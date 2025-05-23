@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Download, FileText, Calendar, AlertCircle, ExternalLink } from "lucide-react";
+import { Download, FileText, Calendar, AlertCircle, ExternalLink, ArrowLeft } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -8,6 +8,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { useFirestoreCollection } from "@/hooks/useFirestore";
 import { Plan } from "@/types";
 import { where, orderBy } from "firebase/firestore";
+import { Link } from "wouter";
 
 export default function DashboardPlan() {
   const { user } = useAuth();
@@ -51,6 +52,16 @@ export default function DashboardPlan() {
   return (
     <div className="min-h-screen py-20 bg-gray-50 dark:bg-gray-900">
       <div className="container mx-auto px-4">
+        {/* Back to Dashboard Navigation */}
+        <div className="mb-6">
+          <Link href="/dashboard">
+            <Button variant="ghost" className="flex items-center gap-2 text-sm">
+              <ArrowLeft className="w-4 h-4" />
+              Back to Dashboard
+            </Button>
+          </Link>
+        </div>
+
         {/* Header */}
         <div className="mb-8">
           <h1 className="text-3xl font-bold mb-2">My Nutrition Plan</h1>
