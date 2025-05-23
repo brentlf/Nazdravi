@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { Calendar, Clock, Plus, CheckCircle, XCircle, AlertCircle, Shield, ArrowLeft } from "lucide-react";
+import { Calendar, Clock, Plus, CheckCircle, XCircle, AlertCircle, Shield, ArrowLeft, Edit, Trash2 } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -56,9 +56,13 @@ export default function DashboardAppointments() {
   const [isBookingOpen, setIsBookingOpen] = useState(false);
   const [hasConsent, setHasConsent] = useState(false);
   const [selectedDate, setSelectedDate] = useState("");
+  const [isRescheduleOpen, setIsRescheduleOpen] = useState(false);
+  const [isCancelOpen, setIsCancelOpen] = useState(false);
+  const [selectedAppointment, setSelectedAppointment] = useState<any>(null);
+  const [rescheduleDate, setRescheduleDate] = useState("");
   const { user } = useAuth();
   const { toast } = useToast();
-  const { add: addAppointment, loading: booking } = useFirestoreActions("appointments");
+  const { add: addAppointment, update: updateAppointment, loading: booking } = useFirestoreActions("appointments");
 
   // Check if user has completed consent form
   useEffect(() => {
@@ -68,6 +72,23 @@ export default function DashboardAppointments() {
 
   // Get available time slots for selected date
   const { availableSlots, loading: slotsLoading } = useAvailableSlots(selectedDate);
+  const { availableSlots: rescheduleSlots, loading: rescheduleSlotsLoading } = useAvailableSlots(rescheduleDate);
+
+  // Helper function to check if appointment can be modified (more than 2 hours before)
+  const canModifyAppointment = (appointment: any) => {
+    const appointmentDateTime = new Date(`${appointment.date}T${appointment.timeslot}`);
+    const now = new Date();
+    const hoursUntilAppointment = (appointmentDateTime.getTime() - now.getTime()) / (1000 * 60 * 60);
+    return hoursUntilAppointment > 2;
+  };
+
+  // Helper function to get late cancellation fee info
+  const isLateCancellation = (appointment: any) => {
+    const appointmentDateTime = new Date(`${appointment.date}T${appointment.timeslot}`);
+    const now = new Date();
+    const hoursUntilAppointment = (appointmentDateTime.getTime() - now.getTime()) / (1000 * 60 * 60);
+    return hoursUntilAppointment <= 2 && hoursUntilAppointment > 0;
+  };
 
   // Fetch user's appointments using consistent userId field
   const { data: appointments, loading } = useFirestoreCollection<Appointment>("appointments", [
@@ -149,6 +170,62 @@ export default function DashboardAppointments() {
       toast({
         title: "Booking failed",
         description: "Please try again later or contact us directly.",
+        variant: "destructive",
+      });
+    }
+  };
+
+  // Handle appointment reschedule
+  const handleReschedule = async (newDate: string, newTimeslot: string) => {
+    if (!selectedAppointment) return;
+
+    try {
+      await updateAppointment(selectedAppointment.id, {
+        date: newDate,
+        timeslot: newTimeslot,
+        status: "pending" // Reset to pending for admin confirmation
+      });
+
+      setIsRescheduleOpen(false);
+      setSelectedAppointment(null);
+      setRescheduleDate("");
+      toast({
+        title: "Appointment Rescheduled!",
+        description: "We'll confirm your new appointment time within 24 hours.",
+      });
+    } catch (error) {
+      toast({
+        title: "Reschedule failed",
+        description: "Please try again or contact us directly.",
+        variant: "destructive",
+      });
+    }
+  };
+
+  // Handle appointment cancellation
+  const handleCancel = async () => {
+    if (!selectedAppointment) return;
+
+    try {
+      await updateAppointment(selectedAppointment.id, {
+        status: "cancelled"
+      });
+
+      setIsCancelOpen(false);
+      setSelectedAppointment(null);
+      
+      const isLate = isLateCancellation(selectedAppointment);
+      toast({
+        title: "Appointment Cancelled",
+        description: isLate 
+          ? "Late cancellation fee may apply. We'll contact you regarding any charges."
+          : "Your appointment has been cancelled successfully.",
+        variant: isLate ? "destructive" : "default",
+      });
+    } catch (error) {
+      toast({
+        title: "Cancellation failed",
+        description: "Please try again or contact us directly.",
         variant: "destructive",
       });
     }
@@ -513,6 +590,50 @@ export default function DashboardAppointments() {
                         <AlertCircle className="w-4 h-4 inline mr-1" />
                         We'll confirm your appointment within 24 hours and send you a confirmation email.
                       </p>
+                    </div>
+                  )}
+
+                  {/* Appointment Management Buttons */}
+                  {(appointment.status === "pending" || appointment.status === "confirmed") && (
+                    <div className="mt-4 flex flex-wrap gap-2">
+                      {canModifyAppointment(appointment) ? (
+                        <>
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => {
+                              setSelectedAppointment(appointment);
+                              setIsRescheduleOpen(true);
+                            }}
+                            className="flex items-center gap-2"
+                          >
+                            <Edit className="w-4 h-4" />
+                            Reschedule
+                          </Button>
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => {
+                              setSelectedAppointment(appointment);
+                              setIsCancelOpen(true);
+                            }}
+                            className="flex items-center gap-2 text-red-600 hover:text-red-700 border-red-300 hover:border-red-400"
+                          >
+                            <Trash2 className="w-4 h-4" />
+                            Cancel
+                          </Button>
+                        </>
+                      ) : isLateCancellation(appointment) ? (
+                        <div className="text-sm text-orange-600 dark:text-orange-400 bg-orange-50 dark:bg-orange-900/20 p-2 rounded">
+                          <AlertCircle className="w-4 h-4 inline mr-1" />
+                          Changes require 2+ hours notice. Late cancellation fees may apply.
+                        </div>
+                      ) : (
+                        <div className="text-sm text-gray-500 dark:text-gray-400">
+                          <Clock className="w-4 h-4 inline mr-1" />
+                          Too close to appointment time to modify
+                        </div>
+                      )}
                     </div>
                   )}
                 </CardContent>
