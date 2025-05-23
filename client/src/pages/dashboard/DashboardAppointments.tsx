@@ -71,8 +71,14 @@ export default function DashboardAppointments() {
   ]);
 
   useEffect(() => {
+    console.log("Consent check debug:", {
+      userId: user?.uid,
+      consentRecords: consentRecords,
+      recordsLength: consentRecords?.length,
+      hasConsent: consentRecords && consentRecords.length > 0
+    });
     setHasConsent(consentRecords && consentRecords.length > 0);
-  }, [consentRecords]);
+  }, [consentRecords, user]);
 
   // Get available time slots for selected date
   const { availableSlots, loading: slotsLoading } = useAvailableSlots(selectedDate);
