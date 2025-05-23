@@ -1,0 +1,201 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  /* Vee Nutrition Brand Colors */
+  --primary: 135 62% 70%; /* #A5CBA4 - mint green */
+  --primary-foreground: 0 0% 100%;
+  
+  /* Background Colors */
+  --background: 120 25% 98%; /* #F8FAF8 - off white */
+  --foreground: 210 11% 15%; /* #2D3748 - text primary */
+  
+  /* UI Colors */
+  --muted: 120 6% 95%;
+  --muted-foreground: 215 16% 47%; /* #4A5568 - text secondary */
+  --popover: 0 0% 100%;
+  --popover-foreground: 210 11% 15%;
+  --card: 0 0% 100%;
+  --card-foreground: 210 11% 15%;
+  --border: 214 32% 91%;
+  --input: 214 32% 91%;
+  --secondary: 120 6% 95%;
+  --secondary-foreground: 210 11% 15%;
+  --accent: 120 6% 95%;
+  --accent-foreground: 210 11% 15%;
+  --destructive: 0 84% 60%;
+  --destructive-foreground: 0 0% 98%;
+  --ring: 210 11% 15%;
+  --radius: 0.75rem;
+  
+  /* Chart colors */
+  --chart-1: 135 62% 70%;
+  --chart-2: 198 93% 60%;
+  --chart-3: 49 96% 53%;
+  --chart-4: 283 39% 53%;
+  --chart-5: 13 93% 69%;
+  
+  /* Sidebar colors */
+  --sidebar-background: 0 0% 98%;
+  --sidebar-foreground: 240 5.3% 26.1%;
+  --sidebar-primary: 135 62% 70%;
+  --sidebar-primary-foreground: 0 0% 100%;
+  --sidebar-accent: 120 6% 95%;
+  --sidebar-accent-foreground: 240 5.9% 10%;
+  --sidebar-border: 220 13% 91%;
+  --sidebar-ring: 217.2 10.6% 64.9%;
+}
+
+.dark {
+  /* Dark theme colors */
+  --background: 224 71% 4%; /* #121212 - dark background */
+  --foreground: 213 31% 91%;
+  --muted: 223 47% 11%;
+  --muted-foreground: 215.4 16.3% 56.9%;
+  --popover: 224 71% 4%;
+  --popover-foreground: 215 20.2% 65.1%;
+  --card: 224 71% 4%;
+  --card-foreground: 213 31% 91%;
+  --border: 216 34% 17%;
+  --input: 216 34% 17%;
+  --primary: 135 62% 70%; /* Keep primary brand color */
+  --primary-foreground: 222.2 47.4% 1.2%;
+  --secondary: 222.2 84% 4.9%;
+  --secondary-foreground: 210 40% 98%;
+  --accent: 216 34% 17%;
+  --accent-foreground: 210 40% 98%;
+  --destructive: 0 63% 31%;
+  --destructive-foreground: 210 40% 98%;
+  --ring: 216 34% 17%;
+  
+  /* Dark sidebar colors */
+  --sidebar-background: 240 5.9% 10%;
+  --sidebar-foreground: 240 4.8% 95.9%;
+  --sidebar-primary: 135 62% 70%;
+  --sidebar-primary-foreground: 240 5.9% 10%;
+  --sidebar-accent: 240 3.7% 15.9%;
+  --sidebar-accent-foreground: 240 4.8% 95.9%;
+  --sidebar-border: 240 3.7% 15.9%;
+  --sidebar-ring: 217.2 10.6% 64.9%;
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  
+  body {
+    @apply bg-background text-foreground font-sans antialiased;
+    font-feature-settings: "rlig" 1, "calt" 1;
+  }
+  
+  /* Smooth scrolling */
+  html {
+    scroll-behavior: smooth;
+  }
+  
+  /* Custom scrollbar */
+  ::-webkit-scrollbar {
+    width: 8px;
+  }
+  
+  ::-webkit-scrollbar-track {
+    @apply bg-muted;
+  }
+  
+  ::-webkit-scrollbar-thumb {
+    @apply bg-border rounded-full;
+  }
+  
+  ::-webkit-scrollbar-thumb:hover {
+    @apply bg-muted-foreground;
+  }
+}
+
+@layer components {
+  /* Primary color variations for different states */
+  .primary-50 { background-color: hsl(135, 70%, 95%); }
+  .primary-100 { background-color: hsl(135, 65%, 90%); }
+  .primary-200 { background-color: hsl(135, 62%, 85%); }
+  .primary-300 { background-color: hsl(135, 62%, 80%); }
+  .primary-400 { background-color: hsl(135, 62%, 75%); }
+  .primary-500 { background-color: hsl(135, 62%, 70%); } /* Main brand color */
+  .primary-600 { background-color: hsl(135, 60%, 65%); }
+  .primary-700 { background-color: hsl(135, 55%, 55%); }
+  .primary-800 { background-color: hsl(135, 50%, 45%); }
+  .primary-900 { background-color: hsl(135, 45%, 35%); }
+  
+  /* Animation utilities */
+  .animate-fade-in {
+    animation: fadeIn 0.5s ease-in-out;
+  }
+  
+  .animate-slide-up {
+    animation: slideUp 0.6s ease-out;
+  }
+  
+  .animate-scale-in {
+    animation: scaleIn 0.3s ease-out;
+  }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideUp {
+  from { 
+    opacity: 0; 
+    transform: translateY(30px); 
+  }
+  to { 
+    opacity: 1; 
+    transform: translateY(0); 
+  }
+}
+
+@keyframes scaleIn {
+  from { 
+    opacity: 0; 
+    transform: scale(0.95); 
+  }
+  to { 
+    opacity: 1; 
+    transform: scale(1); 
+  }
+}
+
+/* Print styles */
+@media print {
+  .no-print {
+    display: none !important;
+  }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  :root {
+    --border: 0 0% 20%;
+    --input: 0 0% 20%;
+  }
+  
+  .dark {
+    --border: 0 0% 80%;
+    --input: 0 0% 80%;
+  }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  
+  html {
+    scroll-behavior: auto;
+  }
+}

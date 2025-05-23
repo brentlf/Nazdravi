@@ -1,0 +1,147 @@
+import { createContext, useContext, useEffect, useState, ReactNode } from "react";
+import { 
+  User as FirebaseUser, 
+  onAuthStateChanged, 
+  signInWithEmailAndPassword,
+  createUserWithEmailAndPassword,
+  signInWithRedirect,
+  getRedirectResult,
+  signOut,
+  updateProfile
+} from "firebase/auth";
+import { doc, getDoc, setDoc } from "firebase/firestore";
+import { auth, googleProvider, db } from "@/lib/firebase";
+import { User } from "@/types";
+
+interface AuthContextType {
+  user: User | null;
+  firebaseUser: FirebaseUser | null;
+  loading: boolean;
+  signIn: (email: string, password: string) => Promise<void>;
+  signUp: (email: string, password: string, name: string) => Promise<void>;
+  signInWithGoogle: () => Promise<void>;
+  signOut: () => Promise<void>;
+  updateUserProfile: (data: Partial<User>) => Promise<void>;
+}
+
+const AuthContext = createContext<AuthContextType | undefined>(undefined);
+
+export function useAuth() {
+  const context = useContext(AuthContext);
+  if (context === undefined) {
+    throw new Error("useAuth must be used within an AuthProvider");
+  }
+  return context;
+}
+
+interface AuthProviderProps {
+  children: ReactNode;
+}
+
+export function AuthProvider({ children }: AuthProviderProps) {
+  const [user, setUser] = useState<User | null>(null);
+  const [firebaseUser, setFirebaseUser] = useState<FirebaseUser | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
+      setFirebaseUser(firebaseUser);
+      
+      if (firebaseUser) {
+        // Get user data from Firestore
+        const userDoc = await getDoc(doc(db, "users", firebaseUser.uid));
+        if (userDoc.exists()) {
+          const userData = userDoc.data();
+          setUser({
+            uid: firebaseUser.uid,
+            role: userData.role || "client",
+            name: userData.name || firebaseUser.displayName || "",
+            email: firebaseUser.email || "",
+            photoURL: userData.photoURL || firebaseUser.photoURL || undefined,
+            preferredLanguage: userData.preferredLanguage || "en",
+            createdAt: userData.createdAt?.toDate() || new Date(),
+          });
+        } else {
+          // Create user document if it doesn't exist
+          const newUser: User = {
+            uid: firebaseUser.uid,
+            role: "client",
+            name: firebaseUser.displayName || "",
+            email: firebaseUser.email || "",
+            photoURL: firebaseUser.photoURL || undefined,
+            preferredLanguage: "en",
+            createdAt: new Date(),
+          };
+          
+          await setDoc(doc(db, "users", firebaseUser.uid), {
+            ...newUser,
+            createdAt: new Date(),
+          });
+          
+          setUser(newUser);
+        }
+      } else {
+        setUser(null);
+      }
+      
+      setLoading(false);
+    });
+
+    // Handle redirect result for OAuth
+    getRedirectResult(auth).catch(console.error);
+
+    return unsubscribe;
+  }, []);
+
+  const signIn = async (email: string, password: string) => {
+    await signInWithEmailAndPassword(auth, email, password);
+  };
+
+  const signUp = async (email: string, password: string, name: string) => {
+    const result = await createUserWithEmailAndPassword(auth, email, password);
+    await updateProfile(result.user, { displayName: name });
+    
+    // Create user document
+    await setDoc(doc(db, "users", result.user.uid), {
+      uid: result.user.uid,
+      role: "client",
+      name,
+      email,
+      photoURL: null,
+      preferredLanguage: "en",
+      createdAt: new Date(),
+    });
+  };
+
+  const signInWithGoogle = async () => {
+    await signInWithRedirect(auth, googleProvider);
+  };
+
+  const handleSignOut = async () => {
+    await signOut(auth);
+  };
+
+  const updateUserProfile = async (data: Partial<User>) => {
+    if (!user) return;
+    
+    await setDoc(doc(db, "users", user.uid), data, { merge: true });
+    setUser({ ...user, ...data });
+  };
+
+  const value: AuthContextType = {
+    user,
+    firebaseUser,
+    loading,
+    signIn,
+    signUp,
+    signInWithGoogle,
+    signOut: handleSignOut,
+    updateUserProfile,
+  };
+
+  return (
+    <AuthContext.Provider value={value}>
+      {children}
+    </AuthContext.Provider>
+  );
+}
