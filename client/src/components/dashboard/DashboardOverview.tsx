@@ -45,6 +45,14 @@ export function DashboardOverview() {
   const nextAppointment = appointments?.[0];
   const unreadMessages = messages?.length || 0;
   const latestProgress = progressEntries?.[0];
+
+  // Debug logging to verify Firebase data
+  console.log("Dashboard Firebase Data:", {
+    appointments: appointments?.length || 0,
+    messages: messages?.length || 0, 
+    progressEntries: progressEntries?.length || 0,
+    userUID: user?.uid
+  });
   
   // Calculate weight change this month
   const currentMonth = new Date().toISOString().slice(0, 7);
