@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { Plus, Scale, Droplets, Calendar, TrendingDown } from "lucide-react";
+import { Plus, Scale, Droplets, Calendar, TrendingDown, ArrowLeft } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -30,6 +30,7 @@ import { useFirestoreCollection, useFirestoreActions } from "@/hooks/useFirestor
 import { ProgressChart } from "@/components/dashboard/ProgressChart";
 import { Progress } from "@/types";
 import { where, orderBy, limit } from "firebase/firestore";
+import { Link } from "wouter";
 
 const progressSchema = z.object({
   date: z.string().min(1, "Please select a date"),
@@ -133,6 +134,16 @@ export default function DashboardProgress() {
   return (
     <div className="min-h-screen py-20 bg-gray-50 dark:bg-gray-900">
       <div className="container mx-auto px-4">
+        {/* Back to Dashboard Navigation */}
+        <div className="mb-6">
+          <Link href="/dashboard">
+            <Button variant="ghost" className="flex items-center gap-2 text-sm">
+              <ArrowLeft className="w-4 h-4" />
+              Back to Dashboard
+            </Button>
+          </Link>
+        </div>
+
         {/* Header */}
         <div className="flex justify-between items-center mb-8">
           <div>

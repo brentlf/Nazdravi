@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { Calendar, Clock, Plus, CheckCircle, XCircle, AlertCircle, Shield } from "lucide-react";
+import { Calendar, Clock, Plus, CheckCircle, XCircle, AlertCircle, Shield, ArrowLeft } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -39,6 +39,7 @@ import { useFirestoreCollection, useFirestoreActions } from "@/hooks/useFirestor
 import { Appointment } from "@/types";
 import { where, orderBy } from "firebase/firestore";
 import { useAvailableSlots } from "@/hooks/useAvailableSlots";
+import { Link } from "wouter";
 
 const appointmentSchema = z.object({
   type: z.enum(["Initial", "Follow-up"], {
@@ -193,6 +194,16 @@ export default function DashboardAppointments() {
   return (
     <div className="min-h-screen py-20 bg-gray-50 dark:bg-gray-900">
       <div className="container mx-auto px-4">
+        {/* Back to Dashboard Navigation */}
+        <div className="mb-6">
+          <Link href="/dashboard">
+            <Button variant="ghost" className="flex items-center gap-2 text-sm">
+              <ArrowLeft className="w-4 h-4" />
+              Back to Dashboard
+            </Button>
+          </Link>
+        </div>
+
         {/* Booking Requirements Status Card */}
         <Card className="mb-8">
           <CardHeader>
