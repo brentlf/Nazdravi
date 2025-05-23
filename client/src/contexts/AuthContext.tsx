@@ -114,7 +114,12 @@ export function AuthProvider({ children }: AuthProviderProps) {
   };
 
   const signInWithGoogle = async () => {
-    await signInWithRedirect(auth, googleProvider);
+    try {
+      await signInWithRedirect(auth, googleProvider);
+    } catch (error: any) {
+      console.error("Google sign-in error:", error);
+      throw new Error("Google sign-in failed. Please try again or contact support.");
+    }
   };
 
   const handleSignOut = async () => {
