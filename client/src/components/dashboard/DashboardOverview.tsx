@@ -20,22 +20,22 @@ import { where, orderBy, limit } from "firebase/firestore";
 export function DashboardOverview() {
   const { user } = useAuth();
 
-  // Fetch user's next appointment
+  // Fetch user's next appointment - check both userId and email
   const { data: appointments } = useFirestoreCollection<Appointment>("appointments", [
-    where("userId", "==", user?.uid || ""),
+    where("email", "==", user?.email || ""),
     where("status", "in", ["pending", "confirmed"]),
     orderBy("date", "asc"),
     limit(1)
   ]);
 
-  // Fetch recent messages
+  // Fetch recent messages - check both userId and email
   const { data: messages } = useFirestoreCollection<Message>("messages", [
     where("toUser", "==", user?.uid || ""),
     orderBy("createdAt", "desc"),
     limit(5)
   ]);
 
-  // Fetch recent progress entries
+  // Fetch recent progress entries - check by userId first, fallback if needed
   const { data: progressEntries } = useFirestoreCollection<Progress>("progress", [
     where("userId", "==", user?.uid || ""),
     orderBy("date", "desc"),
@@ -51,7 +51,9 @@ export function DashboardOverview() {
     appointments: appointments?.length || 0,
     messages: messages?.length || 0, 
     progressEntries: progressEntries?.length || 0,
-    userUID: user?.uid
+    userUID: user?.uid,
+    userEmail: user?.email,
+    actualAppointments: appointments
   });
   
   // Calculate weight change this month

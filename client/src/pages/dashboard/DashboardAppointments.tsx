@@ -63,9 +63,9 @@ export default function DashboardAppointments() {
     setHasConsent(consentCompleted === 'true');
   }, []);
 
-  // Fetch user's appointments
+  // Fetch user's appointments by email to ensure data consistency
   const { data: appointments, loading } = useFirestoreCollection<Appointment>("appointments", [
-    where("userId", "==", user?.uid || ""),
+    where("email", "==", user?.email || ""),
     orderBy("date", "desc")
   ]);
 
