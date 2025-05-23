@@ -4,8 +4,14 @@ export interface User {
   name: string;
   email: string;
   photoURL?: string;
-  preferredLanguage: string;
+  preferredLanguage: "en" | "cs";
   createdAt: Date;
+  // Additional nutrition-specific fields
+  dateOfBirth?: Date;
+  phone?: string;
+  address?: string;
+  emergencyContact?: string;
+  gpContact?: string;
 }
 
 export interface Appointment {
