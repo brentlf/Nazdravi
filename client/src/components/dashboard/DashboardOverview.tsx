@@ -53,6 +53,13 @@ export function DashboardOverview() {
     timeslot: apt.timeslot || (apt as any).time || "Time TBD"
   }));
 
+  console.log("Dashboard data debug:", {
+    appointments: appointments?.length || 0,
+    messages: messages?.length || 0,
+    progressEntries: progressEntries?.length || 0,
+    userId: user?.uid
+  });
+
   const nextAppointment = processedAppointments?.[0];
   const unreadMessages = messages?.length || 0;
   const latestProgress = progressEntries?.[0];
