@@ -20,7 +20,9 @@ import { where, orderBy, limit } from "firebase/firestore";
 export function DashboardOverview() {
   const { user } = useAuth();
 
-
+  // Debug: Check raw appointment data structure first
+  const { data: debugAppointments } = useFirestoreCollection<any>("appointments", [limit(3)]);
+  console.log("Debug - Raw appointment documents:", debugAppointments);
 
   // Fetch user's next appointment using consistent userID
   const { data: appointments } = useFirestoreCollection<Appointment>("appointments", [
