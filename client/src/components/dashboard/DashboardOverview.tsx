@@ -16,9 +16,74 @@ import { useAuth } from "@/contexts/AuthContext";
 import { useFirestoreCollection } from "@/hooks/useFirestore";
 import { Appointment, Message, Progress } from "@/types";
 import { where, orderBy, limit } from "firebase/firestore";
+import { db } from "@/lib/firebase";
+import { collection, getDocs, doc, updateDoc, query } from "firebase/firestore";
+import { useToast } from "@/hooks/use-toast";
 
 export function DashboardOverview() {
   const { user } = useAuth();
+  const { toast } = useToast();
+
+  // Function to update Firebase data to current user
+  const updateUserData = async () => {
+    if (!user) return;
+    
+    try {
+      toast({
+        title: "Updating data...",
+        description: "Connecting your existing Firebase data to current account",
+      });
+
+      // Update appointments collection
+      const appointmentsRef = collection(db, "appointments");
+      const appointmentsQuery = query(appointmentsRef, where("email", "==", "brentlf@gmail.com"));
+      const appointmentsSnapshot = await getDocs(appointmentsQuery);
+      
+      for (const docSnap of appointmentsSnapshot.docs) {
+        await updateDoc(doc(db, "appointments", docSnap.id), {
+          userId: user.uid,
+          email: user.email
+        });
+      }
+
+      // Update progress collection
+      const progressRef = collection(db, "progress");
+      const progressQuery = query(progressRef, where("userId", "==", "Q1ExaEhsVAOlrHI7c66d00kpyXA2"));
+      const progressSnapshot = await getDocs(progressQuery);
+      
+      for (const docSnap of progressSnapshot.docs) {
+        await updateDoc(doc(db, "progress", docSnap.id), {
+          userId: user.uid
+        });
+      }
+
+      // Update messages collection
+      const messagesRef = collection(db, "messages");
+      const messagesQuery = query(messagesRef, where("toUser", "==", "Q1ExaEhsVAOlrHI7c66d00kpyXA2"));
+      const messagesSnapshot = await getDocs(messagesQuery);
+      
+      for (const docSnap of messagesSnapshot.docs) {
+        await updateDoc(doc(db, "messages", docSnap.id), {
+          toUser: user.uid
+        });
+      }
+
+      toast({
+        title: "✅ Data updated successfully!",
+        description: "Your appointments, progress, and messages are now connected to your account",
+      });
+
+      // Refresh page to show updated data
+      window.location.reload();
+    } catch (error) {
+      console.error("Error updating user data:", error);
+      toast({
+        title: "❌ Update failed",
+        description: "There was an error connecting your data. Please try again.",
+        variant: "destructive",
+      });
+    }
+  };
 
   // Fetch user's next appointment - check both userId and email
   const { data: appointments } = useFirestoreCollection<Appointment>("appointments", [
@@ -144,6 +209,30 @@ export function DashboardOverview() {
 
   return (
     <div className="space-y-8">
+      {/* Data Connection Notice */}
+      {appointments?.length === 0 && (
+        <Card className="border-amber-200 bg-amber-50 dark:bg-amber-900/20">
+          <CardContent className="p-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <h3 className="font-semibold text-amber-800 dark:text-amber-200 mb-2">
+                  Connect Your Existing Data
+                </h3>
+                <p className="text-sm text-amber-600 dark:text-amber-300">
+                  We found existing appointments and progress data in Firebase. Click to connect it to your current account.
+                </p>
+              </div>
+              <Button 
+                onClick={updateUserData}
+                className="bg-amber-600 hover:bg-amber-700 text-white"
+              >
+                Connect Data
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
       {/* Welcome Section */}
       <div className="bg-gradient-to-r from-primary-500 to-primary-600 rounded-2xl p-8 text-white">
         <h1 className="text-3xl font-bold mb-2">Welcome back, {user?.name}!</h1>
