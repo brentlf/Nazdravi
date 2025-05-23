@@ -40,6 +40,8 @@ import AdminAppointments from "@/pages/admin/AdminAppointments";
 import AdminMessages from "@/pages/admin/AdminMessages";
 import AdminPlans from "@/pages/admin/AdminPlans";
 import AdminTranslations from "@/pages/admin/AdminTranslations";
+import AdminAvailability from "@/pages/admin/AdminAvailability";
+import AdminBlog from "@/pages/admin/AdminBlog";
 
 function Layout({ children }: { children: React.ReactNode }) {
   return (
@@ -133,6 +135,16 @@ function Router() {
       <Route path="/admin/translations">
         <RouteGuard role="admin">
           <Layout><AdminTranslations /></Layout>
+        </RouteGuard>
+      </Route>
+      <Route path="/admin/availability">
+        <RouteGuard role="admin">
+          <Layout><AdminAvailability /></Layout>
+        </RouteGuard>
+      </Route>
+      <Route path="/admin/blog">
+        <RouteGuard role="admin">
+          <Layout><AdminBlog /></Layout>
         </RouteGuard>
       </Route>
       
