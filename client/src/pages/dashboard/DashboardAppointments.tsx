@@ -189,25 +189,80 @@ export default function DashboardAppointments() {
   return (
     <div className="min-h-screen py-20 bg-gray-50 dark:bg-gray-900">
       <div className="container mx-auto px-4">
-        {/* Consent Warning Banner */}
-        {!hasConsent && (
-          <div className="mb-8 p-4 bg-red-50 dark:bg-red-900/20 rounded-lg border border-red-200 dark:border-red-800">
-            <div className="flex items-center space-x-3">
-              <Shield className="w-5 h-5 text-red-500" />
-              <div>
-                <h3 className="font-semibold text-red-800 dark:text-red-200">
-                  Consent Form Required
-                </h3>
-                <p className="text-red-600 dark:text-red-300 text-sm">
-                  You must complete the informed consent form before booking appointments.{" "}
-                  <a href="/consent-form" className="underline hover:no-underline">
-                    Complete it now
-                  </a>
-                </p>
+        {/* Booking Requirements Status Card */}
+        <Card className="mb-8">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <Shield className="w-5 h-5" />
+              Booking Requirements
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-4">
+              {/* Account Status */}
+              <div className="flex items-center justify-between p-3 bg-green-50 dark:bg-green-900/20 rounded-lg border border-green-200 dark:border-green-800">
+                <div className="flex items-center gap-3">
+                  <CheckCircle className="w-5 h-5 text-green-500" />
+                  <div>
+                    <h4 className="font-medium text-green-800 dark:text-green-200">Account Verified</h4>
+                    <p className="text-sm text-green-600 dark:text-green-300">Signed in as {user?.name}</p>
+                  </div>
+                </div>
+                <Badge className="bg-green-100 text-green-800 dark:bg-green-900/50 dark:text-green-200">
+                  Complete
+                </Badge>
               </div>
+
+              {/* Consent Status */}
+              {hasConsent ? (
+                <div className="flex items-center justify-between p-3 bg-green-50 dark:bg-green-900/20 rounded-lg border border-green-200 dark:border-green-800">
+                  <div className="flex items-center gap-3">
+                    <CheckCircle className="w-5 h-5 text-green-500" />
+                    <div>
+                      <h4 className="font-medium text-green-800 dark:text-green-200">Informed Consent</h4>
+                      <p className="text-sm text-green-600 dark:text-green-300">Consent form completed and recorded</p>
+                    </div>
+                  </div>
+                  <Badge className="bg-green-100 text-green-800 dark:bg-green-900/50 dark:text-green-200">
+                    Complete
+                  </Badge>
+                </div>
+              ) : (
+                <div className="flex items-center justify-between p-3 bg-amber-50 dark:bg-amber-900/20 rounded-lg border border-amber-200 dark:border-amber-800">
+                  <div className="flex items-center gap-3">
+                    <AlertCircle className="w-5 h-5 text-amber-500" />
+                    <div>
+                      <h4 className="font-medium text-amber-800 dark:text-amber-200">Informed Consent Required</h4>
+                      <p className="text-sm text-amber-600 dark:text-amber-300">Complete the informed consent form to enable booking</p>
+                    </div>
+                  </div>
+                  <Button size="sm" asChild className="bg-amber-600 hover:bg-amber-700 text-white">
+                    <a href="/consent-form">Complete Form</a>
+                  </Button>
+                </div>
+              )}
+
+              {/* Booking Status Summary */}
+              {hasConsent ? (
+                <div className="flex items-center justify-center p-4 bg-[#A5CBA4]/10 rounded-lg border border-[#A5CBA4]/30">
+                  <div className="text-center">
+                    <CheckCircle className="w-8 h-8 text-[#A5CBA4] mx-auto mb-2" />
+                    <h4 className="font-semibold text-gray-800 dark:text-gray-200">Ready to Book</h4>
+                    <p className="text-sm text-gray-600 dark:text-gray-300">All requirements completed - you can now schedule appointments</p>
+                  </div>
+                </div>
+              ) : (
+                <div className="flex items-center justify-center p-4 bg-gray-50 dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700">
+                  <div className="text-center">
+                    <XCircle className="w-8 h-8 text-gray-400 mx-auto mb-2" />
+                    <h4 className="font-semibold text-gray-600 dark:text-gray-400">Booking Disabled</h4>
+                    <p className="text-sm text-gray-500 dark:text-gray-400">Complete all requirements above to enable appointment booking</p>
+                  </div>
+                </div>
+              )}
             </div>
-          </div>
-        )}
+          </CardContent>
+        </Card>
 
         {/* Header */}
         <div className="flex justify-between items-center mb-8">
@@ -220,9 +275,14 @@ export default function DashboardAppointments() {
           
           <Dialog open={isBookingOpen} onOpenChange={setIsBookingOpen}>
             <DialogTrigger asChild>
-              <Button className="bg-primary-500 hover:bg-primary-600">
+              <Button 
+                className={hasConsent ? "bg-[#A5CBA4] hover:bg-[#95bb94] text-white" : "bg-gray-400 hover:bg-gray-400 text-gray-600 cursor-not-allowed"}
+                disabled={!hasConsent}
+                title={!hasConsent ? "Complete consent form to enable booking" : "Book new appointment"}
+              >
                 <Plus className="w-4 h-4 mr-2" />
                 Book Appointment
+                {!hasConsent && <Shield className="w-4 h-4 ml-2" />}
               </Button>
             </DialogTrigger>
             <DialogContent className="max-w-2xl">

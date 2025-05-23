@@ -74,47 +74,116 @@ export default function Appointment() {
           </Alert>
         </div>
 
-        {/* Appointment Form - Only if consent completed AND user logged in */}
+        {/* Booking Requirements & Form */}
         <div className="max-w-4xl mx-auto">
-          {!user ? (
-            <div className="p-8 bg-amber-50 dark:bg-amber-900/20 rounded-2xl border-2 border-amber-200 text-center">
-              <User className="w-16 h-16 text-amber-400 mx-auto mb-4" />
-              <h3 className="text-xl font-semibold text-amber-800 dark:text-amber-200 mb-2">
-                Account Required - Please Sign In
-              </h3>
-              <p className="text-amber-600 dark:text-amber-300 mb-4">
-                You must create an account and sign in before booking appointments. This helps us manage your consultation history and provide personalized care.
-              </p>
-              <div className="flex flex-col sm:flex-row gap-3 justify-center">
-                <Link href="/login">
-                  <Button className="bg-amber-600 hover:bg-amber-700 text-white">
-                    Sign In to Your Account
-                  </Button>
-                </Link>
-                <Link href="/register">
-                  <Button variant="outline" className="border-amber-300 text-amber-700 hover:bg-amber-50">
-                    Create New Account
-                  </Button>
-                </Link>
+          {/* Requirements Status Card */}
+          <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 mb-8">
+            <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
+              <Shield className="w-5 h-5" />
+              Booking Requirements
+            </h3>
+            
+            <div className="space-y-3">
+              {/* Account Status */}
+              {user ? (
+                <div className="flex items-center justify-between p-3 bg-green-50 dark:bg-green-900/20 rounded-lg border border-green-200 dark:border-green-800">
+                  <div className="flex items-center gap-3">
+                    <CheckCircle className="w-5 h-5 text-green-500" />
+                    <div>
+                      <h4 className="font-medium text-green-800 dark:text-green-200">Account Verified</h4>
+                      <p className="text-sm text-green-600 dark:text-green-300">Signed in as {user.name}</p>
+                    </div>
+                  </div>
+                  <span className="text-xs bg-green-100 text-green-800 dark:bg-green-900/50 dark:text-green-200 px-2 py-1 rounded">
+                    Complete
+                  </span>
+                </div>
+              ) : (
+                <div className="flex items-center justify-between p-3 bg-amber-50 dark:bg-amber-900/20 rounded-lg border border-amber-200 dark:border-amber-800">
+                  <div className="flex items-center gap-3">
+                    <User className="w-5 h-5 text-amber-500" />
+                    <div>
+                      <h4 className="font-medium text-amber-800 dark:text-amber-200">Account Required</h4>
+                      <p className="text-sm text-amber-600 dark:text-amber-300">Create an account to manage your appointments</p>
+                    </div>
+                  </div>
+                  <div className="flex gap-2">
+                    <Link href="/login">
+                      <Button size="sm" variant="outline" className="border-amber-300 text-amber-700 hover:bg-amber-50">
+                        Sign In
+                      </Button>
+                    </Link>
+                    <Link href="/register">
+                      <Button size="sm" className="bg-amber-600 hover:bg-amber-700 text-white">
+                        Register
+                      </Button>
+                    </Link>
+                  </div>
+                </div>
+              )}
+
+              {/* Consent Status */}
+              {user && (
+                hasConsent ? (
+                  <div className="flex items-center justify-between p-3 bg-green-50 dark:bg-green-900/20 rounded-lg border border-green-200 dark:border-green-800">
+                    <div className="flex items-center gap-3">
+                      <CheckCircle className="w-5 h-5 text-green-500" />
+                      <div>
+                        <h4 className="font-medium text-green-800 dark:text-green-200">Informed Consent</h4>
+                        <p className="text-sm text-green-600 dark:text-green-300">Consent form completed and recorded</p>
+                      </div>
+                    </div>
+                    <span className="text-xs bg-green-100 text-green-800 dark:bg-green-900/50 dark:text-green-200 px-2 py-1 rounded">
+                      Complete
+                    </span>
+                  </div>
+                ) : (
+                  <div className="flex items-center justify-between p-3 bg-amber-50 dark:bg-amber-900/20 rounded-lg border border-amber-200 dark:border-amber-800">
+                    <div className="flex items-center gap-3">
+                      <AlertTriangle className="w-5 h-5 text-amber-500" />
+                      <div>
+                        <h4 className="font-medium text-amber-800 dark:text-amber-200">Informed Consent Required</h4>
+                        <p className="text-sm text-amber-600 dark:text-amber-300">Complete the informed consent form to enable booking</p>
+                      </div>
+                    </div>
+                    <Link href="/consent-form">
+                      <Button size="sm" className="bg-amber-600 hover:bg-amber-700 text-white">
+                        Complete Form
+                      </Button>
+                    </Link>
+                  </div>
+                )
+              )}
+            </div>
+
+            {/* Overall Status */}
+            {user && hasConsent ? (
+              <div className="mt-4 p-4 bg-[#A5CBA4]/10 rounded-lg border border-[#A5CBA4]/30 text-center">
+                <CheckCircle className="w-6 h-6 text-[#A5CBA4] mx-auto mb-2" />
+                <h4 className="font-semibold text-gray-800 dark:text-gray-200">Ready to Book</h4>
+                <p className="text-sm text-gray-600 dark:text-gray-300">All requirements completed</p>
               </div>
-            </div>
-          ) : !hasConsent ? (
-            <div className="p-8 bg-red-50 dark:bg-red-900/20 rounded-2xl border-2 border-red-200 text-center">
-              <Shield className="w-16 h-16 text-red-400 mx-auto mb-4" />
-              <h3 className="text-xl font-semibold text-red-800 dark:text-red-200 mb-2">
-                Consent Required Before Booking
-              </h3>
-              <p className="text-red-600 dark:text-red-300 mb-4">
-                You must complete the informed consent form before booking appointments.
-              </p>
-              <Link href="/consent-form">
-                <Button className="bg-red-600 hover:bg-red-700 text-white">
-                  Complete Consent Form First
-                </Button>
-              </Link>
-            </div>
-          ) : (
+            ) : (
+              <div className="mt-4 p-4 bg-gray-50 dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 text-center">
+                <AlertTriangle className="w-6 h-6 text-gray-400 mx-auto mb-2" />
+                <h4 className="font-semibold text-gray-600 dark:text-gray-400">Complete Requirements Above</h4>
+                <p className="text-sm text-gray-500 dark:text-gray-400">Booking will be enabled once all steps are completed</p>
+              </div>
+            )}
+          </div>
+
+          {/* Appointment Form */}
+          {user && hasConsent ? (
             <AppointmentForm />
+          ) : (
+            <div className="bg-gray-50 dark:bg-gray-800 rounded-lg p-8 text-center">
+              <h3 className="text-lg font-medium text-gray-600 dark:text-gray-400 mb-2">
+                Appointment Booking Form
+              </h3>
+              <p className="text-gray-500 dark:text-gray-500">
+                Complete the requirements above to access the booking form
+              </p>
+            </div>
           )}
         </div>
 
