@@ -11,11 +11,9 @@ export function useAvailableSlots(selectedDate: string) {
   const [availableSlots, setAvailableSlots] = useState<TimeSlot[]>([]);
   const [loading, setLoading] = useState(false);
 
-  // Default time slots for nutrition consultations
+  // 30-minute appointments starting only at the top of each hour
   const defaultSlots = [
-    "09:00", "09:30", "10:00", "10:30", "11:00", "11:30",
-    "13:00", "13:30", "14:00", "14:30", "15:00", "15:30",
-    "16:00", "16:30", "17:00"
+    "09:00", "10:00", "11:00", "13:00", "14:00", "15:00", "16:00", "17:00"
   ];
 
   useEffect(() => {
