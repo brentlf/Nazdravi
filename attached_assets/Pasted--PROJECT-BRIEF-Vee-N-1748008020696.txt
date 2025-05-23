@@ -1,0 +1,566 @@
+/* ======================================================================
+   PROJECT BRIEF — “Vee Nutrition”  (Multilingual Dietitian Web App)
+   ====================================================================== */
+
+/* ------------------------------------------------
+   1. CORE IDEA & USER ROLES
+   ------------------------------------------------ */
+Build a production-ready, full-stack web application for a private
+dietitian / nutrition-consulting practice called **“Vee Nutrition”**.
+
+There are three roles:
+  • **Visitor** – sees marketing pages, reads blog, books an appointment,
+    subscribes to newsletter, downloads free resources.
+  • **Client (authenticated)** – gets a personal dashboard (appointments,
+    messaging, plan PDFs, progress tracker, resource library).
+  • **Admin** – manages users, appointment requests, messages, nutrition
+    plans (PDFs in cloud storage), blog posts, public resources and
+    translations via an internal admin panel.
+
+/* ------------------------------------------------
+   2. TECH STACK & ARCHITECTURE
+   ------------------------------------------------ */
+FRONT END
+  ▸ Next.js 14 (App Router, React 18, TypeScript, Server Actions OK)
+  ▸ Tailwind CSS + shadcn/ui component library (import on demand)
+  ▸ Lucide-react icons
+  ▸ Global theme colors        /* brand mint-green #A5CBA4, off-white #F8FAF8 */
+  ▸ next-i18n routing: default “/en”, optional “/nl”.  Redirect bare “/”
+    to “/en”.  Persist language choice in localStorage.
+  ▸ SEO: per-page metadata, open-graph tags, JSON-LD breadcrumbs.
+
+BACK END
+  ▸ Firebase 10:
+      – Auth (email/password + Google OAuth)
+      – Firestore v2 (modular SDK, strict types)
+      – Storage (PDF plans, hero images)
+      – Analytics (browser only, guard for isSupported)
+  ▸ Cloud Functions (TypeScript):
+      – sendAppointmentEmails(): onWrite to /appointments
+        → nodemailer via Gmail-SMTP (env vars EMAIL_USER / EMAIL_PASS).
+      – nightlyCleanup(): purge test users older than 30 d.
+  ▸ Environment variables read from `.env.local`.
+
+DATA  (collection → schema)
+  users {
+    uid, role (“client” | “admin”), name, email, photoURL,
+    createdAt, preferredLanguage
+  }
+  appointments {
+    id, userId, date, timeslot, type (“Initial” | “Follow-up”),
+    goals, status (“pending” | “confirmed” | “done”), createdAt
+  }
+  messages {
+    id, fromUser, toUser, text, createdAt
+  }
+  plans {
+    id, userId, title, storagePath (PDF), createdAt
+  }
+  progress {
+    id, userId, date, weightKg, waterLitres
+  }
+  resources {
+    id, title, description, url, tags[], lang
+  }
+  translations {
+    lang, namespace, key, value
+  }
+
+INSTALL test indexes: see `/lib/firebase-indexes.ts`.
+
+/* ------------------------------------------------
+   3. PUBLIC PAGES  (unauthenticated)
+   ------------------------------------------------ */
+  /         → redirect to /en
+  /[lang]            – Home (“Your Journey to Better Health Starts Here”)
+                       • Hero (cta → /appointment)
+                       • Services grid (personalised plans, support, resources)
+                       • About preview snippet
+                       • Testimonials carousel
+                       • NewsletterForm component
+                       • Free-resource lead-magnet download
+  /[lang]/about      – Long-form bio with timeline & credentials badges
+  /[lang]/services   – Pricing tiles (Initial Consult, Follow-up, Program)
+  /appointment       – Multi-step booking form:
+                       ◦ collects name, email, phone (E.164), goals textarea,
+                         consultation type radio, preferred date picker
+                       ◦ on submit: write appointment doc, show success card
+  /blog              – Searchable blog list, categories filter, pagination
+                       (dummy seed with three example posts).
+  /blog/[slug]       – Markdown blog reader, TOC sidebar.
+  /resources/free    – Download page gated by newsletter signup.
+  /privacy + /terms  – Static legal pages (EN/NL)
+
+/* ------------------------------------------------
+   4. AUTH & ROUTE GUARDS
+   ------------------------------------------------ */
+  ▸ <RouteGuard role="client"> wraps client dashboard routes.
+  ▸ <RouteGuard role="admin">  wraps admin routes.
+  ▸ Unauthenticated users hitting a protected route are
+    client-redirected to /login?returnTo=….
+
+/* ------------------------------------------------
+   5. CLIENT DASHBOARD  (prefix /dashboard)
+   ------------------------------------------------ */
+  /dashboard             – Overview cards (next appointment, latest message,
+                            progress graph using recharts).
+  /dashboard/appointments – List + “book new” button.
+  /dashboard/messages     – Realtime chat (ordered by createdAt).
+  /dashboard/plan         – If plan exists: PDF viewer + download button,
+                            else info alert.
+  /dashboard/progress     – Tabs (Weight, Water).  Simple form writes to
+                            /progress.  Show line chart of last 30 entries.
+  /dashboard/resources    – Filterable table of downloadable PDFs/videos.
+
+/* ------------------------------------------------
+   6. ADMIN PANEL  (prefix /admin)
+   ------------------------------------------------ */
+  /admin                  – KPI cards (total users, appointments YTD…)
+  /admin/users            – Table, role dropdown, delete button.
+  /admin/appointments     – Confirm or decline pending bookings.
+  /admin/messages         – Read-only stream to assist clients.
+  /admin/plans            – Upload PDF, assign to userId.
+  /admin/translations     – Inline JSON editor (writes to /translations).
+
+/* ------------------------------------------------
+   7. COMPONENT HIGHLIGHTS
+   ------------------------------------------------ */
+  • ThemeProvider with dark/light toggle (system default)
+  • Mobile-first responsive grid & flex utilities
+  • NewsletterForm (POST /api/newsletter → Mailchimp stub)
+  • LanguageSwitcher (flag icon + dropdown)
+  • Breadcrumbs component in all sub-pages
+  • Toasts via shadcn `use-toast`
+  • Skeleton loaders for Firestore fetches
+  • Tests: Vitest + React-Testing-Library example on NewsletterForm
+
+/* ------------------------------------------------
+   8. A11Y, PWA & QUALITY
+   ------------------------------------------------ */
+  – Use <Image> with `alt`.
+  – Keyboard-navigable, focus-ring visible.
+  – Lighthouse ≥ 90 all categories.
+  – Register service-worker for offline viewing of static pages.
+  – ESLint strict / Prettier / Husky pre-commit.
+
+END OF BRIEF
+How to use it
+Open a fresh Replit project, choose “Node.js with TypeScript”.
+
+Paste the entire prompt above into the Replit Agent chat.
+
+Follow-up prompts you might send after generation:
+“Swap Tailwind’s primary color to #6AAA7F” or “Add Google Calendar sync on appointment confirmation.”
+
+This summary captures every feature, page, component, data model and tech detail present in the uploaded dietitianwebsite21-master codebase, so Replit’s AI can spin up an equivalent (or better) project in one shot.
+
+
+Sources
+
+
+
+
+
+
+You said:
+Can we make it more detailed also considering things like Firebase Functioanlity, user portals, admin portals etc. So that I can make use of the existing back-end features which I have already setup 
+
+
+ChatGPT said:
+
+Thought for 9 seconds
+Below is a “kitchen-sink” super-prompt that Replit’s Agent / Ghostwriter can ingest to rebuild exactly what you already have—plus it tells the AI to wire every Firebase feature, user portal view, and admin panel screen you mentioned.
+Copy–paste the whole block (it’s long on purpose) into the Replit chat, then watch it scaffold the repo, deploy functions, seed indexes, and set up route guards in one pass.
+
+pgsql
+Copy
+Edit
+/* ============================================================================
+   PROJECT SPEC —  Vee Nutrition  (Dietitian Web App v2)
+   ============================================================================ */
+
+/* ---------------------------------------------------------------------------
+   0. HIGH-LEVEL GOAL
+   --------------------------------------------------------------------------- */
+Create a production-grade, multilingual dietitian web application that mirrors
+and improves the behaviour and architecture found in my existing
+*dietitianwebsite21-master* repo.  **MUST** integrate with an **already live
+Firebase project (Project ID: vee-nutrition-prod)** — reuse its Authentication
+providers, Firestore, Storage bucket, Functions region (europe-west1),
+Analytics, and configured indexes/security rules.  
+Everything below describes *how that running back-end works today*; reproduce
+it exactly in code comments, environment variables, and CI scripts so the final
+site can be deployed without re-configuring Firebase.
+
+──────────────────────────────────────────────────────────────────────────────
+1. USER ROLES & PERMISSIONS
+──────────────────────────────────────────────────────────────────────────────
+• `visitor`      – unauthenticated, may browse public pages and submit the
+                   Appointment Form (writes a Firestore `appointments` doc).
+• `client`       – authenticated Firebase user *without* the custom claim
+                   `admin == true`.  Gets access to `/dashboard/**` routes.
+• `admin`        – authenticated user *with* `admin == true` custom claim.
+                   Full access to `/admin/**`, Cloud Functions callable
+                   endpoints, and Storage uploads.
+
+FireStore **security rules** (already deployed, replicate in `/firebase.rules`):
+rules_version = '2';
+service cloud.firestore {
+match /databases/{database}/documents {
+
+lua
+Copy
+Edit
+function isSignedIn()       { return request.auth != null; }
+function isAdmin()          { return isSignedIn() &&
+                               request.auth.token.admin == true; }
+function isDocOwner(uid)    { return isSignedIn() &&
+                               request.auth.uid == uid; }
+
+match /users/{uid} {
+  allow read, write: if isDocOwner(uid) || isAdmin();
+}
+
+match /appointments/{id} {
+  allow create: if true;                 // visitors may POST
+  allow read:   if isDocOwner(resource.data.userId) || isAdmin();
+  allow update: if isAdmin();
+  allow delete: if false;
+}
+
+match /messages/{id} {
+  allow create: if isSignedIn();
+  allow read:   if isDocOwner(resource.data.fromUser) ||
+                 isDocOwner(resource.data.toUser) ||
+                 isAdmin();
+}
+
+match /plans/{id} {
+  allow read:   if isDocOwner(resource.data.userId) || isAdmin();
+  allow write:  if isAdmin();
+}
+
+match /progress/{id} {
+  allow read, write: if isDocOwner(resource.data.userId);
+}
+
+match /resources/{id} {
+  allow read: if true;
+  allow write: if isAdmin();
+}
+
+match /translations/{doc=**} {
+  allow read: if true;
+  allow write: if isAdmin();
+}
+}
+}
+
+pgsql
+Copy
+Edit
+Firestore **composite indexes** (exported JSON lives at
+`/firestore.indexes.json`; seed via `firebase deploy --only firestore:indexes`):
+```json
+[
+  { "collectionGroup": "appointments",
+    "queryScope": "COLLECTION",
+    "fields": [
+      { "fieldPath": "userId", "order": "ASCENDING" },
+      { "fieldPath": "date",   "order": "DESCENDING" }
+    ]
+  },
+  { "collectionGroup": "messages",
+    "queryScope": "COLLECTION",
+    "fields": [
+      { "fieldPath": "chatRoom", "order": "ASCENDING" },
+      { "fieldPath": "createdAt","order": "DESCENDING" }
+    ]
+  }
+]
+Storage rules (bucket vee-nutrition-prod.appspot.com):
+
+pgsql
+Copy
+Edit
+service firebase.storage {
+  match /b/{bucket}/o {
+    match /plans/{userId}/{fileName} {
+      allow read: if request.auth.uid == userId || request.auth.token.admin == true;
+      allow write: if request.auth.token.admin == true;
+    }
+  }
+}
+──────────────────────────────────────────────────────────────────────────────
+2. TECH STACK
+──────────────────────────────────────────────────────────────────────────────
+Front-end
+• Next.js 14 (App Router + RSC) – Typescript, react-server-dom
+• Tailwind CSS + shadcn/ui – utility classes + accessible components
+• Lucide-react icons
+• next-intl or next-i18next for SSR i18n (/en, /nl)
+• recharts for client progress graphs
+• next-pwa plugin for offline capability
+• zod for front-end & back-end schema validation
+
+Back-end
+• Firebase 10 modular SDK (Auth, Firestore, Storage, Analytics)
+• Cloud Functions for Firebase in region europe-west1
+• Express wrapped inside an HTTPS Function for REST endpoints
+(/api/subscribe, /api/webhook/stripe, etc.)
+• Stripe SDK 14 (test keys already in Secret Manager)
+• Nodemailer in functions runtime via Gmail OAuth2 SMTP
+• Day.js with timezone plugin (Europe/Amsterdam tz)
+
+CI / CD
+• GitHub Actions workflow deploy.yml:
+─ Lint, type-check, unit test
+─ Build Next.js
+─ firebase deploy --only hosting,functions on push to main
+• Secrets: FIREBASE_SERVICE_ACCOUNT, STRIPE_KEY, SMTP_USER, SMTP_PASS
+
+──────────────────────────────────────────────────────────────────────────────
+3. CLOUD FUNCTIONS (all in TypeScript, already live — replicate)
+──────────────────────────────────────────────────────────────────────────────
+
+File	Trigger	Purpose
+onNewAppointment.ts	onCreate Firestore /appointments/{id}	1) Send confirmation e-mail to user and VeeNutrition inbox. 2) Add event to GoogleCalendar via Service Account.
+onProgressWrite.ts	onWrite Firestore /progress/{id}	Recalculate rolling 30-day averages and write to /users/{uid}/stats.
+nightlyCleanup.ts	Scheduled (0 2 * * *) cron	Delete test_ users older than 30 days, purge their Storage folder.
+sendContactMail.ts	HTTPS Callable sendContactMail	Public contact form POST → e-mail. Rate-limit 3 calls per IP per hour via Firebase App Check token.
+stripeWebhook.ts	HTTPS raw endpoint /api/webhook/stripe	Listen for checkout.session.completed → upgrade user’s role to client.
+translateAddedKey.ts	onCreate Firestore /translations/{lang}/{ns}/{key}	Auto-translate missing languages via Google Cloud Translate and write sibling docs.
+
+All functions are bundled with esbuild (config already included) and use
+Environment Config:
+firebase functions:config:set stripe.secret="sk_test_..." email.user="..."
+
+──────────────────────────────────────────────────────────────────────────────
+4. FIRESTORE SCHEMAS (TypeScript interfaces)
+──────────────────────────────────────────────────────────────────────────────
+
+ts
+Copy
+Edit
+/* src/types/firestore.d.ts */
+
+export interface UserDoc {
+  uid: string;
+  role: 'client' | 'admin';
+  name: string;
+  email: string;
+  photoURL?: string;
+  createdAt: Timestamp;
+  preferredLanguage: 'en' | 'nl';
+}
+
+export interface AppointmentDoc {
+  id: string;
+  userId: string;
+  date: Timestamp;          // stored at UTC 00:00 for the chosen day
+  timeslot: '08:00' | '10:00' | '14:00' | '16:00';
+  type: 'Initial' | 'Follow-up';
+  goals: string;
+  status: 'pending' | 'confirmed' | 'done';
+  createdAt: Timestamp;
+}
+
+export interface MessageDoc {
+  id: string;
+  chatRoom: string;         // `${min(uid1,uid2)}_${max(uid1,uid2)}`
+  fromUser: string;
+  toUser: string;
+  text: string;
+  createdAt: Timestamp;
+}
+
+export interface PlanDoc {
+  id: string;
+  userId: string;
+  title: string;
+  storagePath: string;      // gs://vee-nutrition-.../plans/{uid}/{file}.pdf
+  createdAt: Timestamp;
+}
+
+export interface ProgressDoc {
+  id: string;
+  userId: string;
+  date: Timestamp;
+  weightKg?: number;
+  waterLitres?: number;
+}
+
+export interface ResourceDoc {
+  id: string;
+  title: string;
+  description: string;
+  url: string;
+  tags: string[];
+  lang: 'en' | 'nl';
+}
+
+export interface TranslationDoc {
+  key: string;
+  value: string;
+}
+──────────────────────────────────────────────────────────────────────────────
+5. ROUTING MAP
+──────────────────────────────────────────────────────────────────────────────
+
+bash
+Copy
+Edit
+/
+└─ /[lang] (EN default)
+   ├─ /about
+   ├─ /services
+   ├─ /appointment  →  AppointmentWizard  (public)
+   ├─ /blog
+   │   └─ /[slug]
+   ├─ /resources
+   │   ├─ /free
+   │   └─ /premium  (requires Stripe checkout)
+   ├─ /privacy
+   ├─ /terms
+   ├─ /login
+   ├─ /signup
+   ├─ /dashboard           (client guard)
+   │   ├─ /appointments
+   │   ├─ /messages        (chat, grouped by chatRoom)
+   │   ├─ /plan
+   │   ├─ /progress
+   │   └─ /resources
+   └─ /admin               (admin guard)
+       ├─ /users
+       ├─ /appointments
+       ├─ /messages
+       ├─ /plans
+       ├─ /resources
+       └─ /translations
+Each top-level segment is an App Router “segment config” with
+generateStaticParams where possible and fetch cache tags for ISR.
+
+──────────────────────────────────────────────────────────────────────────────
+6. COMPONENT AND UTIL DETAIL
+──────────────────────────────────────────────────────────────────────────────
+• AppointmentWizard
+
+Step 1 – personal info (name/email/phone <MaskedInput>).
+
+Step 2 – select date (only week-days with open slots, data from
+/functions/getOpenSlots) and consultation type.
+
+Step 3 – goals textarea (autosaves draft in localStorage).
+
+On submit → Firestore write + navigate to “Thank You” page.
+
+• AuthProvider
+Wraps next-auth with Firebase adapter for SSR session cookies.
+Adds setCustomClaims on login if user’s email is in
+/adminConfig/seedAdmins.
+
+• RouteGuard (HOC)
+Checks session?.role. If insufficient, pushes to /login?returnTo=.
+
+• UploadPlanDialog (Admin)
+Drag-and-drop PDF (accept .pdf max 5 MB) → upload to Storage, write
+plans doc, send e-mail via sendPlanNotify callable.
+
+• ProgressChart
+SSR disabled ("use client"). Fetches last 30 progress docs, combines
+weight & water metrics, renders two lines with recharts.
+
+• LanguageSwitcher
+Saves choice in localStorage["i18n-lang"], sets router.push.
+
+• useFirestoreCollection<T>()
+Generic SWR-like hook with react-firebase-hooks under the hood,
+supports converter functions and Firestore v2.
+
+──────────────────────────────────────────────────────────────────────────────
+7. QUALITY, TOOLING, TESTS
+──────────────────────────────────────────────────────────────────────────────
+• ESLint (@next/eslint-plugin-next) + Prettier + Tailwind sort plugin
+• Vitest + React Testing Library, sample tests in /__tests__/
+• Lighthouse budget file (lighthouse-budget.json) to keep perf ≤1 MB JS
+• Husky pre-commit: lint → test → type-check
+
+──────────────────────────────────────────────────────────────────────────────
+8. ENVIRONMENT SETUP
+──────────────────────────────────────────────────────────────────────────────
+.env.local (never commit) – use Replit Secrets:
+
+makefile
+Copy
+Edit
+NEXT_PUBLIC_FIREBASE_API_KEY=…
+NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN=vee-nutrition-prod.firebaseapp.com
+NEXT_PUBLIC_FIREBASE_PROJECT_ID=vee-nutrition-prod
+NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET=vee-nutrition-prod.appspot.com
+NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID=…
+NEXT_PUBLIC_FIREBASE_APP_ID=…
+NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID=…
+
+STRIPE_PK=pk_test_…
+STRIPE_SECRET=   # functions config, not client
+SMTP_USER=       # functions config
+SMTP_PASS=
+NEXT_PUBLIC_DEFAULT_LANG=en
+──────────────────────────────────────────────────────────────────────────────
+9. DEPLOYMENT STEPS (Replit ↔ Firebase)
+──────────────────────────────────────────────────────────────────────────────
+
+npm install – pulls node 20, installs firebase-tools locally.
+
+npm run dev – runs Next.js (localhost:3000) + firebase emulators:start.
+
+npm run deploy – triggers npm run build (Next) then
+firebase deploy --only hosting,functions,firestore:indexes.
+
+CI – GitHub Actions on push to main.
+
+Replit reserved VM keeps site awake; autoscale Functions set to Min 0,
+Max 3 instances.
+
+──────────────────────────────────────────────────────────────────────────────
+10. POST-GENERATION TODO FOR THE AGENT
+──────────────────────────────────────────────────────────────────────────────
+▸ After scaffolding, run firebase use vee-nutrition-prod.
+▸ Import /firestore.rules and /firestore.indexes.json.
+▸ Set Functions config via firebase functions:config:set.
+▸ Seed translation docs (EN & NL) with keys from /locales/en/common.json.
+▸ Write README with local dev instructions + architecture diagram (mermaid).
+
+/* ========================== END OF SPEC =============================== */
+
+markdown
+Copy
+Edit
+
+---
+
+### Using the prompt in Replit
+
+1. **Create** a new Replit → *Node.js (TypeScript)* template.  
+2. **Paste** the giant spec above into the Replit chat panel.  
+3. Wait until Agent finishes scaffolding (≈ 2–3 min).  
+4. Run `npm run dev` → make sure pages build and Firebase emulator connects.  
+5. Deploy with `npm run deploy` when satisfied.
+
+**Follow-up prompts you can give the Agent**
+
+* “Generate unit tests for the AppointmentWizard wizard flow.”  
+* “Add Dutch translations for the Services page.”  
+* “Implement Apple Sign-In alongside Google.”  
+* “Swap recharts for VictoryCharts using the same ProgressChart props.”  
+
+This exhaustive description tells Replit’s AI *everything* about your
+back-end setup (functions, rules, indexes), every front-end route, component
+contract, and even CI details—so it can recreate the whole dietitian platform
+precisely and hook into the Firebase project you already have running.
+
+
+
+
+
+
