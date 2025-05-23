@@ -1,10 +1,19 @@
+import { useState, useEffect } from "react";
 import { AppointmentForm } from "@/components/forms/AppointmentForm";
 import { Button } from "@/components/ui/button";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { Shield, Globe, AlertTriangle } from "lucide-react";
+import { Shield, Globe, AlertTriangle, CheckCircle } from "lucide-react";
 import { Link } from "wouter";
 
 export default function Appointment() {
+  const [hasConsent, setHasConsent] = useState(false);
+
+  // Check if user has completed consent form
+  useEffect(() => {
+    const consentCompleted = localStorage.getItem('consentFormCompleted');
+    setHasConsent(consentCompleted === 'true');
+  }, []);
+
   return (
     <div className="min-h-screen py-20 bg-primary-50 dark:bg-gray-800">
       <div className="container mx-auto px-4">
@@ -63,9 +72,26 @@ export default function Appointment() {
           </Alert>
         </div>
 
-        {/* Appointment Form */}
+        {/* Appointment Form - Only if consent completed */}
         <div className="max-w-4xl mx-auto">
-          <AppointmentForm />
+          {!hasConsent ? (
+            <div className="p-8 bg-red-50 dark:bg-red-900/20 rounded-2xl border-2 border-red-200 text-center">
+              <Shield className="w-16 h-16 text-red-400 mx-auto mb-4" />
+              <h3 className="text-xl font-semibold text-red-800 dark:text-red-200 mb-2">
+                Booking Blocked - Consent Required
+              </h3>
+              <p className="text-red-600 dark:text-red-300 mb-4">
+                You must complete the informed consent form before booking appointments.
+              </p>
+              <Link href="/consent-form">
+                <Button className="bg-red-600 hover:bg-red-700 text-white">
+                  Complete Consent Form First
+                </Button>
+              </Link>
+            </div>
+          ) : (
+            <AppointmentForm />
+          )}
         </div>
 
         {/* Additional Information */}

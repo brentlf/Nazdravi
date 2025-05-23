@@ -34,6 +34,11 @@ export function useAvailableSlots(selectedDate: string) {
         
         const querySnapshot = await getDocs(q);
         const bookedSlots = querySnapshot.docs.map(doc => doc.data().timeslot);
+        
+        console.log(`Checking availability for ${selectedDate}:`, {
+          bookedSlots,
+          totalAppointments: querySnapshot.docs.length
+        });
 
         // Get admin unavailable slots for the selected date
         const unavailableRef = collection(db, "unavailableSlots");
