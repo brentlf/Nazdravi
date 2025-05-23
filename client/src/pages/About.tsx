@@ -260,7 +260,7 @@ export default function About() {
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Button size="lg" asChild>
-              <Link href="/appointment">Book Free Consultation</Link>
+              <Link href="/appointment">Book a Consultation</Link>
             </Button>
             <Button size="lg" variant="outline" asChild>
               <Link href="/contact">Get in Touch</Link>

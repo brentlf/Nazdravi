@@ -369,7 +369,7 @@ export default function Home() {
                   <Button size="lg" variant="secondary" asChild>
                     <Link href="/appointment">
                       <Calendar className="mr-2 h-5 w-5" />
-                      Book Free Consultation
+                      Book a Consultation
                     </Link>
                   </Button>
                   <Button size="lg" variant="outline" className="border-white text-white hover:bg-white hover:text-primary-600" asChild>

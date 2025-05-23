@@ -13,8 +13,8 @@ export default function Blog() {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState<string>("");
 
-  // Fetch published blog posts
-  const { data: blogPosts, loading } = useFirestoreCollection<BlogPost>("blog_posts", [
+  // Fetch published blog posts from Firebase
+  const { data: blogPosts, loading } = useFirestoreCollection<BlogPost>("blogPosts", [
     where("published", "==", true),
     orderBy("createdAt", "desc")
   ]);
@@ -34,50 +34,8 @@ export default function Blog() {
     return matchesSearch && matchesCategory;
   }) || [];
 
-  // Sample blog posts for demo (will be replaced with real data from Firestore)
-  const samplePosts = [
-    {
-      id: "1",
-      slug: "meal-prep-busy-professionals",
-      title: "10 Simple Meal Prep Ideas for Busy Professionals",
-      excerpt: "Discover time-saving meal prep strategies that will help you maintain a healthy diet even with a hectic schedule.",
-      content: "",
-      featuredImage: "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=400",
-      tags: ["Meal Prep", "Tips", "Busy Lifestyle"],
-      lang: "en",
-      published: true,
-      createdAt: new Date("2024-01-15"),
-      updatedAt: new Date("2024-01-15")
-    },
-    {
-      id: "2",
-      slug: "mindful-eating-science",
-      title: "The Science Behind Mindful Eating",
-      excerpt: "Learn how mindful eating practices can transform your relationship with food and improve your overall well-being.",
-      content: "",
-      featuredImage: "https://images.unsplash.com/photo-1490645935967-10de6ba17061?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=400",
-      tags: ["Mindfulness", "Wellness", "Psychology"],
-      lang: "en",
-      published: true,
-      createdAt: new Date("2024-01-10"),
-      updatedAt: new Date("2024-01-10")
-    },
-    {
-      id: "3",
-      slug: "nutrition-myths-debunked",
-      title: "Debunking Common Nutrition Myths",
-      excerpt: "Separate fact from fiction as we explore and debunk the most persistent nutrition myths circulating today.",
-      content: "",
-      featuredImage: "https://images.unsplash.com/photo-1498837167922-ddd27525d352?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=400",
-      tags: ["Education", "Facts", "Myths"],
-      lang: "en",
-      published: true,
-      createdAt: new Date("2024-01-05"),
-      updatedAt: new Date("2024-01-05")
-    }
-  ];
-
-  const postsToShow = filteredPosts.length > 0 ? filteredPosts : samplePosts;
+  // Use only authentic data from Firebase
+  const postsToShow = filteredPosts;
 
   function calculateReadTime(content: string): number {
     const wordsPerMinute = 200;
