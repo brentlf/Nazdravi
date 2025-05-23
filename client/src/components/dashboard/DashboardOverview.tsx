@@ -22,43 +22,45 @@ export function DashboardOverview() {
 
 
 
-  // Fetch user's next appointment using email field (matching appointments page)
+  // Fetch user's data using consistent userId field
   const { data: appointments } = useFirestoreCollection<Appointment>("appointments", [
+    where("userId", "==", user?.uid || ""),
+    where("status", "in", ["pending", "confirmed"]),
+    orderBy("date", "asc"),
+    limit(1)
+  ]);
+
+  const { data: messages } = useFirestoreCollection<Message>("messages", [
+    where("toUser", "==", user?.uid || ""),
+    orderBy("createdAt", "desc"),
+    limit(5)
+  ]);
+
+  const { data: progressEntries } = useFirestoreCollection<Progress>("progress", [
+    where("userId", "==", user?.uid || ""),
+    orderBy("date", "desc"),
+    limit(10)
+  ]);
+
+  // Temporary: Also fetch by email for backwards compatibility until all data has userId
+  const { data: appointmentsByEmail } = useFirestoreCollection<Appointment>("appointments", [
     where("email", "==", user?.email || ""),
     where("status", "in", ["pending", "confirmed"]),
     orderBy("date", "asc"),
     limit(1)
   ]);
 
-  // Fetch recent messages using email field for consistency
-  const { data: messages } = useFirestoreCollection<Message>("messages", [
-    where("toUser", "==", user?.email || ""),
-    orderBy("createdAt", "desc"),
-    limit(5)
-  ]);
-
-  // Fetch recent progress entries using email field for consistency
-  const { data: progressEntries } = useFirestoreCollection<Progress>("progress", [
-    where("email", "==", user?.email || ""),
-    orderBy("date", "desc"),
-    limit(10)
-  ]);
+  // Use userId data if available, otherwise fall back to email data
+  const effectiveAppointments = appointments?.length ? appointments : appointmentsByEmail;
 
   // Handle both date formats (Timestamp and string) and time field variations
-  const processedAppointments = appointments?.map(apt => ({
+  const processedAppointments = effectiveAppointments?.map(apt => ({
     ...apt,
     date: (apt.date as any)?.seconds ? 
       new Date((apt.date as any).seconds * 1000).toISOString().split('T')[0] : 
       apt.date,
     timeslot: apt.timeslot || (apt as any).time || "Time TBD"
   }));
-
-  console.log("Dashboard data debug:", {
-    appointments: appointments?.length || 0,
-    messages: messages?.length || 0,
-    progressEntries: progressEntries?.length || 0,
-    userId: user?.uid
-  });
 
   const nextAppointment = processedAppointments?.[0];
   const unreadMessages = messages?.length || 0;

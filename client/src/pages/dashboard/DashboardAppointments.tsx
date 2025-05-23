@@ -69,11 +69,20 @@ export default function DashboardAppointments() {
   // Get available time slots for selected date
   const { availableSlots, loading: slotsLoading } = useAvailableSlots(selectedDate);
 
-  // Fetch user's appointments by email to ensure data consistency
+  // Fetch user's appointments using consistent userId field
   const { data: appointments, loading } = useFirestoreCollection<Appointment>("appointments", [
+    where("userId", "==", user?.uid || ""),
+    orderBy("date", "desc")
+  ]);
+
+  // Temporary fallback: Also fetch by email for backwards compatibility
+  const { data: appointmentsByEmail } = useFirestoreCollection<Appointment>("appointments", [
     where("email", "==", user?.email || ""),
     orderBy("date", "desc")
   ]);
+
+  // Use userId data if available, otherwise fall back to email data
+  const effectiveAppointments = appointments?.length ? appointments : appointmentsByEmail;
 
   const form = useForm<AppointmentFormData>({
     resolver: zodResolver(appointmentSchema),
@@ -108,7 +117,7 @@ export default function DashboardAppointments() {
 
     try {
       // Check for duplicate bookings (same date/time)
-      const duplicateCheck = appointments?.find(
+      const duplicateCheck = effectiveAppointments?.find(
         (apt) => apt.date === data.date && apt.timeslot === data.timeslot && apt.status !== "cancelled"
       );
 
