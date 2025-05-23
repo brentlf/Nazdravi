@@ -467,8 +467,8 @@ export default function DashboardAppointments() {
 
         {/* Appointments List */}
         <div className="space-y-6">
-          {appointments && appointments.length > 0 ? (
-            appointments.map((appointment) => (
+          {effectiveAppointments && effectiveAppointments.length > 0 ? (
+            effectiveAppointments.map((appointment) => (
               <Card key={appointment.id} className="hover:shadow-lg transition-shadow duration-200">
                 <CardContent className="p-6">
                   <div className="flex items-start justify-between mb-4">
