@@ -21,6 +21,9 @@ import Resources from "@/pages/Resources";
 import Login from "@/pages/Login";
 import Register from "@/pages/Register";
 import Appointment from "@/pages/Appointment";
+import ConsentForm from "@/pages/ConsentForm";
+import Legal from "@/pages/Legal";
+import CzechLegalSummary from "@/pages/CzechLegalSummary";
 
 // Dashboard pages
 import DashboardHome from "@/pages/dashboard/DashboardHome";
@@ -60,7 +63,10 @@ function Router() {
       <Route path="/blog" component={() => <Layout><Blog /></Layout>} />
       <Route path="/blog/:slug" component={() => <Layout><BlogPost /></Layout>} />
       <Route path="/resources" component={() => <Layout><Resources /></Layout>} />
+      <Route path="/consent-form" component={() => <Layout><ConsentForm /></Layout>} />
       <Route path="/appointment" component={() => <Layout><Appointment /></Layout>} />
+      <Route path="/legal" component={() => <Layout><Legal /></Layout>} />
+      <Route path="/legal/czech-summary" component={() => <Layout><CzechLegalSummary /></Layout>} />
       
       {/* Auth routes */}
       <Route path="/login" component={Login} />

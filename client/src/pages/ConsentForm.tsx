@@ -424,7 +424,7 @@ export default function ConsentForm() {
                           <FormItem>
                             <FormLabel>Height *</FormLabel>
                             <FormControl>
-                              <Input placeholder="e.g., 170cm or 5'7\"" {...field} />
+                              <Input placeholder="e.g., 170cm or 5ft 7in" {...field} />
                             </FormControl>
                             <FormMessage />
                           </FormItem>
