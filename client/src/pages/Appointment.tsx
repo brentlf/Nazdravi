@@ -1,4 +1,8 @@
 import { AppointmentForm } from "@/components/forms/AppointmentForm";
+import { Button } from "@/components/ui/button";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Shield, Globe, AlertTriangle } from "lucide-react";
+import { Link } from "wouter";
 
 export default function Appointment() {
   return (
@@ -10,8 +14,53 @@ export default function Appointment() {
             Book Your Consultation
           </h1>
           <p className="text-xl text-muted-foreground">
-            Start your nutrition journey with a personalized consultation
+            Professional nutrition consultations provided in <strong>English (primary)</strong> and <strong>Czech (upon request)</strong>
           </p>
+        </div>
+
+        {/* Compliance Notice - Required Consent */}
+        <div className="max-w-4xl mx-auto mb-8">
+          <Alert className="border-amber-200 bg-amber-50 dark:bg-amber-900/20">
+            <AlertTriangle className="h-4 w-4 text-amber-600" />
+            <AlertDescription>
+              <div className="space-y-3">
+                <p className="font-semibold text-amber-800 dark:text-amber-200">
+                  ⚠️ Required: Complete Informed Consent Before Booking
+                </p>
+                <p className="text-sm text-amber-700 dark:text-amber-300">
+                  All clients must complete our informed consent process before booking appointments. 
+                  This ensures compliance with healthcare regulations and confirms language comprehension for safe care delivery.
+                </p>
+                <div className="flex flex-col sm:flex-row gap-3 pt-2">
+                  <Link href="/consent-form">
+                    <Button className="bg-[#A5CBA4] hover:bg-[#95bb94] text-white">
+                      <Shield className="w-4 h-4 mr-2" />
+                      Complete Required Consent Form
+                    </Button>
+                  </Link>
+                  <Link href="/legal">
+                    <Button variant="outline" className="text-amber-700 border-amber-300 hover:bg-amber-50">
+                      <Globe className="w-4 h-4 mr-2" />
+                      View Legal Information
+                    </Button>
+                  </Link>
+                </div>
+              </div>
+            </AlertDescription>
+          </Alert>
+        </div>
+
+        {/* Language Service Notice */}
+        <div className="max-w-4xl mx-auto mb-8">
+          <Alert className="border-blue-200 bg-blue-50 dark:bg-blue-900/20">
+            <Globe className="h-4 w-4 text-blue-600" />
+            <AlertDescription>
+              <p className="text-sm text-blue-800 dark:text-blue-200">
+                <strong>Language Services:</strong> Care is provided exclusively in <strong>English (primary)</strong> and 
+                <strong> Czech (upon request)</strong> to ensure comprehensive understanding for patient safety and treatment effectiveness.
+              </p>
+            </AlertDescription>
+          </Alert>
         </div>
 
         {/* Appointment Form */}
