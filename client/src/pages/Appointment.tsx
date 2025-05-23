@@ -5,16 +5,22 @@ import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Shield, Globe, AlertTriangle, CheckCircle, User } from "lucide-react";
 import { Link } from "wouter";
 import { useAuth } from "@/contexts/AuthContext";
+import { useFirestoreCollection } from "@/hooks/useFirestore";
+import { where } from "firebase/firestore";
 
 export default function Appointment() {
   const [hasConsent, setHasConsent] = useState(false);
   const { user } = useAuth();
 
-  // Check if user has completed consent form
+  // Check if user has completed consent form from Firebase
+  const { data: consentRecords } = useFirestoreCollection("consentRecords", [
+    where("userId", "==", user?.uid || ""),
+    where("consentGiven", "==", true)
+  ]);
+
   useEffect(() => {
-    const consentCompleted = localStorage.getItem('consentFormCompleted');
-    setHasConsent(consentCompleted === 'true');
-  }, []);
+    setHasConsent(consentRecords && consentRecords.length > 0);
+  }, [consentRecords]);
 
   return (
     <div className="min-h-screen py-20 bg-primary-50 dark:bg-gray-800">

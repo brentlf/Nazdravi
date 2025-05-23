@@ -64,11 +64,15 @@ export default function DashboardAppointments() {
   const { toast } = useToast();
   const { add: addAppointment, update: updateAppointment, loading: booking } = useFirestoreActions("appointments");
 
-  // Check if user has completed consent form
+  // Check if user has completed consent form from Firebase
+  const { data: consentRecords } = useFirestoreCollection("consentRecords", [
+    where("userId", "==", user?.uid || ""),
+    where("consentGiven", "==", true)
+  ]);
+
   useEffect(() => {
-    const consentCompleted = localStorage.getItem('consentFormCompleted');
-    setHasConsent(consentCompleted === 'true');
-  }, []);
+    setHasConsent(consentRecords && consentRecords.length > 0);
+  }, [consentRecords]);
 
   // Get available time slots for selected date
   const { availableSlots, loading: slotsLoading } = useAvailableSlots(selectedDate);
