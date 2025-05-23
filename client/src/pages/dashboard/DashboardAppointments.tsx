@@ -66,19 +66,16 @@ export default function DashboardAppointments() {
 
   // Check if user has completed consent form from Firebase
   const { data: consentRecords } = useFirestoreCollection("consentRecords", [
-    where("userId", "==", user?.uid || ""),
-    where("consentGiven", "==", true)
+    where("userId", "==", user?.uid || "")
   ]);
 
   useEffect(() => {
-    console.log("Consent check debug:", {
-      userId: user?.uid,
-      consentRecords: consentRecords,
-      recordsLength: consentRecords?.length,
-      hasConsent: consentRecords && consentRecords.length > 0
-    });
-    setHasConsent(consentRecords && consentRecords.length > 0);
-  }, [consentRecords, user]);
+    if (user?.uid && consentRecords) {
+      // Look for any consent record where consentGiven is true
+      const hasValidConsent = consentRecords.some(record => record.consentGiven === true);
+      setHasConsent(hasValidConsent);
+    }
+  }, [consentRecords, user?.uid]);
 
   // Get available time slots for selected date
   const { availableSlots, loading: slotsLoading } = useAvailableSlots(selectedDate);

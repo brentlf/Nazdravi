@@ -14,13 +14,16 @@ export default function Appointment() {
 
   // Check if user has completed consent form from Firebase
   const { data: consentRecords } = useFirestoreCollection("consentRecords", [
-    where("userId", "==", user?.uid || ""),
-    where("consentGiven", "==", true)
+    where("userId", "==", user?.uid || "")
   ]);
 
   useEffect(() => {
-    setHasConsent(consentRecords && consentRecords.length > 0);
-  }, [consentRecords]);
+    if (user?.uid && consentRecords) {
+      // Look for any consent record where consentGiven is true
+      const hasValidConsent = consentRecords.some(record => record.consentGiven === true);
+      setHasConsent(hasValidConsent);
+    }
+  }, [consentRecords, user?.uid]);
 
   return (
     <div className="min-h-screen py-20 bg-primary-50 dark:bg-gray-800">
