@@ -151,11 +151,11 @@ export default function AdminTranslations() {
   };
 
   const getLanguageFlag = (lang: string) => {
-    return lang === "en" ? "🇺🇸" : "🇳🇱";
+    return lang === "en" ? "🇺🇸" : "🇨🇿";
   };
 
   const getLanguageName = (lang: string) => {
-    return lang === "en" ? "English" : "Dutch";
+    return lang === "en" ? "English" : "Czech";
   };
 
   if (loading) {
@@ -210,7 +210,7 @@ export default function AdminTranslations() {
                 <SelectContent>
                   <SelectItem value="all">All Languages</SelectItem>
                   <SelectItem value="en">🇺🇸 English</SelectItem>
-                  <SelectItem value="nl">🇳🇱 Dutch</SelectItem>
+                  <SelectItem value="cs">🇨🇿 Czech</SelectItem>
                 </SelectContent>
               </Select>
 
@@ -255,7 +255,7 @@ export default function AdminTranslations() {
                           </SelectTrigger>
                           <SelectContent>
                             <SelectItem value="en">🇺🇸 English</SelectItem>
-                            <SelectItem value="nl">🇳🇱 Dutch</SelectItem>
+                            <SelectItem value="cs">🇨🇿 Czech</SelectItem>
                           </SelectContent>
                         </Select>
                       </div>

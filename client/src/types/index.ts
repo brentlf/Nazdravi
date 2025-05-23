@@ -82,5 +82,5 @@ export interface Translation {
   value: string;
 }
 
-export type Language = "en" | "nl";
+export type Language = "en" | "cs";
 export type Theme = "light" | "dark" | "system";

@@ -1,0 +1,162 @@
+Below are ready-to-copy Prompts you can paste into any generative-AI web-builder (ChatGPT, Wix/GoDaddy AI, Framer AI blocks, Notion AI, etc.).
+Each prompt:
+
+States the context (so the AI “knows” the legal landscape).
+
+Spells out the must-haves (so nothing critical is forgotten).
+
+Uses place-holders in [CAPS] you replace once.
+
+Keeps wording plain and patient-friendly.
+
+Feel free to shorten or mix-and-match, but avoid deleting the enumerated items—those are the compliance anchors.
+
+1 · Global footer / mini-imprint
+Prompt:
+“Draft a concise website footer (max 150 words) for an online dietitian practice.
+Context: The business is physically established in the Netherlands, notified under the Dutch Wtza, but NOT in the BIG register; the dietitian is HCPC-registered (UK) and HPCSA-registered (South Africa) and sometimes provides Czech-language care via the EU temporary-services scheme.
+Must contain, in plain English:
+
+Full practice name and address in the Netherlands.
+
+KvK number [KVK_NUMBER].
+
+VAT status (‘health-care services VAT-exempt in NL; VAT may apply to non-care products’).
+
+Professional titles with registers and numbers (HCPC, HPCSA).
+
+One-line notice of Wtza notification.
+
+English-only service statement + link to Czech summary PDF.
+
+Complaints-officer e-mail and disputes-committee link.
+
+Emergency disclaimer (“No emergency services; call local emergency number”).
+
+Copyright year.
+Keep it legally precise but readable.”
+
+2 · Czech-language micro-summary page
+Prompt (Czech):
+„Napiš jednostránkový český souhrn právních informací pro online poradnu klinické výživy se sídlem v Nizozemsku. Stručně vysvětli:
+• že služby jsou poskytovány ‘na dočasném a příležitostném základě’ dle § 36a zákona 18/2004 Sb.
+• že dietolog má uznanou odbornou kvalifikaci (HCPC UK, HPCSA SA).
+• že jde o soukromou službu, úhrada z veřejného pojištění není možná.
+• jak uplatnit reklamaci a že nespory lze řešit u ČOI.
+• odkaz na plné anglické obchodní podmínky a zásady ochrany osobních údajů.
+Rozsah max 250 slov.“
+
+3 · “About / Professional Credentials” section
+Prompt:
+“Write an “About the Dietitian” section (~300 words).
+Must include:
+• Overview of qualifications: BSc in Dietetics (give UK university as [UNI]), MSc [if any], CPD.
+• Registration numbers: HCPC [HCPC_NO], HPCSA [HPCSA_NO].
+• Statement that the protected Dutch title ‘diëtist’ falls under Article 34 Wet BIG and therefore no BIG-register entry is required.
+• Practice languages: English (primary), Czech (on request).
+• Mission statement focused on evidence-based nutrition, patient autonomy, cross-cultural sensitivity.
+Tone: warm and jargon-free.”
+
+4 · Informed-consent & intake form copy
+Prompt:
+“Generate the text for a two-step online intake form for a tele-dietetics consultation.
+Step 1 – key consents (checkboxes, all required):
+
+I confirm I can read, speak and understand English OR Czech.
+
+I understand services are private, not emergency care.
+
+I consent to video consultation and electronic record-keeping under GDPR.
+
+I acknowledge results vary and no specific weight-loss amount is guaranteed.
+
+SA clients only: I understand local follow-up with a physician may be required (HPCSA Booklet 10).
+Step 2 – health screening (mandatory inputs): age, height, weight, chronic conditions, current medication, recent blood-tests (Y/N), and GP contact.
+End with a ‘Proceed to Booking’ button.
+Make wording patient-friendly; limit to 400 words total.”
+
+5 · Terms & Conditions (T&C) prompt
+Prompt (long-form):
+“Draft full Terms & Conditions for an online dietitian service (approx. 2 000 words; numbered sections; simple language).
+Include these headings and content cues:
+
+Definitions (Provider, Client, Services).
+
+Scope of Services – lifestyle & medical nutrition; no invasive procedures.
+
+Geographic Eligibility – residents of UK, South Africa, Czech Republic, Netherlands expats; English or Czech speakers only.
+
+Professional Status & Governing Law – Netherlands law applies; cross-border recognition paragraphs for UK (HCPC), SA (HPCSA), CZ (§ 36a).
+
+Booking, Fees, VAT (mention health-care VAT exemption & 21 % VAT for non-care products).
+
+14-Day EU right of withdrawal & digital-content waiver tick-box.
+
+Privacy & Data Protection – GDPR reference; link to full privacy notice.
+
+Medical Disclaimer – general advice, no guaranteed outcomes.
+
+Client Obligations – accurate health info; physician coordination for high-risk cases.
+
+Complaints & Disputes – contact [EMAIL]; external committee [NAME], then Dutch courts / ČOI for Czech consumers.
+
+Liability Limit – within statutory limits; no liability for indirect loss.
+
+Changes to T&C & notice method.
+Place-holders: [PRACTICE_NAME], [ADDRESS], [KVK], [VAT_NO], [COMPLAINTS_OFFICER_EMAIL], [DISPUTES_COMMITTEE_URL].
+Ensure plain-English drafting, no “whereas”, aim for Flesch-Kincaid grade 8.”
+
+6 · Privacy & Cookies notice prompt
+Prompt:
+“Create an EU-GDPR-compliant Privacy & Cookies Notice (≈1 500 words) for a tele-health website storing special-category data.
+Must cover:
+• Data controller details ([PRACTICE_NAME], Netherlands address).
+• Purposes & legal bases: medical diagnosis/treatment (Art 9 2(h)), legitimate interests (quality monitoring), consent (marketing).
+• Data processors: video-platform [NAME], scheduling app [NAME]; each EU-based.
+• Retention: 10 years for medical records (WGBO).
+• International transfers: none outside EEA unless SCCs in place.
+• Patients’ rights: access, rectification, deletion (unless health-record retention overrides), complaint to Dutch AP or local DPA.
+• Cookies: strictly necessary vs analytics (opt-in banner with granular controls).
+Tone: clear, headings & bullet lists.”
+
+7 · “Results may vary” banner prompt
+Prompt (micro-copy):
+“Write a one-sentence floating banner (max 20 words) that appears on the weight-loss programmes page, stating that outcomes vary by individual in line with EU Regulation 1924/2006.”
+
+8 · Anti-misleading health-claim check prompt
+Prompt for content QA:
+“Analyse the following draft marketing text [PASTE TEXT] and flag every sentence that:
+(a) states a weight-loss amount or speed,
+(b) uses an un-authorised health claim,
+(c) suggests guaranteed results,
+(d) advertises prescription-only medication.
+Return two columns: ‘Exact sentence’ and ‘Why non-compliant’.
+Assume EU (Dutch + Czech), UK CAP Code and SA ASA rules.”
+
+9 · Czech consent form prompt
+Prompt (Czech):
+„Sepiš souhlas pacienta s teleporadenstvím (max 300 slov) obsahující:
+• potvrzení, že klient rozumí česky,
+• souhlas s online konzultací a ukládáním údajů v NL,
+• prohlášení, že služba není urgentní,
+• možnost odvolat souhlas,
+• podpisové pole (jméno, datum).“
+
+10 · Inspectorate “cheat-sheet” prompt (internal doc)
+Prompt:
+“Draft a one-page Dutch-language fact sheet (≈250 words) summarising the practice for a possible IGJ inspection.
+Include: practice name, solo practitioner, disciplines (diëtetiek online), KvK, Wtza melding ID, languages (EN/CZ), complaints arrangement, data-security summary, incident-log location.
+Tone: bullet points, formal.”
+
+How to use these prompts
+Replace all [PLACE-HOLDERS] once.
+
+Paste each prompt into your AI site builder.
+
+Review the output for tone and local spelling.
+
+Store a PDF export of every generated legal text—inspectors like fixed versions.
+
+For updates, rerun the same prompt and diff the result: version control made easy.
+
+With these prompts you give the AI exactly the guard-rails it needs, keep every regulator in the loop, and present a crystal-clear message to future patients.

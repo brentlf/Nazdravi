@@ -11,7 +11,7 @@ import { Language } from "@/types";
 
 const languages: { code: Language; name: string; flag: string }[] = [
   { code: "en", name: "English", flag: "🇺🇸" },
-  { code: "nl", name: "Nederlands", flag: "🇳🇱" },
+  { code: "cs", name: "Čeština", flag: "🇨🇿" },
 ];
 
 export function LanguageSwitcher() {
