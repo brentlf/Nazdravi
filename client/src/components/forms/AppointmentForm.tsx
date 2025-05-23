@@ -28,6 +28,7 @@ import { useFirestoreActions, useFirestoreCollection } from "@/hooks/useFirestor
 import { useAvailableSlots } from "@/hooks/useAvailableSlots";
 import { collection, query, where, getDocs } from "firebase/firestore";
 import { db } from "@/lib/firebase";
+import { useAuth } from "@/contexts/AuthContext";
 
 const appointmentSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters"),
@@ -48,6 +49,7 @@ export function AppointmentForm() {
   const [selectedDate, setSelectedDate] = useState("");
   const { toast } = useToast();
   const { add, loading } = useFirestoreActions("appointments");
+  const { user } = useAuth();
   
   // Get available time slots for selected date
   const { availableSlots, loading: slotsLoading } = useAvailableSlots(selectedDate);
@@ -118,7 +120,8 @@ export function AppointmentForm() {
       // If we get here, the slot is still available - proceed with booking
       await add({
         ...data,
-        userId: "visitor",
+        userId: user?.uid || "anonymous", // Use actual logged-in user ID
+        email: user?.email || data.email, // Ensure email is always stored
         status: "pending",
         createdAt: new Date(),
         requestId: `${data.date}-${data.timeslot}-${Date.now()}`, // Unique identifier

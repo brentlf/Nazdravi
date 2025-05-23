@@ -24,83 +24,24 @@ export function DashboardOverview() {
   const { user } = useAuth();
   const { toast } = useToast();
 
-  // Function to update Firebase data to current user
-  const updateUserData = async () => {
-    if (!user) return;
-    
-    try {
-      toast({
-        title: "Updating data...",
-        description: "Connecting your existing Firebase data to current account",
-      });
 
-      // Update appointments collection
-      const appointmentsRef = collection(db, "appointments");
-      const appointmentsQuery = query(appointmentsRef, where("email", "==", "brentlf@gmail.com"));
-      const appointmentsSnapshot = await getDocs(appointmentsQuery);
-      
-      for (const docSnap of appointmentsSnapshot.docs) {
-        await updateDoc(doc(db, "appointments", docSnap.id), {
-          userId: user.uid,
-          email: user.email
-        });
-      }
 
-      // Update progress collection
-      const progressRef = collection(db, "progress");
-      const progressQuery = query(progressRef, where("userId", "==", "Q1ExaEhsVAOlrHI7c66d00kpyXA2"));
-      const progressSnapshot = await getDocs(progressQuery);
-      
-      for (const docSnap of progressSnapshot.docs) {
-        await updateDoc(doc(db, "progress", docSnap.id), {
-          userId: user.uid
-        });
-      }
-
-      // Update messages collection
-      const messagesRef = collection(db, "messages");
-      const messagesQuery = query(messagesRef, where("toUser", "==", "Q1ExaEhsVAOlrHI7c66d00kpyXA2"));
-      const messagesSnapshot = await getDocs(messagesQuery);
-      
-      for (const docSnap of messagesSnapshot.docs) {
-        await updateDoc(doc(db, "messages", docSnap.id), {
-          toUser: user.uid
-        });
-      }
-
-      toast({
-        title: "✅ Data updated successfully!",
-        description: "Your appointments, progress, and messages are now connected to your account",
-      });
-
-      // Refresh page to show updated data
-      window.location.reload();
-    } catch (error) {
-      console.error("Error updating user data:", error);
-      toast({
-        title: "❌ Update failed",
-        description: "There was an error connecting your data. Please try again.",
-        variant: "destructive",
-      });
-    }
-  };
-
-  // Fetch user's next appointment - check both userId and email
+  // Fetch user's next appointment using consistent userID
   const { data: appointments } = useFirestoreCollection<Appointment>("appointments", [
-    where("email", "==", user?.email || ""),
+    where("userId", "==", user?.uid || ""),
     where("status", "in", ["pending", "confirmed"]),
     orderBy("date", "asc"),
     limit(1)
   ]);
 
-  // Fetch recent messages - check both userId and email
+  // Fetch recent messages using consistent userID
   const { data: messages } = useFirestoreCollection<Message>("messages", [
     where("toUser", "==", user?.uid || ""),
     orderBy("createdAt", "desc"),
     limit(5)
   ]);
 
-  // Fetch recent progress entries - check by userId first, fallback if needed
+  // Fetch recent progress entries using consistent userID
   const { data: progressEntries } = useFirestoreCollection<Progress>("progress", [
     where("userId", "==", user?.uid || ""),
     orderBy("date", "desc"),
