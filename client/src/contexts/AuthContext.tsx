@@ -45,17 +45,12 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
-      console.log("Auth state changed:", firebaseUser ? "User logged in" : "User logged out");
-      console.log("Firebase user:", firebaseUser?.uid, firebaseUser?.email);
-      
       setFirebaseUser(firebaseUser);
       
       if (firebaseUser) {
-        console.log("Fetching user data from Firestore for:", firebaseUser.uid);
         // Get user data from Firestore
         const userDoc = await getDoc(doc(db, "users", firebaseUser.uid));
         if (userDoc.exists()) {
-          console.log("User document found:", userDoc.data());
           const userData = userDoc.data();
           setUser({
             uid: firebaseUser.uid,
@@ -67,7 +62,6 @@ export function AuthProvider({ children }: AuthProviderProps) {
             createdAt: userData.createdAt?.toDate() || new Date(),
           });
         } else {
-          console.log("User document not found, creating new user");
           // Create user document if it doesn't exist
           const newUser: User = {
             uid: firebaseUser.uid,
@@ -87,7 +81,6 @@ export function AuthProvider({ children }: AuthProviderProps) {
           setUser(newUser);
         }
       } else {
-        console.log("No Firebase user, setting user to null");
         setUser(null);
       }
       

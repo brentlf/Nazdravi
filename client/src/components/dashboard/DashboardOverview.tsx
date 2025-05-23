@@ -20,9 +20,7 @@ import { where, orderBy, limit } from "firebase/firestore";
 export function DashboardOverview() {
   const { user } = useAuth();
 
-  // Debug: Check raw appointment data structure first
-  const { data: debugAppointments } = useFirestoreCollection<any>("appointments", [limit(3)]);
-  console.log("Debug - Raw appointment documents:", debugAppointments);
+
 
   // Fetch user's next appointment using consistent userID
   const { data: appointments } = useFirestoreCollection<Appointment>("appointments", [
@@ -46,7 +44,16 @@ export function DashboardOverview() {
     limit(10)
   ]);
 
-  const nextAppointment = appointments?.[0];
+  // Handle both date formats (Timestamp and string) and time field variations
+  const processedAppointments = appointments?.map(apt => ({
+    ...apt,
+    date: (apt.date as any)?.seconds ? 
+      new Date((apt.date as any).seconds * 1000).toISOString().split('T')[0] : 
+      apt.date,
+    timeslot: apt.timeslot || (apt as any).time || "Time TBD"
+  }));
+
+  const nextAppointment = processedAppointments?.[0];
   const unreadMessages = messages?.length || 0;
   const latestProgress = progressEntries?.[0];
 
