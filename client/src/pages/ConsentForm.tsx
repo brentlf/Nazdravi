@@ -28,6 +28,7 @@ import {
 } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/contexts/AuthContext";
+import { useFirestoreActions } from "@/hooks/useFirestore";
 
 const consentSchema = z.object({
   // Required consents
@@ -73,8 +74,10 @@ type ConsentFormData = z.infer<typeof consentSchema>;
 
 export default function ConsentForm() {
   const [step, setStep] = useState(1);
+  const [isSubmitted, setIsSubmitted] = useState(false);
   const { toast } = useToast();
   const { user } = useAuth();
+  const { add: saveConsent, loading } = useFirestoreActions("consentRecords");
 
   const form = useForm<ConsentFormData>({
     resolver: zodResolver(consentSchema),
@@ -95,17 +98,30 @@ export default function ConsentForm() {
 
   const onSubmit = async (data: ConsentFormData) => {
     try {
-      // Here you would typically save the consent data to your backend
-      console.log("Consent form data:", data);
+      // Save consent data to Firebase for compliance
+      await saveConsent({
+        ...data,
+        userId: user?.uid || 'anonymous',
+        userEmail: user?.email || 'anonymous',
+        submittedAt: new Date(),
+        ipAddress: 'recorded', // You could capture actual IP if needed
+        consentVersion: '1.0',
+        status: 'completed'
+      });
+
+      // Mark consent as completed in localStorage
+      localStorage.setItem('consentFormCompleted', 'true');
+      localStorage.setItem('consentCompletedAt', new Date().toISOString());
+      
+      setIsSubmitted(true);
       
       toast({
-        title: "Consent form completed",
-        description: "Thank you for completing the informed consent. You can now proceed to book your consultation.",
+        title: "Consent form completed successfully",
+        description: "Your consent has been recorded. You can now proceed to book your consultation.",
       });
       
-      // Redirect to booking page
-      window.location.href = "/appointment";
     } catch (error) {
+      console.error("Consent submission error:", error);
       toast({
         title: "Submission failed",
         description: "Please try again or contact support if the problem persists.",
@@ -147,6 +163,40 @@ export default function ConsentForm() {
       });
     }
   };
+
+  // Show success screen after submission
+  if (isSubmitted) {
+    return (
+      <div className="min-h-screen py-20 bg-gray-50 dark:bg-gray-900">
+        <div className="container mx-auto px-4 max-w-3xl">
+          <div className="text-center p-8 bg-green-50 dark:bg-green-900/20 rounded-2xl border border-green-200 dark:border-green-800">
+            <div className="w-16 h-16 bg-green-500 rounded-full flex items-center justify-center mx-auto mb-4">
+              <Check className="h-8 w-8 text-white" />
+            </div>
+            <h3 className="text-2xl font-bold text-green-800 dark:text-green-200 mb-4">
+              Consent Form Successfully Submitted!
+            </h3>
+            <p className="text-green-600 dark:text-green-300 mb-6 max-w-lg mx-auto">
+              Your informed consent has been recorded and saved securely. You can now proceed to book your nutrition consultation appointment.
+            </p>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <Button asChild className="bg-[#A5CBA4] hover:bg-[#95bb94] text-white">
+                <a href="/appointment">
+                  <Shield className="w-4 h-4 mr-2" />
+                  Book Your Consultation
+                </a>
+              </Button>
+              <Button variant="outline" asChild>
+                <a href="/">
+                  Return Home
+                </a>
+              </Button>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen py-20 bg-gray-50 dark:bg-gray-900">

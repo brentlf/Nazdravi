@@ -2,11 +2,13 @@ import { useState, useEffect } from "react";
 import { AppointmentForm } from "@/components/forms/AppointmentForm";
 import { Button } from "@/components/ui/button";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { Shield, Globe, AlertTriangle, CheckCircle } from "lucide-react";
+import { Shield, Globe, AlertTriangle, CheckCircle, User } from "lucide-react";
 import { Link } from "wouter";
+import { useAuth } from "@/contexts/AuthContext";
 
 export default function Appointment() {
   const [hasConsent, setHasConsent] = useState(false);
+  const { user } = useAuth();
 
   // Check if user has completed consent form
   useEffect(() => {
@@ -72,13 +74,35 @@ export default function Appointment() {
           </Alert>
         </div>
 
-        {/* Appointment Form - Only if consent completed */}
+        {/* Appointment Form - Only if consent completed AND user logged in */}
         <div className="max-w-4xl mx-auto">
-          {!hasConsent ? (
+          {!user ? (
+            <div className="p-8 bg-amber-50 dark:bg-amber-900/20 rounded-2xl border-2 border-amber-200 text-center">
+              <User className="w-16 h-16 text-amber-400 mx-auto mb-4" />
+              <h3 className="text-xl font-semibold text-amber-800 dark:text-amber-200 mb-2">
+                Account Required - Please Sign In
+              </h3>
+              <p className="text-amber-600 dark:text-amber-300 mb-4">
+                You must create an account and sign in before booking appointments. This helps us manage your consultation history and provide personalized care.
+              </p>
+              <div className="flex flex-col sm:flex-row gap-3 justify-center">
+                <Link href="/login">
+                  <Button className="bg-amber-600 hover:bg-amber-700 text-white">
+                    Sign In to Your Account
+                  </Button>
+                </Link>
+                <Link href="/register">
+                  <Button variant="outline" className="border-amber-300 text-amber-700 hover:bg-amber-50">
+                    Create New Account
+                  </Button>
+                </Link>
+              </div>
+            </div>
+          ) : !hasConsent ? (
             <div className="p-8 bg-red-50 dark:bg-red-900/20 rounded-2xl border-2 border-red-200 text-center">
               <Shield className="w-16 h-16 text-red-400 mx-auto mb-4" />
               <h3 className="text-xl font-semibold text-red-800 dark:text-red-200 mb-2">
-                Booking Blocked - Consent Required
+                Consent Required Before Booking
               </h3>
               <p className="text-red-600 dark:text-red-300 mb-4">
                 You must complete the informed consent form before booking appointments.
