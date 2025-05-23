@@ -655,6 +655,102 @@ export default function DashboardAppointments() {
             </Card>
           )}
         </div>
+
+        {/* Reschedule Dialog */}
+        <Dialog open={isRescheduleOpen} onOpenChange={setIsRescheduleOpen}>
+          <DialogContent className="max-w-md">
+            <DialogHeader>
+              <DialogTitle>Reschedule Appointment</DialogTitle>
+              <DialogDescription>
+                Choose a new date and time for your {selectedAppointment?.type} consultation
+              </DialogDescription>
+            </DialogHeader>
+            
+            <div className="space-y-4">
+              <div>
+                <Label htmlFor="reschedule-date">New Date</Label>
+                <Input
+                  id="reschedule-date"
+                  type="date"
+                  value={rescheduleDate}
+                  onChange={(e) => setRescheduleDate(e.target.value)}
+                  min={new Date().toISOString().split('T')[0]}
+                />
+              </div>
+
+              {rescheduleDate && (
+                <div>
+                  <Label>Available Time Slots</Label>
+                  <div className="grid grid-cols-2 gap-2 mt-2">
+                    {rescheduleSlotsLoading ? (
+                      <p className="text-sm text-muted-foreground col-span-2">Loading available times...</p>
+                    ) : rescheduleSlots.length > 0 ? (
+                      rescheduleSlots.map((slot) => (
+                        <Button
+                          key={slot.time}
+                          variant="outline"
+                          size="sm"
+                          disabled={!slot.available}
+                          onClick={() => handleReschedule(rescheduleDate, slot.time)}
+                          className="text-sm"
+                        >
+                          {slot.time}
+                        </Button>
+                      ))
+                    ) : (
+                      <p className="text-sm text-muted-foreground col-span-2">No available slots for this date</p>
+                    )}
+                  </div>
+                </div>
+              )}
+            </div>
+          </DialogContent>
+        </Dialog>
+
+        {/* Cancel Dialog */}
+        <Dialog open={isCancelOpen} onOpenChange={setIsCancelOpen}>
+          <DialogContent className="max-w-md">
+            <DialogHeader>
+              <DialogTitle>Cancel Appointment</DialogTitle>
+              <DialogDescription>
+                Are you sure you want to cancel your {selectedAppointment?.type} consultation on{' '}
+                {selectedAppointment && new Date(selectedAppointment.date).toLocaleDateString()} at {selectedAppointment?.timeslot}?
+              </DialogDescription>
+            </DialogHeader>
+            
+            {selectedAppointment && isLateCancellation(selectedAppointment) && (
+              <div className="bg-orange-50 dark:bg-orange-900/20 border border-orange-200 dark:border-orange-800 rounded-lg p-3">
+                <div className="flex items-start space-x-2">
+                  <AlertCircle className="w-5 h-5 text-orange-600 dark:text-orange-400 mt-0.5" />
+                  <div className="text-sm">
+                    <p className="font-medium text-orange-800 dark:text-orange-200">Late Cancellation Notice</p>
+                    <p className="text-orange-700 dark:text-orange-300 mt-1">
+                      Cancelling with less than 2 hours notice may result in a late cancellation fee. 
+                      We'll contact you regarding any applicable charges.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            <div className="flex space-x-3">
+              <Button
+                variant="outline"
+                onClick={() => setIsCancelOpen(false)}
+                className="flex-1"
+              >
+                Keep Appointment
+              </Button>
+              <Button
+                variant="destructive"
+                onClick={handleCancel}
+                className="flex-1"
+              >
+                Cancel Appointment
+              </Button>
+            </div>
+          </DialogContent>
+        </Dialog>
       </div>
     </div>
   );
