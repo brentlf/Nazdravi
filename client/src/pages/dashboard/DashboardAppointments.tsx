@@ -38,6 +38,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { useFirestoreCollection, useFirestoreActions } from "@/hooks/useFirestore";
 import { Appointment } from "@/types";
 import { where, orderBy } from "firebase/firestore";
+import { useAvailableSlots } from "@/hooks/useAvailableSlots";
 
 const appointmentSchema = z.object({
   type: z.enum(["Initial", "Follow-up"], {
@@ -53,6 +54,7 @@ type AppointmentFormData = z.infer<typeof appointmentSchema>;
 export default function DashboardAppointments() {
   const [isBookingOpen, setIsBookingOpen] = useState(false);
   const [hasConsent, setHasConsent] = useState(false);
+  const [selectedDate, setSelectedDate] = useState("");
   const { user } = useAuth();
   const { toast } = useToast();
   const { add: addAppointment, loading: booking } = useFirestoreActions("appointments");
@@ -62,6 +64,9 @@ export default function DashboardAppointments() {
     const consentCompleted = localStorage.getItem('consentFormCompleted');
     setHasConsent(consentCompleted === 'true');
   }, []);
+
+  // Get available time slots for selected date
+  const { availableSlots, loading: slotsLoading } = useAvailableSlots(selectedDate);
 
   // Fetch user's appointments by email to ensure data consistency
   const { data: appointments, loading } = useFirestoreCollection<Appointment>("appointments", [
@@ -79,14 +84,13 @@ export default function DashboardAppointments() {
     },
   });
 
-  const timeSlots = [
-    "09:00 - 10:00",
-    "10:00 - 11:00",
-    "11:00 - 12:00",
-    "14:00 - 15:00",
-    "15:00 - 16:00",
-    "16:00 - 17:00",
-  ];
+  // Watch the selected date to update available slots
+  const watchedDate = form.watch("date");
+  useEffect(() => {
+    if (watchedDate) {
+      setSelectedDate(watchedDate);
+    }
+  }, [watchedDate]);
 
   const onSubmit = async (data: AppointmentFormData) => {
     if (!user) return;
@@ -389,11 +393,27 @@ export default function DashboardAppointments() {
                               </SelectTrigger>
                             </FormControl>
                             <SelectContent>
-                              {timeSlots.map((slot) => (
-                                <SelectItem key={slot} value={slot}>
-                                  {slot}
-                                </SelectItem>
-                              ))}
+                              {slotsLoading ? (
+                                <div className="p-2 text-sm text-muted-foreground">Loading availability...</div>
+                              ) : selectedDate ? (
+                                availableSlots.map((slot) => (
+                                  <SelectItem 
+                                    key={slot.time} 
+                                    value={slot.time}
+                                    disabled={!slot.available}
+                                    className={!slot.available ? "opacity-50" : ""}
+                                  >
+                                    <div className="flex items-center justify-between w-full">
+                                      <span>{slot.time}</span>
+                                      {!slot.available && (
+                                        <span className="text-xs text-red-500 ml-2">Booked</span>
+                                      )}
+                                    </div>
+                                  </SelectItem>
+                                ))
+                              ) : (
+                                <div className="p-2 text-sm text-muted-foreground">Select a date first</div>
+                              )}
                             </SelectContent>
                           </Select>
                           <FormMessage />
