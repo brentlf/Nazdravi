@@ -1,8 +1,8 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { Calendar, Clock, Plus, CheckCircle, XCircle, AlertCircle } from "lucide-react";
+import { Calendar, Clock, Plus, CheckCircle, XCircle, AlertCircle, Shield } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -52,9 +52,16 @@ type AppointmentFormData = z.infer<typeof appointmentSchema>;
 
 export default function DashboardAppointments() {
   const [isBookingOpen, setIsBookingOpen] = useState(false);
+  const [hasConsent, setHasConsent] = useState(false);
   const { user } = useAuth();
   const { toast } = useToast();
   const { add: addAppointment, loading: booking } = useFirestoreActions("appointments");
+
+  // Check if user has completed consent form
+  useEffect(() => {
+    const consentCompleted = localStorage.getItem('consentFormCompleted');
+    setHasConsent(consentCompleted === 'true');
+  }, []);
 
   // Fetch user's appointments
   const { data: appointments, loading } = useFirestoreCollection<Appointment>("appointments", [
@@ -84,7 +91,31 @@ export default function DashboardAppointments() {
   const onSubmit = async (data: AppointmentFormData) => {
     if (!user) return;
 
+    // Check consent requirement
+    if (!hasConsent) {
+      toast({
+        title: "Consent Required",
+        description: "Please complete the informed consent form before booking appointments.",
+        variant: "destructive",
+      });
+      return;
+    }
+
     try {
+      // Check for duplicate bookings (same date/time)
+      const duplicateCheck = appointments?.find(
+        (apt) => apt.date === data.date && apt.timeslot === data.timeslot && apt.status !== "cancelled"
+      );
+
+      if (duplicateCheck) {
+        toast({
+          title: "Time slot unavailable",
+          description: "You already have an appointment booked for this date and time.",
+          variant: "destructive",
+        });
+        return;
+      }
+
       await addAppointment({
         ...data,
         userId: user.uid,
@@ -158,6 +189,26 @@ export default function DashboardAppointments() {
   return (
     <div className="min-h-screen py-20 bg-gray-50 dark:bg-gray-900">
       <div className="container mx-auto px-4">
+        {/* Consent Warning Banner */}
+        {!hasConsent && (
+          <div className="mb-8 p-4 bg-red-50 dark:bg-red-900/20 rounded-lg border border-red-200 dark:border-red-800">
+            <div className="flex items-center space-x-3">
+              <Shield className="w-5 h-5 text-red-500" />
+              <div>
+                <h3 className="font-semibold text-red-800 dark:text-red-200">
+                  Consent Form Required
+                </h3>
+                <p className="text-red-600 dark:text-red-300 text-sm">
+                  You must complete the informed consent form before booking appointments.{" "}
+                  <a href="/consent-form" className="underline hover:no-underline">
+                    Complete it now
+                  </a>
+                </p>
+              </div>
+            </div>
+          </div>
+        )}
+
         {/* Header */}
         <div className="flex justify-between items-center mb-8">
           <div>
