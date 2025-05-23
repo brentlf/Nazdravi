@@ -14,22 +14,19 @@ export default function Blog() {
   const [selectedCategory, setSelectedCategory] = useState<string>("");
 
   // Fetch published blog posts from Firebase
-  const { data: blogPosts, loading } = useFirestoreCollection<BlogPost>("blogPosts", [
-    where("published", "==", true),
-    orderBy("createdAt", "desc")
-  ]);
+  const { data: blogPosts, loading } = useFirestoreCollection<any>("blogPosts");
 
-  // Extract categories from blog posts
-  const allCategories = blogPosts?.flatMap(post => post.tags) || [];
+  // Extract categories from blog posts (using 'category' field from Firebase)
+  const allCategories = blogPosts?.map(post => post.category).filter(Boolean) || [];
   const uniqueCategories = Array.from(new Set(allCategories));
 
   // Filter blog posts based on search and category
   const filteredPosts = blogPosts?.filter(post => {
     const matchesSearch = !searchTerm || 
-      post.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      post.excerpt.toLowerCase().includes(searchTerm.toLowerCase());
+      post.title?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      post.excerpt?.toLowerCase().includes(searchTerm.toLowerCase());
     
-    const matchesCategory = !selectedCategory || post.tags.includes(selectedCategory);
+    const matchesCategory = !selectedCategory || post.category === selectedCategory;
     
     return matchesSearch && matchesCategory;
   }) || [];
@@ -126,14 +123,14 @@ export default function Blog() {
                   {/* Featured Image */}
                   <div className="relative overflow-hidden">
                     <img 
-                      src={post.featuredImage || "https://images.unsplash.com/photo-1498837167922-ddd27525d352?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=400"} 
+                      src={post.image || "https://images.unsplash.com/photo-1498837167922-ddd27525d352?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=400"} 
                       alt={post.title}
                       className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300"
                     />
-                    {/* Tags overlay */}
+                    {/* Category overlay */}
                     <div className="absolute top-4 left-4">
                       <Badge className="bg-primary-500 text-white">
-                        {post.tags[0] || "Nutrition"}
+                        {post.category || "Nutrition"}
                       </Badge>
                     </div>
                   </div>
@@ -142,15 +139,15 @@ export default function Blog() {
                     {/* Meta information */}
                     <div className="flex items-center text-sm text-muted-foreground mb-3">
                       <Calendar className="w-4 h-4 mr-1" />
-                      <span>{new Date(post.createdAt).toLocaleDateString()}</span>
+                      <span>{post.date || 'Recent'}</span>
                       <span className="mx-2">•</span>
                       <Clock className="w-4 h-4 mr-1" />
-                      <span>{calculateReadTime(post.content)} min read</span>
+                      <span>{calculateReadTime(post.excerpt || '')} min read</span>
                     </div>
 
                     {/* Title */}
                     <h2 className="text-xl font-semibold mb-3 group-hover:text-primary-600 transition-colors line-clamp-2">
-                      <Link href={`/blog/${post.slug}`}>{post.title}</Link>
+                      <Link href={post.mediumurl || '#'}>{post.title}</Link>
                     </h2>
 
                     {/* Excerpt */}
@@ -158,17 +155,17 @@ export default function Blog() {
                       {post.excerpt}
                     </p>
 
-                    {/* Tags and Read More */}
+                    {/* Category and Read More */}
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-2">
-                        {post.tags.slice(1, 3).map((tag) => (
-                          <Badge key={tag} variant="outline" className="text-xs">
-                            {tag}
+                        {post.category && (
+                          <Badge variant="outline" className="text-xs">
+                            {post.category}
                           </Badge>
-                        ))}
+                        )}
                       </div>
                       <Button variant="ghost" size="sm" asChild>
-                        <Link href={`/blog/${post.slug}`} className="group/btn">
+                        <Link href={post.mediumurl || '#'} className="group/btn" target="_blank">
                           Read More
                           <ArrowRight className="w-4 h-4 ml-1 group-hover/btn:translate-x-1 transition-transform" />
                         </Link>
