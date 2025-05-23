@@ -126,55 +126,7 @@ export default function Home() {
               </div>
             </div>
 
-            {/* Right Content - Dashboard Preview */}
-            <div className="lg:block">
-              <Card className="max-w-md mx-auto backdrop-blur-sm bg-white/95 dark:bg-gray-900/95">
-                <CardContent className="p-6">
-                  <div className="text-center mb-6">
-                    <h3 className="text-xl font-semibold mb-2">Client Dashboard</h3>
-                    <p className="text-muted-foreground text-sm">Track your progress in real-time</p>
-                  </div>
-                  
-                  {/* Mini Dashboard Cards */}
-                  <div className="space-y-4">
-                    {/* Next Appointment */}
-                    <div className="bg-primary-50 dark:bg-primary-900/20 rounded-lg p-4">
-                      <div className="flex items-center justify-between">
-                        <div>
-                          <p className="text-sm font-medium text-primary-700 dark:text-primary-300">Next Appointment</p>
-                          <p className="font-semibold">Tomorrow 2:00 PM</p>
-                        </div>
-                        <Calendar className="w-6 h-6 text-primary-500" />
-                      </div>
-                    </div>
 
-                    {/* Progress Chart Preview */}
-                    <div className="bg-gray-50 dark:bg-gray-800 rounded-lg p-4">
-                      <p className="text-sm font-medium text-muted-foreground mb-3">Weekly Progress</p>
-                      <div className="h-16 bg-gradient-to-r from-primary-200 to-primary-400 rounded opacity-70"></div>
-                    </div>
-
-                    {/* Quick Stats */}
-                    <div className="grid grid-cols-2 gap-3">
-                      <div className="bg-gray-50 dark:bg-gray-800 rounded-lg p-3 text-center">
-                        <div className="flex items-center justify-center gap-1">
-                          <TrendingDown className="w-4 h-4 text-green-500" />
-                          <p className="text-lg font-bold text-primary-600 dark:text-primary-400">-5kg</p>
-                        </div>
-                        <p className="text-xs text-muted-foreground">This Month</p>
-                      </div>
-                      <div className="bg-gray-50 dark:bg-gray-800 rounded-lg p-3 text-center">
-                        <div className="flex items-center justify-center gap-1">
-                          <Droplets className="w-4 h-4 text-blue-500" />
-                          <p className="text-lg font-bold text-primary-600 dark:text-primary-400">2.1L</p>
-                        </div>
-                        <p className="text-xs text-muted-foreground">Water Today</p>
-                      </div>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            </div>
           </div>
         </div>
       </section>
