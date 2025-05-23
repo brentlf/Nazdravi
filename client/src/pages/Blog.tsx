@@ -13,22 +13,11 @@ export default function Blog() {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState<string>("");
 
-  // Try different collection names to match your Firebase setup
-  const { data: blogPosts1, loading: loading1 } = useFirestoreCollection<any>("blogPosts");
-  const { data: blogPosts2, loading: loading2 } = useFirestoreCollection<any>("blog_posts");
-  const { data: blogPosts3, loading: loading3 } = useFirestoreCollection<any>("posts");
-  const { data: blogPosts4, loading: loading4 } = useFirestoreCollection<any>("articles");
+  // Fetch from the correct "blogs" collection
+  const { data: blogPosts, loading } = useFirestoreCollection<any>("blogs");
   
-  // Use whichever collection has data
-  const blogPosts = blogPosts1?.length ? blogPosts1 : 
-                   blogPosts2?.length ? blogPosts2 : 
-                   blogPosts3?.length ? blogPosts3 : 
-                   blogPosts4 || [];
-                   
-  const loading = loading1 || loading2 || loading3 || loading4;
-  
-  // Debug: Log what we find
-  console.log("Checking collections - blogPosts:", blogPosts1?.length, "blog_posts:", blogPosts2?.length, "posts:", blogPosts3?.length, "articles:", blogPosts4?.length);
+  // Debug: Log the blog data
+  console.log("Blog posts from 'blogs' collection:", blogPosts);
 
   // Extract categories from blog posts (using 'category' field from Firebase)
   const allCategories = blogPosts?.map(post => post.category).filter(Boolean) || [];
