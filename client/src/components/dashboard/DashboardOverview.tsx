@@ -22,24 +22,24 @@ export function DashboardOverview() {
 
 
 
-  // Fetch user's next appointment using consistent userID
+  // Fetch user's next appointment using email field (matching appointments page)
   const { data: appointments } = useFirestoreCollection<Appointment>("appointments", [
-    where("userId", "==", user?.uid || ""),
+    where("email", "==", user?.email || ""),
     where("status", "in", ["pending", "confirmed"]),
     orderBy("date", "asc"),
     limit(1)
   ]);
 
-  // Fetch recent messages using consistent userID
+  // Fetch recent messages using email field for consistency
   const { data: messages } = useFirestoreCollection<Message>("messages", [
-    where("toUser", "==", user?.uid || ""),
+    where("toUser", "==", user?.email || ""),
     orderBy("createdAt", "desc"),
     limit(5)
   ]);
 
-  // Fetch recent progress entries using consistent userID
+  // Fetch recent progress entries using email field for consistency
   const { data: progressEntries } = useFirestoreCollection<Progress>("progress", [
-    where("userId", "==", user?.uid || ""),
+    where("email", "==", user?.email || ""),
     orderBy("date", "desc"),
     limit(10)
   ]);
