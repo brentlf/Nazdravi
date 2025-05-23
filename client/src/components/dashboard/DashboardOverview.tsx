@@ -16,13 +16,9 @@ import { useAuth } from "@/contexts/AuthContext";
 import { useFirestoreCollection } from "@/hooks/useFirestore";
 import { Appointment, Message, Progress } from "@/types";
 import { where, orderBy, limit } from "firebase/firestore";
-import { db } from "@/lib/firebase";
-import { collection, getDocs, doc, updateDoc, query } from "firebase/firestore";
-import { useToast } from "@/hooks/use-toast";
 
 export function DashboardOverview() {
   const { user } = useAuth();
-  const { toast } = useToast();
 
 
 
@@ -52,15 +48,7 @@ export function DashboardOverview() {
   const unreadMessages = messages?.length || 0;
   const latestProgress = progressEntries?.[0];
 
-  // Debug logging to verify Firebase data
-  console.log("Dashboard Firebase Data:", {
-    appointments: appointments?.length || 0,
-    messages: messages?.length || 0, 
-    progressEntries: progressEntries?.length || 0,
-    userUID: user?.uid,
-    userEmail: user?.email,
-    actualAppointments: appointments
-  });
+
   
   // Calculate weight change this month
   const currentMonth = new Date().toISOString().slice(0, 7);
@@ -150,29 +138,7 @@ export function DashboardOverview() {
 
   return (
     <div className="space-y-8">
-      {/* Data Connection Notice */}
-      {appointments?.length === 0 && (
-        <Card className="border-amber-200 bg-amber-50 dark:bg-amber-900/20">
-          <CardContent className="p-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <h3 className="font-semibold text-amber-800 dark:text-amber-200 mb-2">
-                  Connect Your Existing Data
-                </h3>
-                <p className="text-sm text-amber-600 dark:text-amber-300">
-                  We found existing appointments and progress data in Firebase. Click to connect it to your current account.
-                </p>
-              </div>
-              <Button 
-                onClick={updateUserData}
-                className="bg-amber-600 hover:bg-amber-700 text-white"
-              >
-                Connect Data
-              </Button>
-            </div>
-          </CardContent>
-        </Card>
-      )}
+
 
       {/* Welcome Section */}
       <div className="bg-gradient-to-r from-primary-500 to-primary-600 rounded-2xl p-8 text-white">
