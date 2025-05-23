@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { Calendar, Clock, User, Mail, Phone, Target } from "lucide-react";
+import { Calendar, Clock, User, Mail, Phone, Target, AlertCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -24,7 +24,10 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
-import { useFirestoreActions } from "@/hooks/useFirestore";
+import { useFirestoreActions, useFirestoreCollection } from "@/hooks/useFirestore";
+import { useAvailableSlots } from "@/hooks/useAvailableSlots";
+import { collection, query, where, getDocs } from "firebase/firestore";
+import { db } from "@/lib/firebase";
 
 const appointmentSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters"),
@@ -42,8 +45,12 @@ type AppointmentFormData = z.infer<typeof appointmentSchema>;
 
 export function AppointmentForm() {
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [selectedDate, setSelectedDate] = useState("");
   const { toast } = useToast();
   const { add, loading } = useFirestoreActions("appointments");
+  
+  // Get available time slots for selected date
+  const { availableSlots, loading: slotsLoading } = useAvailableSlots(selectedDate);
 
   const form = useForm<AppointmentFormData>({
     resolver: zodResolver(appointmentSchema),
@@ -69,10 +76,52 @@ export function AppointmentForm() {
 
   const onSubmit = async (data: AppointmentFormData) => {
     try {
+      // Double-check availability before booking to prevent conflicts
+      const appointmentsRef = collection(db, "appointments");
+      const conflictQuery = query(
+        appointmentsRef,
+        where("date", "==", data.date),
+        where("timeslot", "==", data.timeslot),
+        where("status", "in", ["pending", "confirmed"])
+      );
+      
+      const conflictSnapshot = await getDocs(conflictQuery);
+      
+      if (!conflictSnapshot.empty) {
+        toast({
+          title: "Time slot unavailable",
+          description: "This time slot was just booked by someone else. Please select a different time.",
+          variant: "destructive",
+        });
+        return;
+      }
+
+      // Also check admin unavailable slots
+      const unavailableRef = collection(db, "unavailableSlots");
+      const unavailableQuery = query(
+        unavailableRef,
+        where("date", "==", data.date)
+      );
+      
+      const unavailableSnapshot = await getDocs(unavailableQuery);
+      const unavailableSlots = unavailableSnapshot.docs.flatMap(doc => doc.data().timeslots || []);
+      
+      if (unavailableSlots.includes(data.timeslot)) {
+        toast({
+          title: "Time slot unavailable",
+          description: "This time slot is no longer available. Please select a different time.",
+          variant: "destructive",
+        });
+        return;
+      }
+
+      // If we get here, the slot is still available - proceed with booking
       await add({
         ...data,
-        userId: "visitor", // For visitor appointments
+        userId: "visitor",
         status: "pending",
+        createdAt: new Date(),
+        requestId: `${data.date}-${data.timeslot}-${Date.now()}`, // Unique identifier
       });
 
       setIsSubmitted(true);
@@ -81,6 +130,7 @@ export function AppointmentForm() {
         description: "We'll confirm your appointment within 24 hours.",
       });
     } catch (error) {
+      console.error("Booking error:", error);
       toast({
         title: "Booking failed",
         description: "Please try again later or contact us directly.",
@@ -250,7 +300,17 @@ export function AppointmentForm() {
                   <FormItem>
                     <FormLabel>Preferred Date</FormLabel>
                     <FormControl>
-                      <Input {...field} type="date" min={new Date().toISOString().split('T')[0]} />
+                      <Input 
+                        {...field} 
+                        type="date" 
+                        min={new Date().toISOString().split('T')[0]}
+                        onChange={(e) => {
+                          field.onChange(e);
+                          setSelectedDate(e.target.value);
+                          // Reset time slot when date changes
+                          form.setValue("timeslot", "");
+                        }}
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -262,21 +322,51 @@ export function AppointmentForm() {
                 name="timeslot"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Preferred Time</FormLabel>
-                    <Select onValueChange={field.onChange} defaultValue={field.value}>
-                      <FormControl>
-                        <SelectTrigger>
-                          <SelectValue placeholder="Select time slot" />
-                        </SelectTrigger>
-                      </FormControl>
-                      <SelectContent>
-                        {timeSlots.map((slot) => (
-                          <SelectItem key={slot} value={slot}>
-                            {slot}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
+                    <FormLabel className="flex items-center gap-2">
+                      <Clock className="h-4 w-4" />
+                      Available Time Slots
+                      {slotsLoading && selectedDate && (
+                        <span className="text-xs text-muted-foreground">(Loading...)</span>
+                      )}
+                    </FormLabel>
+                    {selectedDate ? (
+                      availableSlots.length > 0 ? (
+                        <div className="grid grid-cols-2 gap-2 mt-3">
+                          {availableSlots.map((slot) => (
+                            <Button
+                              key={slot.time}
+                              type="button"
+                              variant={field.value === slot.time ? "default" : "outline"}
+                              disabled={!slot.available}
+                              onClick={() => field.onChange(slot.time)}
+                              className={`h-12 text-sm ${
+                                !slot.available 
+                                  ? 'opacity-50 cursor-not-allowed bg-gray-100 text-gray-400' 
+                                  : field.value === slot.time
+                                  ? 'bg-primary-500 text-white'
+                                  : 'hover:bg-primary-50'
+                              }`}
+                            >
+                              {slot.time}
+                              {!slot.available && (
+                                <span className="ml-1 text-xs">(Booked)</span>
+                              )}
+                            </Button>
+                          ))}
+                        </div>
+                      ) : (
+                        <div className="p-4 text-center text-muted-foreground bg-gray-50 dark:bg-gray-800 rounded-lg">
+                          <AlertCircle className="w-6 h-6 mx-auto mb-2" />
+                          <p className="text-sm">No available slots for this date</p>
+                          <p className="text-xs">Please select a different date</p>
+                        </div>
+                      )
+                    ) : (
+                      <div className="p-4 text-center text-muted-foreground bg-gray-50 dark:bg-gray-800 rounded-lg">
+                        <Calendar className="w-6 h-6 mx-auto mb-2" />
+                        <p className="text-sm">Please select a date first</p>
+                      </div>
+                    )}
                     <FormMessage />
                   </FormItem>
                 )}
