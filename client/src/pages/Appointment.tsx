@@ -29,38 +29,6 @@ export default function Appointment() {
           </p>
         </div>
 
-        {/* Compliance Notice - Required Consent */}
-        <div className="max-w-4xl mx-auto mb-8">
-          <Alert className="border-amber-200 bg-amber-50 dark:bg-amber-900/20">
-            <AlertTriangle className="h-4 w-4 text-amber-600" />
-            <AlertDescription>
-              <div className="space-y-3">
-                <p className="font-semibold text-amber-800 dark:text-amber-200">
-                  ⚠️ Required: Complete Informed Consent Before Booking
-                </p>
-                <p className="text-sm text-amber-700 dark:text-amber-300">
-                  All clients must complete our informed consent process before booking appointments. 
-                  This ensures compliance with healthcare regulations and confirms language comprehension for safe care delivery.
-                </p>
-                <div className="flex flex-col sm:flex-row gap-3 pt-2">
-                  <Link href="/consent-form">
-                    <Button className="bg-[#A5CBA4] hover:bg-[#95bb94] text-white">
-                      <Shield className="w-4 h-4 mr-2" />
-                      Complete Required Consent Form
-                    </Button>
-                  </Link>
-                  <Link href="/legal">
-                    <Button variant="outline" className="text-amber-700 border-amber-300 hover:bg-amber-50">
-                      <Globe className="w-4 h-4 mr-2" />
-                      View Legal Information
-                    </Button>
-                  </Link>
-                </div>
-              </div>
-            </AlertDescription>
-          </Alert>
-        </div>
-
         {/* Language Service Notice */}
         <div className="max-w-4xl mx-auto mb-8">
           <Alert className="border-blue-200 bg-blue-50 dark:bg-blue-900/20">
