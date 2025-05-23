@@ -24,6 +24,7 @@ export function useFirestoreCollection<T = DocumentData>(
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
+    console.log(`Setting up Firestore listener for ${collectionName} with constraints:`, constraints);
     const q = query(collection(db, collectionName), ...constraints);
     
     const unsubscribe = onSnapshot(
@@ -33,6 +34,7 @@ export function useFirestoreCollection<T = DocumentData>(
           id: doc.id,
           ...doc.data()
         })) as T[];
+        console.log(`Firestore data received for ${collectionName}:`, items.length, "items");
         setData(items);
         setLoading(false);
         setError(null);
