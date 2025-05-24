@@ -52,7 +52,56 @@ export default function AdminEmailScheduler() {
     }
   };
 
-  const handleTestEmail = async () => {
+  const handleTestWelcomeEmail = async () => {
+    setSending(true);
+    try {
+      await emailService.sendWelcomeEmail(
+        "info@veenutrition.com",
+        "Vee Nutrition Team"
+      );
+      
+      toast({
+        title: "Test welcome email sent!",
+        description: "Check info@veenutrition.com inbox to verify the welcome format.",
+      });
+    } catch (error) {
+      toast({
+        title: "Test email failed",
+        description: "Please check your email configuration.",
+        variant: "destructive",
+      });
+    } finally {
+      setSending(false);
+    }
+  };
+
+  const handleTestConfirmationEmail = async () => {
+    setSending(true);
+    try {
+      await emailService.sendAppointmentConfirmation(
+        "info@veenutrition.com",
+        "Vee Nutrition Team",
+        tomorrow.toLocaleDateString(),
+        "10:00",
+        "Initial Consultation"
+      );
+      
+      toast({
+        title: "Test confirmation email sent!",
+        description: "Check info@veenutrition.com inbox to verify the confirmation format.",
+      });
+    } catch (error) {
+      toast({
+        title: "Test email failed",
+        description: "Please check your email configuration.",
+        variant: "destructive",
+      });
+    } finally {
+      setSending(false);
+    }
+  };
+
+  const handleTestReminderEmail = async () => {
     setSending(true);
     try {
       await emailService.sendAppointmentReminder(
@@ -64,8 +113,35 @@ export default function AdminEmailScheduler() {
       );
       
       toast({
-        title: "Test email sent!",
+        title: "Test reminder email sent!",
         description: "Check info@veenutrition.com inbox to verify the reminder format.",
+      });
+    } catch (error) {
+      toast({
+        title: "Test email failed",
+        description: "Please check your email configuration.",
+        variant: "destructive",
+      });
+    } finally {
+      setSending(false);
+    }
+  };
+
+  const handleTestRescheduleEmail = async () => {
+    setSending(true);
+    try {
+      await emailService.sendRescheduleRequest(
+        "info@veenutrition.com",
+        "Vee Nutrition Team",
+        "info@veenutrition.com",
+        tomorrow.toLocaleDateString(),
+        "10:00",
+        "Schedule conflict"
+      );
+      
+      toast({
+        title: "Test reschedule email sent!",
+        description: "Check info@veenutrition.com inbox to verify the reschedule format.",
       });
     } catch (error) {
       toast({
@@ -174,7 +250,17 @@ export default function AdminEmailScheduler() {
                       Sent automatically when new accounts are created
                     </p>
                   </div>
-                  <Badge className="bg-green-100 text-green-800">Active</Badge>
+                  <div className="flex items-center gap-2">
+                    <Badge className="bg-green-100 text-green-800">Active</Badge>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={handleTestWelcomeEmail}
+                      disabled={sending}
+                    >
+                      Test
+                    </Button>
+                  </div>
                 </div>
 
                 <div className="flex items-center justify-between p-4 border rounded-lg">
@@ -184,7 +270,17 @@ export default function AdminEmailScheduler() {
                       Sent when admin confirms pending appointments
                     </p>
                   </div>
-                  <Badge className="bg-green-100 text-green-800">Active</Badge>
+                  <div className="flex items-center gap-2">
+                    <Badge className="bg-green-100 text-green-800">Active</Badge>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={handleTestConfirmationEmail}
+                      disabled={sending}
+                    >
+                      Test
+                    </Button>
+                  </div>
                 </div>
 
                 <div className="flex items-center justify-between p-4 border rounded-lg">
@@ -194,7 +290,17 @@ export default function AdminEmailScheduler() {
                       Admin notified when clients request reschedules
                     </p>
                   </div>
-                  <Badge className="bg-green-100 text-green-800">Active</Badge>
+                  <div className="flex items-center gap-2">
+                    <Badge className="bg-green-100 text-green-800">Active</Badge>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={handleTestRescheduleEmail}
+                      disabled={sending}
+                    >
+                      Test
+                    </Button>
+                  </div>
                 </div>
 
                 <div className="flex items-center justify-between p-4 border rounded-lg">
@@ -204,7 +310,17 @@ export default function AdminEmailScheduler() {
                       Manual trigger for day-before appointment reminders
                     </p>
                   </div>
-                  <Badge className="bg-blue-100 text-blue-800">Manual</Badge>
+                  <div className="flex items-center gap-2">
+                    <Badge className="bg-blue-100 text-blue-800">Manual</Badge>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={handleTestReminderEmail}
+                      disabled={sending}
+                    >
+                      Test
+                    </Button>
+                  </div>
                 </div>
               </div>
             </CardContent>
