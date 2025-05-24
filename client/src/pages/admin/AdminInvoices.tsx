@@ -178,7 +178,7 @@ export default function AdminInvoices() {
                     </div>
                     <div>
                       <span className="text-muted-foreground">Amount:</span>
-                      <p className="font-medium">£{selectedAppointment.type === "Initial" ? "85.00" : "65.00"}</p>
+                      <p className="font-medium">€{selectedAppointment.type === "Initial" ? "95.00" : "75.00"}</p>
                     </div>
                   </div>
                   
@@ -284,7 +284,7 @@ export default function AdminInvoices() {
                   
                   <div className="flex items-center gap-4">
                     <div className="text-right">
-                      <p className="font-medium">£{invoice.amount.toFixed(2)}</p>
+                      <p className="font-medium">€{invoice.amount.toFixed(2)}</p>
                       {getStatusBadge(invoice.status)}
                     </div>
                     

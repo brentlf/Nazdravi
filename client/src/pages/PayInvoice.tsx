@@ -107,7 +107,7 @@ const PaymentForm = ({ invoice, clientSecret }: { invoice: Invoice; clientSecret
         ) : (
           <>
             <CreditCard className="w-4 h-4 mr-2" />
-            Pay £{invoice.amount.toFixed(2)}
+            Pay €{invoice.amount.toFixed(2)}
           </>
         )}
       </Button>
@@ -244,7 +244,7 @@ export default function PayInvoice() {
               <div className="border-t pt-4">
                 <div className="flex justify-between items-center text-lg font-bold">
                   <span>Total Amount</span>
-                  <span>£{invoice.amount.toFixed(2)} {invoice.currency}</span>
+                  <span>€{invoice.amount.toFixed(2)} {invoice.currency}</span>
                 </div>
               </div>
             </CardContent>
