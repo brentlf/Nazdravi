@@ -1,6 +1,19 @@
 // Firebase Functions Email Service for Vee Nutrition
 import { db } from './firebase';
 
+// Test Firebase connection immediately
+(async () => {
+  try {
+    console.log('Testing Firebase Firestore connection...');
+    const testDoc = await db.collection('test').add({ timestamp: new Date() });
+    console.log('✓ Firebase connection successful! Test doc ID:', testDoc.id);
+    await db.collection('test').doc(testDoc.id).delete();
+    console.log('✓ Firebase write/delete operations working');
+  } catch (error) {
+    console.error('✗ Firebase connection failed:', error);
+  }
+})();
+
 interface EmailTemplate {
   subject: string;
   html: string;
