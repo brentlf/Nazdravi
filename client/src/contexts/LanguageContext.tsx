@@ -33,32 +33,21 @@ export function LanguageProvider({ children }: LanguageProviderProps) {
 
   const t = (key: string, namespace = "common", params?: Record<string, string>) => {
     try {
-      // Debug logging
-      console.log(`Looking for: ${language}.${namespace}.${key}`);
-      console.log('Available namespaces:', Object.keys((translations as any)[language] || {}));
-      
       // Try current language first
       const currentLangTranslation = (translations as any)[language]?.[namespace]?.[key];
-      console.log('Current lang result:', currentLangTranslation);
-      
       if (currentLangTranslation) {
         return currentLangTranslation;
       }
       
       // Fallback to English
       const englishTranslation = (translations as any)['en']?.[namespace]?.[key];
-      console.log('English fallback result:', englishTranslation);
-      
       if (englishTranslation) {
         return englishTranslation;
       }
       
       // Convert kebab-case to readable as final fallback
-      const fallback = key.split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
-      console.log('Using fallback:', fallback);
-      return fallback;
+      return key.split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
     } catch (error) {
-      console.error('Translation error:', error);
       return key.split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
     }
   };
