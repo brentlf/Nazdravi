@@ -33,6 +33,7 @@ import {
 import { useToast } from "@/hooks/use-toast";
 import { useFirestoreCollection, useFirestoreActions } from "@/hooks/useFirestore";
 import { Appointment } from "@/types";
+import { emailService } from "@/lib/emailService";
 import { collection, query, where, getDocs, orderBy } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 
@@ -64,12 +65,42 @@ export default function AdminAppointments() {
 
   const handleStatusChange = async (appointmentId: string, newStatus: "confirmed" | "done" | "reschedule_requested" | "cancelled_reschedule") => {
     try {
+      const appointment = appointments?.find(apt => apt.id === appointmentId);
       await updateAppointment(appointmentId, { status: newStatus });
       
       let title = "Appointment updated";
       let description = `Appointment status changed to ${newStatus}.`;
       
-      if (newStatus === "reschedule_requested") {
+      // Send automatic emails based on status change
+      if (newStatus === "confirmed" && appointment) {
+        // Send appointment confirmation email to client
+        try {
+          await emailService.sendAppointmentConfirmation(
+            appointment.email,
+            appointment.name,
+            appointment.date,
+            appointment.timeslot,
+            appointment.type
+          );
+          description = "Appointment confirmed and confirmation email sent to client.";
+        } catch (emailError) {
+          console.error('Failed to send confirmation email:', emailError);
+          description = "Appointment confirmed (email notification failed).";
+        }
+      } else if (newStatus === "reschedule_requested" && appointment) {
+        // Send reschedule notification to admin
+        try {
+          await emailService.sendRescheduleRequest(
+            'admin@veenutrition.com', // Configure your admin email
+            appointment.name,
+            appointment.email,
+            appointment.date,
+            appointment.timeslot,
+            'Admin requested reschedule'
+          );
+        } catch (emailError) {
+          console.error('Failed to send reschedule notification:', emailError);
+        }
         title = "Reschedule Requested";
         description = "Client will be notified to select a new time and date.";
       } else if (newStatus === "cancelled_reschedule") {

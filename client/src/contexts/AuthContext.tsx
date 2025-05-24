@@ -12,6 +12,7 @@ import {
 import { doc, getDoc, setDoc } from "firebase/firestore";
 import { auth, googleProvider, db } from "@/lib/firebase";
 import { User } from "@/types";
+import { emailService } from "@/lib/emailService";
 
 interface AuthContextType {
   user: User | null;
@@ -137,6 +138,15 @@ export function AuthProvider({ children }: AuthProviderProps) {
       preferredLanguage: "en",
       createdAt: new Date(),
     });
+
+    // Send welcome email automatically
+    try {
+      await emailService.sendWelcomeEmail(email, name);
+      console.log('Welcome email sent to new user:', email);
+    } catch (error) {
+      console.error('Failed to send welcome email:', error);
+      // Don't fail registration if email fails
+    }
   };
 
   const signInWithGoogle = async () => {
