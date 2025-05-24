@@ -70,10 +70,10 @@ export default function Home() {
       {/* Hero Section */}
       <section className="relative overflow-hidden py-20 lg:py-32">
         <div 
-          className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-10 dark:opacity-5"
+          className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-60 dark:opacity-40"
           style={{ backgroundImage: `url(${heroImage})` }}
         ></div>
-        <div className="absolute inset-0 bg-gradient-to-br from-primary-50 via-white to-primary-100 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900"></div>
+        <div className="absolute inset-0 bg-gradient-to-br from-primary-50/70 via-white/80 to-primary-100/70 dark:from-gray-900/80 dark:via-gray-800/80 dark:to-gray-900/80"></div>
         <div className="container mx-auto px-4">
           <div className="grid lg:grid-cols-2 gap-12 items-center">
             {/* Content */}
