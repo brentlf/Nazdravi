@@ -29,6 +29,7 @@ import {
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/contexts/AuthContext";
 import { useFirestoreActions } from "@/hooks/useFirestore";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 const consentSchema = z.object({
   // Required consents
@@ -78,6 +79,7 @@ export default function ConsentForm() {
   const { toast } = useToast();
   const { user } = useAuth();
   const { add: saveConsent, loading } = useFirestoreActions("consentRecords");
+  const { t } = useLanguage();
 
   const form = useForm<ConsentFormData>({
     resolver: zodResolver(consentSchema),
