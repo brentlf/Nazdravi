@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Search, Calendar, Clock, CheckCircle, XCircle, AlertCircle, Filter, ArrowLeft } from "lucide-react";
+import { Search, Calendar, Clock, CheckCircle, XCircle, AlertCircle, Filter, ArrowLeft, CalendarX, RotateCcw } from "lucide-react";
 import { Link } from "wouter";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -59,12 +59,24 @@ export default function AdminAppointments() {
     return matchesSearch && matchesStatus;
   }) || [];
 
-  const handleStatusChange = async (appointmentId: string, newStatus: "confirmed" | "done") => {
+  const handleStatusChange = async (appointmentId: string, newStatus: "confirmed" | "done" | "reschedule_requested" | "cancelled_reschedule") => {
     try {
       await updateAppointment(appointmentId, { status: newStatus });
+      
+      let title = "Appointment updated";
+      let description = `Appointment status changed to ${newStatus}.`;
+      
+      if (newStatus === "reschedule_requested") {
+        title = "Reschedule Requested";
+        description = "Client will be notified to select a new time and date.";
+      } else if (newStatus === "cancelled_reschedule") {
+        title = "Appointment Cancelled";
+        description = "Appointment cancelled and marked for rescheduling.";
+      }
+      
       toast({
-        title: "Appointment updated",
-        description: `Appointment status changed to ${newStatus}.`,
+        title,
+        description,
       });
       setSelectedAppointment(null);
     } catch (error) {
@@ -84,6 +96,10 @@ export default function AdminAppointments() {
         return <AlertCircle className="w-4 h-4 text-yellow-500" />;
       case "done":
         return <CheckCircle className="w-4 h-4 text-blue-500" />;
+      case "reschedule_requested":
+        return <CalendarX className="w-4 h-4 text-orange-500" />;
+      case "cancelled_reschedule":
+        return <RotateCcw className="w-4 h-4 text-red-500" />;
       default:
         return <XCircle className="w-4 h-4 text-red-500" />;
     }
@@ -97,6 +113,10 @@ export default function AdminAppointments() {
         return "bg-yellow-100 text-yellow-800 dark:bg-yellow-900/20 dark:text-yellow-400";
       case "done":
         return "bg-blue-100 text-blue-800 dark:bg-blue-900/20 dark:text-blue-400";
+      case "reschedule_requested":
+        return "bg-orange-100 text-orange-800 dark:bg-orange-900/20 dark:text-orange-400";
+      case "cancelled_reschedule":
+        return "bg-red-100 text-red-800 dark:bg-red-900/20 dark:text-red-400";
       default:
         return "bg-red-100 text-red-800 dark:bg-red-900/20 dark:text-red-400";
     }
@@ -106,6 +126,23 @@ export default function AdminAppointments() {
     return type === "Initial" 
       ? "bg-purple-100 text-purple-800 dark:bg-purple-900/20 dark:text-purple-400"
       : "bg-blue-100 text-blue-800 dark:bg-blue-900/20 dark:text-blue-400";
+  };
+
+  const getStatusLabel = (status: string) => {
+    switch (status) {
+      case "pending":
+        return "Pending";
+      case "confirmed":
+        return "Confirmed";
+      case "done":
+        return "Completed";
+      case "reschedule_requested":
+        return "Reschedule Requested";
+      case "cancelled_reschedule":
+        return "Cancelled & Reschedule";
+      default:
+        return status.charAt(0).toUpperCase() + status.slice(1);
+    }
   };
 
   if (loading) {
@@ -168,6 +205,8 @@ export default function AdminAppointments() {
                   <SelectItem value="pending">Pending</SelectItem>
                   <SelectItem value="confirmed">Confirmed</SelectItem>
                   <SelectItem value="done">Completed</SelectItem>
+                  <SelectItem value="reschedule_requested">Reschedule Requested</SelectItem>
+                  <SelectItem value="cancelled_reschedule">Cancelled & Reschedule</SelectItem>
                 </SelectContent>
               </Select>
             </div>
@@ -236,7 +275,7 @@ export default function AdminAppointments() {
                         <div className="flex items-center space-x-2">
                           {getStatusIcon(appointment.status)}
                           <Badge className={getStatusColor(appointment.status)}>
-                            {appointment.status.charAt(0).toUpperCase() + appointment.status.slice(1)}
+                            {getStatusLabel(appointment.status)}
                           </Badge>
                         </div>
                       </TableCell>
@@ -307,7 +346,7 @@ export default function AdminAppointments() {
                               </div>
                             )}
 
-                            <DialogFooter className="gap-2">
+                            <DialogFooter className="gap-2 flex-wrap">
                               {selectedAppointment?.status === "pending" && (
                                 <>
                                   <Button
@@ -315,6 +354,24 @@ export default function AdminAppointments() {
                                     onClick={() => setSelectedAppointment(null)}
                                   >
                                     Close
+                                  </Button>
+                                  <Button
+                                    variant="outline"
+                                    onClick={() => handleStatusChange(selectedAppointment.id!, "reschedule_requested")}
+                                    disabled={actionLoading}
+                                    className="bg-orange-600 hover:bg-orange-700 text-white"
+                                  >
+                                    <CalendarX className="w-4 h-4 mr-2" />
+                                    {actionLoading ? "Processing..." : "Request New Time/Date"}
+                                  </Button>
+                                  <Button
+                                    variant="outline"
+                                    onClick={() => handleStatusChange(selectedAppointment.id!, "cancelled_reschedule")}
+                                    disabled={actionLoading}
+                                    className="bg-red-600 hover:bg-red-700 text-white"
+                                  >
+                                    <RotateCcw className="w-4 h-4 mr-2" />
+                                    {actionLoading ? "Processing..." : "Cancel & Reschedule"}
                                   </Button>
                                   <Button
                                     onClick={() => handleStatusChange(selectedAppointment.id!, "confirmed")}
@@ -335,6 +392,24 @@ export default function AdminAppointments() {
                                     Close
                                   </Button>
                                   <Button
+                                    variant="outline"
+                                    onClick={() => handleStatusChange(selectedAppointment.id!, "reschedule_requested")}
+                                    disabled={actionLoading}
+                                    className="bg-orange-600 hover:bg-orange-700 text-white"
+                                  >
+                                    <CalendarX className="w-4 h-4 mr-2" />
+                                    {actionLoading ? "Processing..." : "Request New Time/Date"}
+                                  </Button>
+                                  <Button
+                                    variant="outline"
+                                    onClick={() => handleStatusChange(selectedAppointment.id!, "cancelled_reschedule")}
+                                    disabled={actionLoading}
+                                    className="bg-red-600 hover:bg-red-700 text-white"
+                                  >
+                                    <RotateCcw className="w-4 h-4 mr-2" />
+                                    {actionLoading ? "Processing..." : "Cancel & Reschedule"}
+                                  </Button>
+                                  <Button
                                     onClick={() => handleStatusChange(selectedAppointment.id!, "done")}
                                     disabled={actionLoading}
                                     className="bg-blue-600 hover:bg-blue-700"
@@ -344,7 +419,9 @@ export default function AdminAppointments() {
                                 </>
                               )}
                               
-                              {selectedAppointment?.status === "done" && (
+                              {(selectedAppointment?.status === "done" || 
+                                selectedAppointment?.status === "reschedule_requested" || 
+                                selectedAppointment?.status === "cancelled_reschedule") && (
                                 <Button
                                   variant="outline"
                                   onClick={() => setSelectedAppointment(null)}
