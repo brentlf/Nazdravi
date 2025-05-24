@@ -71,10 +71,52 @@ export default function AdminAppointments() {
       let title = "Appointment updated";
       let description = `Appointment status changed to ${newStatus}.`;
       
-      // Send automatic emails based on status change
+      // Send automatic emails and create Teams meeting for confirmed appointments
       if (newStatus === "confirmed" && appointment) {
-        // Send appointment confirmation email to client
         try {
+          // First, create Teams meeting
+          const meetingSubject = `Nutrition Consultation - ${appointment.type} with ${appointment.name}`;
+          const startDateTime = `${appointment.date}T${appointment.timeslot}:00`;
+          const endDateTime = new Date(new Date(startDateTime).getTime() + 60 * 60 * 1000).toISOString();
+          
+          const teamsResponse = await fetch('/api/teams/create-meeting', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              subject: meetingSubject,
+              startDateTime,
+              endDateTime,
+              attendeeEmail: appointment.email,
+              attendeeName: appointment.name,
+            }),
+          });
+
+          let teamsJoinUrl = '';
+          let teamsMeetingId = '';
+          
+          if (teamsResponse.ok) {
+            const teamsData = await teamsResponse.json();
+            teamsJoinUrl = teamsData.teamsJoinUrl;
+            teamsMeetingId = teamsData.teamsMeetingId;
+            
+            // Update appointment with Teams meeting details
+            await update(appointment.id, {
+              ...appointment,
+              status: newStatus,
+              teamsJoinUrl,
+              teamsMeetingId,
+            });
+          } else {
+            // Still confirm appointment even if Teams meeting creation fails
+            await update(appointment.id, {
+              ...appointment,
+              status: newStatus,
+            });
+          }
+
+          // Send appointment confirmation email to client
           await emailService.sendAppointmentConfirmation(
             appointment.email,
             appointment.name,
@@ -82,10 +124,14 @@ export default function AdminAppointments() {
             appointment.timeslot,
             appointment.type
           );
-          description = "Appointment confirmed and confirmation email sent to client.";
-        } catch (emailError) {
-          console.error('Failed to send confirmation email:', emailError);
-          description = "Appointment confirmed (email notification failed).";
+          
+          description = teamsJoinUrl 
+            ? "Appointment confirmed, Teams meeting created, and confirmation email sent to client."
+            : "Appointment confirmed and confirmation email sent to client.";
+            
+        } catch (error) {
+          console.error('Failed to confirm appointment:', error);
+          description = "Appointment confirmed (some features may not be available).";
         }
       } else if (newStatus === "reschedule_requested" && appointment) {
         // Send reschedule notification to admin

@@ -2,6 +2,7 @@ import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
 import { mailerLiteService } from "./email";
+import { teamsService } from "./microsoft-teams";
 import Stripe from "stripe";
 
 if (!process.env.STRIPE_SECRET_KEY) {
@@ -131,19 +132,27 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Microsoft Teams Meeting Creation
   app.post("/api/teams/create-meeting", async (req, res) => {
     try {
-      const { subject, startTime, endTime, attendeeEmail, attendeeName } = req.body;
+      const { subject, startDateTime, endDateTime, attendeeEmail, attendeeName } = req.body;
       
-      // For now, we'll create a placeholder Teams meeting URL
-      // In production, you'll need Microsoft Graph API credentials
-      const teamsJoinUrl = `https://teams.microsoft.com/l/meetup-join/placeholder/${Date.now()}`;
-      const teamsMeetingId = `meeting_${Date.now()}`;
+      if (!subject || !startDateTime || !endDateTime || !attendeeEmail || !attendeeName) {
+        return res.status(400).json({ error: "Missing required meeting details" });
+      }
+
+      // Create Teams meeting using Microsoft Graph API
+      const meeting = await teamsService.createTeamsMeeting(
+        subject,
+        startDateTime,
+        endDateTime,
+        attendeeEmail,
+        attendeeName
+      );
       
       res.json({
-        teamsJoinUrl,
-        teamsMeetingId,
-        subject,
-        startTime,
-        endTime
+        teamsJoinUrl: meeting.joinWebUrl,
+        teamsMeetingId: meeting.id,
+        subject: meeting.subject,
+        startDateTime: meeting.startDateTime,
+        endDateTime: meeting.endDateTime
       });
     } catch (error) {
       console.error("Teams meeting creation error:", error);
