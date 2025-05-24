@@ -33,7 +33,7 @@ export function MessageThread() {
   // Create chat room ID (user_admin format)
   const chatRoom = user ? `${user.uid}_admin` : "";
 
-  // Fetch messages for this chat room
+  // Fetch messages for this chat room with real-time updates
   const { data: messages, loading } = useFirestoreCollection<Message>("messages", [
     where("chatRoom", "==", chatRoom),
     orderBy("createdAt", "asc")
@@ -48,8 +48,27 @@ export function MessageThread() {
 
   // Auto-scroll to bottom when new messages arrive
   useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    if (messages && messages.length > 0) {
+      messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    }
   }, [messages]);
+
+  // Helper function to format message timestamp
+  const formatMessageTime = (timestamp: any) => {
+    if (!timestamp) return "";
+    
+    const date = timestamp.toDate ? timestamp.toDate() : new Date(timestamp);
+    const now = new Date();
+    const diffMs = now.getTime() - date.getTime();
+    const diffSecs = Math.floor(diffMs / 1000);
+    const diffMins = Math.floor(diffSecs / 60);
+    const diffHours = Math.floor(diffMins / 60);
+    
+    if (diffSecs < 60) return "Just now";
+    if (diffMins < 60) return `${diffMins}m ago`;
+    if (diffHours < 24) return `${diffHours}h ago`;
+    return date.toLocaleDateString();
+  };
 
   const onSubmit = async (data: MessageFormData) => {
     if (!user) return;
@@ -57,12 +76,16 @@ export function MessageThread() {
     try {
       await addMessage({
         fromUser: user.uid,
-        toUser: "admin",
+        toUser: "admin", 
         text: data.text,
         chatRoom: chatRoom,
+        createdAt: new Date(),
+        read: false,
+        messageType: "text"
       });
 
       form.reset();
+      // Messages will update automatically via real-time listener
     } catch (error) {
       console.error("Failed to send message:", error);
     }
@@ -128,7 +151,7 @@ export function MessageThread() {
                             : 'text-muted-foreground'
                         }`}
                       >
-                        {new Date(message.createdAt).toLocaleTimeString()}
+                        {formatMessageTime(message.createdAt)}
                       </p>
                     </div>
 
