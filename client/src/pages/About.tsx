@@ -3,8 +3,11 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Link } from "wouter";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 export default function About() {
+  const { t } = useLanguage();
+  
   const credentials = [
     "MSc in Clinical Nutrition",
     "Registered Dietitian (RD)",
@@ -15,46 +18,46 @@ export default function About() {
   const timeline = [
     {
       year: "2019",
-      title: "Started Practice",
-      description: "Opened Vee Nutrition to help people transform their relationship with food"
+      title: t("started-practice", "about"),
+      description: t("started-description", "about")
     },
     {
       year: "2020",
-      title: "Digital Platform Launch",
-      description: "Developed online consultation platform to reach more clients"
+      title: t("digital-platform", "about"),
+      description: t("digital-description", "about")
     },
     {
       year: "2021",
-      title: "500+ Clients Milestone",
-      description: "Reached milestone of helping over 500 individuals achieve their health goals"
+      title: t("milestone-500", "about"),
+      description: t("milestone-description", "about")
     },
     {
       year: "2022",
-      title: "Advanced Certifications",
-      description: "Completed specialized training in sports nutrition and metabolic health"
+      title: t("advanced-certs", "about"),
+      description: t("advanced-description", "about")
     },
     {
       year: "2024",
-      title: "Present Day",
-      description: "Continuing to evolve practice with latest nutrition science and technology"
+      title: t("present-day", "about"),
+      description: t("present-description", "about")
     }
   ];
 
   const values = [
     {
       icon: Heart,
-      title: "Compassionate Care",
-      description: "Every client receives personalized attention and support throughout their journey"
+      title: t("compassionate-care", "about"),
+      description: t("compassionate-description", "about")
     },
     {
       icon: Target,
-      title: "Evidence-Based",
-      description: "All recommendations are grounded in current scientific research and proven methods"
+      title: t("evidence-based", "about"),
+      description: t("evidence-description", "about")
     },
     {
       icon: Users,
-      title: "Sustainable Results",
-      description: "Focus on creating lasting lifestyle changes rather than quick fixes"
+      title: t("sustainable-results", "about"),
+      description: t("sustainable-description", "about")
     }
   ];
 
@@ -66,35 +69,33 @@ export default function About() {
           {/* Content */}
           <div>
             <Badge className="mb-4 bg-primary-100 text-primary-700 hover:bg-primary-100">
-              Meet Your Nutritionist
+              {t("meet-nutritionist", "about")}
             </Badge>
             <h1 className="text-4xl md:text-5xl font-bold mb-6">
-              Hi, I'm Vee - Your Partner in Health
+              {t("hi-im-vee", "about")}
             </h1>
             <p className="text-xl text-muted-foreground mb-8 leading-relaxed">
-              With over 5 years of experience in clinical nutrition and a passion for helping 
-              people transform their relationship with food, I believe that sustainable health 
-              starts with understanding your unique needs.
+              {t("vee-description", "about")}
             </p>
 
             {/* Key Stats */}
             <div className="grid grid-cols-3 gap-6 mb-8">
               <div className="text-center">
                 <div className="text-3xl font-bold text-primary-600 mb-2">500+</div>
-                <div className="text-sm text-muted-foreground">Happy Clients</div>
+                <div className="text-sm text-muted-foreground">{t("happy-clients", "about")}</div>
               </div>
               <div className="text-center">
                 <div className="text-3xl font-bold text-primary-600 mb-2">5+</div>
-                <div className="text-sm text-muted-foreground">Years Experience</div>
+                <div className="text-sm text-muted-foreground">{t("years-experience", "about")}</div>
               </div>
               <div className="text-center">
                 <div className="text-3xl font-bold text-primary-600 mb-2">98%</div>
-                <div className="text-sm text-muted-foreground">Success Rate</div>
+                <div className="text-sm text-muted-foreground">{t("success-rate", "about")}</div>
               </div>
             </div>
 
             <Button size="lg" asChild>
-              <Link href="/appointment">Book Your Consultation</Link>
+              <Link href="/appointment">{t("book-consultation", "about")}</Link>
             </Button>
           </div>
 
@@ -122,10 +123,10 @@ export default function About() {
         <div className="container mx-auto px-4">
           <div className="text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-bold mb-4">
-              Professional Qualifications
+              {t("professional-qualifications", "about")}
             </h2>
             <p className="text-xl text-muted-foreground">
-              Backed by education, certification, and continuous learning
+              {t("backed-by-education", "about")}
             </p>
           </div>
 
@@ -151,10 +152,10 @@ export default function About() {
           <div className="max-w-4xl mx-auto">
             <div className="text-center mb-16">
               <h2 className="text-3xl md:text-4xl font-bold mb-4">
-                My Approach to Nutrition
+                {t("my-approach", "about")}
               </h2>
               <p className="text-xl text-muted-foreground">
-                Sustainable, personalized, and evidence-based nutrition guidance
+                {t("sustainable-personalized", "about")}
               </p>
             </div>
 
@@ -183,10 +184,10 @@ export default function About() {
         <div className="container mx-auto px-4">
           <div className="text-center mb-16">
             <h2 className="text-3xl md:text-4xl font-bold mb-4">
-              My Journey
+              {t("my-journey", "about")}
             </h2>
             <p className="text-xl text-muted-foreground">
-              Building expertise and helping clients achieve their goals
+              {t("building-expertise", "about")}
             </p>
           </div>
 
@@ -227,13 +228,10 @@ export default function About() {
           <Card className="max-w-4xl mx-auto bg-gradient-to-r from-primary-500 to-primary-600 text-white">
             <CardContent className="p-12 text-center">
               <h2 className="text-3xl md:text-4xl font-bold mb-6">
-                Why I Do What I Do
+                {t("why-i-do", "about")}
               </h2>
               <blockquote className="text-xl leading-relaxed mb-8 italic">
-                "I believe that everyone deserves to feel confident and healthy in their own body. 
-                My mission is to provide you with the knowledge, tools, and support you need to 
-                create lasting positive changes. It's not about perfection – it's about progress, 
-                self-compassion, and finding what works for your unique lifestyle."
+                "{t("mission-quote", "about")}"
               </blockquote>
               <div className="flex items-center justify-center gap-4">
                 <div className="w-16 h-16 bg-white/20 rounded-full flex items-center justify-center">
@@ -241,7 +239,7 @@ export default function About() {
                 </div>
                 <div className="text-left">
                   <p className="font-semibold text-lg">Vee</p>
-                  <p className="text-primary-100">Registered Dietitian & Nutritionist</p>
+                  <p className="text-primary-100">{t("registered-dietitian-title", "about")}</p>
                 </div>
               </div>
             </CardContent>
@@ -253,17 +251,17 @@ export default function About() {
       <section className="py-20 bg-primary-50 dark:bg-gray-800">
         <div className="container mx-auto px-4 text-center">
           <h2 className="text-3xl md:text-4xl font-bold mb-4">
-            Ready to Start Your Journey?
+            {t("ready-start-journey", "about")}
           </h2>
           <p className="text-xl text-muted-foreground mb-8 max-w-2xl mx-auto">
-            Let's work together to create a personalized nutrition plan that fits your lifestyle and helps you achieve your health goals.
+            {t("lets-work-together", "about")}
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Button size="lg" asChild>
-              <Link href="/appointment">Book a Consultation</Link>
+              <Link href="/appointment">{t("book-consultation", "about")}</Link>
             </Button>
             <Button size="lg" variant="outline" asChild>
-              <Link href="/contact">Get in Touch</Link>
+              <Link href="/contact">{t("get-in-touch", "about")}</Link>
             </Button>
           </div>
         </div>
