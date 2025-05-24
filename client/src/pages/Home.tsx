@@ -24,21 +24,21 @@ export default function Home() {
   const services = [
     {
       icon: ClipboardList,
-      title: "Personalized Meal Plans",
-      description: "Custom nutrition plans tailored to your goals, preferences, and lifestyle. Updated regularly based on your progress.",
-      features: ["Detailed meal planning", "Shopping lists included", "Recipe substitutions"]
+      title: t("personalized-meal-plans", "home"),
+      description: t("meal-plans-description", "home"),
+      features: [t("detailed-meal-planning", "home"), t("shopping-lists", "home"), t("recipe-substitutions", "home")]
     },
     {
       icon: MessageCircle,
-      title: "24/7 Support & Messaging",
-      description: "Direct access to your nutritionist through our secure messaging platform. Get answers and support whenever you need it.",
-      features: ["Real-time messaging", "Quick question responses", "Motivational support"]
+      title: t("support-messaging", "home"),
+      description: t("support-description", "home"),
+      features: [t("real-time-messaging", "home"), t("quick-responses", "home"), t("motivational-support", "home")]
     },
     {
       icon: BookOpen,
-      title: "Exclusive Resources",
-      description: "Access our comprehensive library of guides, recipes, and educational materials to support your journey.",
-      features: ["Recipe collections", "Educational guides", "Video tutorials"]
+      title: t("exclusive-resources", "home"),
+      description: t("resources-description", "home"),
+      features: [t("recipe-collections", "home"), t("educational-guides", "home"), t("video-tutorials", "home")]
     }
   ];
 
