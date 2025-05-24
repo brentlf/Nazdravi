@@ -8,6 +8,7 @@ import { Badge } from "@/components/ui/badge";
 import { useFirestoreCollection } from "@/hooks/useFirestore";
 import { BlogPost } from "@/types";
 import { where, orderBy } from "firebase/firestore";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 export default function Blog() {
   const [searchTerm, setSearchTerm] = useState("");

@@ -111,12 +111,12 @@ export default function Appointment() {
                     <div className="flex items-center gap-3">
                       <CheckCircle className="w-5 h-5 text-green-500" />
                       <div>
-                        <h4 className="font-medium text-green-800 dark:text-green-200">Informed Consent</h4>
-                        <p className="text-sm text-green-600 dark:text-green-300">Consent form completed and recorded</p>
+                        <h4 className="font-medium text-green-800 dark:text-green-200">{t("informed-consent", "appointment")}</h4>
+                        <p className="text-sm text-green-600 dark:text-green-300">{t("consent-completed", "appointment")}</p>
                       </div>
                     </div>
                     <span className="text-xs bg-green-100 text-green-800 dark:bg-green-900/50 dark:text-green-200 px-2 py-1 rounded">
-                      Complete
+                      {t("complete", "appointment")}
                     </span>
                   </div>
                 ) : (
@@ -124,13 +124,13 @@ export default function Appointment() {
                     <div className="flex items-center gap-3">
                       <AlertTriangle className="w-5 h-5 text-amber-500" />
                       <div>
-                        <h4 className="font-medium text-amber-800 dark:text-amber-200">Informed Consent Required</h4>
-                        <p className="text-sm text-amber-600 dark:text-amber-300">Complete the informed consent form to enable booking</p>
+                        <h4 className="font-medium text-amber-800 dark:text-amber-200">{t("informed-consent-required", "appointment")}</h4>
+                        <p className="text-sm text-amber-600 dark:text-amber-300">{t("complete-consent", "appointment")}</p>
                       </div>
                     </div>
                     <Link href="/consent-form">
                       <Button size="sm" className="bg-amber-600 hover:bg-amber-700 text-white">
-                        Complete Form
+                        {t("complete-form", "appointment")}
                       </Button>
                     </Link>
                   </div>
@@ -142,14 +142,14 @@ export default function Appointment() {
             {user && hasConsent ? (
               <div className="mt-4 p-4 bg-[#A5CBA4]/10 rounded-lg border border-[#A5CBA4]/30 text-center">
                 <CheckCircle className="w-6 h-6 text-[#A5CBA4] mx-auto mb-2" />
-                <h4 className="font-semibold text-gray-800 dark:text-gray-200">Ready to Book</h4>
-                <p className="text-sm text-gray-600 dark:text-gray-300">All requirements completed</p>
+                <h4 className="font-semibold text-gray-800 dark:text-gray-200">{t("ready-to-book", "appointment")}</h4>
+                <p className="text-sm text-gray-600 dark:text-gray-300">{t("all-requirements-completed", "appointment")}</p>
               </div>
             ) : (
               <div className="mt-4 p-4 bg-gray-50 dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 text-center">
                 <AlertTriangle className="w-6 h-6 text-gray-400 mx-auto mb-2" />
-                <h4 className="font-semibold text-gray-600 dark:text-gray-400">Complete Requirements Above</h4>
-                <p className="text-sm text-gray-500 dark:text-gray-400">Booking will be enabled once all steps are completed</p>
+                <h4 className="font-semibold text-gray-600 dark:text-gray-400">{t("complete-requirements", "appointment")}</h4>
+                <p className="text-sm text-gray-500 dark:text-gray-400">{t("booking-enabled", "appointment")}</p>
               </div>
             )}
           </div>
@@ -160,10 +160,10 @@ export default function Appointment() {
           ) : (
             <div className="bg-gray-50 dark:bg-gray-800 rounded-lg p-8 text-center">
               <h3 className="text-lg font-medium text-gray-600 dark:text-gray-400 mb-2">
-                Appointment Booking Form
+                {t("appointment-booking-form", "appointment")}
               </h3>
               <p className="text-gray-500 dark:text-gray-500">
-                Complete the requirements above to access the booking form
+                {t("complete-requirements-access", "appointment")}
               </p>
             </div>
           )}
@@ -174,32 +174,32 @@ export default function Appointment() {
           <div className="grid md:grid-cols-2 gap-8">
             {/* What to Expect */}
             <div className="bg-white dark:bg-gray-900 rounded-2xl p-8 shadow-lg">
-              <h3 className="text-xl font-semibold mb-4">What to Expect</h3>
+              <h3 className="text-xl font-semibold mb-4">{t("what-to-expect", "appointment")}</h3>
               <ul className="space-y-3 text-muted-foreground">
                 <li className="flex items-start space-x-3">
                   <div className="w-2 h-2 bg-primary-500 rounded-full mt-2"></div>
-                  <span>Comprehensive health and lifestyle assessment</span>
+                  <span>{t("health-assessment", "appointment")}</span>
                 </li>
                 <li className="flex items-start space-x-3">
                   <div className="w-2 h-2 bg-primary-500 rounded-full mt-2"></div>
-                  <span>Discussion of your nutrition goals and challenges</span>
+                  <span>{t("nutrition-goals", "appointment")}</span>
                 </li>
                 <li className="flex items-start space-x-3">
                   <div className="w-2 h-2 bg-primary-500 rounded-full mt-2"></div>
-                  <span>Initial recommendations and next steps</span>
+                  <span>{t("initial-recommendations", "appointment")}</span>
                 </li>
                 <li className="flex items-start space-x-3">
                   <div className="w-2 h-2 bg-primary-500 rounded-full mt-2"></div>
-                  <span>Access to your personal client dashboard</span>
+                  <span>{t("client-dashboard", "appointment")}</span>
                 </li>
               </ul>
             </div>
 
             {/* Contact Information */}
             <div className="bg-white dark:bg-gray-900 rounded-2xl p-8 shadow-lg">
-              <h3 className="text-xl font-semibold mb-4">Questions?</h3>
+              <h3 className="text-xl font-semibold mb-4">{t("questions", "appointment")}</h3>
               <p className="text-muted-foreground mb-6">
-                If you have any questions or need assistance with booking, feel free to contact us directly.
+                {t("questions-description", "appointment")}
               </p>
               <div className="space-y-3">
                 <div className="flex items-center space-x-3">
