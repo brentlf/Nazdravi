@@ -1,10 +1,11 @@
 import { useState } from "react";
-import { Search, Calendar, Clock, CheckCircle, XCircle, AlertCircle, Filter, ArrowLeft, CalendarX, RotateCcw } from "lucide-react";
+import { Search, Calendar, Clock, CheckCircle, XCircle, AlertCircle, Filter, ArrowLeft, CalendarX, RotateCcw, Edit } from "lucide-react";
 import { Link } from "wouter";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
+import { Label } from "@/components/ui/label";
 import {
   Select,
   SelectContent,
@@ -38,6 +39,9 @@ export default function AdminAppointments() {
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState<string>("all");
   const [selectedAppointment, setSelectedAppointment] = useState<Appointment | null>(null);
+  const [isEditingAppointment, setIsEditingAppointment] = useState(false);
+  const [editDate, setEditDate] = useState("");
+  const [editTimeslot, setEditTimeslot] = useState("");
   const { toast } = useToast();
 
   // Fetch appointments
@@ -86,6 +90,47 @@ export default function AdminAppointments() {
         variant: "destructive",
       });
     }
+  };
+
+  const handleEditAppointment = async () => {
+    if (!selectedAppointment || !editDate || !editTimeslot) {
+      toast({
+        title: "Missing information",
+        description: "Please select both date and time slot.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    try {
+      await updateAppointment(selectedAppointment.id!, { 
+        date: editDate, 
+        timeslot: editTimeslot 
+      });
+      
+      toast({
+        title: "Appointment updated",
+        description: "Appointment date and time have been successfully changed.",
+      });
+      
+      setIsEditingAppointment(false);
+      setSelectedAppointment(null);
+      setEditDate("");
+      setEditTimeslot("");
+    } catch (error) {
+      toast({
+        title: "Update failed",
+        description: "Failed to update appointment. Please try again.",
+        variant: "destructive",
+      });
+    }
+  };
+
+  const startEditingAppointment = (appointment: Appointment) => {
+    setSelectedAppointment(appointment);
+    setEditDate(appointment.date);
+    setEditTimeslot(appointment.timeslot);
+    setIsEditingAppointment(true);
   };
 
   const getStatusIcon = (status: string) => {
@@ -285,16 +330,25 @@ export default function AdminAppointments() {
                         </span>
                       </TableCell>
                       <TableCell className="text-right">
-                        <Dialog>
-                          <DialogTrigger asChild>
-                            <Button 
-                              variant="outline" 
-                              size="sm"
-                              onClick={() => setSelectedAppointment(appointment)}
-                            >
-                              View Details
-                            </Button>
-                          </DialogTrigger>
+                        <div className="flex gap-2 justify-end">
+                          <Button 
+                            variant="outline" 
+                            size="sm"
+                            onClick={() => startEditingAppointment(appointment)}
+                          >
+                            <Edit className="w-4 h-4 mr-1" />
+                            Edit
+                          </Button>
+                          <Dialog>
+                            <DialogTrigger asChild>
+                              <Button 
+                                variant="outline" 
+                                size="sm"
+                                onClick={() => setSelectedAppointment(appointment)}
+                              >
+                                View Details
+                              </Button>
+                            </DialogTrigger>
                           <DialogContent className="max-w-2xl">
                             <DialogHeader>
                               <DialogTitle>Appointment Details</DialogTitle>
@@ -432,6 +486,7 @@ export default function AdminAppointments() {
                             </DialogFooter>
                           </DialogContent>
                         </Dialog>
+                        </div>
                       </TableCell>
                     </TableRow>
                   ))}
@@ -451,6 +506,77 @@ export default function AdminAppointments() {
             )}
           </CardContent>
         </Card>
+
+        {/* Edit Appointment Dialog */}
+        <Dialog open={isEditingAppointment} onOpenChange={setIsEditingAppointment}>
+          <DialogContent className="max-w-md">
+            <DialogHeader>
+              <DialogTitle>Edit Appointment</DialogTitle>
+              <DialogDescription>
+                Change the date and time for this appointment
+              </DialogDescription>
+            </DialogHeader>
+            
+            {selectedAppointment && (
+              <div className="space-y-4">
+                <div>
+                  <p className="text-sm font-medium mb-2">Client: {selectedAppointment.name}</p>
+                  <p className="text-sm text-muted-foreground mb-4">
+                    Current: {new Date(selectedAppointment.date).toLocaleDateString()} at {selectedAppointment.timeslot}
+                  </p>
+                </div>
+
+                <div className="space-y-4">
+                  <div>
+                    <Label htmlFor="edit-date">New Date</Label>
+                    <Input
+                      id="edit-date"
+                      type="date"
+                      value={editDate}
+                      onChange={(e) => setEditDate(e.target.value)}
+                      min={new Date().toISOString().split('T')[0]}
+                    />
+                  </div>
+
+                  <div>
+                    <Label htmlFor="edit-timeslot">New Time Slot</Label>
+                    <Select value={editTimeslot} onValueChange={setEditTimeslot}>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select time slot" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="09:00">09:00</SelectItem>
+                        <SelectItem value="10:00">10:00</SelectItem>
+                        <SelectItem value="11:00">11:00</SelectItem>
+                        <SelectItem value="13:00">13:00</SelectItem>
+                        <SelectItem value="14:00">14:00</SelectItem>
+                        <SelectItem value="15:00">15:00</SelectItem>
+                        <SelectItem value="16:00">16:00</SelectItem>
+                        <SelectItem value="17:00">17:00</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            <DialogFooter>
+              <Button
+                variant="outline"
+                onClick={() => setIsEditingAppointment(false)}
+              >
+                Cancel
+              </Button>
+              <Button
+                onClick={handleEditAppointment}
+                disabled={actionLoading || !editDate || !editTimeslot}
+                className="bg-blue-600 hover:bg-blue-700"
+              >
+                {actionLoading ? "Saving..." : "Save Changes"}
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
 
         {/* Summary Stats */}
         <div className="grid md:grid-cols-4 gap-6 mt-8">
