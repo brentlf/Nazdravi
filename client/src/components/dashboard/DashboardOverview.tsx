@@ -48,9 +48,23 @@ export function DashboardOverview() {
     user?.uid ? [where("userId", "==", user.uid)] : []
   );
 
-  // Fetch client's invoices
-  const { data: invoices } = useFirestoreCollection<Invoice>("invoices", 
-    user?.uid ? [where("userId", "==", user.uid), orderBy("createdAt", "desc")] : []
+  // Fetch client's invoices by multiple identifiers
+  const { data: invoicesByUserId } = useFirestoreCollection<Invoice>("invoices", 
+    user?.uid ? [where("userId", "==", user.uid)] : []
+  );
+  
+  const { data: invoicesByEmail } = useFirestoreCollection<Invoice>("invoices", 
+    user?.email ? [where("clientEmail", "==", user.email)] : []
+  );
+
+  // Combine and deduplicate invoices
+  const allUserInvoices = [
+    ...(invoicesByUserId || []),
+    ...(invoicesByEmail || [])
+  ];
+  
+  const invoices = allUserInvoices.filter((invoice, index, self) => 
+    index === self.findIndex(i => i.invoiceNumber === invoice.invoiceNumber)
   );
 
   // Combine all appointment sources

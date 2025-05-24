@@ -11,10 +11,26 @@ import type { Invoice } from "@shared/firebase-schema";
 export default function DashboardInvoices() {
   const { effectiveUser: user } = useAuth();
 
-  // Fetch client's invoices
-  const { data: invoices, loading } = useFirestoreCollection<Invoice>("invoices", 
-    user?.uid ? [where("userId", "==", user.uid), orderBy("createdAt", "desc")] : []
+  // Fetch client's invoices by multiple possible user identifiers
+  const { data: invoicesByUserId, loading: loadingById } = useFirestoreCollection<Invoice>("invoices", 
+    user?.uid ? [where("userId", "==", user.uid)] : []
   );
+  
+  const { data: invoicesByEmail, loading: loadingByEmail } = useFirestoreCollection<Invoice>("invoices", 
+    user?.email ? [where("clientEmail", "==", user.email)] : []
+  );
+
+  // Combine and deduplicate invoices
+  const allInvoices = [
+    ...(invoicesByUserId || []),
+    ...(invoicesByEmail || [])
+  ];
+  
+  const invoices = allInvoices.filter((invoice, index, self) => 
+    index === self.findIndex(i => i.invoiceNumber === invoice.invoiceNumber)
+  ).sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+
+  const loading = loadingById || loadingByEmail;
 
   const handlePayInvoice = (invoice: Invoice) => {
     if (invoice.paymentUrl) {
