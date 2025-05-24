@@ -4,6 +4,8 @@ import { storage } from "./storage";
 import { mailerLiteService } from "./email";
 import { teamsService } from "./microsoft-teams";
 import Stripe from "stripe";
+import { db } from "../client/src/lib/firebase";
+import { collection, addDoc } from "firebase/firestore";
 
 if (!process.env.STRIPE_SECRET_KEY) {
   throw new Error('Missing required Stripe secret: STRIPE_SECRET_KEY');
@@ -211,8 +213,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
         paymentUrl: `${req.protocol}://${req.get('host')}/pay-invoice/${invoiceNumber}`
       };
 
+      // Save invoice to Firebase
+      const docRef = await addDoc(collection(db, "invoices"), invoiceData);
+      console.log("Invoice saved to Firebase with ID:", docRef.id);
+
       res.json({
-        invoice: invoiceData,
+        invoice: { ...invoiceData, id: docRef.id },
         clientSecret: paymentIntent.client_secret
       });
     } catch (error) {
