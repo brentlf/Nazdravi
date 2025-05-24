@@ -11,7 +11,7 @@ import { where, orderBy } from "firebase/firestore";
 import { Link } from "wouter";
 
 export default function DashboardPlan() {
-  const { user } = useAuth();
+  const { effectiveUser: user, isAdminViewingClient } = useAuth();
   
   // Fetch user's nutrition plans
   const { data: plans, loading } = useFirestoreCollection<Plan>("plans", [

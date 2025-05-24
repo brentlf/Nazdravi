@@ -60,7 +60,7 @@ export default function DashboardAppointments() {
   const [isCancelOpen, setIsCancelOpen] = useState(false);
   const [selectedAppointment, setSelectedAppointment] = useState<any>(null);
   const [rescheduleDate, setRescheduleDate] = useState("");
-  const { user } = useAuth();
+  const { effectiveUser: user, isAdminViewingClient } = useAuth();
   const { toast } = useToast();
   const { add: addAppointment, update: updateAppointment, loading: booking } = useFirestoreActions("appointments");
 

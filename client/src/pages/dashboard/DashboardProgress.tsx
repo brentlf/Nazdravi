@@ -45,7 +45,7 @@ type ProgressFormData = z.infer<typeof progressSchema>;
 
 export default function DashboardProgress() {
   const [isAddingProgress, setIsAddingProgress] = useState(false);
-  const { user } = useAuth();
+  const { effectiveUser: user, isAdminViewingClient } = useAuth();
   const { toast } = useToast();
   const { add: addProgress, loading: adding } = useFirestoreActions("progress");
 
