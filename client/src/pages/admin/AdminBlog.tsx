@@ -1,333 +1,501 @@
 import { useState } from "react";
-import { PenTool, Plus, Eye, Trash2, Edit, Globe } from "lucide-react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { ArrowLeft, Plus, Edit, Trash2, Search, Image, Save, Eye } from "lucide-react";
+import { Link } from "wouter";
 import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { Switch } from "@/components/ui/switch";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Switch } from "@/components/ui/switch";
+import { Badge } from "@/components/ui/badge";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { useToast } from "@/hooks/use-toast";
 import { useFirestoreCollection, useFirestoreActions } from "@/hooks/useFirestore";
+import { useToast } from "@/hooks/use-toast";
+import { storage } from "@/lib/firebase";
+import { ref, uploadBytes, getDownloadURL, deleteObject } from "firebase/storage";
 import { BlogPost } from "@/types";
 
+interface BlogPostFormData {
+  title: string;
+  slug: string;
+  excerpt: string;
+  content: string;
+  tags: string[];
+  lang: "en" | "cs";
+  published: boolean;
+  featuredImage: File | null;
+  featuredImageUrl?: string;
+}
+
 export default function AdminBlog() {
-  const [isCreateOpen, setIsCreateOpen] = useState(false);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [selectedLang, setSelectedLang] = useState<"all" | "en" | "cs">("all");
+  const [dialogOpen, setDialogOpen] = useState(false);
   const [editingPost, setEditingPost] = useState<BlogPost | null>(null);
-  const { toast } = useToast();
-
-  const { data: blogPosts, loading } = useFirestoreCollection<BlogPost>("blogPosts");
-  const { add: addPost, update: updatePost, remove: removePost } = useFirestoreActions("blogPosts");
-
-  const [formData, setFormData] = useState({
+  const [uploading, setUploading] = useState(false);
+  const [formData, setFormData] = useState<BlogPostFormData>({
     title: "",
+    slug: "",
     excerpt: "",
     content: "",
-    tags: "",
+    tags: [],
     lang: "en",
     published: false,
-    featuredImage: ""
+    featuredImage: null,
+    featuredImageUrl: ""
   });
 
-  const handleSubmit = async () => {
-    if (!formData.title || !formData.content) {
+  const { toast } = useToast();
+
+  // Fetch blog posts
+  const { data: blogPosts } = useFirestoreCollection<BlogPost>("blogs", []);
+  const { add: addBlogPost, update: updateBlogPost, remove: removeBlogPost } = useFirestoreActions("blogs");
+
+  // Filter blog posts
+  const filteredPosts = blogPosts?.filter(post => {
+    const matchesSearch = !searchTerm || 
+      post.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      post.excerpt.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      post.tags.some(tag => tag.toLowerCase().includes(searchTerm.toLowerCase()));
+    
+    const matchesLang = selectedLang === "all" || post.lang === selectedLang;
+    
+    return matchesSearch && matchesLang;
+  }) || [];
+
+  const generateSlug = (title: string) => {
+    return title
+      .toLowerCase()
+      .replace(/[^a-z0-9\s-]/g, '')
+      .replace(/\s+/g, '-')
+      .replace(/-+/g, '-')
+      .trim();
+  };
+
+  const handleTitleChange = (title: string) => {
+    setFormData(prev => ({
+      ...prev,
+      title,
+      slug: prev.slug || generateSlug(title)
+    }));
+  };
+
+  const handleTagsChange = (tagsString: string) => {
+    const tags = tagsString.split(',').map(tag => tag.trim()).filter(tag => tag.length > 0);
+    setFormData(prev => ({ ...prev, tags }));
+  };
+
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0] || null;
+    setFormData(prev => ({ ...prev, featuredImage: file }));
+  };
+
+  const uploadImage = async (file: File): Promise<string> => {
+    const imageRef = ref(storage, `blog-images/${Date.now()}_${file.name}`);
+    const uploadResult = await uploadBytes(imageRef, file);
+    return getDownloadURL(uploadResult.ref);
+  };
+
+  const handleSavePost = async () => {
+    if (!formData.title.trim() || !formData.content.trim()) {
       toast({
         title: "Missing information",
-        description: "Please fill in title and content.",
-        variant: "destructive",
+        description: "Please fill in the title and content.",
+        variant: "destructive"
       });
       return;
     }
 
+    setUploading(true);
+    
     try {
+      let featuredImageUrl = formData.featuredImageUrl || "";
+
+      // Upload featured image if provided
+      if (formData.featuredImage) {
+        featuredImageUrl = await uploadImage(formData.featuredImage);
+      }
+
       const postData = {
-        ...formData,
-        slug: formData.title.toLowerCase().replace(/[^a-z0-9]+/g, '-'),
-        tags: formData.tags.split(',').map(tag => tag.trim()).filter(Boolean),
-        createdAt: editingPost?.createdAt || new Date(),
-        updatedAt: new Date(),
+        title: formData.title,
+        slug: formData.slug || generateSlug(formData.title),
+        excerpt: formData.excerpt,
+        content: formData.content,
+        featuredImage: featuredImageUrl,
+        tags: formData.tags,
+        lang: formData.lang,
+        published: formData.published,
+        updatedAt: new Date()
       };
 
       if (editingPost) {
-        await updatePost(editingPost.id, postData);
+        // Update existing post
+        await updateBlogPost(editingPost.id, postData);
         toast({
-          title: "Post updated",
-          description: "Blog post has been successfully updated.",
+          title: "Blog post updated",
+          description: "Your blog post has been updated successfully."
         });
       } else {
-        await addPost(postData);
+        // Create new post
+        await addBlogPost({
+          ...postData,
+          createdAt: new Date()
+        });
         toast({
-          title: "Post created",
-          description: "New blog post has been created.",
+          title: "Blog post created",
+          description: "Your blog post has been created successfully."
         });
       }
 
-      setFormData({
-        title: "",
-        excerpt: "",
-        content: "",
-        tags: "",
-        lang: "en",
-        published: false,
-        featuredImage: ""
-      });
-      setIsCreateOpen(false);
-      setEditingPost(null);
+      // Reset form
+      resetForm();
+      setDialogOpen(false);
+
     } catch (error) {
+      console.error("Save error:", error);
       toast({
-        title: "Operation failed",
-        description: "Please try again.",
-        variant: "destructive",
+        title: "Save failed",
+        description: "Failed to save blog post. Please try again.",
+        variant: "destructive"
       });
+    } finally {
+      setUploading(false);
     }
   };
 
-  const handleEdit = (post: BlogPost) => {
+  const handleEditPost = (post: BlogPost) => {
+    setEditingPost(post);
     setFormData({
       title: post.title,
+      slug: post.slug,
       excerpt: post.excerpt,
       content: post.content,
-      tags: post.tags.join(', '),
+      tags: post.tags,
       lang: post.lang,
       published: post.published,
-      featuredImage: post.featuredImage || ""
+      featuredImage: null,
+      featuredImageUrl: post.featuredImage || ""
     });
-    setEditingPost(post);
-    setIsCreateOpen(true);
+    setDialogOpen(true);
   };
 
-  const handleDelete = async (postId: string) => {
-    if (confirm("Are you sure you want to delete this blog post?")) {
-      try {
-        await removePost(postId);
-        toast({
-          title: "Post deleted",
-          description: "Blog post has been removed.",
-        });
-      } catch (error) {
-        toast({
-          title: "Delete failed",
-          description: "Please try again.",
-          variant: "destructive",
-        });
+  const handleDeletePost = async (post: BlogPost) => {
+    try {
+      // Delete featured image from storage if exists
+      if (post.featuredImage) {
+        try {
+          const imageRef = ref(storage, post.featuredImage);
+          await deleteObject(imageRef);
+        } catch (error) {
+          console.log("Image deletion failed (may not exist):", error);
+        }
       }
+
+      // Remove post from Firestore
+      await removeBlogPost(post.id);
+
+      toast({
+        title: "Blog post deleted",
+        description: "The blog post has been removed successfully."
+      });
+
+    } catch (error) {
+      console.error("Delete error:", error);
+      toast({
+        title: "Delete failed",
+        description: "Failed to delete blog post. Please try again.",
+        variant: "destructive"
+      });
     }
+  };
+
+  const resetForm = () => {
+    setFormData({
+      title: "",
+      slug: "",
+      excerpt: "",
+      content: "",
+      tags: [],
+      lang: "en",
+      published: false,
+      featuredImage: null,
+      featuredImageUrl: ""
+    });
+    setEditingPost(null);
+  };
+
+  const openNewPostDialog = () => {
+    resetForm();
+    setDialogOpen(true);
   };
 
   return (
     <div className="min-h-screen py-20 bg-gray-50 dark:bg-gray-900">
       <div className="container mx-auto px-4">
-        <div className="mb-8 flex justify-between items-center">
-          <div>
-            <h1 className="text-3xl font-bold mb-2">Blog Management</h1>
-            <p className="text-muted-foreground">
-              Create and manage nutrition blog posts for your clients
-            </p>
-          </div>
-          <Dialog open={isCreateOpen} onOpenChange={setIsCreateOpen}>
-            <DialogTrigger asChild>
-              <Button className="bg-[#A5CBA4] hover:bg-[#95bb94] text-white">
-                <Plus className="w-4 h-4 mr-2" />
-                New Post
-              </Button>
-            </DialogTrigger>
-            <DialogContent className="max-w-4xl max-h-[80vh] overflow-y-auto">
-              <DialogHeader>
-                <DialogTitle>
-                  {editingPost ? "Edit Blog Post" : "Create New Blog Post"}
-                </DialogTitle>
-              </DialogHeader>
-              <div className="space-y-6">
-                <div className="grid md:grid-cols-2 gap-4">
-                  <div>
-                    <Label htmlFor="title">Title</Label>
-                    <Input
-                      id="title"
-                      value={formData.title}
-                      onChange={(e) => setFormData({...formData, title: e.target.value})}
-                      placeholder="Enter post title"
-                    />
-                  </div>
-                  <div>
-                    <Label htmlFor="lang">Language</Label>
-                    <Select value={formData.lang} onValueChange={(value) => setFormData({...formData, lang: value})}>
-                      <SelectTrigger>
-                        <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="en">English</SelectItem>
-                        <SelectItem value="cs">Czech</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-                </div>
-
-                <div>
-                  <Label htmlFor="excerpt">Excerpt</Label>
-                  <Textarea
-                    id="excerpt"
-                    value={formData.excerpt}
-                    onChange={(e) => setFormData({...formData, excerpt: e.target.value})}
-                    placeholder="Brief description of the post"
-                    rows={3}
-                  />
-                </div>
-
-                <div>
-                  <Label htmlFor="content">Content</Label>
-                  <Textarea
-                    id="content"
-                    value={formData.content}
-                    onChange={(e) => setFormData({...formData, content: e.target.value})}
-                    placeholder="Write your blog post content here..."
-                    rows={12}
-                  />
-                </div>
-
-                <div className="grid md:grid-cols-2 gap-4">
-                  <div>
-                    <Label htmlFor="tags">Tags (comma-separated)</Label>
-                    <Input
-                      id="tags"
-                      value={formData.tags}
-                      onChange={(e) => setFormData({...formData, tags: e.target.value})}
-                      placeholder="nutrition, health, diet"
-                    />
-                  </div>
-                  <div>
-                    <Label htmlFor="featuredImage">Featured Image URL</Label>
-                    <Input
-                      id="featuredImage"
-                      value={formData.featuredImage}
-                      onChange={(e) => setFormData({...formData, featuredImage: e.target.value})}
-                      placeholder="https://example.com/image.jpg"
-                    />
-                  </div>
-                </div>
-
-                <div className="flex items-center space-x-2">
-                  <Switch
-                    id="published"
-                    checked={formData.published}
-                    onCheckedChange={(checked) => setFormData({...formData, published: checked})}
-                  />
-                  <Label htmlFor="published">Publish immediately</Label>
-                </div>
-
-                <div className="flex gap-3">
-                  <Button onClick={handleSubmit} className="bg-[#A5CBA4] hover:bg-[#95bb94] text-white">
-                    {editingPost ? "Update Post" : "Create Post"}
-                  </Button>
-                  <Button variant="outline" onClick={() => {
-                    setIsCreateOpen(false);
-                    setEditingPost(null);
-                    setFormData({
-                      title: "",
-                      excerpt: "",
-                      content: "",
-                      tags: "",
-                      lang: "en",
-                      published: false,
-                      featuredImage: ""
-                    });
-                  }}>
-                    Cancel
-                  </Button>
-                </div>
-              </div>
-            </DialogContent>
-          </Dialog>
+        {/* Header with Back Navigation */}
+        <div className="mb-8">
+          <Button variant="ghost" size="sm" className="mb-4" asChild>
+            <Link href="/admin">
+              <ArrowLeft className="mr-2 h-4 w-4" />
+              Back to Admin Dashboard
+            </Link>
+          </Button>
+          <h1 className="text-3xl font-bold mb-2">Blog Management</h1>
+          <p className="text-muted-foreground">
+            Create and manage blog posts with image uploads
+          </p>
         </div>
 
-        {loading ? (
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {[...Array(6)].map((_, i) => (
-              <Card key={i}>
-                <CardContent className="p-6">
-                  <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded mb-4 animate-pulse"></div>
-                  <div className="h-3 bg-gray-200 dark:bg-gray-700 rounded mb-2 animate-pulse"></div>
-                  <div className="h-3 bg-gray-200 dark:bg-gray-700 rounded w-2/3 animate-pulse"></div>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        ) : blogPosts && blogPosts.length > 0 ? (
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {blogPosts.map((post) => (
-              <Card key={post.id}>
-                <CardContent className="p-6">
-                  <div className="flex items-start justify-between mb-4">
-                    <div className={`px-2 py-1 rounded text-xs ${
-                      post.published 
-                        ? 'bg-green-100 text-green-800' 
-                        : 'bg-yellow-100 text-yellow-800'
-                    }`}>
-                      {post.published ? 'Published' : 'Draft'}
+        {/* Actions and Filters */}
+        <Card className="mb-8">
+          <CardContent className="p-6">
+            <div className="flex flex-col md:flex-row gap-4 justify-between">
+              {/* Search */}
+              <div className="flex-1 relative">
+                <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+                <Input
+                  placeholder="Search blog posts..."
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  className="pl-9"
+                />
+              </div>
+
+              {/* Language Filter */}
+              <Select value={selectedLang} onValueChange={(value: any) => setSelectedLang(value)}>
+                <SelectTrigger className="w-40">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">All Languages</SelectItem>
+                  <SelectItem value="en">English</SelectItem>
+                  <SelectItem value="cs">Czech</SelectItem>
+                </SelectContent>
+              </Select>
+
+              {/* New Post Button */}
+              <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
+                <DialogTrigger asChild>
+                  <Button onClick={openNewPostDialog}>
+                    <Plus className="w-4 h-4 mr-2" />
+                    New Blog Post
+                  </Button>
+                </DialogTrigger>
+                <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
+                  <DialogHeader>
+                    <DialogTitle>
+                      {editingPost ? "Edit Blog Post" : "Create New Blog Post"}
+                    </DialogTitle>
+                  </DialogHeader>
+                  
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    {/* Left Column - Basic Info */}
+                    <div className="space-y-4">
+                      <div>
+                        <Label htmlFor="title">Title</Label>
+                        <Input
+                          id="title"
+                          value={formData.title}
+                          onChange={(e) => handleTitleChange(e.target.value)}
+                          placeholder="Enter blog post title"
+                        />
+                      </div>
+
+                      <div>
+                        <Label htmlFor="slug">URL Slug</Label>
+                        <Input
+                          id="slug"
+                          value={formData.slug}
+                          onChange={(e) => setFormData(prev => ({ ...prev, slug: e.target.value }))}
+                          placeholder="url-friendly-slug"
+                        />
+                      </div>
+
+                      <div>
+                        <Label htmlFor="excerpt">Excerpt</Label>
+                        <Textarea
+                          id="excerpt"
+                          value={formData.excerpt}
+                          onChange={(e) => setFormData(prev => ({ ...prev, excerpt: e.target.value }))}
+                          placeholder="Brief description of the post"
+                          rows={3}
+                        />
+                      </div>
+
+                      <div>
+                        <Label htmlFor="tags">Tags (comma-separated)</Label>
+                        <Input
+                          id="tags"
+                          value={formData.tags.join(', ')}
+                          onChange={(e) => handleTagsChange(e.target.value)}
+                          placeholder="nutrition, health, diet"
+                        />
+                      </div>
+
+                      <div>
+                        <Label htmlFor="language">Language</Label>
+                        <Select value={formData.lang} onValueChange={(value: "en" | "cs") => setFormData(prev => ({ ...prev, lang: value }))}>
+                          <SelectTrigger>
+                            <SelectValue />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="en">English</SelectItem>
+                            <SelectItem value="cs">Czech</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </div>
+
+                      <div className="flex items-center space-x-2">
+                        <Switch
+                          id="published"
+                          checked={formData.published}
+                          onCheckedChange={(checked) => setFormData(prev => ({ ...prev, published: checked }))}
+                        />
+                        <Label htmlFor="published">Publish immediately</Label>
+                      </div>
+
+                      <div>
+                        <Label htmlFor="featured-image">Featured Image</Label>
+                        <Input
+                          id="featured-image"
+                          type="file"
+                          accept="image/*"
+                          onChange={handleImageChange}
+                        />
+                        {(formData.featuredImageUrl || formData.featuredImage) && (
+                          <div className="mt-2">
+                            <p className="text-sm text-muted-foreground">
+                              {formData.featuredImage ? `Selected: ${formData.featuredImage.name}` : "Current image will be used"}
+                            </p>
+                          </div>
+                        )}
+                      </div>
                     </div>
-                    <div className="flex items-center gap-1 text-xs text-muted-foreground">
-                      <Globe className="w-3 h-3" />
-                      {post.lang.toUpperCase()}
+
+                    {/* Right Column - Content */}
+                    <div className="space-y-4">
+                      <div>
+                        <Label htmlFor="content">Content</Label>
+                        <Textarea
+                          id="content"
+                          value={formData.content}
+                          onChange={(e) => setFormData(prev => ({ ...prev, content: e.target.value }))}
+                          placeholder="Write your blog post content here..."
+                          rows={20}
+                          className="font-mono text-sm"
+                        />
+                      </div>
                     </div>
                   </div>
-                  
-                  <h3 className="font-semibold mb-2 line-clamp-2">{post.title}</h3>
-                  <p className="text-sm text-muted-foreground mb-4 line-clamp-3">
-                    {post.excerpt}
-                  </p>
-                  
-                  <div className="flex flex-wrap gap-1 mb-4">
-                    {post.tags.slice(0, 3).map((tag) => (
-                      <span key={tag} className="bg-[#A5CBA4]/20 text-[#A5CBA4] text-xs px-2 py-1 rounded">
-                        {tag}
-                      </span>
-                    ))}
+
+                  <div className="flex justify-end space-x-2 pt-4">
+                    <Button variant="outline" onClick={() => setDialogOpen(false)}>
+                      Cancel
+                    </Button>
+                    <Button onClick={handleSavePost} disabled={uploading}>
+                      {uploading ? (
+                        <>
+                          <Save className="w-4 h-4 mr-2 animate-spin" />
+                          Saving...
+                        </>
+                      ) : (
+                        <>
+                          <Save className="w-4 h-4 mr-2" />
+                          {editingPost ? "Update Post" : "Create Post"}
+                        </>
+                      )}
+                    </Button>
                   </div>
-                  
-                  <div className="flex justify-between items-center">
-                    <span className="text-xs text-muted-foreground">
-                      {new Date(post.createdAt).toLocaleDateString()}
-                    </span>
-                    <div className="flex gap-2">
+                </DialogContent>
+              </Dialog>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Blog Posts List */}
+        <Card>
+          <CardHeader>
+            <CardTitle>Blog Posts ({filteredPosts.length})</CardTitle>
+          </CardHeader>
+          <CardContent>
+            {filteredPosts.length > 0 ? (
+              <div className="space-y-4">
+                {filteredPosts.map(post => (
+                  <div key={post.id} className="flex items-start justify-between p-4 border rounded-lg">
+                    <div className="flex space-x-4 flex-1">
+                      {/* Featured Image */}
+                      {post.featuredImage && (
+                        <div className="w-16 h-16 bg-gray-200 dark:bg-gray-700 rounded-lg overflow-hidden flex-shrink-0">
+                          <img 
+                            src={post.featuredImage} 
+                            alt={post.title}
+                            className="w-full h-full object-cover"
+                          />
+                        </div>
+                      )}
+                      
+                      {/* Post Info */}
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center gap-2 mb-1">
+                          <h3 className="font-medium truncate">{post.title}</h3>
+                          <Badge variant={post.published ? "default" : "secondary"}>
+                            {post.published ? "Published" : "Draft"}
+                          </Badge>
+                          <Badge variant="outline">
+                            {post.lang.toUpperCase()}
+                          </Badge>
+                        </div>
+                        <p className="text-sm text-muted-foreground mb-2 line-clamp-2">
+                          {post.excerpt}
+                        </p>
+                        <div className="flex items-center gap-4 text-xs text-muted-foreground">
+                          <span>Created: {new Date(post.createdAt).toLocaleDateString()}</span>
+                          <span>Updated: {new Date(post.updatedAt).toLocaleDateString()}</span>
+                          {post.tags.length > 0 && (
+                            <span>Tags: {post.tags.join(', ')}</span>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Actions */}
+                    <div className="flex items-center space-x-2 flex-shrink-0">
                       <Button
-                        variant="outline"
                         size="sm"
-                        onClick={() => handleEdit(post)}
+                        variant="outline"
+                        onClick={() => window.open(`/blog/${post.slug}`, '_blank')}
+                      >
+                        <Eye className="w-4 h-4" />
+                      </Button>
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        onClick={() => handleEditPost(post)}
                       >
                         <Edit className="w-4 h-4" />
                       </Button>
                       <Button
-                        variant="outline"
                         size="sm"
-                        onClick={() => handleDelete(post.id)}
-                        className="text-red-600 hover:text-red-700"
+                        variant="outline"
+                        onClick={() => handleDeletePost(post)}
                       >
                         <Trash2 className="w-4 h-4" />
                       </Button>
                     </div>
                   </div>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        ) : (
-          <Card>
-            <CardContent className="text-center py-12">
-              <PenTool className="w-16 h-16 text-muted-foreground mx-auto mb-4" />
-              <h3 className="text-lg font-semibold mb-2">No blog posts yet</h3>
-              <p className="text-muted-foreground mb-4">
-                Start creating valuable nutrition content for your clients.
-              </p>
-              <Button 
-                onClick={() => setIsCreateOpen(true)}
-                className="bg-[#A5CBA4] hover:bg-[#95bb94] text-white"
-              >
-                <Plus className="w-4 h-4 mr-2" />
-                Create Your First Post
-              </Button>
-            </CardContent>
-          </Card>
-        )}
+                ))}
+              </div>
+            ) : (
+              <div className="text-center py-12">
+                <Image className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
+                <p className="text-muted-foreground">
+                  No blog posts found. Create your first blog post!
+                </p>
+              </div>
+            )}
+          </CardContent>
+        </Card>
       </div>
     </div>
   );

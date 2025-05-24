@@ -42,6 +42,7 @@ import AdminMessages from "@/pages/admin/AdminMessages";
 import AdminPlans from "@/pages/admin/AdminPlans";
 import AdminTranslations from "@/pages/admin/AdminTranslations";
 import AdminAvailability from "@/pages/admin/AdminAvailability";
+import AdminDocuments from "@/pages/admin/AdminDocuments";
 import AdminBlog from "@/pages/admin/AdminBlog";
 
 function Layout({ children }: { children: React.ReactNode }) {
@@ -141,6 +142,11 @@ function Router() {
       <Route path="/admin/availability">
         <RouteGuard role="admin">
           <Layout><AdminAvailability /></Layout>
+        </RouteGuard>
+      </Route>
+      <Route path="/admin/documents">
+        <RouteGuard role="admin">
+          <Layout><AdminDocuments /></Layout>
         </RouteGuard>
       </Route>
       <Route path="/admin/blog">

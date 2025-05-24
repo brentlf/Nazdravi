@@ -41,7 +41,12 @@ export interface Plan {
   id: string;
   userId: string;
   title: string;
+  description?: string;
   storagePath: string;
+  downloadURL?: string;
+  fileName?: string;
+  fileSize?: number;
+  fileType?: string;
   createdAt: Date;
 }
 
