@@ -33,13 +33,35 @@ export function MessageThread() {
   // Create chat room ID (user_admin format)
   const chatRoom = user ? `${user.uid}_admin` : "";
 
-  // Only fetch messages if user is authenticated and chatRoom exists
-  const { data: messages, loading } = useFirestoreCollection<Message>("messages", 
-    user && chatRoom ? [
-      where("chatRoom", "==", chatRoom),
-      orderBy("createdAt", "asc")
-    ] : []
+  // Fetch messages with fallback approach - try both current format and legacy format
+  const { data: messagesNew } = useFirestoreCollection<Message>("messages", 
+    user ? [where("chatRoom", "==", chatRoom), orderBy("createdAt", "asc")] : []
   );
+  
+  const { data: messagesLegacy } = useFirestoreCollection<Message>("messages", 
+    user ? [where("fromUser", "==", user.uid), orderBy("createdAt", "asc")] : []
+  );
+  
+  const { data: messagesLegacyTo } = useFirestoreCollection<Message>("messages", 
+    user ? [where("toUser", "==", user.uid), orderBy("createdAt", "asc")] : []
+  );
+
+  // Combine all messages and deduplicate
+  const allMessages = [
+    ...(messagesNew || []),
+    ...(messagesLegacy || []),
+    ...(messagesLegacyTo || [])
+  ];
+  
+  const messages = allMessages.filter((msg, index, self) => 
+    index === self.findIndex(m => m.id === msg.id)
+  ).sort((a, b) => {
+    const dateA = a.createdAt?.toDate ? a.createdAt.toDate() : new Date(a.createdAt);
+    const dateB = b.createdAt?.toDate ? b.createdAt.toDate() : new Date(b.createdAt);
+    return dateA.getTime() - dateB.getTime();
+  });
+
+  const loading = !messagesNew && !messagesLegacy && !messagesLegacyTo;
 
   // Debug logging to see what's happening
   useEffect(() => {
