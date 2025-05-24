@@ -21,6 +21,7 @@ interface BlogPostFormData {
   slug: string;
   excerpt: string;
   content: string;
+  mediumUrl: string;
   tags: string[];
   lang: "en" | "cs";
   published: boolean;
@@ -39,6 +40,7 @@ export default function AdminBlog() {
     slug: "",
     excerpt: "",
     content: "",
+    mediumUrl: "",
     tags: [],
     lang: "en",
     published: false,
@@ -122,6 +124,7 @@ export default function AdminBlog() {
         slug: formData.slug || generateSlug(formData.title),
         excerpt: formData.excerpt,
         content: formData.content,
+        mediumUrl: formData.mediumUrl,
         featuredImage: featuredImageUrl,
         tags: formData.tags,
         lang: formData.lang,
@@ -171,8 +174,9 @@ export default function AdminBlog() {
       slug: post.slug,
       excerpt: post.excerpt,
       content: post.content,
-      tags: post.tags,
-      lang: post.lang,
+      mediumUrl: post.mediumUrl || "",
+      tags: post.tags || [],
+      lang: post.lang as "en" | "cs",
       published: post.published,
       featuredImage: null,
       featuredImageUrl: post.featuredImage || ""
@@ -216,6 +220,7 @@ export default function AdminBlog() {
       slug: "",
       excerpt: "",
       content: "",
+      mediumUrl: "",
       tags: [],
       lang: "en",
       published: false,
@@ -320,6 +325,16 @@ export default function AdminBlog() {
                           onChange={(e) => setFormData(prev => ({ ...prev, excerpt: e.target.value }))}
                           placeholder="Brief description of the post"
                           rows={3}
+                        />
+                      </div>
+
+                      <div>
+                        <Label htmlFor="mediumUrl">Medium URL</Label>
+                        <Input
+                          id="mediumUrl"
+                          value={formData.mediumUrl}
+                          onChange={(e) => setFormData(prev => ({ ...prev, mediumUrl: e.target.value }))}
+                          placeholder="https://medium.com/@yourhandle/your-post"
                         />
                       </div>
 
@@ -464,7 +479,8 @@ export default function AdminBlog() {
                       <Button
                         size="sm"
                         variant="outline"
-                        onClick={() => window.open(`/blog/${post.slug}`, '_blank')}
+                        onClick={() => window.open(post.mediumUrl || `/blog/${post.slug}`, '_blank')}
+                        disabled={!post.mediumUrl}
                       >
                         <Eye className="w-4 h-4" />
                       </Button>

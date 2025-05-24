@@ -77,6 +77,7 @@ export interface BlogPost {
   title: string;
   excerpt: string;
   content: string;
+  mediumUrl?: string;
   featuredImage?: string;
   tags: string[];
   lang: string;

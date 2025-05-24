@@ -150,7 +150,14 @@ export default function Blog() {
 
                     {/* Title */}
                     <h2 className="text-xl font-semibold mb-3 group-hover:text-primary-600 transition-colors line-clamp-2">
-                      <Link href={post.mediumurl || '#'}>{post.title}</Link>
+                      <a 
+                        href={post.mediumurl || '#'} 
+                        target="_blank" 
+                        rel="noopener noreferrer"
+                        className="hover:text-primary-600 transition-colors"
+                      >
+                        {post.title}
+                      </a>
                     </h2>
 
                     {/* Excerpt */}
