@@ -1,11 +1,6 @@
-import { createContext, useContext, useState, useEffect, ReactNode } from "react";
-import { i18n } from "@/lib/i18n";
-import { Language } from "@/types";
-import { gt } from "@/lib/globalTranslationFunction";
+import { createContext, useContext, ReactNode } from "react";
 
 interface LanguageContextType {
-  language: Language;
-  setLanguage: (lang: Language) => void;
   t: (key: string, namespace?: string, params?: Record<string, string>) => string;
 }
 
@@ -23,26 +18,27 @@ interface LanguageProviderProps {
   children: ReactNode;
 }
 
+// Simple function to convert kebab-case keys to readable English
+function keyToEnglish(key: string): string {
+  return key
+    .split('-')
+    .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(' ');
+}
+
 export function LanguageProvider({ children }: LanguageProviderProps) {
-  const [language, setLanguageState] = useState<Language>(i18n.getCurrentLanguage());
-
-  const setLanguage = (lang: Language) => {
-    i18n.setLanguage(lang);
-    setLanguageState(lang);
-  };
-
+  // Simple translation function that converts keys to readable English
   const t = (key: string, namespace?: string, params?: Record<string, string>) => {
-    // Use global translation function - no more namespace confusion!
-    return gt(key, language);
+    // Convert kebab-case keys to readable English
+    return keyToEnglish(key);
   };
 
-  useEffect(() => {
-    // Set initial language state
-    setLanguageState(i18n.getCurrentLanguage());
-  }, []);
+  const value: LanguageContextType = {
+    t,
+  };
 
   return (
-    <LanguageContext.Provider value={{ language, setLanguage, t }}>
+    <LanguageContext.Provider value={value}>
       {children}
     </LanguageContext.Provider>
   );

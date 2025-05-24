@@ -11,22 +11,19 @@ import {
   DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { LanguageSwitcher } from "./LanguageSwitcher";
 import { ThemeToggle } from "./ThemeToggle";
 import { useAuth } from "@/contexts/AuthContext";
-import { useLanguage } from "@/contexts/LanguageContext";
 
 export function Header() {
   const [isOpen, setIsOpen] = useState(false);
   const [location] = useLocation();
   const { user, signOut } = useAuth();
-  const { t } = useLanguage();
 
   const navigation = [
-    { name: t("home"), href: "/" },
-    { name: t("about"), href: "/about" },
-    { name: t("services"), href: "/services" },
-    { name: t("blog"), href: "/blog" },
+    { name: "Home", href: "/" },
+    { name: "About", href: "/about" },
+    { name: "Services", href: "/services" },
+    { name: "Blog", href: "/blog" },
     { name: "Book Appointment", href: "/appointment" },
   ];
 
@@ -74,7 +71,6 @@ export function Header() {
 
         {/* Right side controls */}
         <div className="flex items-center space-x-4">
-          <LanguageSwitcher />
           <ThemeToggle />
 
           {/* User menu or auth buttons */}
@@ -125,7 +121,7 @@ export function Header() {
                 )}
                 <DropdownMenuItem onClick={handleSignOut}>
                   <LogOut className="mr-2 h-4 w-4" />
-                  {t("logout")}
+                  Logout
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
@@ -134,7 +130,7 @@ export function Header() {
               <Button variant="ghost" size="sm" asChild>
                 <Link href="/login">
                   <LogIn className="mr-2 h-4 w-4" />
-                  {t("login")}
+                  Login
                 </Link>
               </Button>
               <Button size="sm" asChild>
@@ -176,7 +172,7 @@ export function Header() {
                     <Button variant="ghost" size="sm" asChild>
                       <Link href="/login" onClick={() => setIsOpen(false)}>
                         <LogIn className="mr-2 h-4 w-4" />
-                        {t("login")}
+                        Login
                       </Link>
                     </Button>
                     <Button size="sm" asChild>
