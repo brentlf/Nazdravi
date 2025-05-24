@@ -36,6 +36,7 @@ import DashboardPlan from "@/pages/dashboard/DashboardPlan";
 import DashboardProgress from "@/pages/dashboard/DashboardProgress";
 import DashboardResources from "@/pages/dashboard/DashboardResources";
 import DashboardDocuments from "@/pages/dashboard/DashboardDocuments";
+import DashboardInvoices from "@/pages/dashboard/DashboardInvoices";
 import AdminClientView from "@/pages/dashboard/AdminClientView";
 
 // Admin pages
@@ -123,6 +124,11 @@ function Router() {
       <Route path="/dashboard/documents">
         <RouteGuard role="client">
           <Layout><DashboardDocuments /></Layout>
+        </RouteGuard>
+      </Route>
+      <Route path="/dashboard/invoices">
+        <RouteGuard role="client">
+          <Layout><DashboardInvoices /></Layout>
         </RouteGuard>
       </Route>
       
