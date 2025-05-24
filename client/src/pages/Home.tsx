@@ -188,8 +188,8 @@ export default function Home() {
                   <div className="w-12 h-12 bg-primary-500 rounded-xl flex items-center justify-center mx-auto mb-2">
                     <Award className="w-6 h-6 text-white" />
                   </div>
-                  <p className="text-sm font-semibold">Certified</p>
-                  <p className="text-xs text-muted-foreground">Nutritionist</p>
+                  <p className="text-sm font-semibold">{t("certified", "home")}</p>
+                  <p className="text-xs text-muted-foreground">{t("nutritionist", "home")}</p>
                 </div>
               </div>
             </div>
@@ -197,11 +197,10 @@ export default function Home() {
             {/* Right - Content */}
             <div>
               <h2 className="text-3xl sm:text-4xl font-bold mb-6">
-                Meet Your Nutrition Expert
+                {t("meet-expert", "home")}
               </h2>
               <p className="text-lg text-muted-foreground mb-6">
-                With over 5 years of experience in clinical nutrition and a passion for helping 
-                people transform their lives through food, I'm here to guide you on your wellness journey.
+                {t("expert-description", "home")}
               </p>
               
               {/* Credentials */}
@@ -210,13 +209,13 @@ export default function Home() {
                   <div className="w-8 h-8 bg-primary-100 dark:bg-primary-900/30 rounded-lg flex items-center justify-center">
                     <Award className="w-4 h-4 text-primary-600 dark:text-primary-400" />
                   </div>
-                  <span>MSc in Clinical Nutrition</span>
+                  <span>{t("msc-nutrition", "home")}</span>
                 </div>
                 <div className="flex items-center space-x-3">
                   <div className="w-8 h-8 bg-primary-100 dark:bg-primary-900/30 rounded-lg flex items-center justify-center">
                     <CheckCircle className="w-4 h-4 text-primary-600 dark:text-primary-400" />
                   </div>
-                  <span>Registered Dietitian</span>
+                  <span>{t("registered-dietitian", "home")}</span>
                 </div>
                 <div className="flex items-center space-x-3">
                   <div className="w-8 h-8 bg-primary-100 dark:bg-primary-900/30 rounded-lg flex items-center justify-center">
