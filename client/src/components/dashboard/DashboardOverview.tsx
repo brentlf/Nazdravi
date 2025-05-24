@@ -175,6 +175,13 @@ export function DashboardOverview() {
 
       {/* Welcome Section */}
       <div className="bg-gradient-to-r from-primary-500 to-primary-600 rounded-2xl p-8 text-white">
+        {isAdminViewingClient && (
+          <div className="mb-4 bg-yellow-500/20 border border-yellow-400/30 rounded-lg p-3">
+            <p className="text-sm text-yellow-100">
+              👁️ Admin View: You are viewing {user?.name}'s dashboard
+            </p>
+          </div>
+        )}
         <h1 className="text-3xl font-bold mb-2">Welcome back, {user?.name}!</h1>
         <p className="text-primary-100">Here's your nutrition journey overview</p>
       </div>
