@@ -118,15 +118,15 @@ export default function ConsentForm() {
       setIsSubmitted(true);
       
       toast({
-        title: "Consent form completed successfully",
-        description: "Your consent has been recorded. You can now proceed to book your consultation.",
+        title: t("consent-completed", "consent"),
+        description: t("consent-recorded", "consent"),
       });
       
     } catch (error) {
       console.error("Consent submission error:", error);
       toast({
-        title: "Submission failed",
-        description: "Please try again or contact support if the problem persists.",
+        title: t("submission-failed", "consent"),
+        description: t("try-again", "consent"),
         variant: "destructive",
       });
     }
@@ -159,8 +159,8 @@ export default function ConsentForm() {
       setStep(2);
     } else {
       toast({
-        title: "Please complete all required consents",
-        description: "All consent checkboxes must be checked to proceed.",
+        title: t("complete-required-consents", "consent"),
+        description: t("all-checkboxes-required", "consent"),
         variant: "destructive",
       });
     }
@@ -176,21 +176,21 @@ export default function ConsentForm() {
               <Check className="h-8 w-8 text-white" />
             </div>
             <h3 className="text-2xl font-bold text-green-800 dark:text-green-200 mb-4">
-              Consent Form Successfully Submitted!
+              {t("success-title", "consent")}
             </h3>
             <p className="text-green-600 dark:text-green-300 mb-6 max-w-lg mx-auto">
-              Your informed consent has been recorded and saved securely. You can now proceed to book your nutrition consultation appointment.
+              {t("success-description", "consent")}
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Button asChild className="bg-[#A5CBA4] hover:bg-[#95bb94] text-white">
                 <a href="/appointment">
                   <Shield className="w-4 h-4 mr-2" />
-                  Book Your Consultation
+                  {t("book-consultation", "consent")}
                 </a>
               </Button>
               <Button variant="outline" asChild>
                 <a href="/">
-                  Return Home
+                  {t("return-home", "consent")}
                 </a>
               </Button>
             </div>
@@ -205,9 +205,9 @@ export default function ConsentForm() {
       <div className="container mx-auto px-4 max-w-3xl">
         {/* Header */}
         <div className="text-center mb-8">
-          <h1 className="text-3xl font-bold mb-4">Informed Consent & Health Screening</h1>
+          <h1 className="text-3xl font-bold mb-4">{t("informed-consent-title", "consent")}</h1>
           <p className="text-muted-foreground">
-            Step {step} of 2: {step === 1 ? "Consent & Service Agreement" : "Health Information"}
+            {t("step-of", "consent")} {step} {t("of", "consent")} 2: {step === 1 ? t("step-1-title", "consent") : t("step-2-title", "consent")}
           </p>
         </div>
 
