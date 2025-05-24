@@ -108,14 +108,25 @@ export default function BlogPost() {
             )}
           </header>
 
-          {/* Featured Image */}
+          {/* Featured Image with Title Overlay */}
           {post.featuredImage && (
-            <div className="mb-8">
+            <div className="relative mb-8">
               <img 
                 src={post.featuredImage} 
                 alt={post.title}
                 className="w-full h-64 md:h-96 object-cover rounded-lg shadow-lg"
               />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent rounded-lg"></div>
+              <div className="absolute bottom-0 left-0 right-0 p-6 md:p-8">
+                <h1 className="text-2xl md:text-3xl lg:text-4xl font-bold text-white mb-2 leading-tight">
+                  {post.title}
+                </h1>
+                {post.excerpt && (
+                  <p className="text-white/90 text-sm md:text-base leading-relaxed max-w-2xl">
+                    {post.excerpt}
+                  </p>
+                )}
+              </div>
             </div>
           )}
 
@@ -123,17 +134,17 @@ export default function BlogPost() {
           <Card className="mb-8">
             <CardContent className="p-8">
               <div 
-                className="prose prose-lg max-w-none dark:prose-invert
+                className="prose prose-base max-w-none dark:prose-invert
                           prose-headings:text-gray-900 dark:prose-headings:text-white
-                          prose-h1:text-3xl prose-h1:font-bold prose-h1:mb-6 prose-h1:mt-8
-                          prose-h2:text-2xl prose-h2:font-semibold prose-h2:mb-4 prose-h2:mt-6 prose-h2:text-primary-700 dark:prose-h2:text-primary-300
-                          prose-h3:text-xl prose-h3:font-semibold prose-h3:mb-3 prose-h3:mt-5
-                          prose-p:text-gray-700 dark:prose-p:text-gray-300 prose-p:leading-relaxed prose-p:mb-4
+                          prose-h1:text-2xl prose-h1:font-bold prose-h1:mb-5 prose-h1:mt-6
+                          prose-h2:text-xl prose-h2:font-semibold prose-h2:mb-4 prose-h2:mt-6 prose-h2:text-primary-700 dark:prose-h2:text-primary-300
+                          prose-h3:text-lg prose-h3:font-semibold prose-h3:mb-3 prose-h3:mt-4
+                          prose-p:text-gray-700 dark:prose-p:text-gray-300 prose-p:leading-relaxed prose-p:mb-4 prose-p:text-base
                           prose-strong:text-gray-900 dark:prose-strong:text-white prose-strong:font-semibold
                           prose-em:text-gray-600 dark:prose-em:text-gray-400
-                          prose-blockquote:border-l-4 prose-blockquote:border-primary-500 prose-blockquote:pl-4 prose-blockquote:italic prose-blockquote:bg-primary-50 dark:prose-blockquote:bg-primary-900/20 prose-blockquote:py-2 prose-blockquote:rounded-r-md
-                          prose-ul:space-y-2 prose-li:text-gray-700 dark:prose-li:text-gray-300
-                          prose-ol:space-y-2
+                          prose-blockquote:border-l-4 prose-blockquote:border-primary-500 prose-blockquote:pl-4 prose-blockquote:italic prose-blockquote:bg-primary-50 dark:prose-blockquote:bg-primary-900/20 prose-blockquote:py-3 prose-blockquote:rounded-r-md prose-blockquote:text-base
+                          prose-ul:space-y-1 prose-li:text-gray-700 dark:prose-li:text-gray-300 prose-li:text-base
+                          prose-ol:space-y-1
                           prose-img:rounded-lg prose-img:shadow-md prose-img:mx-auto
                           prose-a:text-primary-600 dark:prose-a:text-primary-400 prose-a:no-underline hover:prose-a:underline
                           prose-code:bg-gray-100 dark:prose-code:bg-gray-800 prose-code:px-2 prose-code:py-1 prose-code:rounded prose-code:text-sm
