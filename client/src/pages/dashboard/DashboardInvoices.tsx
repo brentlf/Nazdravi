@@ -118,7 +118,7 @@ export default function DashboardInvoices() {
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-sm font-medium text-muted-foreground">Amount Due</p>
-                  <p className="text-2xl font-bold">£{totalPending.toFixed(2)}</p>
+                  <p className="text-2xl font-bold">€{totalPending.toFixed(2)}</p>
                 </div>
                 <CreditCard className="w-8 h-8 text-red-500" />
               </div>
@@ -170,7 +170,7 @@ export default function DashboardInvoices() {
 
                     <div className="flex items-center gap-4">
                       <div className="text-right">
-                        <p className="font-bold text-lg">£{invoice.amount.toFixed(2)}</p>
+                        <p className="font-bold text-lg">€{invoice.amount.toFixed(2)}</p>
                         <p className="text-sm text-gray-500">
                           Due: {new Date(invoice.dueDate).toLocaleDateString()}
                         </p>

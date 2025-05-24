@@ -183,7 +183,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const invoiceNumber = `INV-${Date.now()}`;
       
       // Create Stripe payment intent with currency-appropriate payment methods
-      const currency = "gbp";
+      const currency = "eur";
       const paymentMethodTypes = ['card']; // Always support cards
       
       // Only add iDEAL for EUR currency (iDEAL doesn't support GBP)
@@ -210,7 +210,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         clientName,
         clientEmail,
         amount,
-        currency: "GBP",
+        currency: "EUR",
         description,
         sessionDate,
         sessionType,

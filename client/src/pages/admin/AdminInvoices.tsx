@@ -40,7 +40,7 @@ export default function AdminInvoices() {
         userId: appointmentData.userId,
         clientName: appointmentData.name,
         clientEmail: appointmentData.email,
-        amount: appointmentData.type === "Initial" ? 85 : 65, // Initial: £85, Follow-up: £65
+        amount: appointmentData.type === "Initial" ? 95 : 75, // Initial: €95, Follow-up: €75
         description: `Nutrition Consultation - ${appointmentData.type}`,
         sessionDate: appointmentData.date,
         sessionType: appointmentData.type,
@@ -152,7 +152,7 @@ export default function AdminInvoices() {
                           </p>
                         </div>
                         <Badge variant="outline">
-                          {appointment.type === "Initial" ? "£85" : "£65"}
+                          {appointment.type === "Initial" ? "€95" : "€75"}
                         </Badge>
                       </div>
                     </div>
@@ -247,7 +247,7 @@ export default function AdminInvoices() {
               <div>
                 <p className="text-sm font-medium text-muted-foreground">Revenue This Month</p>
                 <p className="text-2xl font-bold">
-                  £{invoices?.filter(inv => 
+                  €{invoices?.filter(inv => 
                     inv.status === 'paid' && 
                     new Date(inv.createdAt).getMonth() === new Date().getMonth()
                   ).reduce((sum, inv) => sum + inv.amount, 0)?.toFixed(2) || '0.00'}
