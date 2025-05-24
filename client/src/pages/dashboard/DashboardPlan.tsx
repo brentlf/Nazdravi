@@ -14,9 +14,8 @@ export default function DashboardPlan() {
   const { effectiveUser: user, isAdminViewingClient } = useAuth();
   
   // Fetch user's nutrition plans with real-time updates
-  const { data: plans, loading, refetch } = useFirestoreCollection<Plan>("plans", [
-    where("userId", "==", user?.uid || ""),
-    orderBy("createdAt", "desc")
+  const { data: plans, loading } = useFirestoreCollection<Plan>("plans", [
+    where("userId", "==", user?.uid || "")
   ]);
 
   // Debug logging to check data flow
