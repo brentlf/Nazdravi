@@ -56,8 +56,25 @@ export function MessageThread() {
   const messages = allMessages.filter((msg, index, self) => 
     index === self.findIndex(m => m.id === msg.id)
   ).sort((a, b) => {
-    const dateA = a.createdAt?.toDate ? a.createdAt.toDate() : new Date(a.createdAt);
-    const dateB = b.createdAt?.toDate ? b.createdAt.toDate() : new Date(b.createdAt);
+    // Handle different date formats from Firebase
+    let dateA, dateB;
+    
+    if (a.createdAt && typeof a.createdAt.toDate === 'function') {
+      dateA = a.createdAt.toDate();
+    } else if (a.createdAt) {
+      dateA = new Date(a.createdAt);
+    } else {
+      dateA = new Date(0);
+    }
+    
+    if (b.createdAt && typeof b.createdAt.toDate === 'function') {
+      dateB = b.createdAt.toDate();
+    } else if (b.createdAt) {
+      dateB = new Date(b.createdAt);
+    } else {
+      dateB = new Date(0);
+    }
+    
     return dateA.getTime() - dateB.getTime();
   });
 
