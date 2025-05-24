@@ -109,9 +109,9 @@ export function Header() {
                       </Link>
                     </DropdownMenuItem>
                     <DropdownMenuItem asChild>
-                      <Link href="/dashboard">
+                      <Link href="/admin-client-view">
                         <User className="mr-2 h-4 w-4" />
-                        Client Dashboard
+                        View Client Dashboard
                       </Link>
                     </DropdownMenuItem>
                   </>

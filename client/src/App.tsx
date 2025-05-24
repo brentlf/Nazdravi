@@ -32,6 +32,7 @@ import DashboardMessages from "@/pages/dashboard/DashboardMessages";
 import DashboardPlan from "@/pages/dashboard/DashboardPlan";
 import DashboardProgress from "@/pages/dashboard/DashboardProgress";
 import DashboardResources from "@/pages/dashboard/DashboardResources";
+import AdminClientView from "@/pages/dashboard/AdminClientView";
 
 // Admin pages
 import AdminHome from "@/pages/admin/AdminHome";
@@ -145,6 +146,11 @@ function Router() {
       <Route path="/admin/blog">
         <RouteGuard role="admin">
           <Layout><AdminBlog /></Layout>
+        </RouteGuard>
+      </Route>
+      <Route path="/admin-client-view">
+        <RouteGuard role="admin">
+          <Layout><AdminClientView /></Layout>
         </RouteGuard>
       </Route>
       

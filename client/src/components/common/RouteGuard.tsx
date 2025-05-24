@@ -31,12 +31,17 @@ export function RouteGuard({ children, role, requireAuth = true }: RouteGuardPro
   }
 
   if (role && user?.role !== role) {
-    if (user?.role === "admin") {
-      setLocation("/admin");
-    } else {
-      setLocation("/dashboard");
+    // Allow admins to access client routes when viewing as client
+    const isAdminViewingClient = user?.role === "admin" && role === "client";
+    
+    if (!isAdminViewingClient) {
+      if (user?.role === "admin") {
+        setLocation("/admin");
+      } else {
+        setLocation("/dashboard");
+      }
+      return null;
     }
-    return null;
   }
 
   return <>{children}</>;

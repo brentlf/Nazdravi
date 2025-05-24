@@ -125,9 +125,9 @@ export default function AdminHome() {
               </p>
             </div>
             <Button variant="outline" asChild>
-              <Link href="/dashboard">
+              <Link href="/admin-client-view">
                 <Users className="mr-2 h-4 w-4" />
-                Switch to Client View
+                View Client Dashboard
               </Link>
             </Button>
           </div>
