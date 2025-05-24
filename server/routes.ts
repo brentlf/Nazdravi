@@ -179,6 +179,18 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(400).json({ error: "Missing required invoice fields" });
       }
 
+      // Check if invoice already exists for this appointment using Firebase Admin SDK
+      const existingInvoiceSnapshot = await db.collection("invoices")
+        .where("appointmentId", "==", appointmentId)
+        .get();
+      
+      if (!existingInvoiceSnapshot.empty) {
+        return res.status(409).json({ 
+          error: "Invoice already exists for this appointment",
+          invoiceId: existingInvoiceSnapshot.docs[0].id
+        });
+      }
+
       // Generate invoice number
       const invoiceNumber = `INV-${Date.now()}`;
       
@@ -192,7 +204,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }
 
       const paymentIntent = await stripe.paymentIntents.create({
-        amount: Math.round(amount * 100), // Convert to pence
+        amount: Math.round(amount * 100), // Convert to cents
         currency: currency,
         payment_method_types: paymentMethodTypes,
         metadata: {

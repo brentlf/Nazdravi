@@ -62,6 +62,15 @@ export default function AdminInvoices() {
         });
         setIsCreatingInvoice(false);
         setSelectedAppointment(null);
+      } else if (response.status === 409) {
+        const errorData = await response.json();
+        toast({
+          title: "Invoice Already Exists",
+          description: "An invoice has already been created for this appointment.",
+          variant: "destructive",
+        });
+        setIsCreatingInvoice(false);
+        setSelectedAppointment(null);
       } else {
         throw new Error('Failed to create invoice');
       }
