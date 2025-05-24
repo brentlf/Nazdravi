@@ -214,7 +214,7 @@ export default function AdminHome() {
                             </p>
                           </div>
                           <Badge className="bg-yellow-100 text-yellow-800 dark:bg-yellow-900/20 dark:text-yellow-400">
-                            Pending
+                            Requested
                           </Badge>
                         </div>
                       ))}
@@ -222,7 +222,7 @@ export default function AdminHome() {
                 ) : (
                   <div className="text-center py-8">
                     <CheckCircle className="w-12 h-12 text-green-500 mx-auto mb-4" />
-                    <p className="text-muted-foreground">No pending appointments</p>
+                    <p className="text-muted-foreground">No requested appointments</p>
                   </div>
                 )}
               </CardContent>

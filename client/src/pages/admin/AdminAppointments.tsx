@@ -290,7 +290,7 @@ export default function AdminAppointments() {
               <div className="flex gap-2">
                 <Badge variant="outline" className="flex items-center gap-1">
                   <AlertCircle className="w-3 h-3 text-yellow-500" />
-                  {filteredAppointments.filter(a => a.status === "pending").length} Pending
+                  {filteredAppointments.filter(a => a.status === "requested").length} Requested
                 </Badge>
                 <Badge variant="outline" className="flex items-center gap-1">
                   <CheckCircle className="w-3 h-3 text-green-500" />
