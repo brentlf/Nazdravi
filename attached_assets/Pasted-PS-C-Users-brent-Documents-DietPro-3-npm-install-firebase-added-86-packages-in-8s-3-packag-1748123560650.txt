@@ -1,0 +1,359 @@
+PS C:\Users\brent\Documents\DietPro (3)> npm install firebase
+
+added 86 packages in 8s
+
+3 packages are looking for funding
+  run `npm fund` for details
+PS C:\Users\brent\Documents\DietPro (3)> npm install   
+
+up to date, audited 87 packages in 770ms
+
+3 packages are looking for funding
+  run `npm fund` for details
+
+found 0 vulnerabilities
+PS C:\Users\brent\Documents\DietPro (3)> firebase init firestore
+
+     ######## #### ########  ######## ########     ###     ######  ########
+     ##        ##  ##     ## ##       ##     ##  ##   ##  ##       ##
+     ######    ##  ########  ######   ########  #########  ######  ######
+     ##        ##  ##    ##  ##       ##     ## ##     ##       ## ##
+     ##       #### ##     ## ######## ########  ##     ##  ######  ########
+
+You're about to initialize a Firebase project in this directory:
+
+  C:\Users\brent\Documents\DietPro (3)
+
+✔ Are you ready to proceed? Yes
+
+=== Project Setup
+
+First, let's associate this project directory with a Firebase project.
+You can create multiple project aliases by running firebase use --add,
+but for now we'll just set up a default project.
+
+✔ Please select an option: Use an existing project
+✔ Select a default Firebase project for this directory: veenutrition-79fba (VeeNutrition)
+i  Using project veenutrition-79fba (VeeNutrition)
+
+=== Firestore Setup
+
+Firestore Security Rules allow you to define how and when to allow
+requests. You can keep these rules in your project directory
+and publish them with firebase deploy.
+
+✔ What file should be used for Firestore Rules? firestore.rules
+
+Firestore indexes allow you to perform complex queries while
+maintaining performance that scales with the size of the result
+set. You can keep index definitions in your project directory
+and publish them with firebase deploy.
+
+✔ What file should be used for Firestore indexes? firestore.indexes.json
+
+i  Writing configuration info to firebase.json...
+i  Writing project information to .firebaserc...
+i  Writing gitignore file to .gitignore...
+
++  Firebase initialization complete!
+PS C:\Users\brent\Documents\DietPro (3)> firebase deploy --only functions
+
+Error: Cannot understand what targets to deploy/serve. No targets in firebase.json match '--only functions'. If you are using PowerShell make sure you place quotes around any comma-separated lists (ex: --only "functions,firestore").      
+PS C:\Users\brent\Documents\DietPro (3)> firebase deploy
+
+=== Deploying to 'veenutrition-79fba'...
+
+i  deploying firestore
+i  firestore: reading indexes from firestore.indexes.json...
+i  cloud.firestore: checking firestore.rules for compilation errors...
++  cloud.firestore: rules file firestore.rules compiled successfully
+i  firestore: deploying indexes...
++  firestore: deployed indexes in firestore.indexes.json successfully for (default) database
+i  firestore: latest version of firestore.rules already up to date, skipping upload...
++  firestore: released rules firestore.rules to cloud.firestore
+
++  Deploy complete!
+
+Project Console: https://console.firebase.google.com/project/veenutrition-79fba/overview
+PS C:\Users\brent\Documents\DietPro (3)> firebase init firestore
+
+     ######## #### ########  ######## ########     ###     ######  ########
+     ##        ##  ##     ## ##       ##     ##  ##   ##  ##       ##
+     ######    ##  ########  ######   ########  #########  ######  ######
+     ##        ##  ##    ##  ##       ##     ## ##     ##       ## ##
+     ##       #### ##     ## ######## ########  ##     ##  ######  ########
+
+You're about to initialize a Firebase project in this directory:
+
+  C:\Users\brent\Documents\DietPro (3)
+
+Before we get started, keep in mind:
+
+  * You are initializing within an existing Firebase project directory
+
+✔ Are you ready to proceed? Yes
+
+=== Project Setup
+
+First, let's associate this project directory with a Firebase project.
+You can create multiple project aliases by running firebase use --add,
+but for now we'll just set up a default project.
+
+i  Using project veenutrition-79fba (VeeNutrition)
+
+=== Firestore Setup
+
+Firestore Security Rules allow you to define how and when to allow
+requests. You can keep these rules in your project directory
+and publish them with firebase deploy.
+
+✔ File firestore.rules already exists. Do you want to overwrite it with the Firestore Rules from the Firebase Console? Yes
+
+Firestore indexes allow you to perform complex queries while
+maintaining performance that scales with the size of the result
+set. You can keep index definitions in your project directory
+and publish them with firebase deploy.
+
+✔ File firestore.indexes.json already exists. Do you want to overwrite it with the Firestore Indexes from the Firebase Console? Yes
+
+i  Writing configuration info to firebase.json...
+i  Writing project information to .firebaserc...
+
++  Firebase initialization complete!
+PS C:\Users\brent\Documents\DietPro (3)> firebase deploy        
+
+=== Deploying to 'veenutrition-79fba'...
+
+i  deploying firestore, functions
+Running command: npm --prefix "$RESOURCE_DIR" run build
+npm error code ENOENT
+npm error syscall open
+npm error path C:\Users\brent\Documents\DietPro (3)\functions\package.json
+npm error errno -4058
+npm error enoent Could not read package.json: Error: ENOENT: no such file or directory, open 'C:\Users\brent\Documents\DietPro (3)\functions\package.json'
+npm error enoent This is related to npm not being able to find a file.
+npm error enoent
+npm error A complete log of this run can be found in: C:\Users\brent\AppData\Local\npm-cache\_logs\2025-05-24T21_43_22_211Z-debug-0.log
+
+Error: functions predeploy error: Command terminated with non-zero exit code 4294963238
+PS C:\Users\brent\Documents\DietPro (3)> firebase init firestore
+
+     ######## #### ########  ######## ########     ###     ######  ########
+     ##        ##  ##     ## ##       ##     ##  ##   ##  ##       ##
+     ######    ##  ########  ######   ########  #########  ######  ######
+     ##        ##  ##    ##  ##       ##     ## ##     ##       ## ##
+     ##       #### ##     ## ######## ########  ##     ##  ######  ########
+
+You're about to initialize a Firebase project in this directory:
+
+  C:\Users\brent\Documents\DietPro (3)
+
+Before we get started, keep in mind:
+
+  * You are initializing within an existing Firebase project directory
+
+✔ Are you ready to proceed? Yes
+
+=== Project Setup
+
+First, let's associate this project directory with a Firebase project.
+You can create multiple project aliases by running firebase use --add,
+but for now we'll just set up a default project.
+
+i  Using project veenutrition-79fba (VeeNutrition)
+
+=== Firestore Setup
+
+Firestore Security Rules allow you to define how and when to allow
+requests. You can keep these rules in your project directory
+and publish them with firebase deploy.
+
+✔ File firestore.rules already exists. Do you want to overwrite it with the Firestore Rules from the Firebase Console? Yes
+
+Firestore indexes allow you to perform complex queries while
+maintaining performance that scales with the size of the result
+set. You can keep index definitions in your project directory
+and publish them with firebase deploy.
+
+✔ File firestore.indexes.json already exists. Do you want to overwrite it with the Firestore Indexes from the Firebase Console? Yes
+
+i  Writing configuration info to firebase.json...
+i  Writing project information to .firebaserc...
+
++  Firebase initialization complete!
+PS C:\Users\brent\Documents\DietPro (3)> npm install firebase
+
+up to date, audited 87 packages in 966ms
+
+3 packages are looking for funding
+  run `npm fund` for details
+
+found 0 vulnerabilities
+PS C:\Users\brent\Documents\DietPro (3)> npm install
+
+up to date, audited 87 packages in 791ms
+
+3 packages are looking for funding
+  run `npm fund` for details
+
+found 0 vulnerabilities
+PS C:\Users\brent\Documents\DietPro (3)> firebase deploy        
+
+=== Deploying to 'veenutrition-79fba'...
+
+i  deploying firestore, functions
+Running command: npm --prefix "$RESOURCE_DIR" run build
+npm error code ENOENT
+npm error syscall open
+npm error path C:\Users\brent\Documents\DietPro (3)\functions\package.json
+npm error errno -4058
+npm error enoent Could not read package.json: Error: ENOENT: no such file or directory, open 'C:\Users\brent\Documents\DietPro (3)\functions\package.json'
+npm error enoent This is related to npm not being able to find a file.
+npm error enoent
+npm error A complete log of this run can be found in: C:\Users\brent\AppData\Local\npm-cache\_logs\2025-05-24T21_43_53_737Z-debug-0.log
+
+Error: functions predeploy error: Command terminated with non-zero exit code 4294963238
+PS C:\Users\brent\Documents\DietPro (3)> firebase deploy
+
+=== Deploying to 'veenutrition-79fba'...
+
+i  deploying firestore, functions
+Running command: npm --prefix "$RESOURCE_DIR" run build
+npm error code ENOENT
+npm error syscall open
+npm error path C:\Users\brent\Documents\DietPro (3)\functions\package.json
+npm error errno -4058
+npm error enoent Could not read package.json: Error: ENOENT: no such file or directory, open 'C:\Users\brent\Documents\DietPro (3)\functions\package.json'
+npm error enoent This is related to npm not being able to find a file.
+npm error enoent
+npm error A complete log of this run can be found in: C:\Users\brent\AppData\Local\npm-cache\_logs\2025-05-24T21_45_41_250Z-debug-0.log
+
+Error: functions predeploy error: Command terminated with non-zero exit code 4294963238
+
+Having trouble? Try firebase [command] --help
+PS C:\Users\brent\Documents\DietPro (3)> firebase deploy
+
+=== Deploying to 'veenutrition-79fba'...
+
+i  deploying firestore, functions
+Running command: npm --prefix "$RESOURCE_DIR" run build
+npm error code ENOENT
+npm error syscall open
+npm error path C:\Users\brent\Documents\DietPro (3)\functions\package.json
+npm error errno -4058
+npm error enoent Could not read package.json: Error: ENOENT: no such file or directory, open 'C:\Users\brent\Documents\DietPro (3)\functions\package.json'
+npm error enoent This is related to npm not being able to find a file.
+npm error enoent
+npm error A complete log of this run can be found in: C:\Users\brent\AppData\Local\npm-cache\_logs\2025-05-24T21_46_29_062Z-debug-0.log
+
+Error: functions predeploy error: Command terminated with non-zero exit code 4294963238
+
+Having trouble? Try firebase [command] --help
+PS C:\Users\brent\Documents\DietPro (3)> cd
+PS C:\Users\brent> cd functions
+Set-Location: Cannot find path 'C:\Users\brent\functions' because it does not exist.
+PS C:\Users\brent> cd 
+PS C:\Users\brent> cd functions
+>> npm install
+Set-Location: Cannot find path 'C:\Users\brent\functions' because it does not exist.
+npm error code ENOENT
+npm error syscall open
+npm error path C:\Users\brent\package.json
+npm error errno -4058
+npm error enoent Could not read package.json: Error: ENOENT: no such file or directory, open 'C:\Users\brent\package.json'
+npm error enoent This is related to npm not being able to find a file.
+npm error enoent
+npm error A complete log of this run can be found in: C:\Users\brent\AppData\Local\npm-cache\_logs\2025-05-24T21_48_42_355Z-debug-0.log
+PS C:\Users\brent> cd "C:\Users\brent\Documents\DietPro (3)\DietPro"
+PS C:\Users\brent\Documents\DietPro (3)\DietPro> cd functions
+PS C:\Users\brent\Documents\DietPro (3)\DietPro\functions> cd functions
+>> npm install
+>> cd ..
+>> firebase deploy --only functions
+Set-Location: Cannot find path 'C:\Users\brent\Documents\DietPro (3)\DietPro\functions\functions' because it does not exist.
+npm warn EBADENGINE Unsupported engine {
+npm warn EBADENGINE   package: undefined,
+npm warn EBADENGINE   required: { node: '18' },
+npm warn EBADENGINE   current: { node: 'v22.15.0', npm: '11.4.1' }
+npm warn EBADENGINE }
+npm warn deprecated node-domexception@1.0.0: Use your platform's native DOMException instead
+
+added 251 packages, and audited 252 packages in 6s
+
+31 packages are looking for funding
+  run `npm fund` for details
+
+found 0 vulnerabilities
+
+=== Deploying to 'veenutrition-79fba'...
+
+i  deploying functions
+Running command: npm --prefix "$RESOURCE_DIR" run build
+npm error code ENOENT
+npm error syscall open
+npm error path C:\Users\brent\Documents\DietPro (3)\functions\package.json
+npm error errno -4058
+npm error enoent Could not read package.json: Error: ENOENT: no such file or directory, open 'C:\Users\brent\Documents\DietPro (3)\functions\package.json'
+npm error enoent This is related to npm not being able to find a file.
+npm error enoent
+npm error A complete log of this run can be found in: C:\Users\brent\AppData\Local\npm-cache\_logs\2025-05-24T21_50_07_138Z-debug-0.log
+
+Error: functions predeploy error: Command terminated with non-zero exit code 4294963238
+PS C:\Users\brent\Documents\DietPro (3)\DietPro> npm run build
+
+> rest-express@1.0.0 build
+> vite build && esbuild server/index.ts --platform=node --packages=external --bundle --format=esm --outdir=dist
+
+'vite' is not recognized as an internal or external command,
+operable program or batch file.
+PS C:\Users\brent\Documents\DietPro (3)\DietPro> cd "C:\Users\brent\Documents\DietPro (3)\DietPro"
+>> firebase deploy --only functions
+
+=== Deploying to 'veenutrition-79fba'...
+
+i  deploying functions
+Running command: npm --prefix "$RESOURCE_DIR" run build
+npm error code ENOENT
+npm error syscall open
+npm error path C:\Users\brent\Documents\DietPro (3)\functions\package.json
+npm error errno -4058
+npm error enoent Could not read package.json: Error: ENOENT: no such file or directory, open 'C:\Users\brent\Documents\DietPro (3)\functions\package.json'
+npm error enoent This is related to npm not being able to find a file.
+npm error enoent
+npm error A complete log of this run can be found in: C:\Users\brent\AppData\Local\npm-cache\_logs\2025-05-24T21_51_43_168Z-debug-0.log
+
+Error: functions predeploy error: Command terminated with non-zero exit code 4294963238
+
+Having trouble? Try firebase [command] --help
+PS C:\Users\brent\Documents\DietPro (3)\DietPro> npm install firebase
+
+added 1233 packages, and audited 1234 packages in 19s
+
+126 packages are looking for funding
+  run `npm fund` for details
+
+4 moderate severity vulnerabilities
+
+To address all issues, run:
+  npm audit fix
+
+Run `npm audit` for details.
+PS C:\Users\brent\Documents\DietPro (3)\DietPro> firebase deploy --only functions
+
+=== Deploying to 'veenutrition-79fba'...
+
+i  deploying functions
+Running command: npm --prefix "$RESOURCE_DIR" run build
+npm error code ENOENT
+npm error syscall open
+npm error path C:\Users\brent\Documents\DietPro (3)\functions\package.json
+npm error errno -4058
+npm error enoent Could not read package.json: Error: ENOENT: no such file or directory, open 'C:\Users\brent\Documents\DietPro (3)\functions\package.json'
+npm error enoent This is related to npm not being able to find a file.
+npm error enoent
+npm error A complete log of this run can be found in: C:\Users\brent\AppData\Local\npm-cache\_logs\2025-05-24T21_52_27_887Z-debug-0.log
+
+Error: functions predeploy error: Command terminated with non-zero exit code 4294963238
+
+Having trouble? Try firebase [command] --help
+PS C:\Users\brent\Documents\DietPro (3)\DietPro> 

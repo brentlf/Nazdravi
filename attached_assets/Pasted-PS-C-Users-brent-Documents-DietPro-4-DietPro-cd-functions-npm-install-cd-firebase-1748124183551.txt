@@ -1,0 +1,60 @@
+PS C:\Users\brent\Documents\DietPro (4)\DietPro> cd functions
+>> npm install
+>> cd ..
+>> firebase deploy --only functions
+npm warn EBADENGINE Unsupported engine {
+npm warn EBADENGINE   package: undefined,
+npm warn EBADENGINE   required: { node: '18' },
+npm warn EBADENGINE   current: { node: 'v22.15.0', npm: '11.4.1' }
+npm warn EBADENGINE }
+npm warn deprecated inflight@1.0.6: This module is not supported, and leaks memory. Do not use it. Check out lru-cache if you want a good and tested way to coalesce async requests by a key value, which is much more comprehensive and powerful.
+npm warn deprecated glob@8.1.0: Glob versions prior to v9 are no longer supported
+npm warn deprecated google-p12-pem@4.0.1: Package is no longer maintained
+npm warn deprecated node-domexception@1.0.0: Use your platform's native DOMException instead
+
+added 311 packages, and audited 312 packages in 7s
+
+37 packages are looking for funding
+  run `npm fund` for details
+
+4 critical severity vulnerabilities
+
+To address all issues (including breaking changes), run:
+  npm audit fix --force
+
+Run `npm audit` for details.
+
+=== Deploying to 'veenutrition-79fba'...
+
+i  deploying functions
+Running command: npm --prefix "$RESOURCE_DIR" run build
+
+> build
+> tsc
+
++  functions: Finished running predeploy script.
+i  functions: preparing codebase default for deployment
+i  functions: ensuring required API cloudfunctions.googleapis.com is enabled...
+i  functions: ensuring required API cloudbuild.googleapis.com is enabled...
+i  artifactregistry: ensuring required API artifactregistry.googleapis.com is enabled...
++  artifactregistry: required API artifactregistry.googleapis.com is enabled
++  functions: required API cloudbuild.googleapis.com is enabled
++  functions: required API cloudfunctions.googleapis.com is enabled
+!  functions: Runtime Node.js 18 was deprecated on 2025-04-30 and will be decommissioned on 2025-10-30, after which you will not be able to deploy without upgrading. Consider upgrading now to avoid disruption. See https://cloud.google.com/functions/docs/runtime-support for full details on the lifecycle policy
+!  functions: package.json indicates an outdated version of firebase-functions. Please upgrade using npm install --save firebase-functions@latest in your functions directory.
+!  functions: Please note that there will be breaking changes when you upgrade.
+i  functions: Loading and analyzing source code for codebase default to determine what to deploy
+i  functions: You are using a version of firebase-functions SDK (4.9.0) that does not have support for the newest Firebase Extensions features. Please update firebase-functions SDK to >=5.1.0 to use them correctly
+Serving at port 8704
+
+i  functions: preparing functions directory for uploading...
+i  functions: packaged C:\Users\brent\Documents\DietPro (4)\DietPro\functions (49.5 KB) for uploading
+i  functions: ensuring required API cloudscheduler.googleapis.com is enabled...
+!  functions: missing required API cloudscheduler.googleapis.com. Enabling now...
++  functions: required API cloudscheduler.googleapis.com is enabled
++  functions: functions folder uploaded successfully
+i  functions: creating Node.js 18 (1st Gen) function onUserCreated(us-central1)...
+i  functions: creating Node.js 18 (1st Gen) function onAppointmentConfirmed(us-central1)...
+i  functions: creating Node.js 18 (1st Gen) function onRescheduleRequest(us-central1)...
+i  functions: creating Node.js 18 (1st Gen) function processMailQueue(us-central1)...
+i  functions: creating Node.js 18 (1st Gen) function sendDailyReminders(us-central1)...
