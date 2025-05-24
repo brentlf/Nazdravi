@@ -3,24 +3,22 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Link } from "wouter";
-import { useLanguage } from "@/contexts/LanguageContext";
 
 export default function Services() {
-  const { t } = useLanguage();
   const services = [
     {
       id: "initial",
-      title: t("initial-consultation-title", "services"),
-      duration: t("60-minutes", "services"),
+      title: "Initial Consultation",
+      duration: "60 minutes",
       price: "€89",
-      description: t("initial-consultation-desc", "services"),
+      description: "Comprehensive assessment of your current health status, dietary habits, and lifestyle to create your personalized nutrition roadmap.",
       features: [
-        t("complete-health-assessment", "services"),
-        t("detailed-nutrition-analysis", "services"),
-        t("goal-setting-session", "services"),
-        t("personalized-recommendations", "services"),
-        t("client-dashboard-access", "services"),
-        t("followup-plan-outline", "services")
+        "Complete health assessment",
+        "Detailed nutrition analysis", 
+        "Goal setting session",
+        "Personalized recommendations",
+        "Client dashboard access",
+        "Follow-up plan outline"
       ],
       icon: Users,
       popular: false,
@@ -28,39 +26,39 @@ export default function Services() {
     },
     {
       id: "followup",
-      title: t("followup-session-title", "services"),
-      duration: t("30-minutes", "services"),
-      price: "€59",
-      description: t("followup-session-desc", "services"),
+      title: "Follow-up Session",
+      duration: "30 minutes",
+      price: "€49",
+      description: "Regular check-ins to monitor progress, adjust your plan, and provide ongoing support for sustainable results.",
       features: [
-        t("progress-review-analysis", "services"),
-        t("plan-adjustments", "services"),
-        t("challenge-troubleshooting", "services"),
-        t("continued-motivation", "services"),
-        t("updated-recommendations", "services"),
-        t("goal-refinement", "services")
+        "Progress review",
+        "Plan adjustments",
+        "Nutritional guidance",
+        "Motivation support",
+        "Q&A session",
+        "Updated recommendations"
       ],
-      icon: Clock,
+      icon: Target,
       popular: true,
       color: "bg-green-500"
     },
     {
-      id: "program",
-      title: t("complete-program-title", "services"),
-      duration: t("12-weeks", "services"),
-      price: "€499",
-      description: t("complete-program-desc", "services"),
+      id: "complete",
+      title: "Complete Program",
+      duration: "12 weeks",
+      price: "€449",
+      description: "Comprehensive 12-week program including initial consultation, weekly follow-ups, and personalized meal plans.",
       features: [
-        t("initial-60min-consultation", "services"),
-        t("weekly-followup-sessions", "services"),
-        t("personalized-meal-plans", "services"),
-        t("recipe-collections", "services"),
-        t("24-7-messaging-support", "services"),
-        t("progress-tracking-tools", "services"),
-        t("resource-library-access", "services"),
-        t("final-assessment-plan", "services")
+        "Initial consultation (60 min)",
+        "Weekly follow-up sessions",
+        "Personalized meal plans",
+        "Shopping lists",
+        "Recipe collection",
+        "24/7 messaging support",
+        "Progress tracking tools",
+        "Lifestyle coaching"
       ],
-      icon: Target,
+      icon: Calendar,
       popular: false,
       color: "bg-purple-500"
     }
@@ -68,42 +66,42 @@ export default function Services() {
 
   const additionalServices = [
     {
-      title: t("meal-planning-title", "services"),
-      description: t("meal-planning-desc", "services"),
-      icon: FileText
+      icon: MessageCircle,
+      title: "Meal Planning",
+      description: "Custom meal plans tailored to your preferences and dietary needs"
     },
     {
-      title: t("24-7-support-title", "services"),
-      description: t("24-7-support-desc", "services"),
-      icon: MessageCircle
+      icon: Target,
+      title: "Progress Tracking",
+      description: "Monitor your journey with comprehensive tracking tools"
     },
     {
-      title: t("progress-tracking-title", "services"),
-      description: t("progress-tracking-desc", "services"),
-      icon: Target
+      icon: Clock,
+      title: "24/7 Support",
+      description: "Round-the-clock messaging support for questions and motivation"
     }
   ];
 
   const processSteps = [
     {
       step: "1",
-      title: t("step-1-title", "services"),
-      description: t("step-1-desc", "services")
+      title: "Assessment",
+      description: "Comprehensive health and lifestyle evaluation"
     },
     {
-      step: "2",
-      title: t("step-2-title", "services"),
-      description: t("step-2-desc", "services")
+      step: "2", 
+      title: "Planning",
+      description: "Personalized nutrition plan development"
     },
     {
       step: "3",
-      title: t("step-3-title", "services"),
-      description: t("step-3-desc", "services")
+      title: "Implementation",
+      description: "Implementation and support"
     },
     {
       step: "4",
-      title: t("step-4-title", "services"),
-      description: t("step-4-desc", "services")
+      title: "Monitoring",
+      description: "Ongoing monitoring and adjustments"
     }
   ];
 
@@ -113,10 +111,10 @@ export default function Services() {
       <section className="container mx-auto px-4 mb-20">
         <div className="text-center max-w-4xl mx-auto">
           <h1 className="text-4xl md:text-5xl font-bold mb-6">
-            {t("title", "services")}
+            Comprehensive Nutrition Services
           </h1>
           <p className="text-xl text-muted-foreground mb-8">
-            {t("subtitle", "services")}
+            Personalized nutrition solutions designed to help you achieve your health goals with expert guidance and ongoing support.
           </p>
         </div>
       </section>
@@ -135,7 +133,7 @@ export default function Services() {
               >
                 {service.popular && (
                   <div className="absolute -top-3 left-1/2 transform -translate-x-1/2">
-                    <Badge className="bg-primary-500 text-white">{t("most-popular", "services")}</Badge>
+                    <Badge className="bg-primary-500 text-white">Most Popular</Badge>
                   </div>
                 )}
                 
@@ -153,12 +151,12 @@ export default function Services() {
                 </CardHeader>
 
                 <CardContent className="space-y-6">
-                  <p className="text-muted-foreground text-center">{service.description}</p>
-                  
                   <div className="text-center">
-                    <div className="text-4xl font-bold text-primary-600 mb-2">{service.price}</div>
+                    <div className="text-3xl font-bold text-primary-600">{service.price}</div>
                     <p className="text-sm text-muted-foreground">One-time fee</p>
                   </div>
+
+                  <p className="text-muted-foreground text-center">{service.description}</p>
 
                   <ul className="space-y-3">
                     {service.features.map((feature, index) => (
@@ -184,10 +182,10 @@ export default function Services() {
         <div className="container mx-auto px-4">
           <div className="text-center mb-16">
             <h2 className="text-3xl md:text-4xl font-bold mb-4">
-              {t("whats-included", "services")}
+              What's Included
             </h2>
             <p className="text-xl text-muted-foreground">
-              {t("comprehensive-support", "services")}
+              Every service comes with comprehensive support and resources
             </p>
           </div>
 
@@ -198,7 +196,7 @@ export default function Services() {
                 <Card key={index} className="text-center hover:shadow-lg transition-shadow duration-300">
                   <CardContent className="p-8">
                     <div className="w-16 h-16 bg-primary-100 dark:bg-primary-900/30 rounded-full flex items-center justify-center mx-auto mb-6">
-                      <Icon className="w-8 h-8 text-primary-600 dark:text-primary-400" />
+                      <Icon className="w-8 h-8 text-primary-600" />
                     </div>
                     <h3 className="text-xl font-semibold mb-4">{service.title}</h3>
                     <p className="text-muted-foreground">{service.description}</p>
@@ -215,125 +213,42 @@ export default function Services() {
         <div className="container mx-auto px-4">
           <div className="text-center mb-16">
             <h2 className="text-3xl md:text-4xl font-bold mb-4">
-              {t("how-it-works", "services")}
+              How It Works
             </h2>
             <p className="text-xl text-muted-foreground">
-              {t("simple-steps", "services")}
+              Simple steps to transform your health
             </p>
           </div>
 
-          <div className="max-w-4xl mx-auto">
-            <div className="grid md:grid-cols-4 gap-8">
-              {processSteps.map((step, index) => (
-                <div key={index} className="text-center relative">
-                  {/* Connector Line */}
-                  {index < processSteps.length - 1 && (
-                    <div className="hidden md:block absolute top-8 left-1/2 w-full h-0.5 bg-primary-200 dark:bg-primary-800 z-0"></div>
-                  )}
-                  
-                  {/* Step Circle */}
-                  <div className="w-16 h-16 bg-primary-500 text-white rounded-full flex items-center justify-center text-xl font-bold mx-auto mb-4 relative z-10">
-                    {step.step}
-                  </div>
-                  
-                  <h3 className="text-lg font-semibold mb-2">{step.title}</h3>
-                  <p className="text-muted-foreground text-sm">{step.description}</p>
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+            {processSteps.map((step, index) => (
+              <div key={index} className="text-center">
+                <div className="w-16 h-16 bg-primary-500 text-white rounded-full flex items-center justify-center mx-auto mb-4 text-2xl font-bold">
+                  {step.step}
                 </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* FAQ Section */}
-      <section className="bg-gray-50 dark:bg-gray-900 py-20">
-        <div className="container mx-auto px-4">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold mb-4">
-              {t("faq-title", "services")}
-            </h2>
-          </div>
-
-          <div className="max-w-3xl mx-auto space-y-6">
-            <Card>
-              <CardHeader>
-                <CardTitle className="text-lg">{t("faq-1-question", "services")}</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-muted-foreground">
-                  {t("faq-1-answer", "services")}
-                </p>
-              </CardContent>
-            </Card>
-
-            <Card>
-              <CardHeader>
-                <CardTitle className="text-lg">{t("faq-2-question", "services")}</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-muted-foreground">
-                  {t("faq-2-answer", "services")}
-                </p>
-              </CardContent>
-            </Card>
-
-            <Card>
-              <CardHeader>
-                <CardTitle className="text-lg">{t("faq-3-question", "services")}</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-muted-foreground">
-                  {t("faq-3-answer", "services")}
-                </p>
-              </CardContent>
-            </Card>
-
-            <Card>
-              <CardHeader>
-                <CardTitle className="text-lg">Can I contact you between sessions?</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-muted-foreground">
-                  Absolutely! All clients have access to our secure messaging platform where you can ask questions, 
-                  share updates, and get support between scheduled appointments.
-                </p>
-              </CardContent>
-            </Card>
+                <h3 className="text-xl font-semibold mb-2">{step.title}</h3>
+                <p className="text-muted-foreground">{step.description}</p>
+              </div>
+            ))}
           </div>
         </div>
       </section>
 
       {/* CTA Section */}
-      <section className="py-20">
-        <div className="container mx-auto px-4">
-          <Card className="max-w-4xl mx-auto bg-gradient-to-r from-primary-500 to-primary-600 text-white">
-            <CardContent className="p-12 text-center">
-              <h2 className="text-3xl md:text-4xl font-bold mb-6">
-                {t("cta-title", "services")}
-              </h2>
-              <p className="text-xl text-primary-100 mb-8 max-w-2xl mx-auto">
-                {t("cta-description", "services")}
-              </p>
-              
-              <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                <Button size="lg" variant="secondary" asChild>
-                  <Link href="/appointment">
-                    <Calendar className="mr-2 h-5 w-5" />
-                    {t("book-consultation", "common")}
-                  </Link>
-                </Button>
-                <Button size="lg" variant="outline" className="border-white text-white hover:bg-white hover:text-primary-600" asChild>
-                  <Link href="/contact">{t("contact-directly", "services")}</Link>
-                </Button>
-              </div>
-              
-              {/* Contact Info */}
-              <div className="mt-8 text-primary-100 text-sm">
-                <p>{t("contact-info", "services")}</p>
-                <p className="font-medium">info@vee-nutrition.com | +31 6 12345678</p>
-              </div>
-            </CardContent>
-          </Card>
+      <section className="bg-primary-600 text-white py-20">
+        <div className="container mx-auto px-4 text-center">
+          <h2 className="text-3xl md:text-4xl font-bold mb-4">
+            Ready to Start Your Journey?
+          </h2>
+          <p className="text-xl mb-8 opacity-90">
+            Choose the service that best fits your needs and take the first step towards better health.
+          </p>
+          <Button size="lg" variant="secondary" asChild>
+            <Link href="/appointment">
+              <Calendar className="mr-2 h-5 w-5" />
+              Book Your Consultation
+            </Link>
+          </Button>
         </div>
       </section>
     </div>

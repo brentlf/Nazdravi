@@ -16,6 +16,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { NewsletterForm } from "@/components/forms/NewsletterForm";
+import heroImage from "@assets/image_1748071908267.png";
 
 export default function Home() {
   const services = [
@@ -69,48 +70,60 @@ export default function Home() {
       {/* Hero Section */}
       <section className="relative overflow-hidden bg-gradient-to-br from-primary-50 via-white to-primary-100 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 py-20 lg:py-32">
         <div className="container mx-auto px-4">
-          <div className="max-w-4xl mx-auto text-center">
-            <Badge variant="secondary" className="mb-6">
-              🌱 Transform Your Health Today
-            </Badge>
-            
-            <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold mb-6 bg-gradient-to-r from-primary-600 to-primary-800 bg-clip-text text-transparent">
-              Transform Your Health with 
-              <span className="block">Personalized Nutrition</span>
-            </h1>
-            
-            <p className="text-xl md:text-2xl text-muted-foreground mb-8 max-w-3xl mx-auto">
-              Personalized nutrition counseling designed to help you achieve your health goals through sustainable lifestyle changes and expert guidance.
-            </p>
-            
-            <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
-              <Button size="lg" asChild>
-                <Link href="/appointment">
-                  <Calendar className="mr-2 h-5 w-5" />
-                  Book Free Consultation
-                </Link>
-              </Button>
-              <Button variant="outline" size="lg" asChild>
-                <Link href="/services">
-                  Learn More
-                </Link>
-              </Button>
+          <div className="grid lg:grid-cols-2 gap-12 items-center">
+            {/* Content */}
+            <div className="space-y-8">
+              <Badge variant="secondary" className="w-fit">
+                🌱 Transform Your Health Today
+              </Badge>
+              
+              <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold bg-gradient-to-r from-primary-600 to-primary-800 bg-clip-text text-transparent">
+                Transform Your Health with 
+                <span className="block">Personalized Nutrition</span>
+              </h1>
+              
+              <p className="text-xl text-muted-foreground max-w-2xl">
+                Personalized nutrition counseling designed to help you achieve your health goals through sustainable lifestyle changes and expert guidance.
+              </p>
+              
+              <div className="flex flex-col sm:flex-row gap-4">
+                <Button size="lg" asChild>
+                  <Link href="/appointment">
+                    <Calendar className="mr-2 h-5 w-5" />
+                    Book Free Consultation
+                  </Link>
+                </Button>
+                <Button variant="outline" size="lg" asChild>
+                  <Link href="/services">
+                    Learn More
+                  </Link>
+                </Button>
+              </div>
+
+              {/* Stats */}
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+                {stats.map((stat, index) => {
+                  const Icon = stat.icon;
+                  return (
+                    <div key={index} className="text-center">
+                      <div className="w-10 h-10 bg-primary-100 dark:bg-primary-900/30 rounded-full flex items-center justify-center mx-auto mb-2">
+                        <Icon className="w-5 h-5 text-primary-600" />
+                      </div>
+                      <div className="text-2xl font-bold text-primary-600">{stat.number}</div>
+                      <div className="text-xs text-muted-foreground">{stat.label}</div>
+                    </div>
+                  );
+                })}
+              </div>
             </div>
 
-            {/* Stats */}
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mt-16">
-              {stats.map((stat, index) => {
-                const Icon = stat.icon;
-                return (
-                  <div key={index} className="text-center">
-                    <div className="w-12 h-12 bg-primary-100 dark:bg-primary-900/30 rounded-full flex items-center justify-center mx-auto mb-3">
-                      <Icon className="w-6 h-6 text-primary-600" />
-                    </div>
-                    <div className="text-2xl md:text-3xl font-bold text-primary-600">{stat.number}</div>
-                    <div className="text-sm text-muted-foreground">{stat.label}</div>
-                  </div>
-                );
-              })}
+            {/* Image */}
+            <div className="relative">
+              <img 
+                src={heroImage} 
+                alt="Professional nutritionist consultation" 
+                className="rounded-2xl shadow-2xl w-full h-auto object-cover max-w-lg mx-auto"
+              />
             </div>
           </div>
         </div>

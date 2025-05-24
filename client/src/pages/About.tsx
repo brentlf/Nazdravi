@@ -3,11 +3,8 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Link } from "wouter";
-import { useLanguage } from "@/contexts/LanguageContext";
 
 export default function About() {
-  const { t } = useLanguage();
-  
   const credentials = [
     "MSc in Clinical Nutrition",
     "Registered Dietitian (RD)",
@@ -18,202 +15,159 @@ export default function About() {
   const timeline = [
     {
       year: "2019",
-      title: t("started-practice", "about"),
-      description: t("started-description", "about")
+      title: "Started my practice",
+      description: "After completing my Master's degree in Nutrition Science"
     },
     {
       year: "2020",
-      title: t("digital-platform", "about"),
-      description: t("digital-description", "about")
+      title: "Digital Platform Expertise",
+      description: "Specialized in online nutrition counseling and digital health tools"
     },
     {
       year: "2021",
-      title: t("milestone-500", "about"),
-      description: t("milestone-description", "about")
+      title: "500+ clients helped",
+      description: "Successfully guided over 500 individuals to better health"
     },
     {
       year: "2022",
-      title: t("advanced-certs", "about"),
-      description: t("advanced-description", "about")
+      title: "Advanced certifications",
+      description: "Regularly updating knowledge with latest research and methodologies"
     },
     {
       year: "2024",
-      title: t("present-day", "about"),
-      description: t("present-description", "about")
+      title: "Present day",
+      description: "Continuing to innovate in personalized nutrition therapy"
     }
   ];
 
   const values = [
     {
       icon: Heart,
-      title: t("compassionate-care", "about"),
-      description: t("compassionate-description", "about")
+      title: "Compassionate Care",
+      description: "Understanding and empathetic support throughout your journey"
     },
     {
       icon: Target,
-      title: t("evidence-based", "about"),
-      description: t("evidence-description", "about")
+      title: "Evidence-Based",
+      description: "All recommendations are backed by the latest scientific research"
     },
     {
       icon: Users,
-      title: t("sustainable-results", "about"),
-      description: t("sustainable-description", "about")
+      title: "Sustainable & Personalized",
+      description: "Plans that fit your lifestyle and create lasting change"
     }
+  ];
+
+  const stats = [
+    { number: "500+", label: "Happy Clients" },
+    { number: "8+", label: "Years Experience" },
+    { number: "95%", label: "Success Rate" },
+    { number: "24/7", label: "Support Available" }
   ];
 
   return (
     <div className="min-h-screen py-20">
       {/* Hero Section */}
       <section className="container mx-auto px-4 mb-20">
+        <div className="max-w-4xl mx-auto text-center">
+          <h1 className="text-4xl md:text-5xl font-bold mb-6">
+            About Vee
+          </h1>
+          <p className="text-xl text-muted-foreground mb-8">
+            Meet the nutritional therapist dedicated to helping you transform your life through the power of nutrition and sustainable lifestyle changes.
+          </p>
+        </div>
+      </section>
+
+      {/* Introduction Section */}
+      <section className="container mx-auto px-4 mb-20">
         <div className="grid lg:grid-cols-2 gap-12 items-center">
-          {/* Content */}
-          <div>
-            <Badge className="mb-4 bg-primary-100 text-primary-700 hover:bg-primary-100">
-              {t("meet-nutritionist", "about")}
-            </Badge>
-            <h1 className="text-4xl md:text-5xl font-bold mb-6">
-              {t("hi-im-vee", "about")}
-            </h1>
-            <p className="text-xl text-muted-foreground mb-8 leading-relaxed">
-              {t("vee-description", "about")}
+          <div className="space-y-6">
+            <div className="space-y-4">
+              <Badge variant="secondary" className="w-fit">
+                👋 Hi, I'm Vee!
+              </Badge>
+              <h2 className="text-3xl font-bold">
+                Registered Dietitian & Nutrition Expert
+              </h2>
+            </div>
+            
+            <p className="text-lg text-muted-foreground leading-relaxed">
+              I'm a registered dietitian with over 8 years of experience helping people achieve their health goals through personalized nutrition. My passion is helping people discover that healthy eating can be enjoyable, sustainable, and perfectly suited to their individual needs.
+            </p>
+            
+            <p className="text-lg text-muted-foreground leading-relaxed">
+              My journey in nutrition began with my own personal transformation. After years of struggling with my own health and energy levels, I discovered the transformative power of proper nutrition and holistic wellness. This inspired me to become certified in nutritional therapy and specialize in helping others achieve their health goals.
             </p>
 
-            {/* Key Stats */}
-            <div className="grid grid-cols-3 gap-6 mb-8">
-              <div className="text-center">
-                <div className="text-3xl font-bold text-primary-600 mb-2">500+</div>
-                <div className="text-sm text-muted-foreground">{t("happy-clients", "about")}</div>
-              </div>
-              <div className="text-center">
-                <div className="text-3xl font-bold text-primary-600 mb-2">5+</div>
-                <div className="text-sm text-muted-foreground">{t("years-experience", "about")}</div>
-              </div>
-              <div className="text-center">
-                <div className="text-3xl font-bold text-primary-600 mb-2">98%</div>
-                <div className="text-sm text-muted-foreground">{t("success-rate", "about")}</div>
-              </div>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+              {stats.map((stat, index) => (
+                <div key={index} className="text-center p-4 bg-primary-50 dark:bg-gray-800 rounded-lg">
+                  <div className="text-2xl font-bold text-primary-600">{stat.number}</div>
+                  <div className="text-sm text-muted-foreground">{stat.label}</div>
+                </div>
+              ))}
             </div>
-
-            <Button size="lg" asChild>
-              <Link href="/appointment">{t("book-consultation", "about")}</Link>
-            </Button>
           </div>
 
-          {/* Image */}
           <div className="relative">
-            <img 
-              src="https://images.unsplash.com/photo-1559839734-2b71ea197ec2?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=1000" 
-              alt="Professional nutritionist in consultation" 
-              className="rounded-2xl shadow-2xl w-full"
-            />
-            
-            {/* Floating Elements */}
-            <div className="absolute -top-4 -right-4 w-20 h-20 bg-primary-500 rounded-full flex items-center justify-center shadow-lg">
-              <Heart className="w-8 h-8 text-white" />
-            </div>
-            <div className="absolute -bottom-4 -left-4 w-16 h-16 bg-white dark:bg-gray-800 rounded-full flex items-center justify-center shadow-lg">
-              <Award className="w-8 h-8 text-primary-500" />
+            <div className="bg-primary-50 dark:bg-gray-800 rounded-2xl p-8">
+              <h3 className="text-xl font-semibold mb-4">Professional Qualifications</h3>
+              <ul className="space-y-3">
+                {credentials.map((credential, index) => (
+                  <li key={index} className="flex items-center gap-3">
+                    <CheckCircle className="w-5 h-5 text-green-500 flex-shrink-0" />
+                    <span className="text-muted-foreground">{credential}</span>
+                  </li>
+                ))}
+              </ul>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Credentials Section */}
+      {/* Mission Section */}
       <section className="bg-primary-50 dark:bg-gray-800 py-20">
         <div className="container mx-auto px-4">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold mb-4">
-              {t("professional-qualifications", "about")}
+          <div className="max-w-4xl mx-auto text-center">
+            <h2 className="text-3xl md:text-4xl font-bold mb-6">
+              My Mission
             </h2>
-            <p className="text-xl text-muted-foreground">
-              {t("backed-by-education", "about")}
+            <p className="text-xl text-muted-foreground mb-8">
+              I believe everyone deserves to feel their best in their own body. My mission is to provide you with the knowledge, tools, and support needed to achieve sustainable health transformation.
             </p>
-          </div>
-
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {credentials.map((credential, index) => (
-              <Card key={index} className="text-center hover:shadow-lg transition-shadow duration-300">
-                <CardContent className="p-6">
-                  <div className="w-16 h-16 bg-primary-100 dark:bg-primary-900/30 rounded-full flex items-center justify-center mx-auto mb-4">
-                    <Award className="w-8 h-8 text-primary-600 dark:text-primary-400" />
-                  </div>
-                  <h3 className="font-semibold mb-2">{credential}</h3>
-                  <CheckCircle className="w-5 h-5 text-green-500 mx-auto" />
-                </CardContent>
-              </Card>
-            ))}
+            
+            <blockquote className="text-2xl font-medium italic text-primary-600 border-l-4 border-primary-600 pl-6 max-w-2xl mx-auto">
+              "My mission is to help you achieve lasting health through nutrition"
+            </blockquote>
           </div>
         </div>
       </section>
 
-      {/* My Approach Section */}
+      {/* My Journey Timeline */}
       <section className="py-20">
-        <div className="container mx-auto px-4">
-          <div className="max-w-4xl mx-auto">
-            <div className="text-center mb-16">
-              <h2 className="text-3xl md:text-4xl font-bold mb-4">
-                {t("my-approach", "about")}
-              </h2>
-              <p className="text-xl text-muted-foreground">
-                {t("sustainable-personalized", "about")}
-              </p>
-            </div>
-
-            <div className="grid md:grid-cols-3 gap-8">
-              {values.map((value, index) => {
-                const Icon = value.icon;
-                return (
-                  <Card key={index} className="text-center hover:shadow-lg transition-shadow duration-300">
-                    <CardContent className="p-8">
-                      <div className="w-16 h-16 bg-primary-100 dark:bg-primary-900/30 rounded-full flex items-center justify-center mx-auto mb-6">
-                        <Icon className="w-8 h-8 text-primary-600 dark:text-primary-400" />
-                      </div>
-                      <h3 className="text-xl font-semibold mb-4">{value.title}</h3>
-                      <p className="text-muted-foreground">{value.description}</p>
-                    </CardContent>
-                  </Card>
-                );
-              })}
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Timeline Section */}
-      <section className="bg-gray-50 dark:bg-gray-900 py-20">
         <div className="container mx-auto px-4">
           <div className="text-center mb-16">
             <h2 className="text-3xl md:text-4xl font-bold mb-4">
-              {t("my-journey", "about")}
+              My Journey
             </h2>
             <p className="text-xl text-muted-foreground">
-              {t("building-expertise", "about")}
+              Building expertise and helping people transform their health
             </p>
           </div>
 
           <div className="max-w-4xl mx-auto">
-            <div className="relative">
-              {/* Timeline Line */}
-              <div className="absolute left-8 top-0 bottom-0 w-0.5 bg-primary-200 dark:bg-primary-800"></div>
-
+            <div className="space-y-8">
               {timeline.map((item, index) => (
-                <div key={index} className="relative flex items-start mb-12 last:mb-0">
-                  {/* Timeline Dot */}
-                  <div className="w-16 h-16 bg-primary-500 rounded-full flex items-center justify-center text-white font-bold text-lg shadow-lg z-10">
-                    {item.year.slice(-2)}
+                <div key={index} className="flex gap-6 items-start">
+                  <div className="flex-shrink-0">
+                    <div className="w-16 h-16 bg-primary-500 text-white rounded-full flex items-center justify-center font-bold">
+                      {item.year}
+                    </div>
                   </div>
-                  
-                  {/* Content */}
-                  <div className="ml-8 flex-1">
-                    <Card>
-                      <CardContent className="p-6">
-                        <div className="flex items-center gap-3 mb-2">
-                          <Badge variant="outline">{item.year}</Badge>
-                          <h3 className="text-xl font-semibold">{item.title}</h3>
-                        </div>
-                        <p className="text-muted-foreground">{item.description}</p>
-                      </CardContent>
-                    </Card>
+                  <div className="flex-1 pt-2">
+                    <h3 className="text-xl font-semibold mb-2">{item.title}</h3>
+                    <p className="text-muted-foreground">{item.description}</p>
                   </div>
                 </div>
               ))}
@@ -222,48 +176,68 @@ export default function About() {
         </div>
       </section>
 
-      {/* Personal Note Section */}
+      {/* My Approach */}
+      <section className="bg-white dark:bg-gray-800 py-20">
+        <div className="container mx-auto px-4">
+          <div className="text-center mb-16">
+            <h2 className="text-3xl md:text-4xl font-bold mb-4">
+              My Approach
+            </h2>
+            <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
+              I believe in a holistic, evidence-based approach to nutrition that considers your unique lifestyle, preferences, and goals. No two people are the same, so neither should their nutrition plans.
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-3 gap-8">
+            {values.map((value, index) => {
+              const Icon = value.icon;
+              return (
+                <Card key={index} className="text-center hover:shadow-lg transition-shadow duration-300">
+                  <CardContent className="p-8">
+                    <div className="w-16 h-16 bg-primary-100 dark:bg-primary-900/30 rounded-full flex items-center justify-center mx-auto mb-6">
+                      <Icon className="w-8 h-8 text-primary-600" />
+                    </div>
+                    <h3 className="text-xl font-semibold mb-4">{value.title}</h3>
+                    <p className="text-muted-foreground">{value.description}</p>
+                  </CardContent>
+                </Card>
+              );
+            })}
+          </div>
+        </div>
+      </section>
+
+      {/* Why I Do What I Do */}
       <section className="py-20">
         <div className="container mx-auto px-4">
-          <Card className="max-w-4xl mx-auto bg-gradient-to-r from-primary-500 to-primary-600 text-white">
-            <CardContent className="p-12 text-center">
-              <h2 className="text-3xl md:text-4xl font-bold mb-6">
-                {t("why-i-do", "about")}
-              </h2>
-              <blockquote className="text-xl leading-relaxed mb-8 italic">
-                "{t("mission-quote", "about")}"
-              </blockquote>
-              <div className="flex items-center justify-center gap-4">
-                <div className="w-16 h-16 bg-white/20 rounded-full flex items-center justify-center">
-                  <Heart className="w-8 h-8 text-white" />
-                </div>
-                <div className="text-left">
-                  <p className="font-semibold text-lg">Vee</p>
-                  <p className="text-primary-100">{t("registered-dietitian-title", "about")}</p>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
+          <div className="max-w-4xl mx-auto text-center">
+            <h2 className="text-3xl md:text-4xl font-bold mb-6">
+              Why I Do What I Do
+            </h2>
+            <p className="text-xl text-muted-foreground leading-relaxed mb-8">
+              My passion is helping people discover that healthy eating can be enjoyable, sustainable, and perfectly suited to their individual needs. I've seen firsthand how the right nutrition approach can transform not just physical health, but energy levels, confidence, and overall quality of life.
+            </p>
+            <p className="text-lg text-muted-foreground leading-relaxed">
+              Every client's success story reminds me why I chose this path - to empower people with the knowledge and tools they need to take control of their health and live their best lives.
+            </p>
+          </div>
         </div>
       </section>
 
       {/* CTA Section */}
-      <section className="py-20 bg-primary-50 dark:bg-gray-800">
+      <section className="bg-primary-600 text-white py-20">
         <div className="container mx-auto px-4 text-center">
           <h2 className="text-3xl md:text-4xl font-bold mb-4">
-            {t("ready-start-journey", "about")}
+            Ready to start your journey to better health?
           </h2>
-          <p className="text-xl text-muted-foreground mb-8 max-w-2xl mx-auto">
-            {t("lets-work-together", "about")}
+          <p className="text-xl mb-8 opacity-90">
+            Let's work together to create a personalized nutrition plan that fits your lifestyle and helps you achieve your goals.
           </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button size="lg" asChild>
-              <Link href="/appointment">{t("book-consultation", "about")}</Link>
-            </Button>
-            <Button size="lg" variant="outline" asChild>
-              <Link href="/contact">{t("get-in-touch", "about")}</Link>
-            </Button>
-          </div>
+          <Button size="lg" variant="secondary" asChild>
+            <Link href="/appointment">
+              Book Your Free Consultation
+            </Link>
+          </Button>
         </div>
       </section>
     </div>
