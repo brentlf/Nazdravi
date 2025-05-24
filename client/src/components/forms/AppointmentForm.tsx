@@ -57,8 +57,8 @@ export function AppointmentForm() {
   const form = useForm<AppointmentFormData>({
     resolver: zodResolver(appointmentSchema),
     defaultValues: {
-      name: "",
-      email: "",
+      name: user?.name || "",
+      email: user?.email || "",
       phone: "",
       type: "Initial",
       goals: "",
@@ -201,8 +201,16 @@ export function AppointmentForm() {
                       Email Address *
                     </FormLabel>
                     <FormControl>
-                      <Input {...field} type="email" placeholder="your.email@example.com" />
+                      <Input 
+                        {...field} 
+                        type="email" 
+                        placeholder="your.email@example.com"
+                        readOnly
+                        disabled
+                        className="bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400"
+                      />
                     </FormControl>
+                    <p className="text-xs text-muted-foreground">Using your account email address</p>
                     <FormMessage />
                   </FormItem>
                 )}
