@@ -22,46 +22,50 @@ export function DashboardOverview() {
 
 
 
-  // Fetch user's data using consistent userId field
-  const { data: appointments } = useFirestoreCollection<Appointment>("appointments", [
-    where("userId", "==", user?.uid || ""),
-    where("status", "in", ["pending", "confirmed"]),
-    orderBy("date", "asc"),
-    limit(1)
-  ]);
+  // Try multiple approaches to find appointments - remove status filter first
+  const { data: appointmentsByUserId } = useFirestoreCollection<Appointment>("appointments", 
+    user?.uid ? [where("userId", "==", user.uid)] : []
+  );
+  
+  const { data: appointmentsByEmail } = useFirestoreCollection<Appointment>("appointments", 
+    user?.email ? [where("email", "==", user.email)] : []
+  );
+  
+  // Also try searching by user field (some might use this instead)
+  const { data: appointmentsByUser } = useFirestoreCollection<Appointment>("appointments", 
+    user?.uid ? [where("user", "==", user.uid)] : []
+  );
 
-  // Fetch messages from the user's chat room
+  // Fetch messages from the user's chat room (remove orderBy temporarily)
   const chatRoom = user ? `${user.uid}_admin` : "";
-  const { data: messages } = useFirestoreCollection<Message>("messages", [
-    where("chatRoom", "==", chatRoom),
-    orderBy("createdAt", "desc"),
-    limit(5)
-  ]);
+  const { data: messages } = useFirestoreCollection<Message>("messages", 
+    chatRoom ? [where("chatRoom", "==", chatRoom)] : []
+  );
 
-  const { data: progressEntries } = useFirestoreCollection<Progress>("progress", [
-    where("userId", "==", user?.uid || ""),
-    orderBy("date", "desc"),
-    limit(10)
-  ]);
+  const { data: progressEntries } = useFirestoreCollection<Progress>("progress", 
+    user?.uid ? [where("userId", "==", user.uid)] : []
+  );
 
-  // Temporary: Also fetch by email for backwards compatibility until all data has userId
-  const { data: appointmentsByEmail } = useFirestoreCollection<Appointment>("appointments", [
-    where("email", "==", user?.email || ""),
-    where("status", "in", ["pending", "confirmed"]),
-    orderBy("date", "asc"),
-    limit(1)
-  ]);
-
-  // Use userId data if available, otherwise fall back to email data
-  const effectiveAppointments = appointments?.length ? appointments : appointmentsByEmail;
+  // Combine all appointment sources
+  const allAppointments = [
+    ...(appointmentsByUserId || []),
+    ...(appointmentsByEmail || []),
+    ...(appointmentsByUser || [])
+  ];
+  
+  // Remove duplicates and get effective appointments
+  const effectiveAppointments = allAppointments.filter((apt, index, self) => 
+    index === self.findIndex(a => a.id === apt.id)
+  );
   
   // Debug logging for appointments
   console.log("Dashboard Appointments Debug:", {
     userId: user?.uid,
     userEmail: user?.email,
-    appointmentsByUserId: appointments?.length || 0,
+    appointmentsByUserId: appointmentsByUserId?.length || 0,
     appointmentsByEmail: appointmentsByEmail?.length || 0,
-    effectiveAppointments: effectiveAppointments?.length || 0
+    appointmentsByUser: appointmentsByUser?.length || 0,
+    totalAppointments: effectiveAppointments?.length || 0
   });
 
   // Handle both date formats (Timestamp and string) and time field variations
