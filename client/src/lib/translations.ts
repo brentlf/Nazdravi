@@ -109,6 +109,10 @@ export const translations = {
       'faq-2-answer': 'We recommend follow-up sessions every 2-4 weeks, depending on your goals and progress. Regular check-ins help ensure you stay on track and allow for timely adjustments to your plan.',
       'faq-3-question': 'What is included in the meal planning service?',
       'faq-3-answer': 'Our meal planning includes customized weekly menus, detailed recipes, portion guidance, shopping lists, and nutritional information. All plans are tailored to your dietary preferences, restrictions, and health goals.',
+      'cta-title': 'Ready to Transform Your Health?',
+      'cta-description': 'Book your initial consultation today and take the first step towards a healthier, more confident you. I\'m here to support you every step of the way.',
+      'contact-directly': 'Contact Directly',
+      'contact-info': 'Or contact me directly at:',
     },
   },
   cs: {
@@ -221,6 +225,10 @@ export const translations = {
       'faq-2-answer': 'Doporučujeme následné konzultace každé 2-4 týdny, v závislosti na vašich cílech a pokroku. Pravidelné kontroly pomáhají zajistit, že zůstanete na správné cestě a umožňují včasné úpravy vašeho plánu.',
       'faq-3-question': 'Co je zahrnuto ve službě plánování jídel?',
       'faq-3-answer': 'Naše plánování jídel zahrnuje přizpůsobené týdenní menu, podrobné recepty, pokyny k porcím, nákupní seznamy a výživové informace. Všechny plány jsou přizpůsobeny vašim stravovacím preferencím, omezením a zdravotním cílům.',
+      'cta-title': 'Jste připraveni transformovat své zdraví?',
+      'cta-description': 'Rezervujte si úvodní konzultaci ještě dnes a udělejte první krok k zdravějšímu a sebevědomějšímu já. Jsem tu, abych vás podporovala na každém kroku vaší cesty.',
+      'contact-directly': 'Kontaktovat přímo',
+      'contact-info': 'Nebo mě kontaktujte přímo na:',
     },
   },
 };
