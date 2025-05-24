@@ -143,7 +143,7 @@ export default function Blog() {
                       <span>{post.date || 'Recent'}</span>
                       <span className="mx-2">•</span>
                       <Clock className="w-4 h-4 mr-1" />
-                      <span>{calculateReadTime(post.excerpt || '')} {t("min-read", "blog")}</span>
+                      <span>{calculateReadTime(post.excerpt || '')} min read</span>
                     </div>
 
                     {/* Title */}
@@ -179,7 +179,7 @@ export default function Blog() {
                           target="_blank" 
                           rel="noopener noreferrer"
                         >
-                          {t("read-more", "blog")}
+                          Read More
                           <ArrowRight className="w-4 h-4 ml-1 group-hover/btn:translate-x-1 transition-transform" />
                         </a>
                       </Button>
@@ -195,12 +195,12 @@ export default function Blog() {
             <div className="w-16 h-16 bg-muted rounded-full flex items-center justify-center mx-auto mb-4">
               <Search className="w-8 h-8 text-muted-foreground" />
             </div>
-            <h3 className="text-xl font-semibold mb-2">{t("no-articles-found", "blog")}</h3>
+            <h3 className="text-xl font-semibold mb-2">No articles found</h3>
             <p className="text-muted-foreground mb-6">
-              {t("no-articles-description", "blog")}
+              Try adjusting your search terms or clearing the filters
             </p>
             <Button onClick={() => { setSearchTerm(""); setSelectedCategory(""); }}>
-              {t("clear-filters", "blog")}
+              Clear Filters
             </Button>
           </div>
         )}
@@ -211,13 +211,13 @@ export default function Blog() {
         <Card className="bg-gradient-to-r from-primary-500 to-primary-600 text-white">
           <CardContent className="p-12 text-center">
             <h2 className="text-3xl font-bold mb-4">
-              {t("never-miss-article", "blog")}
+              Never miss an article
             </h2>
             <p className="text-primary-100 mb-8 max-w-2xl mx-auto">
-              {t("newsletter-description", "blog")}
+              Stay updated with the latest nutrition tips and health insights
             </p>
             <Button size="lg" variant="secondary" asChild>
-              <Link href="/#newsletter">{t("subscribe-now", "blog")}</Link>
+              <Link href="/#newsletter">Subscribe Now</Link>
             </Button>
           </CardContent>
         </Card>
