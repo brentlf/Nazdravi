@@ -7,10 +7,12 @@ import { Link } from "wouter";
 import { useAuth } from "@/contexts/AuthContext";
 import { useFirestoreCollection } from "@/hooks/useFirestore";
 import { where } from "firebase/firestore";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 export default function Appointment() {
   const [hasConsent, setHasConsent] = useState(false);
   const { user } = useAuth();
+  const { t } = useLanguage();
 
   // Check if user has completed consent form from Firebase
   const { data: consentRecords } = useFirestoreCollection("consentRecords", [
@@ -35,10 +37,10 @@ export default function Appointment() {
         {/* Page Header */}
         <div className="text-center mb-12">
           <h1 className="text-3xl sm:text-4xl font-bold mb-4">
-            Book Your Consultation
+            {t("book-consultation", "appointment")}
           </h1>
           <p className="text-xl text-muted-foreground">
-            Professional nutrition consultations provided in <strong>English (primary)</strong> and <strong>Czech (upon request)</strong>
+            {t("language-service-notice", "appointment")}
           </p>
         </div>
 
@@ -48,8 +50,7 @@ export default function Appointment() {
             <Globe className="h-4 w-4 text-blue-600" />
             <AlertDescription>
               <p className="text-sm text-blue-800 dark:text-blue-200">
-                <strong>Language Services:</strong> Care is provided exclusively in <strong>English (primary)</strong> and 
-                <strong> Czech (upon request)</strong> to ensure comprehensive understanding for patient safety and treatment effectiveness.
+                <strong>{t("language-services-title", "appointment")}</strong> {t("language-services-description", "appointment")}
               </p>
             </AlertDescription>
           </Alert>
@@ -61,7 +62,7 @@ export default function Appointment() {
           <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 mb-8">
             <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
               <Shield className="w-5 h-5" />
-              Booking Requirements
+              {t("booking-requirements", "appointment")}
             </h3>
             
             <div className="space-y-3">
@@ -71,12 +72,12 @@ export default function Appointment() {
                   <div className="flex items-center gap-3">
                     <CheckCircle className="w-5 h-5 text-green-500" />
                     <div>
-                      <h4 className="font-medium text-green-800 dark:text-green-200">Account Verified</h4>
-                      <p className="text-sm text-green-600 dark:text-green-300">Signed in as {user.name}</p>
+                      <h4 className="font-medium text-green-800 dark:text-green-200">{t("account-verified", "appointment")}</h4>
+                      <p className="text-sm text-green-600 dark:text-green-300">{t("signed-in-as", "appointment")} {user.name}</p>
                     </div>
                   </div>
                   <span className="text-xs bg-green-100 text-green-800 dark:bg-green-900/50 dark:text-green-200 px-2 py-1 rounded">
-                    Complete
+                    {t("complete", "appointment")}
                   </span>
                 </div>
               ) : (
@@ -84,19 +85,19 @@ export default function Appointment() {
                   <div className="flex items-center gap-3">
                     <User className="w-5 h-5 text-amber-500" />
                     <div>
-                      <h4 className="font-medium text-amber-800 dark:text-amber-200">Account Required</h4>
-                      <p className="text-sm text-amber-600 dark:text-amber-300">Create an account to manage your appointments</p>
+                      <h4 className="font-medium text-amber-800 dark:text-amber-200">{t("account-required", "appointment")}</h4>
+                      <p className="text-sm text-amber-600 dark:text-amber-300">{t("create-account", "appointment")}</p>
                     </div>
                   </div>
                   <div className="flex gap-2">
                     <Link href="/login">
                       <Button size="sm" variant="outline" className="border-amber-300 text-amber-700 hover:bg-amber-50">
-                        Sign In
+                        {t("sign-in", "appointment")}
                       </Button>
                     </Link>
                     <Link href="/register">
                       <Button size="sm" className="bg-amber-600 hover:bg-amber-700 text-white">
-                        Register
+                        {t("register", "appointment")}
                       </Button>
                     </Link>
                   </div>
