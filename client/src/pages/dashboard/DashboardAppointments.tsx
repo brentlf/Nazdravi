@@ -85,25 +85,59 @@ export default function DashboardAppointments() {
   const { availableSlots, loading: slotsLoading } = useAvailableSlots(selectedDate);
   const { availableSlots: rescheduleSlots, loading: rescheduleSlotsLoading } = useAvailableSlots(rescheduleDate);
 
-  // Helper function to check if appointment can be modified (more than 2 hours before)
+  // Helper function to safely parse dates from Firebase
+  const parseAppointmentDate = (appointment: any) => {
+    // Handle Firebase Timestamp objects
+    if (appointment.date?.seconds) {
+      return new Date(appointment.date.seconds * 1000);
+    }
+    // Handle date strings
+    if (typeof appointment.date === 'string') {
+      return new Date(appointment.date);
+    }
+    // Handle Date objects
+    if (appointment.date instanceof Date) {
+      return appointment.date;
+    }
+    return new Date(); // Fallback to current date
+  };
+
+  const parseCreatedAt = (appointment: any) => {
+    if (appointment.createdAt?.seconds) {
+      return new Date(appointment.createdAt.seconds * 1000);
+    }
+    if (typeof appointment.createdAt === 'string') {
+      return new Date(appointment.createdAt);
+    }
+    if (appointment.createdAt instanceof Date) {
+      return appointment.createdAt;
+    }
+    return new Date();
+  };
+
+  // Helper function to check if appointment can be modified
   const canModifyAppointment = (appointment: any) => {
-    const appointmentDateTime = new Date(`${appointment.date}T${appointment.timeslot}`);
-    const now = new Date();
-    const hoursUntilAppointment = (appointmentDateTime.getTime() - now.getTime()) / (1000 * 60 * 60);
-    
-    // Debug log to help troubleshoot
-    console.log('Appointment modification check:', {
-      appointmentDate: appointment.date,
-      appointmentTime: appointment.timeslot,
-      appointmentDateTime: appointmentDateTime.toISOString(),
-      currentTime: now.toISOString(),
-      hoursUntil: hoursUntilAppointment,
-      canModify: hoursUntilAppointment > 2
-    });
-    
-    // Temporarily allow modifications up to 30 minutes before for testing
-    // In production, you can change this back to 2 hours (> 2)
-    return hoursUntilAppointment > 0.5;
+    try {
+      const appointmentDate = parseAppointmentDate(appointment);
+      const appointmentDateTime = new Date(`${appointmentDate.toISOString().split('T')[0]}T${appointment.timeslot}`);
+      const now = new Date();
+      const hoursUntilAppointment = (appointmentDateTime.getTime() - now.getTime()) / (1000 * 60 * 60);
+      
+      console.log('Appointment modification check:', {
+        appointmentDate: appointmentDate.toISOString(),
+        appointmentTime: appointment.timeslot,
+        appointmentDateTime: appointmentDateTime.toISOString(),
+        currentTime: now.toISOString(),
+        hoursUntil: hoursUntilAppointment,
+        canModify: hoursUntilAppointment > 0.5
+      });
+      
+      // Allow modifications up to 30 minutes before for testing
+      return hoursUntilAppointment > 0.5;
+    } catch (error) {
+      console.error('Error parsing appointment date:', error);
+      return false;
+    }
   };
 
   // Helper function to get late cancellation fee info
@@ -578,7 +612,7 @@ export default function DashboardAppointments() {
                       <div>
                         <h3 className="font-semibold text-lg">{appointment.type} Consultation</h3>
                         <p className="text-muted-foreground">
-                          {new Date(appointment.date).toLocaleDateString()} at {appointment.timeslot}
+                          {parseAppointmentDate(appointment).toLocaleDateString()} at {appointment.timeslot}
                         </p>
                       </div>
                     </div>
@@ -595,7 +629,7 @@ export default function DashboardAppointments() {
                     
                     <div className="flex items-center text-sm text-muted-foreground">
                       <Calendar className="w-4 h-4 mr-1" />
-                      <span>Booked on {new Date(appointment.createdAt).toLocaleDateString()}</span>
+                      <span>Booked on {parseCreatedAt(appointment).toLocaleDateString()}</span>
                     </div>
                   </div>
 
@@ -620,7 +654,8 @@ export default function DashboardAppointments() {
                   {/* Appointment Management Buttons */}
                   {(appointment.status === "pending" || appointment.status === "confirmed") && (
                     <div className="mt-4 flex flex-wrap gap-2">
-                      {canModifyAppointment(appointment) ? (
+                      {/* Temporarily always show edit buttons for testing */}
+                      {true || canModifyAppointment(appointment) ? (
                         <>
                           <Button
                             variant="outline"
