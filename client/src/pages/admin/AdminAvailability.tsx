@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { Calendar, Clock, Plus, Trash2, Save } from "lucide-react";
+import { Calendar, Clock, Plus, Trash2, Save, ArrowLeft } from "lucide-react";
+import { Link } from "wouter";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -92,7 +93,14 @@ export default function AdminAvailability() {
   return (
     <div className="min-h-screen py-20 bg-gray-50 dark:bg-gray-900">
       <div className="container mx-auto px-4">
+        {/* Header with Back Navigation */}
         <div className="mb-8">
+          <Button variant="ghost" size="sm" className="mb-4" asChild>
+            <Link href="/admin">
+              <ArrowLeft className="mr-2 h-4 w-4" />
+              Back to Admin Dashboard
+            </Link>
+          </Button>
           <h1 className="text-3xl font-bold mb-2">Manage Availability</h1>
           <p className="text-muted-foreground">
             Set your unavailable dates and times for client bookings

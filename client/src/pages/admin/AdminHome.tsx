@@ -9,7 +9,8 @@ import {
   TrendingUp,
   Clock,
   CheckCircle,
-  AlertTriangle
+  AlertTriangle,
+  CalendarX
 } from "lucide-react";
 import { Link } from "wouter";
 import { useFirestoreCollection } from "@/hooks/useFirestore";
@@ -120,6 +121,13 @@ export default function AdminHome() {
       icon: FileText,
       href: "/admin/blog",
       color: "bg-pink-500 hover:bg-pink-600"
+    },
+    {
+      title: "Manage Availability",
+      description: "Set unavailable dates and time slots",
+      icon: CalendarX,
+      href: "/admin/availability",
+      color: "bg-red-500 hover:bg-red-600"
     },
     {
       title: "Manage Users",

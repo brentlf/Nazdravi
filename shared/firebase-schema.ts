@@ -164,6 +164,15 @@ export const healthAssessmentSchema = z.object({
   createdAt: z.date(),
 });
 
+// Unavailable Slots Schema (Admin availability management)
+export const unavailableSlotSchema = z.object({
+  id: z.string().optional(),
+  date: z.string(), // Date in YYYY-MM-DD format
+  timeslots: z.array(z.string()), // Array of time slots like ["09:00", "10:00"]
+  reason: z.string().optional(), // Optional reason for unavailability
+  createdAt: z.date(),
+});
+
 // Firebase Collection Names
 export const COLLECTIONS = {
   USERS: 'users',
@@ -177,6 +186,7 @@ export const COLLECTIONS = {
   NEWSLETTER: 'newsletter',
   CONSENT_RECORDS: 'consentRecords',
   HEALTH_ASSESSMENTS: 'healthAssessments',
+  UNAVAILABLE_SLOTS: 'unavailableSlots',
 } as const;
 
 // Type exports
@@ -191,6 +201,7 @@ export type Translation = z.infer<typeof translationSchema>;
 export type NewsletterSubscriber = z.infer<typeof newsletterSchema>;
 export type ConsentRecord = z.infer<typeof consentRecordSchema>;
 export type HealthAssessment = z.infer<typeof healthAssessmentSchema>;
+export type UnavailableSlot = z.infer<typeof unavailableSlotSchema>;
 
 // Form validation schemas (for frontend forms)
 export const loginSchema = z.object({
