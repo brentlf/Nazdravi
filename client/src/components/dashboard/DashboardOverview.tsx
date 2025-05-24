@@ -228,7 +228,9 @@ export function DashboardOverview() {
                         <MessageCircle className="w-4 h-4 text-primary-600 dark:text-primary-400" />
                       </div>
                       <div className="flex-1 min-w-0">
-                        <p className="text-sm font-medium">From Nutritionist</p>
+                        <p className="text-sm font-medium">
+                          {message.fromUser === user?.uid ? "You" : "Nutritionist"}
+                        </p>
                         <p className="text-sm text-muted-foreground truncate">{message.text}</p>
                         <p className="text-xs text-muted-foreground mt-1">
                           {new Date(message.createdAt).toLocaleDateString()}
