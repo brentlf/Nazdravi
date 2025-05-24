@@ -595,7 +595,7 @@ export default function DashboardAppointments() {
                     </div>
                   )}
 
-                  {appointment.status === "requested" && (
+                  {appointment.status === "pending" && (
                     <div className="mt-4 p-3 bg-yellow-50 dark:bg-yellow-900/20 rounded-lg">
                       <p className="text-sm text-yellow-800 dark:text-yellow-400">
                         <AlertCircle className="w-4 h-4 inline mr-1" />
@@ -605,7 +605,7 @@ export default function DashboardAppointments() {
                   )}
 
                   {/* Appointment Management Buttons */}
-                  {(appointment.status === "requested" || appointment.status === "confirmed") && (
+                  {(appointment.status === "pending" || appointment.status === "confirmed") && (
                     <div className="mt-4 flex flex-wrap gap-2">
                       {canModifyAppointment(appointment) ? (
                         <>

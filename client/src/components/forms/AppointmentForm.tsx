@@ -84,7 +84,7 @@ export function AppointmentForm() {
         appointmentsRef,
         where("date", "==", data.date),
         where("timeslot", "==", data.timeslot),
-        where("status", "in", ["requested", "confirmed"])
+        where("status", "in", ["pending", "confirmed"])
       );
       
       const conflictSnapshot = await getDocs(conflictQuery);
@@ -122,7 +122,7 @@ export function AppointmentForm() {
         ...data,
         userId: user?.uid || "anonymous", // Use actual logged-in user ID
         email: user?.email || data.email, // Ensure email is always stored
-        status: "requested",
+        status: "pending",
         createdAt: new Date(),
         requestId: `${data.date}-${data.timeslot}-${Date.now()}`, // Unique identifier
       });

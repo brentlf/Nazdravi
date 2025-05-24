@@ -21,7 +21,7 @@ export interface Appointment {
   timeslot: string;
   type: "Initial" | "Follow-up";
   goals: string;
-  status: "requested" | "confirmed" | "done" | "cancelled" | "reschedule_requested" | "cancelled_reschedule";
+  status: "pending" | "confirmed" | "done" | "cancelled" | "reschedule_requested" | "cancelled_reschedule";
   name: string;
   email: string;
   phone: string;

@@ -48,7 +48,7 @@ export default function AdminHome() {
   const totalUsers = users?.length || 0;
   const clientUsers = users?.filter(user => user.role === "client").length || 0;
   
-  const pendingAppointments = appointments?.filter(apt => apt.status === "requested").length || 0;
+  const pendingAppointments = appointments?.filter(apt => apt.status === "pending").length || 0;
   const thisMonthAppointments = appointments?.filter(apt => 
     new Date(apt.date).getMonth() === new Date().getMonth()
   ).length || 0;
@@ -193,7 +193,7 @@ export default function AdminHome() {
               <CardHeader className="flex flex-row items-center justify-between">
                 <CardTitle className="flex items-center gap-2">
                   <Clock className="w-5 h-5" />
-                  Requested Appointments
+                  Pending Appointments
                 </CardTitle>
                 <Button variant="outline" size="sm" asChild>
                   <Link href="/admin/appointments">View All</Link>
@@ -203,7 +203,7 @@ export default function AdminHome() {
                 {appointments && pendingAppointments > 0 ? (
                   <div className="space-y-4">
                     {appointments
-                      .filter(apt => apt.status === "requested")
+                      .filter(apt => apt.status === "pending")
                       .slice(0, 3)
                       .map((appointment) => (
                         <div key={appointment.id} className="flex items-center justify-between p-4 bg-yellow-50 dark:bg-yellow-900/20 rounded-lg">
@@ -214,7 +214,7 @@ export default function AdminHome() {
                             </p>
                           </div>
                           <Badge className="bg-yellow-100 text-yellow-800 dark:bg-yellow-900/20 dark:text-yellow-400">
-                            Requested
+                            Pending
                           </Badge>
                         </div>
                       ))}
@@ -222,7 +222,7 @@ export default function AdminHome() {
                 ) : (
                   <div className="text-center py-8">
                     <CheckCircle className="w-12 h-12 text-green-500 mx-auto mb-4" />
-                    <p className="text-muted-foreground">No requested appointments</p>
+                    <p className="text-muted-foreground">No pending appointments</p>
                   </div>
                 )}
               </CardContent>

@@ -290,7 +290,7 @@ export default function AdminAppointments() {
               <div className="flex gap-2">
                 <Badge variant="outline" className="flex items-center gap-1">
                   <AlertCircle className="w-3 h-3 text-yellow-500" />
-                  {filteredAppointments.filter(a => a.status === "requested").length} Requested
+                  {filteredAppointments.filter(a => a.status === "pending").length} Pending
                 </Badge>
                 <Badge variant="outline" className="flex items-center gap-1">
                   <CheckCircle className="w-3 h-3 text-green-500" />
@@ -425,7 +425,7 @@ export default function AdminAppointments() {
                             )}
 
                             <DialogFooter className="gap-2 flex-wrap">
-                              {selectedAppointment?.status === "requested" && (
+                              {selectedAppointment?.status === "pending" && (
                                 <>
                                   <Button
                                     variant="outline"
