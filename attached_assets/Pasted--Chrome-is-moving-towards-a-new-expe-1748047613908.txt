@@ -1,0 +1,19 @@
+
+                
+          
+          
+          
+         Chrome is moving towards a new experience that allows users to choose to browse without third-party cookies.
+AdminMessages.tsx:76 Filtered messages count: 0
+AdminMessages.tsx:77 Total messages count: 0
+AdminMessages.tsx:44 Checking message: {messageId: 'B0tecPbSP1M8NUAl36Hx', fromUser: 'GHs80OQAuefSw83xsRw505Qpk813', toUser: 'admin', chatRoom: 'GHs80OQAuefSw83xsRw505Qpk813_admin', selectedChatRoom: '', …}
+AdminMessages.tsx:44 Checking message: {messageId: 'J8cArj2B5172YGm65kXw', fromUser: 'GHs80OQAuefSw83xsRw505Qpk813', toUser: 'admin', chatRoom: 'GHs80OQAuefSw83xsRw505Qpk813_admin', selectedChatRoom: '', …}
+AdminMessages.tsx:44 Checking message: {messageId: 'ShCWJnNJjgCbgzOqnhyC', fromUser: 'k8auIVCVCuVLQNttjmH2cynH8W92', toUser: 'GHs80OQAuefSw83xsRw505Qpk813', chatRoom: 'GHs80OQAuefSw83xsRw505Qpk813_k8auIVCVCuVLQNttjmH2cynH8W92', selectedChatRoom: '', …}
+AdminMessages.tsx:76 Filtered messages count: 0
+AdminMessages.tsx:77 Total messages count: 3
+AdminMessages.tsx:44 Checking message: {messageId: 'B0tecPbSP1M8NUAl36Hx', fromUser: 'GHs80OQAuefSw83xsRw505Qpk813', toUser: 'admin', chatRoom: 'GHs80OQAuefSw83xsRw505Qpk813_admin', selectedChatRoom: 'GHs80OQAuefSw83xsRw505Qpk813_k8auIVCVCuVLQNttjmH2cynH8W92', …}chatRoom: "GHs80OQAuefSw83xsRw505Qpk813_admin"currentUserUid: "k8auIVCVCuVLQNttjmH2cynH8W92"fromUser: "GHs80OQAuefSw83xsRw505Qpk813"messageId: "B0tecPbSP1M8NUAl36Hx"selectedChatRoom: "GHs80OQAuefSw83xsRw505Qpk813_k8auIVCVCuVLQNttjmH2cynH8W92"text: "Would you perhaps be free on Friday at 5pm?"toUser: "admin"[[Prototype]]: Object
+AdminMessages.tsx:44 Checking message: {messageId: 'J8cArj2B5172YGm65kXw', fromUser: 'GHs80OQAuefSw83xsRw505Qpk813', toUser: 'admin', chatRoom: 'GHs80OQAuefSw83xsRw505Qpk813_admin', selectedChatRoom: 'GHs80OQAuefSw83xsRw505Qpk813_k8auIVCVCuVLQNttjmH2cynH8W92', …}chatRoom: "GHs80OQAuefSw83xsRw505Qpk813_admin"currentUserUid: "k8auIVCVCuVLQNttjmH2cynH8W92"fromUser: "GHs80OQAuefSw83xsRw505Qpk813"messageId: "J8cArj2B5172YGm65kXw"selectedChatRoom: "GHs80OQAuefSw83xsRw505Qpk813_k8auIVCVCuVLQNttjmH2cynH8W92"text: "Are you free on friday?"toUser: "admin"[[Prototype]]: Object
+AdminMessages.tsx:44 Checking message: {messageId: 'ShCWJnNJjgCbgzOqnhyC', fromUser: 'k8auIVCVCuVLQNttjmH2cynH8W92', toUser: 'GHs80OQAuefSw83xsRw505Qpk813', chatRoom: 'GHs80OQAuefSw83xsRw505Qpk813_k8auIVCVCuVLQNttjmH2cynH8W92', selectedChatRoom: 'GHs80OQAuefSw83xsRw505Qpk813_k8auIVCVCuVLQNttjmH2cynH8W92', …}chatRoom: "GHs80OQAuefSw83xsRw505Qpk813_k8auIVCVCuVLQNttjmH2cynH8W92"currentUserUid: "k8auIVCVCuVLQNttjmH2cynH8W92"fromUser: "k8auIVCVCuVLQNttjmH2cynH8W92"messageId: "ShCWJnNJjgCbgzOqnhyC"selectedChatRoom: "GHs80OQAuefSw83xsRw505Qpk813_k8auIVCVCuVLQNttjmH2cynH8W92"text: "I can do 1pm?"toUser: "GHs80OQAuefSw83xsRw505Qpk813"[[Prototype]]: Object
+AdminMessages.tsx:56 Message matches chat room: ShCWJnNJjgCbgzOqnhyC
+AdminMessages.tsx:76 Filtered messages count: 1
+AdminMessages.tsx:77 Total messages count: 3

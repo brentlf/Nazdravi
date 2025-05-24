@@ -40,37 +40,34 @@ export default function AdminMessages() {
 
   // Filter messages for the selected chat room
   const messages = allMessages?.filter(message => {
-    // Debug logging
-    console.log('Checking message:', {
-      messageId: message.id,
-      fromUser: message.fromUser,
-      toUser: message.toUser,
-      chatRoom: message.chatRoom,
-      selectedChatRoom,
-      text: message.text,
-      currentUserUid: user?.uid
-    });
+    if (!selectedChatRoom || !user) return false;
     
-    // Check if message belongs to this chat room
-    if (message.chatRoom === selectedChatRoom) {
-      console.log('Message matches chat room:', message.id);
+    // Extract client user ID from selected chat room
+    const clientUserId = selectedChatRoom.replace(`${user.uid}_`, "").replace(`_${user.uid}`, "");
+    
+    // Check multiple possible chat room formats
+    const possibleChatRooms = [
+      selectedChatRoom, // e.g., "client_admin"
+      `${clientUserId}_admin`, // Legacy format with "admin"
+      `admin_${clientUserId}`, // Reverse order with "admin"
+      `${clientUserId}_${user.uid}`, // Current format
+      `${user.uid}_${clientUserId}` // Reverse current format
+    ];
+    
+    // Check if message belongs to any of these chat rooms
+    if (possibleChatRooms.includes(message.chatRoom)) {
       return true;
     }
     
-    // Also check if it's a message involving the selected client
-    if (selectedChatRoom && user) {
-      const clientUserId = selectedChatRoom.replace(`${user.uid}_`, "").replace(`_${user.uid}`, "");
-      const isRelevant = (
-        (message.fromUser === user.uid && message.toUser === clientUserId) ||
-        (message.fromUser === clientUserId && message.toUser === user.uid)
-      );
-      if (isRelevant) {
-        console.log('Message matches user pair:', message.id);
-      }
-      return isRelevant;
-    }
+    // Also check direct user-to-user messages
+    const isDirectMessage = (
+      (message.fromUser === user.uid && message.toUser === clientUserId) ||
+      (message.fromUser === clientUserId && message.toUser === user.uid) ||
+      (message.fromUser === user.uid && message.toUser === "admin") ||
+      (message.fromUser === clientUserId && message.toUser === "admin")
+    );
     
-    return false;
+    return isDirectMessage;
   }) || [];
 
   console.log('Filtered messages count:', messages.length);
