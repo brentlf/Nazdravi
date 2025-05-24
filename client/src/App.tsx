@@ -48,6 +48,8 @@ import AdminTranslations from "@/pages/admin/AdminTranslations";
 import AdminAvailability from "@/pages/admin/AdminAvailability";
 import AdminDocuments from "@/pages/admin/AdminDocuments";
 import AdminBlog from "@/pages/admin/AdminBlog";
+import AdminInvoices from "@/pages/admin/AdminInvoices";
+import PayInvoice from "@/pages/PayInvoice";
 import AdminEmailScheduler from "@/pages/admin/AdminEmailScheduler";
 
 function Layout({ children }: { children: React.ReactNode }) {
@@ -83,6 +85,9 @@ function Router() {
       {/* Auth routes */}
       <Route path="/login" component={Login} />
       <Route path="/register" component={Register} />
+      
+      {/* Payment route */}
+      <Route path="/pay-invoice/:invoiceNumber" component={() => <Layout><PayInvoice /></Layout>} />
       
       {/* Client dashboard routes */}
       <Route path="/dashboard">
@@ -170,6 +175,11 @@ function Router() {
       <Route path="/admin/emails">
         <RouteGuard role="admin">
           <Layout><AdminEmailScheduler /></Layout>
+        </RouteGuard>
+      </Route>
+      <Route path="/admin/invoices">
+        <RouteGuard role="admin">
+          <Layout><AdminInvoices /></Layout>
         </RouteGuard>
       </Route>
       <Route path="/admin-client-view">
