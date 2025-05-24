@@ -89,6 +89,11 @@ export const translations = {
       'book-consultation-btn': 'Book a Consultation',
       'contact-directly': 'Contact Directly',
       'contact-info': 'Or contact me directly at:',
+      'my-approach': 'My Approach',
+      'approach-description': 'I believe in sustainable, evidence-based nutrition that fits your lifestyle. No extreme diets, just practical guidance that creates lasting change.',
+      'learn-more-about': 'Learn More About Me',
+      'success-stories': 'Success Stories',
+      'real-transformations': 'Real transformations from real people',
     },
     services: {
       'title': 'Nutrition Services',
@@ -201,6 +206,11 @@ export const translations = {
       'book-consultation-btn': 'Rezervovat konzultaci',
       'contact-directly': 'Kontaktovat přímo',
       'contact-info': 'Nebo mě kontaktujte přímo na:',
+      'my-approach': 'Můj přístup',
+      'approach-description': 'Věřím v udržitelnou výživu založenou na důkazech, která se hodí k vašemu životnímu stylu. Žádné extrémní diety, jen praktické vedení, které vytváří trvalé změny.',
+      'learn-more-about': 'Dozvědět se více o mně',
+      'success-stories': 'Příběhy úspěchu',
+      'real-transformations': 'Skutečné transformace od skutečných lidí',
     },
     services: {
       'title': 'Nutriční služby',

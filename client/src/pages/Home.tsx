@@ -222,16 +222,15 @@ export default function Home() {
               {/* My Approach */}
               <Card className="mb-8">
                 <CardContent className="p-6">
-                  <h3 className="text-lg font-semibold mb-3">My Approach</h3>
+                  <h3 className="text-lg font-semibold mb-3">{t("my-approach", "home")}</h3>
                   <p className="text-muted-foreground text-sm">
-                    I believe in sustainable, evidence-based nutrition that fits your lifestyle. 
-                    No extreme diets, just practical guidance that creates lasting change.
+                    {t("approach-description", "home")}
                   </p>
                 </CardContent>
               </Card>
 
               <Button asChild>
-                <Link href="/about">Learn More About Me</Link>
+                <Link href="/about">{t("learn-more-about", "home")}</Link>
               </Button>
             </div>
           </div>
@@ -242,8 +241,8 @@ export default function Home() {
       <section className="py-20 bg-background">
         <div className="container mx-auto px-4">
           <div className="text-center mb-16">
-            <h2 className="text-3xl sm:text-4xl font-bold mb-4">Success Stories</h2>
-            <p className="text-xl text-muted-foreground">Real transformations from real people</p>
+            <h2 className="text-3xl sm:text-4xl font-bold mb-4">{t("success-stories", "home")}</h2>
+            <p className="text-xl text-muted-foreground">{t("real-transformations", "home")}</p>
           </div>
 
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
