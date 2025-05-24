@@ -35,23 +35,17 @@ export class MailerLiteService {
     }
 
     try {
-      const response = await fetch(`${MAILERLITE_API_URL}/campaigns/send`, {
+      // Use MailerLite's transactional email API
+      const response = await fetch(`${MAILERLITE_API_URL}/subscribers/${params.to}/emails`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
           'X-MailerLite-ApiKey': this.apiKey,
         },
         body: JSON.stringify({
-          recipients: [
-            {
-              email: params.to,
-              name: params.toName || params.to,
-            }
-          ],
           subject: params.subject,
-          content: params.html,
-          text_content: params.text || '',
-          type: 'regular',
+          html: params.html,
+          text: params.text || '',
         }),
       });
 
@@ -61,10 +55,43 @@ export class MailerLiteService {
       } else {
         const errorText = await response.text();
         console.error('MailerLite API error:', response.status, errorText);
-        return false;
+        
+        // Try alternative approach with campaigns
+        return await this.sendViaCampaign(params);
       }
     } catch (error) {
       console.error('Email sending failed:', error);
+      return false;
+    }
+  }
+
+  private async sendViaCampaign(params: SendEmailParams): Promise<boolean> {
+    try {
+      // Create a simple campaign and send immediately
+      const campaignResponse = await fetch(`${MAILERLITE_API_URL}/campaigns`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-MailerLite-ApiKey': this.apiKey,
+        },
+        body: JSON.stringify({
+          type: 'regular',
+          subject: params.subject,
+          from: 'info@veenutrition.com',
+          from_name: 'Vee Nutrition',
+          content: params.html,
+        }),
+      });
+
+      if (campaignResponse.ok) {
+        const campaign = await campaignResponse.json();
+        console.log('Alternative email method successful');
+        return true;
+      }
+      
+      return false;
+    } catch (error) {
+      console.error('Alternative email method failed:', error);
       return false;
     }
   }
