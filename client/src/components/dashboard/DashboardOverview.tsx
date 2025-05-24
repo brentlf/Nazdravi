@@ -9,12 +9,14 @@ import {
   FileText,
   Target,
   Clock,
-  Users
+  Users,
+  Receipt
 } from "lucide-react";
 import { Link } from "wouter";
 import { useAuth } from "@/contexts/AuthContext";
 import { useFirestoreCollection } from "@/hooks/useFirestore";
 import { Appointment, Message, Progress } from "@/types";
+import type { Invoice } from "@shared/firebase-schema";
 import { where, orderBy, limit } from "firebase/firestore";
 
 export function DashboardOverview() {
@@ -44,6 +46,11 @@ export function DashboardOverview() {
 
   const { data: progressEntries } = useFirestoreCollection<Progress>("progress", 
     user?.uid ? [where("userId", "==", user.uid)] : []
+  );
+
+  // Fetch client's invoices
+  const { data: invoices } = useFirestoreCollection<Invoice>("invoices", 
+    user?.uid ? [where("userId", "==", user.uid), orderBy("createdAt", "desc")] : []
   );
 
   // Combine all appointment sources
@@ -82,6 +89,7 @@ export function DashboardOverview() {
     msg.toUser === user?.uid && (msg.read === false || msg.read === undefined)
   ).length || 0;
   const latestProgress = progressEntries?.[0];
+  const pendingInvoices = invoices?.filter(invoice => invoice.status === "pending").length || 0;
 
 
   
@@ -137,6 +145,16 @@ export function DashboardOverview() {
       bgColor: "bg-primary-50 dark:bg-primary-900/20",
       action: "View All",
       href: "/dashboard/messages"
+    },
+    {
+      title: "Invoices",
+      value: pendingInvoices.toString(),
+      subtitle: "Pending Payment",
+      icon: Receipt,
+      color: "text-orange-600",
+      bgColor: "bg-orange-50 dark:bg-orange-900/20",
+      action: "Pay Now",
+      href: "/dashboard/invoices"
     }
   ];
 
@@ -168,6 +186,13 @@ export function DashboardOverview() {
       icon: FileText,
       href: "/dashboard/plan",
       color: "bg-purple-500 hover:bg-purple-600"
+    },
+    {
+      title: "Pay Invoices",
+      description: "View and pay outstanding invoices",
+      icon: Receipt,
+      href: "/dashboard/invoices",
+      color: "bg-orange-500 hover:bg-orange-600"
     }
   ];
 
