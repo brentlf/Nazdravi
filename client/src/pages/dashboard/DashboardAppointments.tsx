@@ -651,53 +651,33 @@ export default function DashboardAppointments() {
                     </div>
                   )}
 
-                  {/* Debug appointment status */}
-                  {console.log('Appointment status debug:', appointment.status, appointment)}
-
-                  {/* Appointment Management Buttons - Show for all manageable statuses */}
-                  {(appointment.status === "pending" || appointment.status === "confirmed" || appointment.status === "reschedule_requested") && (
-                    <div className="mt-4 flex flex-wrap gap-2">
-                      {/* Temporarily always show edit buttons for testing */}
-                      {true || canModifyAppointment(appointment) ? (
-                        <>
-                          <Button
-                            variant="outline"
-                            size="sm"
-                            onClick={() => {
-                              setSelectedAppointment(appointment);
-                              setIsRescheduleOpen(true);
-                            }}
-                            className="flex items-center gap-2"
-                          >
-                            <Edit className="w-4 h-4" />
-                            Reschedule
-                          </Button>
-                          <Button
-                            variant="outline"
-                            size="sm"
-                            onClick={() => {
-                              setSelectedAppointment(appointment);
-                              setIsCancelOpen(true);
-                            }}
-                            className="flex items-center gap-2 text-red-600 hover:text-red-700 border-red-300 hover:border-red-400"
-                          >
-                            <Trash2 className="w-4 h-4" />
-                            Cancel
-                          </Button>
-                        </>
-                      ) : isLateCancellation(appointment) ? (
-                        <div className="text-sm text-orange-600 dark:text-orange-400 bg-orange-50 dark:bg-orange-900/20 p-2 rounded">
-                          <AlertCircle className="w-4 h-4 inline mr-1" />
-                          Changes require 2+ hours notice. Late cancellation fees may apply.
-                        </div>
-                      ) : (
-                        <div className="text-sm text-gray-500 dark:text-gray-400">
-                          <Clock className="w-4 h-4 inline mr-1" />
-                          Too close to appointment time to modify
-                        </div>
-                      )}
-                    </div>
-                  )}
+                  {/* Appointment Management Buttons - Always show for testing */}
+                  <div className="mt-4 flex flex-wrap gap-2">
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => {
+                        setSelectedAppointment(appointment);
+                        setIsRescheduleOpen(true);
+                      }}
+                      className="flex items-center gap-2"
+                    >
+                      <Edit className="w-4 h-4" />
+                      Reschedule
+                    </Button>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => {
+                        setSelectedAppointment(appointment);
+                        setIsCancelOpen(true);
+                      }}
+                      className="flex items-center gap-2 text-red-600 hover:text-red-700 border-red-300 hover:border-red-400"
+                    >
+                      <Trash2 className="w-4 h-4" />
+                      Cancel
+                    </Button>
+                  </div>
                 </CardContent>
               </Card>
             ))
