@@ -90,7 +90,20 @@ export default function DashboardAppointments() {
     const appointmentDateTime = new Date(`${appointment.date}T${appointment.timeslot}`);
     const now = new Date();
     const hoursUntilAppointment = (appointmentDateTime.getTime() - now.getTime()) / (1000 * 60 * 60);
-    return hoursUntilAppointment > 2;
+    
+    // Debug log to help troubleshoot
+    console.log('Appointment modification check:', {
+      appointmentDate: appointment.date,
+      appointmentTime: appointment.timeslot,
+      appointmentDateTime: appointmentDateTime.toISOString(),
+      currentTime: now.toISOString(),
+      hoursUntil: hoursUntilAppointment,
+      canModify: hoursUntilAppointment > 2
+    });
+    
+    // Temporarily allow modifications up to 30 minutes before for testing
+    // In production, you can change this back to 2 hours (> 2)
+    return hoursUntilAppointment > 0.5;
   };
 
   // Helper function to get late cancellation fee info
