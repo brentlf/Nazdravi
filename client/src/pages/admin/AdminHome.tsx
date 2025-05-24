@@ -251,7 +251,21 @@ export default function AdminHome() {
                           <p className="text-sm font-medium">{getSenderName(message)}</p>
                           <p className="text-sm text-muted-foreground truncate">{message.text}</p>
                           <p className="text-xs text-muted-foreground mt-1">
-                            {new Date(message.createdAt).toLocaleDateString()}
+                            {(() => {
+                              try {
+                                let date;
+                                if (message.createdAt instanceof Date) {
+                                  date = message.createdAt;
+                                } else if (message.createdAt && typeof message.createdAt === 'object' && 'toDate' in message.createdAt) {
+                                  date = (message.createdAt as any).toDate();
+                                } else {
+                                  date = new Date();
+                                }
+                                return date.toLocaleDateString();
+                              } catch (error) {
+                                return 'Recent';
+                              }
+                            })()}
                           </p>
                         </div>
                       </div>
