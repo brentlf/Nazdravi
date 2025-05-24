@@ -108,11 +108,18 @@ export default function AdminHome() {
       color: "bg-green-500 hover:bg-green-600"
     },
     {
-      title: "Upload Plans",
-      description: "Add nutrition plans for clients",
+      title: "Client Documents",
+      description: "Upload nutrition plans and documents for clients",
       icon: FileText,
-      href: "/admin/plans",
+      href: "/admin/documents",
       color: "bg-purple-500 hover:bg-purple-600"
+    },
+    {
+      title: "Blog Management",
+      description: "Create and manage blog posts with images",
+      icon: FileText,
+      href: "/admin/blog",
+      color: "bg-pink-500 hover:bg-pink-600"
     },
     {
       title: "Manage Users",
