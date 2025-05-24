@@ -35,6 +35,8 @@ export interface Message {
   text: string;
   chatRoom: string;
   createdAt: Date;
+  read: boolean;
+  messageType?: "text" | "file" | "system";
 }
 
 export interface Plan {

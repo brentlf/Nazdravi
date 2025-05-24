@@ -107,6 +107,24 @@ export function MessageThread() {
     }
   }, [messages]);
 
+  // Mark messages as read when component loads and user views them
+  useEffect(() => {
+    if (messages && user) {
+      const unreadMessages = messages.filter(msg => 
+        msg.toUser === user.uid && (msg.read === false || msg.read === undefined)
+      );
+      
+      // Mark each unread message as read
+      unreadMessages.forEach(async (message) => {
+        try {
+          await updateMessage(message.id, { read: true });
+        } catch (error) {
+          console.error('Failed to mark message as read:', error);
+        }
+      });
+    }
+  }, [messages, user]);
+
   // Helper function to format message timestamp
   const formatMessageTime = (timestamp: any) => {
     if (!timestamp) return "";

@@ -55,7 +55,7 @@ export default function AdminHome() {
 
   const recentMessages = messages?.slice(0, 5) || [];
   const unreadMessages = messages?.filter(msg => 
-    msg.toUser === "admin" // Messages to admin
+    msg.toUser === "admin" && (msg.read === false || msg.read === undefined) // Only unread messages to admin
   ).length || 0;
 
   const quickStats = [

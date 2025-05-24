@@ -78,7 +78,9 @@ export function DashboardOverview() {
   }));
 
   const nextAppointment = processedAppointments?.[0];
-  const unreadMessages = messages?.length || 0;
+  const unreadMessages = messages?.filter(msg => 
+    msg.toUser === user?.uid && (msg.read === false || msg.read === undefined)
+  ).length || 0;
   const latestProgress = progressEntries?.[0];
 
 
