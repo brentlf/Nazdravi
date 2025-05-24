@@ -1,0 +1,37 @@
+PS C:\Users\brent\Documents\DietPro (4)\DietPro> firebase functions:log --only processMailQueue
+2025-05-24T22:16:39.640068568Z D processMailQueue: Function execution started
+2025-05-24T22:16:39.645176Z ? processMailQueue: Processing email from queue: info@veenutrition.com
+2025-05-24T22:16:39.763364Z ? processMailQueue: Email sending failed: Error [ERR_REQUIRE_ESM]: require() of ES Module /workspace/node_modules/node-fetch/src/index.js from /workspace/lib/index.js not supported.
+2025-05-24T22:16:39.763380Z ? processMailQueue: Instead change the require of /workspace/node_modules/node-fetch/src/index.js in /workspace/lib/index.js to a dynamic import() which is available in all CommonJS modules.
+2025-05-24T22:16:39.763387Z ? processMailQueue:     at /workspace/lib/index.js:40:76
+2025-05-24T22:16:39.763393Z ? processMailQueue:     at async MailerLiteService.sendEmail (/workspace/lib/index.js:40:28)
+2025-05-24T22:16:39.763399Z ? processMailQueue:     at async /workspace/lib/index.js:304:25 {
+2025-05-24T22:16:39.763404Z ? processMailQueue:   code: 'ERR_REQUIRE_ESM'
+2025-05-24T22:16:39.763408Z ? processMailQueue: }
+2025-05-24T22:16:39.865288Z ? processMailQueue: Email failed to info@veenutrition.com
+2025-05-24T22:16:39.866943187Z D processMailQueue: Function execution took 226 ms, finished with status: 'ok'
+2025-05-24T22:19:14.883687179Z D processMailQueue: Function execution started
+2025-05-24T22:19:14.888090Z ? processMailQueue: Processing email from queue: info@veenutrition.com
+2025-05-24T22:19:14.964731Z ? processMailQueue: Email sending failed: Error [ERR_REQUIRE_ESM]: require() of ES Module /workspace/node_modules/node-fetch/src/index.js from /workspace/lib/index.js not supported.
+2025-05-24T22:19:14.964744Z ? processMailQueue: Instead change the require of /workspace/node_modules/node-fetch/src/index.js in /workspace/lib/index.js to a dynamic import() which is available in all CommonJS modules.
+2025-05-24T22:19:14.964748Z ? processMailQueue:     at /workspace/lib/index.js:40:76
+2025-05-24T22:19:14.964752Z ? processMailQueue:     at async MailerLiteService.sendEmail (/workspace/lib/index.js:40:28)
+2025-05-24T22:19:14.964755Z ? processMailQueue:     at async /workspace/lib/index.js:304:25 {
+2025-05-24T22:19:14.964758Z ? processMailQueue:   code: 'ERR_REQUIRE_ESM'
+2025-05-24T22:19:14.964761Z ? processMailQueue: }
+2025-05-24T22:19:15.171859Z ? processMailQueue: Email failed to info@veenutrition.com
+2025-05-24T22:19:15.176171536Z D processMailQueue: Function execution took 292 ms, finished with status: 'ok'
+2025-05-24T22:21:57.822511Z N processMailQueue: {"@type":"type.googleapis.com/google.cloud.audit.AuditLog","authenticationInfo":{"principalEmail":"Brentlf@gmail.com","principalSubject":"user:Brentlf@gmail.com"},"requestMetadata":{"callerIp":"84.83.116.246","callerSuppliedUserAgent":"FirebaseCLI/14.4.0,gzip(gfe),gzip(gfe)","requestAttributes":{"time":"2025-05-24T22:21:58.204720Z","auth":{}},"destinationAttributes":{}},"serviceName":"cloudfunctions.googleapis.com","methodName":"google.cloud.functions.v1.CloudFunctionsService.UpdateFunction","authorizationInfo":[{"resource":"projects/veenutrition-79fba/locations/us-central1/functions/processMailQueue","permission":"cloudfunctions.functions.update","granted":true,"resourceAttributes":{},"permissionType":"ADMIN_WRITE"}],"resourceName":"projects/veenutrition-79fba/locations/us-central1/functions/processMailQueue","request":{"function":{"sourceUploadUrl":"https://storage.googleapis.com/uploads-243108003689.us-central1.cloudfunctions.appspot.com/0f1e5925-4858-4664-84d2-2759bc0f561c.zip?GoogleAccessId=service-58051802559@gcf-admin-robot.iam.gserviceaccount.com&Expires=1748127069&Signature=S0geHirk3d6zi2Dp5kv9mjTj5Xx1dKLh%2BdEngrTd%2F3gst62EVe61mQzbvh5LRih4GwXkBuE9FGCRgPedT4G3MYB8qZ%2B7dPDMg%2FMxjo9%2FOPPko%2BuYJB5qbzXDP0vK92J%2FCef4Fllfat4Go2VYw5TiklG%2BRXMlo7hInGNwAyymnEkpsYZJmsk72h4FoJK2uLpsriOVt6tIcLAuyu%2BNjuOTTTgLgSbr493YbB22xXW%2FHESASFK9%2FVlQOlbBb1ExaLHGym3fqfY8ljdCdNS4rD42Ew0o0tIAhq%2BrzoygqlAJfZs2v%2Bzu%2BEA6L3%2BUyO9XSMPg8Fqf74uFWzEYgnhssOh1%2BA%3D%3D","eventTrigger":{"resource":"projects/veenutrition-79fba/databases/(default)/documents/mail/{mailId}","eventType":"providers/cloud.firestore/eventTypes/document.create"},"labels":{"deployment-tool":"cli-firebase","firebase-functions-hash":"4299675ca9b23b37acc1ab544a57ca0d307cd89d"},"name":"projects/veenutrition-79fba/locations/us-central1/functions/processMailQueue","entryPoint":"processMailQueue","sourceToken":"dea2ab60-60c9-4923-aa65-57a666a3d42d","dockerRegistry":"ARTIFACT_REGISTRY","runtime":"nodejs18"},"updateMask":"name,sourceUploadUrl,entryPoint,runtime,dockerRegistry,labels,eventTrigger.eventType,eventTrigger.resource,eventTrigger.failurePolicy,minInstances,maxInstances,ingressSettings,environmentVariables,serviceAccountEmail,availableMemoryMb,timeout,vpcConnector,vpcConnectorEgressSettings,sourceToken,buildEnvironmentVariables","@type":"type.googleapis.com/google.cloud.functions.v1.UpdateFunctionRequest"},"resourceLocation":{"currentLocations":["us-central1"]}}
+2025-05-24T22:22:16.091597Z N processMailQueue: {"@type":"type.googleapis.com/google.cloud.audit.AuditLog","status":{},"authenticationInfo":{},"serviceName":"cloudfunctions.googleapis.com","methodName":"google.cloud.functions.v1.CloudFunctionsService.UpdateFunction","resourceName":"projects/veenutrition-79fba/locations/us-central1/functions/processMailQueue"}
+2025-05-24T22:22:46.722678035Z D processMailQueue: Function execution started
+2025-05-24T22:22:46.802939Z ? processMailQueue: Processing email from queue: info@veenutrition.com
+2025-05-24T22:22:47.098608Z ? processMailQueue: Email sending failed: Error [ERR_REQUIRE_ESM]: require() of ES Module /workspace/node_modules/node-fetch/src/index.js from /workspace/lib/index.js not supported.
+2025-05-24T22:22:47.098622Z ? processMailQueue: Instead change the require of /workspace/node_modules/node-fetch/src/index.js in /workspace/lib/index.js to a dynamic import() which is available in all CommonJS modules.
+2025-05-24T22:22:47.098627Z ? processMailQueue:     at /workspace/lib/index.js:40:76
+2025-05-24T22:22:47.098632Z ? processMailQueue:     at async MailerLiteService.sendEmail (/workspace/lib/index.js:40:28)
+2025-05-24T22:22:47.098637Z ? processMailQueue:     at async /workspace/lib/index.js:304:25 {
+2025-05-24T22:22:47.098641Z ? processMailQueue:   code: 'ERR_REQUIRE_ESM'
+2025-05-24T22:22:47.098645Z ? processMailQueue: }
+2025-05-24T22:22:51.193518Z ? processMailQueue: Email failed to info@veenutrition.com
+2025-05-24T22:22:51.206601372Z D processMailQueue: Function execution took 4483 ms, finished with status: 'ok'
+PS C:\Users\brent\Documents\DietPro (4)\DietPro> 

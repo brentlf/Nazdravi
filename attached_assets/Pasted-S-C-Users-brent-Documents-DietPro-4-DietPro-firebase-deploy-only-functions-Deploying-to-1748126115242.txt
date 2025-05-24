@@ -1,0 +1,153 @@
+S C:\Users\brent\Documents\DietPro (4)\DietPro> firebase deploy --only functions
+
+=== Deploying to 'veenutrition-79fba'...
+
+i  deploying functions
+Running command: npm --prefix "$RESOURCE_DIR" run build
+
+> build
+> tsc
+
++  functions: Finished running predeploy script.
+i  functions: preparing codebase default for deployment
+i  functions: ensuring required API cloudfunctions.googleapis.com is enabled...
+i  functions: ensuring required API cloudbuild.googleapis.com is enabled...
+i  artifactregistry: ensuring required API artifactregistry.googleapis.com is enabled...
++  functions: required API cloudfunctions.googleapis.com is enabled
++  functions: required API cloudbuild.googleapis.com is enabled
++  artifactregistry: required API artifactregistry.googleapis.com is enabled
+!  functions: Runtime Node.js 18 was deprecated on 2025-04-30 and will be decommissioned on 2025-10-30, after which you will not be able to deploy without upgrading. Consider upgrading now to avoid disruption. See https://cloud.google.com/functions/docs/runtime-support for full details on the lifecycle policy
+!  functions: package.json indicates an outdated version of firebase-functions. Please upgrade using npm install --save firebase-functions@latest in your functions directory.
+!  functions: Please note that there will be breaking changes when you upgrade.
+i  functions: Loading and analyzing source code for codebase default to determine what to deploy
+i  functions: You are using a version of firebase-functions SDK (4.9.0) that does not have support for the newest Firebase Extensions features. Please update firebase-functions SDK to >=5.1.0 to use them correctly
+Serving at port 8747
+
+i  functions: preparing functions directory for uploading...
+i  functions: packaged C:\Users\brent\Documents\DietPro (4)\DietPro\functions (49.28 KB) for uploading
+i  functions: ensuring required API cloudscheduler.googleapis.com is enabled...
++  functions: required API cloudscheduler.googleapis.com is enabled
++  functions: functions folder uploaded successfully
+i  functions: updating Node.js 18 (1st Gen) function onUserCreated(us-central1)...
+i  functions: updating Node.js 18 (1st Gen) function onAppointmentConfirmed(us-central1)...
+i  functions: updating Node.js 18 (1st Gen) function onRescheduleRequest(us-central1)...
+i  functions: updating Node.js 18 (1st Gen) function processMailQueue(us-central1)...
+i  functions: updating Node.js 18 (1st Gen) function sendDailyReminders(us-central1)...
+Function failed on loading user code. This is likely due to a bug in the user code. Error message: Provided module can't be loaded.
+Is there a syntax error in your code?
+Detailed stack trace: Error [ERR_REQUIRE_ESM]: require() of ES Module /workspace/node_modules/node-fetch/src/index.js from /workspace/lib/index.js not supported.
+Instead change the require of /workspace/node_modules/node-fetch/src/index.js in /workspace/lib/index.js to a dynamic import() which is available in all CommonJS modules.
+    at Object.<anonymous> (/workspace/lib/index.js:35:38)
+    at getUserFunction (/layers/google.nodejs.functions-framework/functions-framework/node_modules/@google-cloud/functions-framework/build/src/loader.js:98:30)
+    at async main (/layers/google.nodejs.functions-framework/functions-framework/node_modules/@google-cloud/functions-framework/build/src/main.js:40:32)
+Could not load the function, shutting down.. Please visit https://cloud.google.com/functions/docs/troubleshooting for in-depth troubleshooting documentation.
+Function failed on loading user code. This is likely due to a bug in the user code. Error message: Provided module can't be loaded.
+Is there a syntax error in your code?
+Detailed stack trace: Error [ERR_REQUIRE_ESM]: require() of ES Module /workspace/node_modules/node-fetch/src/index.js from /workspace/lib/index.js not supported.
+Instead change the require of /workspace/node_modules/node-fetch/src/index.js in /workspace/lib/index.js to a dynamic import() which is available in all CommonJS modules.
+    at Object.<anonymous> (/workspace/lib/index.js:35:38)
+    at getUserFunction (/layers/google.nodejs.functions-framework/functions-framework/node_modules/@google-cloud/functions-framework/build/src/loader.js:98:30)
+    at async main (/layers/google.nodejs.functions-framework/functions-framework/node_modules/@google-cloud/functions-framework/build/src/main.js:40:32)
+Could not load the function, shutting down.. Please visit https://cloud.google.com/functions/docs/troubleshooting for in-depth troubleshooting documentation.
+Function failed on loading user code. This is likely due to a bug in the user code. Error message: Provided module can't be loaded.
+Is there a syntax error in your code?
+Detailed stack trace: Error [ERR_REQUIRE_ESM]: require() of ES Module /workspace/node_modules/node-fetch/src/index.js from /workspace/lib/index.js not supported.
+Instead change the require of /workspace/node_modules/node-fetch/src/index.js in /workspace/lib/index.js to a dynamic import() which is available in all CommonJS modules.
+    at Object.<anonymous> (/workspace/lib/index.js:35:38)
+    at getUserFunction (/layers/google.nodejs.functions-framework/functions-framework/node_modules/@google-cloud/functions-framework/build/src/loader.js:98:30)
+    at async main (/layers/google.nodejs.functions-framework/functions-framework/node_modules/@google-cloud/functions-framework/build/src/main.js:40:32)
+Could not load the function, shutting down.. Please visit https://cloud.google.com/functions/docs/troubleshooting for in-depth troubleshooting documentation.
+Function failed on loading user code. This is likely due to a bug in the user code. Error message: Provided module can't be loaded.
+Is there a syntax error in your code?
+Detailed stack trace: Error [ERR_REQUIRE_ESM]: require() of ES Module /workspace/node_modules/node-fetch/src/index.js from /workspace/lib/index.js not supported.
+Instead change the require of /workspace/node_modules/node-fetch/src/index.js in /workspace/lib/index.js to a dynamic import() which is available in all CommonJS modules.
+    at Object.<anonymous> (/workspace/lib/index.js:35:38)
+    at getUserFunction (/layers/google.nodejs.functions-framework/functions-framework/node_modules/@google-cloud/functions-framework/build/src/loader.js:98:30)
+    at async main (/layers/google.nodejs.functions-framework/functions-framework/node_modules/@google-cloud/functions-framework/build/src/main.js:40:32)
+Could not load the function, shutting down.. Please visit https://cloud.google.com/functions/docs/troubleshooting for in-depth troubleshooting documentation.
+Function failed on loading user code. This is likely due to a bug in the user code. Error message: Provided module can't be loaded.
+Is there a syntax error in your code?
+Detailed stack trace: Error [ERR_REQUIRE_ESM]: require() of ES Module /workspace/node_modules/node-fetch/src/index.js from /workspace/lib/index.js not supported.
+Instead change the require of /workspace/node_modules/node-fetch/src/index.js in /workspace/lib/index.js to a dynamic import() which is available in all CommonJS modules.
+    at Object.<anonymous> (/workspace/lib/index.js:35:38)
+    at getUserFunction (/layers/google.nodejs.functions-framework/functions-framework/node_modules/@google-cloud/functions-framework/build/src/loader.js:98:30)
+    at async main (/layers/google.nodejs.functions-framework/functions-framework/node_modules/@google-cloud/functions-framework/build/src/main.js:40:32)
+Could not load the function, shutting down.. Please visit https://cloud.google.com/functions/docs/troubleshooting for in-depth troubleshooting documentation.
+
+Functions deploy had errors with the following functions:
+        onAppointmentConfirmed(us-central1)
+        onRescheduleRequest(us-central1)
+        onUserCreated(us-central1)
+        processMailQueue(us-central1)
+        sendDailyReminders(us-central1)
+Error: There was an error deploying functions:
+- Error Failed to update function onRescheduleRequest in region us-central1
+- Error Failed to update function processMailQueue in region us-central1
+- Error Failed to update function onUserCreated in region us-central1
+- Error Failed to update function sendDailyReminders in region us-central1
+- Error Failed to update function onAppointmentConfirmed in region us-central1
+PS C:\Users\brent\Documents\DietPro (4)\DietPro> cd functions
+>> npm install
+>> cd ..
+>> firebase deploy --only functions
+npm warn EBADENGINE Unsupported engine {
+npm warn EBADENGINE   package: undefined,
+npm warn EBADENGINE   required: { node: '18' },
+npm warn EBADENGINE   current: { node: 'v22.15.0', npm: '11.4.1' }
+npm warn EBADENGINE }
+
+removed 12 packages, and audited 300 packages in 1s
+
+34 packages are looking for funding
+  run `npm fund` for details
+
+4 critical severity vulnerabilities
+
+To address all issues (including breaking changes), run:
+  npm audit fix --force
+
+Run `npm audit` for details.
+
+=== Deploying to 'veenutrition-79fba'...
+
+i  deploying functions
+Running command: npm --prefix "$RESOURCE_DIR" run build
+
+> build
+> tsc
+
++  functions: Finished running predeploy script.
+i  functions: preparing codebase default for deployment
+i  functions: ensuring required API cloudfunctions.googleapis.com is enabled...
+i  functions: ensuring required API cloudbuild.googleapis.com is enabled...
+i  artifactregistry: ensuring required API artifactregistry.googleapis.com is enabled...
++  artifactregistry: required API artifactregistry.googleapis.com is enabled
++  functions: required API cloudfunctions.googleapis.com is enabled
++  functions: required API cloudbuild.googleapis.com is enabled
+!  functions: Runtime Node.js 18 was deprecated on 2025-04-30 and will be decommissioned on 2025-10-30, after which you will not be able to deploy without upgrading. Consider upgrading now to avoid disruption. See https://cloud.google.com/functions/docs/runtime-support for full details on the lifecycle policy
+!  functions: package.json indicates an outdated version of firebase-functions. Please upgrade using npm install --save firebase-functions@latest in your functions directory.
+!  functions: Please note that there will be breaking changes when you upgrade.
+i  functions: Loading and analyzing source code for codebase default to determine what to deploy
+i  functions: You are using a version of firebase-functions SDK (4.9.0) that does not have support for the newest Firebase Extensions features. Please update firebase-functions SDK to >=5.1.0 to use them correctly
+Serving at port 8746
+
+i  functions: preparing functions directory for uploading...
+i  functions: packaged C:\Users\brent\Documents\DietPro (4)\DietPro\functions (47.56 KB) for uploading
+i  functions: ensuring required API cloudscheduler.googleapis.com is enabled...
++  functions: required API cloudscheduler.googleapis.com is enabled
++  functions: functions folder uploaded successfully
+i  functions: updating Node.js 18 (1st Gen) function onUserCreated(us-central1)...
+i  functions: updating Node.js 18 (1st Gen) function onAppointmentConfirmed(us-central1)...
+i  functions: updating Node.js 18 (1st Gen) function onRescheduleRequest(us-central1)...
+i  functions: updating Node.js 18 (1st Gen) function processMailQueue(us-central1)...
+i  functions: updating Node.js 18 (1st Gen) function sendDailyReminders(us-central1)...
++  functions[processMailQueue(us-central1)] Successful update operation.
++  functions[onAppointmentConfirmed(us-central1)] Successful update operation.
++  functions[onUserCreated(us-central1)] Successful update operation.
++  functions[onRescheduleRequest(us-central1)] Successful update operation.
++  functions[sendDailyReminders(us-central1)] Successful update operation.
+
++  Deploy complete!
+
+Project Console: https://console.firebase.google.com/project/veenutrition-79fba/overview
+PS C:\Users\brent\Documents\DietPro (4)\DietPro> 

@@ -1,11 +1,9 @@
 import * as functions from 'firebase-functions';
 import * as admin from 'firebase-admin';
+import * as https from 'https';
 
 // Initialize Firebase Admin
 admin.initializeApp();
-
-const MAILERLITE_API_URL = 'https://api.mailerlite.com/api/v2';
-const MAILERLITE_API_KEY = functions.config().mailerlite?.apikey;
 
 interface EmailTemplate {
   subject: string;
@@ -15,41 +13,63 @@ interface EmailTemplate {
 
 class MailerLiteService {
   async sendEmail(to: string, toName: string, subject: string, html: string, text?: string): Promise<boolean> {
+    const MAILERLITE_API_KEY = functions.config().mailerlite.apikey;
+    
     if (!MAILERLITE_API_KEY) {
       console.error('MailerLite API key not configured');
       return false;
     }
 
-    try {
-      const fetch = (await import('node-fetch')).default;
-      
-      const response = await fetch(`${MAILERLITE_API_URL}/campaigns/send`, {
+    return new Promise((resolve) => {
+      // First, let's try the direct email approach
+      const postData = JSON.stringify({
+        email: to,
+        name: toName,
+        fields: {
+          name: toName
+        }
+      });
+
+      const options = {
+        hostname: 'api.mailerlite.com',
+        port: 443,
+        path: '/api/v2/subscribers',
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
           'X-MailerLite-ApiKey': MAILERLITE_API_KEY,
-        },
-        body: JSON.stringify({
-          recipients: [{ email: to, name: toName }],
-          subject: subject,
-          content: html,
-          text_content: text || '',
-          type: 'regular',
-        }),
+          'Content-Length': Buffer.byteLength(postData)
+        }
+      };
+
+      const req = https.request(options, (res) => {
+        let responseData = '';
+        
+        res.on('data', (chunk) => {
+          responseData += chunk;
+        });
+        
+        res.on('end', () => {
+          console.log('MailerLite response:', res.statusCode, responseData);
+          
+          if (res.statusCode === 200 || res.statusCode === 201) {
+            console.log(`Email recipient added successfully: ${to}`);
+            resolve(true);
+          } else {
+            console.error('MailerLite API error:', res.statusCode, responseData);
+            resolve(false);
+          }
+        });
       });
 
-      if (response.ok) {
-        console.log(`Email sent successfully to ${to}`);
-        return true;
-      } else {
-        const errorText = await response.text();
-        console.error('MailerLite API error:', response.status, errorText);
-        return false;
-      }
-    } catch (error) {
-      console.error('Email sending failed:', error);
-      return false;
-    }
+      req.on('error', (error) => {
+        console.error('Email sending failed:', error);
+        resolve(false);
+      });
+
+      req.write(postData);
+      req.end();
+    });
   }
 
   getAccountConfirmationTemplate(name: string): EmailTemplate {
@@ -249,154 +269,174 @@ const mailerLite = new MailerLiteService();
 export const onUserCreated = functions.firestore
   .document('users/{userId}')
   .onCreate(async (snap, context) => {
-    const user = snap.data();
+    const userData = snap.data();
+    const name = userData.displayName || userData.email;
     
-    if (user && user.email && user.name && user.role === 'client') {
-      console.log(`Sending welcome email to new user: ${user.email}`);
-      
-      const template = mailerLite.getAccountConfirmationTemplate(user.name);
-      await mailerLite.sendEmail(
-        user.email,
-        user.name,
-        template.subject,
-        template.html,
-        template.text
-      );
-    }
+    console.log('New user created:', userData.email);
+    
+    const template = mailerLite.getAccountConfirmationTemplate(name);
+    
+    // Add to email queue
+    await admin.firestore().collection('mail').add({
+      to: userData.email,
+      toName: name,
+      subject: template.subject,
+      html: template.html,
+      text: template.text,
+      type: 'account-confirmation',
+      status: 'pending',
+      createdAt: admin.firestore.FieldValue.serverTimestamp(),
+    });
   });
 
-// 2. Appointment Status Changed to Confirmed
+// 2. Appointment Confirmed
 export const onAppointmentConfirmed = functions.firestore
   .document('appointments/{appointmentId}')
   .onUpdate(async (change, context) => {
     const before = change.before.data();
     const after = change.after.data();
     
-    // Check if status changed from pending to confirmed
-    if (before.status === 'pending' && after.status === 'confirmed') {
-      console.log(`Sending confirmation email for appointment: ${context.params.appointmentId}`);
+    // Check if status changed to confirmed
+    if (before.status !== 'confirmed' && after.status === 'confirmed') {
+      console.log('Appointment confirmed:', after.clientEmail);
       
       const template = mailerLite.getAppointmentConfirmationTemplate(
-        after.name,
+        after.clientName,
         after.date,
-        after.timeslot,
+        after.time,
         after.type
       );
       
-      await mailerLite.sendEmail(
-        after.email,
-        after.name,
-        template.subject,
-        template.html,
-        template.text
-      );
+      // Add to email queue
+      await admin.firestore().collection('mail').add({
+        to: after.clientEmail,
+        toName: after.clientName,
+        subject: template.subject,
+        html: template.html,
+        text: template.text,
+        type: 'appointment-confirmation',
+        status: 'pending',
+        createdAt: admin.firestore.FieldValue.serverTimestamp(),
+      });
     }
   });
 
-// 3. Reschedule Request Created
+// 3. Reschedule Request
 export const onRescheduleRequest = functions.firestore
   .document('appointments/{appointmentId}')
   .onUpdate(async (change, context) => {
     const before = change.before.data();
     const after = change.after.data();
     
-    // Check if status changed to reschedule_requested
-    if (before.status !== 'reschedule_requested' && after.status === 'reschedule_requested') {
-      console.log(`Sending reschedule notification for appointment: ${context.params.appointmentId}`);
-      
-      // Send to admin email (you can configure this)
-      const adminEmail = 'admin@veenutrition.com'; // Configure your admin email
+    // Check if reschedule was requested
+    if (!before.rescheduleRequested && after.rescheduleRequested) {
+      console.log('Reschedule requested for:', after.clientEmail);
       
       const template = mailerLite.getRescheduleRequestTemplate(
-        after.name,
-        after.email,
+        after.clientName,
+        after.clientEmail,
         after.date,
-        after.timeslot,
+        after.time,
         after.rescheduleReason
       );
       
-      await mailerLite.sendEmail(
-        adminEmail,
-        'Vee Nutrition Admin',
-        template.subject,
-        template.html,
-        template.text
-      );
+      // Send to admin email
+      await admin.firestore().collection('mail').add({
+        to: 'info@veenutrition.com',
+        toName: 'Vee Nutrition Admin',
+        subject: template.subject,
+        html: template.html,
+        text: template.text,
+        type: 'reschedule-request',
+        status: 'pending',
+        createdAt: admin.firestore.FieldValue.serverTimestamp(),
+      });
     }
   });
 
-// 4. Mail Queue Processor (triggers on new mail documents)
+// 4. Process Mail Queue
 export const processMailQueue = functions.firestore
   .document('mail/{mailId}')
   .onCreate(async (snap, context) => {
     const mailData = snap.data();
     
-    if (mailData && mailData.to && mailData.subject) {
-      console.log(`Processing email from queue: ${mailData.to}`);
-      
+    if (mailData.status !== 'pending') {
+      return;
+    }
+    
+    console.log('Processing email from queue:', mailData.to);
+    
+    try {
       const success = await mailerLite.sendEmail(
         mailData.to,
-        mailData.toName || '',
+        mailData.toName || mailData.to,
         mailData.subject,
-        mailData.html || '',
-        mailData.text || ''
+        mailData.html,
+        mailData.text
       );
       
-      // Update the document with the result
+      if (success) {
+        await snap.ref.update({
+          status: 'sent',
+          sentAt: admin.firestore.FieldValue.serverTimestamp(),
+        });
+        console.log('Email sent successfully to', mailData.to);
+      } else {
+        await snap.ref.update({
+          status: 'failed',
+          failedAt: admin.firestore.FieldValue.serverTimestamp(),
+        });
+        console.log('Email failed to', mailData.to);
+      }
+    } catch (error) {
+      console.error('Email sending failed:', error);
       await snap.ref.update({
-        status: success ? 'sent' : 'failed',
-        processedAt: admin.firestore.FieldValue.serverTimestamp(),
-        success: success
+        status: 'failed',
+        error: error.message,
+        failedAt: admin.firestore.FieldValue.serverTimestamp(),
       });
-      
-      console.log(`Email ${success ? 'sent successfully' : 'failed'} to ${mailData.to}`);
     }
   });
 
-// 5. Daily Appointment Reminders (scheduled function)
+// 5. Daily Reminder Scheduler
 export const sendDailyReminders = functions.pubsub
-  .schedule('0 18 * * *') // Run every day at 6 PM
-  .timeZone('Europe/Amsterdam') // Adjust to your timezone
+  .schedule('0 18 * * *') // 6 PM daily
+  .timeZone('Europe/Amsterdam')
   .onRun(async (context) => {
     console.log('Running daily appointment reminders...');
     
     const tomorrow = new Date();
     tomorrow.setDate(tomorrow.getDate() + 1);
-    const tomorrowStr = tomorrow.toISOString().split('T')[0]; // YYYY-MM-DD format
+    const tomorrowString = tomorrow.toISOString().split('T')[0];
     
-    try {
-      // Get all confirmed appointments for tomorrow
-      const appointmentsSnapshot = await admin.firestore()
-        .collection('appointments')
-        .where('date', '==', tomorrowStr)
-        .where('status', '==', 'confirmed')
-        .get();
+    const appointmentsSnapshot = await admin.firestore()
+      .collection('appointments')
+      .where('date', '==', tomorrowString)
+      .where('status', '==', 'confirmed')
+      .get();
+    
+    const promises = appointmentsSnapshot.docs.map(async (doc) => {
+      const appointment = doc.data();
       
-      const reminderPromises = appointmentsSnapshot.docs.map(async (doc) => {
-        const appointment = doc.data();
-        
-        console.log(`Sending reminder to ${appointment.email} for appointment tomorrow`);
-        
-        const template = mailerLite.getAppointmentReminderTemplate(
-          appointment.name,
-          appointment.date,
-          appointment.timeslot,
-          appointment.type
-        );
-        
-        return mailerLite.sendEmail(
-          appointment.email,
-          appointment.name,
-          template.subject,
-          template.html,
-          template.text
-        );
+      const template = mailerLite.getAppointmentReminderTemplate(
+        appointment.clientName,
+        appointment.date,
+        appointment.time,
+        appointment.type
+      );
+      
+      return admin.firestore().collection('mail').add({
+        to: appointment.clientEmail,
+        toName: appointment.clientName,
+        subject: template.subject,
+        html: template.html,
+        text: template.text,
+        type: 'appointment-reminder',
+        status: 'pending',
+        createdAt: admin.firestore.FieldValue.serverTimestamp(),
       });
-      
-      await Promise.all(reminderPromises);
-      console.log(`Sent ${reminderPromises.length} appointment reminders`);
-      
-    } catch (error) {
-      console.error('Error sending daily reminders:', error);
-    }
+    });
+    
+    await Promise.all(promises);
+    console.log(`Queued ${promises.length} reminder emails`);
   });
