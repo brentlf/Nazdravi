@@ -47,7 +47,8 @@ export default function AdminMessages() {
       toUser: message.toUser,
       chatRoom: message.chatRoom,
       selectedChatRoom,
-      text: message.text.substring(0, 20) + '...'
+      text: message.text,
+      currentUserUid: user?.uid
     });
     
     // Check if message belongs to this chat room
