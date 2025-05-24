@@ -70,7 +70,7 @@ function Router() {
       <Route path="/about" component={() => <Layout><About /></Layout>} />
       <Route path="/services" component={() => <Layout><Services /></Layout>} />
       <Route path="/blog" component={() => <Layout><Blog /></Layout>} />
-      <Route path="/blog/:slug" component={() => <Layout><BlogPost /></Layout>} />
+      <Route path="/blog/post" component={() => <Layout><BlogPost /></Layout>} />
 
       <Route path="/consent-form" component={() => <Layout><ConsentForm /></Layout>} />
       <Route path="/appointment" component={() => <Layout><Appointment /></Layout>} />

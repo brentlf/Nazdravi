@@ -148,14 +148,12 @@ export default function Blog() {
 
                     {/* Title */}
                     <h2 className="text-xl font-semibold mb-3 group-hover:text-primary-600 transition-colors line-clamp-2">
-                      <a 
-                        href={post.mediumUrl || '#'} 
-                        target="_blank" 
-                        rel="noopener noreferrer"
+                      <Link 
+                        href={`/blog/post?id=${post.id}`}
                         className="hover:text-primary-600 transition-colors"
                       >
                         {post.title}
-                      </a>
+                      </Link>
                     </h2>
 
                     {/* Excerpt */}
@@ -173,15 +171,13 @@ export default function Blog() {
                         )}
                       </div>
                       <Button variant="ghost" size="sm" asChild>
-                        <a 
-                          href={post.mediumUrl || '#'} 
-                          className="group/btn flex items-center" 
-                          target="_blank" 
-                          rel="noopener noreferrer"
+                        <Link 
+                          href={`/blog/post?id=${post.id}`}
+                          className="group/btn flex items-center"
                         >
                           Read More
                           <ArrowRight className="w-4 h-4 ml-1 group-hover/btn:translate-x-1 transition-transform" />
-                        </a>
+                        </Link>
                       </Button>
                     </div>
                   </CardContent>
