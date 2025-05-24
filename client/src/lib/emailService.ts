@@ -44,19 +44,13 @@ class EmailService implements EmailNotificationService {
     reason?: string
   ): Promise<void> {
     try {
-      await apiRequest('/api/emails/reschedule-request', {
-        method: 'POST',
-        body: JSON.stringify({
-          adminEmail,
-          clientName,
-          clientEmail,
-          originalDate,
-          originalTime,
-          reason,
-        }),
-        headers: {
-          'Content-Type': 'application/json',
-        },
+      await apiRequest('POST', '/api/emails/reschedule-request', {
+        adminEmail,
+        clientName,
+        clientEmail,
+        originalDate,
+        originalTime,
+        reason,
       });
       console.log('Reschedule request email sent successfully');
     } catch (error) {
@@ -89,15 +83,10 @@ class EmailService implements EmailNotificationService {
     type: string;
   }>): Promise<{ successful: number; failed: number }> {
     try {
-      const response = await apiRequest('/api/emails/daily-reminders', {
-        method: 'POST',
-        body: JSON.stringify({ appointments }),
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
+      const response = await apiRequest('POST', '/api/emails/daily-reminders', { appointments });
+      const data = await response.json();
       console.log('Daily reminders sent successfully');
-      return response;
+      return data;
     } catch (error) {
       console.error('Failed to send daily reminders:', error);
       throw error;
