@@ -402,7 +402,7 @@ export const translations = {
     blog: {
       'nutrition-blog': 'Blog o výživě',
       'blog-subtitle': 'Nejnovější poznatky o výživě, zdraví a wellness',
-      'no-articles-description': 'Nebyly nalezeny žádné články odpovídající vašim kritériím. Zkuste upravit vyhledávání nebo filtry.'
+      'no-articles-description': 'Nebyly nalezeny žádné články odpovídající vašim kritériům. Zkuste upravit vyhledávání nebo filtry.'
     },
     auth: {
       'welcome-back-toast': 'Vítejte zpět!',
