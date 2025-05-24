@@ -16,7 +16,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { NewsletterForm } from "@/components/forms/NewsletterForm";
-import heroImage from "@assets/image_1748071908267.png";
+import heroImage from "@assets/AboutMe.jpg";
 
 export default function Home() {
   const services = [
