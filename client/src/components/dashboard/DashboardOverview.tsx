@@ -30,8 +30,10 @@ export function DashboardOverview() {
     limit(1)
   ]);
 
+  // Fetch messages from the user's chat room
+  const chatRoom = user ? `${user.uid}_admin` : "";
   const { data: messages } = useFirestoreCollection<Message>("messages", [
-    where("toUser", "==", user?.uid || ""),
+    where("chatRoom", "==", chatRoom),
     orderBy("createdAt", "desc"),
     limit(5)
   ]);

@@ -33,11 +33,23 @@ export function MessageThread() {
   // Create chat room ID (user_admin format)
   const chatRoom = user ? `${user.uid}_admin` : "";
 
-  // Fetch messages for this chat room with real-time updates
-  const { data: messages, loading } = useFirestoreCollection<Message>("messages", [
-    where("chatRoom", "==", chatRoom),
-    orderBy("createdAt", "asc")
-  ]);
+  // Only fetch messages if user is authenticated and chatRoom exists
+  const { data: messages, loading } = useFirestoreCollection<Message>("messages", 
+    user && chatRoom ? [
+      where("chatRoom", "==", chatRoom),
+      orderBy("createdAt", "asc")
+    ] : []
+  );
+
+  // Debug logging to see what's happening
+  useEffect(() => {
+    console.log("MessageThread Debug:", {
+      user: user?.uid,
+      chatRoom,
+      messagesCount: messages?.length || 0,
+      loading
+    });
+  }, [user, chatRoom, messages, loading]);
 
   const form = useForm<MessageFormData>({
     resolver: zodResolver(messageSchema),
