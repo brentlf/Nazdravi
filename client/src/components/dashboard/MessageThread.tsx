@@ -132,7 +132,7 @@ export function MessageThread() {
         fromUser: user.uid,
         toUser: "admin", 
         text: data.text,
-        chatRoom: chatRoom,
+        chatRoom: `${user.uid}_admin`, // Standardized format for consistency
         createdAt: new Date(),
         read: false,
         messageType: "text"

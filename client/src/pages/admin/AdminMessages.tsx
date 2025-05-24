@@ -70,8 +70,7 @@ export default function AdminMessages() {
     return isDirectMessage;
   }) || [];
 
-  console.log('Filtered messages count:', messages.length);
-  console.log('Total messages count:', allMessages?.length || 0);
+
 
   const { add: addMessage, loading: sendingMessage } = useFirestoreActions("messages");
 
@@ -86,11 +85,14 @@ export default function AdminMessages() {
     if (!newMessage.trim() || !selectedChatRoom || !user) return;
 
     try {
+      // Extract client user ID from selected chat room
+      const clientUserId = selectedChatRoom.replace(`_admin`, "").replace(`admin_`, "");
+      
       await addMessage({
-        fromUser: user.uid,
-        toUser: selectedChatRoom.replace(`${user.uid}_`, "").replace(`_${user.uid}`, ""),
+        fromUser: "admin", // Always use "admin" for consistency across admin accounts
+        toUser: clientUserId,
         text: newMessage,
-        chatRoom: selectedChatRoom,
+        chatRoom: `${clientUserId}_admin`, // Standardized format
         createdAt: new Date(),
       });
 
@@ -109,13 +111,19 @@ export default function AdminMessages() {
   };
 
   const createChatRoom = (clientUserId: string) => {
-    if (!user) return "";
-    return [user.uid, clientUserId].sort().join("_");
+    // Always use standardized format for admin chat rooms
+    return `${clientUserId}_admin`;
   };
 
   const getLastMessage = (clientUserId: string) => {
     const chatRoom = createChatRoom(clientUserId);
-    const roomMessages = messages?.filter(m => m.chatRoom === chatRoom) || [];
+    // Filter messages for this standardized chat room format
+    const roomMessages = allMessages?.filter(m => 
+      m.chatRoom === chatRoom || 
+      m.chatRoom === `admin_${clientUserId}` ||
+      (m.fromUser === clientUserId && m.toUser === "admin") ||
+      (m.fromUser === "admin" && m.toUser === clientUserId)
+    ) || [];
     return roomMessages[roomMessages.length - 1];
   };
 
@@ -252,19 +260,19 @@ export default function AdminMessages() {
                         <div
                           key={message.id}
                           className={`flex ${
-                            message.fromUser === user?.uid ? 'justify-end' : 'justify-start'
+                            message.fromUser === "admin" || message.fromUser === user?.uid ? 'justify-end' : 'justify-start'
                           }`}
                         >
                           <div
                             className={`max-w-xs lg:max-w-md px-4 py-2 rounded-lg ${
-                              message.fromUser === user?.uid
+                              message.fromUser === "admin" || message.fromUser === user?.uid
                                 ? 'bg-blue-600 text-white'
                                 : 'bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-100'
                             }`}
                           >
                             <p className="text-sm">{message.text}</p>
                             <p className={`text-xs mt-1 ${
-                              message.fromUser === user?.uid ? 'text-blue-100' : 'text-muted-foreground'
+                              message.fromUser === "admin" || message.fromUser === user?.uid ? 'text-blue-100' : 'text-muted-foreground'
                             }`}>
                               {(() => {
                                 try {
