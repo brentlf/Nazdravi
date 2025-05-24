@@ -34,42 +34,8 @@ export class MailerLiteService {
       return false;
     }
 
-    try {
-      // Use MailerLite's newer API for sending emails
-      const response = await fetch(`${MAILERLITE_API_URL}/emails`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Accept': 'application/json',
-          'Authorization': `Bearer ${this.apiKey}`,
-        },
-        body: JSON.stringify({
-          to: [{
-            email: params.to,
-            name: params.toName || params.to,
-          }],
-          from: {
-            email: 'info@veenutrition.com',
-            name: 'Vee Nutrition',
-          },
-          subject: params.subject,
-          html: params.html,
-          text: params.text || '',
-        }),
-      });
-
-      if (response.ok) {
-        console.log(`Email sent successfully to ${params.to}`);
-        return true;
-      } else {
-        const errorText = await response.text();
-        console.error('MailerLite API error:', response.status, errorText);
-        return false;
-      }
-    } catch (error) {
-      console.error('Email sending failed:', error);
-      return false;
-    }
+    // Use campaign-based sending method which is more reliable
+    return await this.sendViaCampaign(params);
   }
 
   private async sendViaCampaign(params: SendEmailParams): Promise<boolean> {

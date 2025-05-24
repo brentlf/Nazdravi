@@ -1,0 +1,43 @@
+POST https://e394ccd4-b3dd-43ba-8feb-deda267050d2-00-3v6n3vit95c2j.spock.replit.dev/api/emails/appointment-reminder 500 (Internal Server Error)
+apiRequest @ queryClient.ts:15
+sendAppointmentReminder @ emailService.ts:76
+handleTestEmail @ AdminEmailScheduler.tsx:58
+callCallback2 @ chunk-WERSD76P.js?v=cf324a50:3674
+invokeGuardedCallbackDev @ chunk-WERSD76P.js?v=cf324a50:3699
+invokeGuardedCallback @ chunk-WERSD76P.js?v=cf324a50:3733
+invokeGuardedCallbackAndCatchFirstError @ chunk-WERSD76P.js?v=cf324a50:3736
+executeDispatch @ chunk-WERSD76P.js?v=cf324a50:7014
+processDispatchQueueItemsInOrder @ chunk-WERSD76P.js?v=cf324a50:7034
+processDispatchQueue @ chunk-WERSD76P.js?v=cf324a50:7043
+dispatchEventsForPlugins @ chunk-WERSD76P.js?v=cf324a50:7051
+(anonymous) @ chunk-WERSD76P.js?v=cf324a50:7174
+batchedUpdates$1 @ chunk-WERSD76P.js?v=cf324a50:18913
+batchedUpdates @ chunk-WERSD76P.js?v=cf324a50:3579
+dispatchEventForPluginEventSystem @ chunk-WERSD76P.js?v=cf324a50:7173
+dispatchEventWithEnableCapturePhaseSelectiveHydrationWithoutDiscreteEventReplay @ chunk-WERSD76P.js?v=cf324a50:5478
+dispatchEvent @ chunk-WERSD76P.js?v=cf324a50:5472
+dispatchDiscreteEvent @ chunk-WERSD76P.js?v=cf324a50:5449Understand this error
+emailService.ts:79 Failed to send appointment reminder email: Error: 500: {"error":"Failed to send appointment reminder email"}
+    at throwIfResNotOk (queryClient.ts:6:11)
+    at async apiRequest (queryClient.ts:22:3)
+    at async EmailService.sendAppointmentReminder (emailService.ts:76:7)
+    at async handleTestEmail (AdminEmailScheduler.tsx:58:7)
+overrideMethod @ hook.js:608
+sendAppointmentReminder @ emailService.ts:79
+await in sendAppointmentReminder
+handleTestEmail @ AdminEmailScheduler.tsx:58
+callCallback2 @ chunk-WERSD76P.js?v=cf324a50:3674
+invokeGuardedCallbackDev @ chunk-WERSD76P.js?v=cf324a50:3699
+invokeGuardedCallback @ chunk-WERSD76P.js?v=cf324a50:3733
+invokeGuardedCallbackAndCatchFirstError @ chunk-WERSD76P.js?v=cf324a50:3736
+executeDispatch @ chunk-WERSD76P.js?v=cf324a50:7014
+processDispatchQueueItemsInOrder @ chunk-WERSD76P.js?v=cf324a50:7034
+processDispatchQueue @ chunk-WERSD76P.js?v=cf324a50:7043
+dispatchEventsForPlugins @ chunk-WERSD76P.js?v=cf324a50:7051
+(anonymous) @ chunk-WERSD76P.js?v=cf324a50:7174
+batchedUpdates$1 @ chunk-WERSD76P.js?v=cf324a50:18913
+batchedUpdates @ chunk-WERSD76P.js?v=cf324a50:3579
+dispatchEventForPluginEventSystem @ chunk-WERSD76P.js?v=cf324a50:7173
+dispatchEventWithEnableCapturePhaseSelectiveHydrationWithoutDiscreteEventReplay @ chunk-WERSD76P.js?v=cf324a50:5478
+dispatchEvent @ chunk-WERSD76P.js?v=cf324a50:5472
+dispatchDiscreteEvent @ chunk-WERSD76P.js?v=cf324a50:5449
