@@ -52,9 +52,23 @@ export function AuthProvider({ children }: AuthProviderProps) {
         const userDoc = await getDoc(doc(db, "users", firebaseUser.uid));
         if (userDoc.exists()) {
           const userData = userDoc.data();
+          
+          // Define admin email addresses and check if current user should be admin
+          const adminEmails = ["brentlf@gmail.com", "vero.bakova@gmail.com"];
+          const shouldBeAdmin = adminEmails.includes(firebaseUser.email || "");
+          const currentRole = shouldBeAdmin ? "admin" : (userData.role || "client");
+          
+          // Update role in Firestore if it needs to change
+          if (shouldBeAdmin && userData.role !== "admin") {
+            await setDoc(doc(db, "users", firebaseUser.uid), {
+              ...userData,
+              role: "admin"
+            }, { merge: true });
+          }
+          
           setUser({
             uid: firebaseUser.uid,
-            role: userData.role || "client",
+            role: currentRole,
             name: userData.name || firebaseUser.displayName || "",
             email: firebaseUser.email || "",
             photoURL: userData.photoURL || firebaseUser.photoURL || undefined,
@@ -62,10 +76,14 @@ export function AuthProvider({ children }: AuthProviderProps) {
             createdAt: userData.createdAt?.toDate() || new Date(),
           });
         } else {
+          // Define admin email addresses
+          const adminEmails = ["brentlf@gmail.com", "vero.bakova@gmail.com"];
+          const isAdmin = adminEmails.includes(firebaseUser.email || "");
+          
           // Create user document if it doesn't exist
           const newUser: User = {
             uid: firebaseUser.uid,
-            role: "client",
+            role: isAdmin ? "admin" : "client",
             name: firebaseUser.displayName || "",
             email: firebaseUser.email || "",
             photoURL: firebaseUser.photoURL || undefined,
