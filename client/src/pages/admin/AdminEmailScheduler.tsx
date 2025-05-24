@@ -223,7 +223,7 @@ export default function AdminEmailScheduler() {
                 </Button>
                 <Button
                   variant="outline"
-                  onClick={handleTestEmail}
+                  onClick={handleTestReminderEmail}
                   disabled={sending}
                 >
                   <Mail className="w-4 h-4 mr-2" />
