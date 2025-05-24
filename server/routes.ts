@@ -182,14 +182,19 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // Generate invoice number
       const invoiceNumber = `INV-${Date.now()}`;
       
-      // Create Stripe payment intent with multiple payment methods
+      // Create Stripe payment intent with currency-appropriate payment methods
+      const currency = "gbp";
+      const paymentMethodTypes = ['card']; // Always support cards
+      
+      // Only add iDEAL for EUR currency (iDEAL doesn't support GBP)
+      if (currency === "eur") {
+        paymentMethodTypes.push('ideal');
+      }
+
       const paymentIntent = await stripe.paymentIntents.create({
         amount: Math.round(amount * 100), // Convert to pence
-        currency: "gbp",
-        payment_method_types: [
-          'card',           // Credit/debit cards, Maestro
-          'ideal',          // iDEAL payments for Dutch clients
-        ],
+        currency: currency,
+        payment_method_types: paymentMethodTypes,
         metadata: {
           invoiceNumber,
           appointmentId,
