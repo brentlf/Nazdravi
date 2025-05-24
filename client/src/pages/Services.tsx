@@ -10,17 +10,17 @@ export default function Services() {
   const services = [
     {
       id: "initial",
-      title: "Initial Consultation",
-      duration: "60 minutes",
+      title: t("initial-consultation-title", "services"),
+      duration: t("60-minutes", "services"),
       price: "€89",
-      description: "Comprehensive assessment of your current health status, dietary habits, and lifestyle to create your personalized nutrition roadmap.",
+      description: t("initial-consultation-desc", "services"),
       features: [
-        "Complete health and lifestyle assessment",
-        "Detailed nutrition analysis",
-        "Goal setting and planning session",
-        "Personalized recommendations",
-        "Access to client dashboard",
-        "Follow-up plan outline"
+        t("complete-health-assessment", "services"),
+        t("detailed-nutrition-analysis", "services"),
+        t("goal-setting-session", "services"),
+        t("personalized-recommendations", "services"),
+        t("client-dashboard-access", "services"),
+        t("followup-plan-outline", "services")
       ],
       icon: Users,
       popular: false,
@@ -28,17 +28,17 @@ export default function Services() {
     },
     {
       id: "followup",
-      title: "Follow-up Session",
-      duration: "30 minutes",
+      title: t("followup-session-title", "services"),
+      duration: t("30-minutes", "services"),
       price: "€59",
-      description: "Regular check-ins to monitor progress, adjust your plan, and provide ongoing support for sustainable results.",
+      description: t("followup-session-desc", "services"),
       features: [
-        "Progress review and analysis",
-        "Plan adjustments and modifications",
-        "Challenge troubleshooting",
-        "Continued motivation and support",
-        "Updated recommendations",
-        "Goal refinement"
+        t("progress-review-analysis", "services"),
+        t("plan-adjustments", "services"),
+        t("challenge-troubleshooting", "services"),
+        t("continued-motivation", "services"),
+        t("updated-recommendations", "services"),
+        t("goal-refinement", "services")
       ],
       icon: Clock,
       popular: true,
@@ -46,19 +46,19 @@ export default function Services() {
     },
     {
       id: "program",
-      title: "Complete Program",
-      duration: "12 weeks",
+      title: t("complete-program-title", "services"),
+      duration: t("12-weeks", "services"),
       price: "€499",
-      description: "Comprehensive 12-week program including initial consultation, weekly follow-ups, and personalized meal plans.",
+      description: t("complete-program-desc", "services"),
       features: [
-        "Initial 60-minute consultation",
-        "12 weekly follow-up sessions",
-        "Personalized meal plans",
-        "Recipe collections",
-        "24/7 messaging support",
-        "Progress tracking tools",
-        "Resource library access",
-        "Final assessment and transition plan"
+        t("initial-60min-consultation", "services"),
+        t("weekly-followup-sessions", "services"),
+        t("personalized-meal-plans", "services"),
+        t("recipe-collections", "services"),
+        t("24-7-messaging-support", "services"),
+        t("progress-tracking-tools", "services"),
+        t("resource-library-access", "services"),
+        t("final-assessment-plan", "services")
       ],
       icon: Target,
       popular: false,
@@ -68,18 +68,18 @@ export default function Services() {
 
   const additionalServices = [
     {
-      title: "Meal Planning",
-      description: "Custom weekly meal plans with recipes and shopping lists",
+      title: t("meal-planning-title", "services"),
+      description: t("meal-planning-desc", "services"),
       icon: FileText
     },
     {
-      title: "24/7 Support",
-      description: "Direct messaging access to your nutritionist",
+      title: t("24-7-support-title", "services"),
+      description: t("24-7-support-desc", "services"),
       icon: MessageCircle
     },
     {
-      title: "Progress Tracking",
-      description: "Digital tools to monitor your health journey",
+      title: t("progress-tracking-title", "services"),
+      description: t("progress-tracking-desc", "services"),
       icon: Target
     }
   ];
@@ -113,11 +113,10 @@ export default function Services() {
       <section className="container mx-auto px-4 mb-20">
         <div className="text-center max-w-4xl mx-auto">
           <h1 className="text-4xl md:text-5xl font-bold mb-6">
-            Comprehensive Nutrition Services
+            {t("title", "services")}
           </h1>
           <p className="text-xl text-muted-foreground mb-8">
-            Personalized nutrition solutions designed to help you achieve your health goals 
-            with expert guidance and ongoing support.
+            {t("subtitle", "services")}
           </p>
         </div>
       </section>
@@ -136,7 +135,7 @@ export default function Services() {
               >
                 {service.popular && (
                   <div className="absolute -top-3 left-1/2 transform -translate-x-1/2">
-                    <Badge className="bg-primary-500 text-white">Most Popular</Badge>
+                    <Badge className="bg-primary-500 text-white">{t("most-popular", "services")}</Badge>
                   </div>
                 )}
                 
