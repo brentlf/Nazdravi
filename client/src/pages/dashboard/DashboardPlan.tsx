@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Download, FileText, Calendar, AlertCircle, ExternalLink, ArrowLeft } from "lucide-react";
+import { Download, FileText, Calendar, AlertCircle, ExternalLink, ArrowLeft, RefreshCw } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -13,8 +13,8 @@ import { Link } from "wouter";
 export default function DashboardPlan() {
   const { effectiveUser: user, isAdminViewingClient } = useAuth();
   
-  // Fetch user's nutrition plans
-  const { data: plans, loading } = useFirestoreCollection<Plan>("plans", [
+  // Fetch user's nutrition plans with real-time updates
+  const { data: plans, loading, refetch } = useFirestoreCollection<Plan>("plans", [
     where("userId", "==", user?.uid || ""),
     orderBy("createdAt", "desc")
   ]);

@@ -54,6 +54,14 @@ export default function AdminDocuments() {
   const clientDocuments = selectedClient 
     ? documents?.filter(doc => doc.userId === selectedClient) || []
     : documents || [];
+  
+  // Debug: Log all documents to see what's in the database
+  console.log('Admin Documents Debug:', {
+    totalDocuments: documents?.length || 0,
+    allDocuments: documents,
+    selectedClient,
+    clientDocuments: clientDocuments.length
+  });
 
   const getClientName = (userId: string) => {
     const client = clients.find(c => c.uid === userId);
