@@ -27,7 +27,7 @@ export function useAvailableSlots(selectedDate: string) {
         const q = query(
           appointmentsRef,
           where("date", "==", selectedDate),
-          where("status", "in", ["pending", "confirmed"])
+          where("status", "in", ["requested", "confirmed"])
         );
         
         const querySnapshot = await getDocs(q);
