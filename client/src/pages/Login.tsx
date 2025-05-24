@@ -20,12 +20,10 @@ import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/contexts/AuthContext";
 import { useLanguage } from "@/contexts/LanguageContext";
 
-const loginSchema = z.object({
-  email: z.string().email("Please enter a valid email address"),
-  password: z.string().min(6, "Password must be at least 6 characters"),
+const createLoginSchema = (t: (key: string, namespace?: string) => string) => z.object({
+  email: z.string().email(t("valid-email", "login")),
+  password: z.string().min(6, t("password-min-length", "login")),
 });
-
-type LoginFormData = z.infer<typeof loginSchema>;
 
 export default function Login() {
   const [showPassword, setShowPassword] = useState(false);
@@ -34,6 +32,9 @@ export default function Login() {
   const { toast } = useToast();
   const { signIn, signInWithGoogle, user } = useAuth();
   const { t } = useLanguage();
+
+  const loginSchema = createLoginSchema(t);
+  type LoginFormData = z.infer<typeof loginSchema>;
 
   const form = useForm<LoginFormData>({
     resolver: zodResolver(loginSchema),
@@ -59,13 +60,13 @@ export default function Login() {
     try {
       await signIn(data.email, data.password);
       toast({
-        title: "Welcome back!",
-        description: "You have been successfully signed in.",
+        title: t("welcome-back-toast", "login"),
+        description: t("sign-in-success", "login"),
       });
     } catch (error: any) {
       toast({
-        title: "Sign in failed",
-        description: error.message || "Please check your credentials and try again.",
+        title: t("sign-in-failed", "login"),
+        description: error.message || t("check-credentials", "login"),
         variant: "destructive",
       });
     } finally {
@@ -79,8 +80,8 @@ export default function Login() {
       await signInWithGoogle();
     } catch (error: any) {
       toast({
-        title: "Google sign in failed",
-        description: error.message || "Please try again later.",
+        title: t("google-sign-in-failed", "login"),
+        description: error.message || t("try-again-later", "login"),
         variant: "destructive",
       });
       setLoading(false);
@@ -106,9 +107,9 @@ export default function Login() {
 
         <Card>
           <CardHeader className="space-y-1">
-            <CardTitle className="text-2xl font-bold text-center">Welcome back</CardTitle>
+            <CardTitle className="text-2xl font-bold text-center">{t("welcome-back", "login")}</CardTitle>
             <CardDescription className="text-center">
-              Sign in to your account to access your nutrition dashboard
+              {t("sign-in-description", "login")}
             </CardDescription>
           </CardHeader>
           
@@ -138,7 +139,7 @@ export default function Login() {
                   d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"
                 />
               </svg>
-              Continue with Google
+              {t("continue-with-google", "login")}
             </Button>
 
             <div className="relative">
@@ -147,7 +148,7 @@ export default function Login() {
               </div>
               <div className="relative flex justify-center text-xs uppercase">
                 <span className="bg-background px-2 text-muted-foreground">
-                  Or continue with email
+                  {t("or-continue-with-email", "login")}
                 </span>
               </div>
             </div>
@@ -160,14 +161,14 @@ export default function Login() {
                   name="email"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Email address</FormLabel>
+                      <FormLabel>{t("email-address", "login")}</FormLabel>
                       <FormControl>
                         <div className="relative">
                           <Mail className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
                           <Input
                             {...field}
                             type="email"
-                            placeholder="Enter your email"
+                            placeholder={t("enter-your-email", "login")}
                             className="pl-9"
                           />
                         </div>
@@ -182,14 +183,14 @@ export default function Login() {
                   name="password"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Password</FormLabel>
+                      <FormLabel>{t("password", "login")}</FormLabel>
                       <FormControl>
                         <div className="relative">
                           <Lock className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
                           <Input
                             {...field}
                             type={showPassword ? "text" : "password"}
-                            placeholder="Enter your password"
+                            placeholder={t("enter-your-password", "login")}
                             className="pl-9 pr-9"
                           />
                           <Button
@@ -213,7 +214,7 @@ export default function Login() {
                 />
 
                 <Button type="submit" className="w-full" disabled={loading}>
-                  {loading ? "Signing in..." : "Sign in"}
+                  {loading ? t("signing-in", "login") : t("sign-in", "login")}
                 </Button>
               </form>
             </Form>
@@ -221,14 +222,14 @@ export default function Login() {
 
           <CardFooter className="flex flex-col space-y-2">
             <div className="text-sm text-muted-foreground text-center">
-              Don't have an account?{" "}
+              {t("dont-have-account", "login")}{" "}
               <Link href="/register" className="text-primary-600 hover:text-primary-500 font-medium">
-                Sign up here
+                {t("sign-up-here", "login")}
               </Link>
             </div>
             <div className="text-sm text-muted-foreground text-center">
               <Link href="/forgot-password" className="text-primary-600 hover:text-primary-500">
-                Forgot your password?
+                {t("forgot-your-password", "login")}
               </Link>
             </div>
           </CardFooter>
