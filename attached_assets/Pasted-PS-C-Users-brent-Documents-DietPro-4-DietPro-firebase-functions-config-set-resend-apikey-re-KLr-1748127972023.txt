@@ -1,0 +1,86 @@
+PS C:\Users\brent\Documents\DietPro (4)\DietPro> firebase functions:config:set resend.apikey="re_KLrymY4t_PZiBTsy5faoSLfi2rgXsTzDr"
++  Functions config updated.
+
+Please deploy your functions for the change to take effect by running firebase deploy --only functions
+
+PS C:\Users\brent\Documents\DietPro (4)\DietPro> firebase deploy --only functions
+
+=== Deploying to 'veenutrition-79fba'...
+
+i  deploying functions
+Running command: npm --prefix "$RESOURCE_DIR" run build
+
+> build
+> tsc
+
++  functions: Finished running predeploy script.
+i  functions: preparing codebase default for deployment
+i  functions: ensuring required API cloudfunctions.googleapis.com is enabled...
+i  functions: ensuring required API cloudbuild.googleapis.com is enabled...
+i  artifactregistry: ensuring required API artifactregistry.googleapis.com is enabled...
++  functions: required API cloudfunctions.googleapis.com is enabled
++  functions: required API cloudbuild.googleapis.com is enabled
++  artifactregistry: required API artifactregistry.googleapis.com is enabled
+!  functions: Runtime Node.js 18 was deprecated on 2025-04-30 and will be decommissioned on 2025-10-30, after which you will not be able to deploy without upgrading. Consider upgrading now to avoid disruption. See https://cloud.google.com/functions/docs/runtime-support for full details on the lifecycle policy
+!  functions: package.json indicates an outdated version of firebase-functions. Please upgrade using npm install --save firebase-functions@latest in your functions directory.
+!  functions: Please note that there will be breaking changes when you upgrade.
+i  functions: Loading and analyzing source code for codebase default to determine what to deploy
+i  functions: You are using a version of firebase-functions SDK (4.9.0) that does not have support for the newest Firebase Extensions features. Please update firebase-functions SDK to >=5.1.0 to use them correctly
+Serving at port 8194
+
+i  functions: preparing functions directory for uploading...
+i  functions: packaged C:\Users\brent\Documents\DietPro (4)\DietPro\functions (47.64 KB) for uploading
+i  functions: ensuring required API cloudscheduler.googleapis.com is enabled...
++  functions: required API cloudscheduler.googleapis.com is enabled
++  functions: functions folder uploaded successfully
+i  functions: updating Node.js 18 (1st Gen) function onUserCreated(us-central1)...
+i  functions: updating Node.js 18 (1st Gen) function onAppointmentConfirmed(us-central1)...
+i  functions: updating Node.js 18 (1st Gen) function onRescheduleRequest(us-central1)...
+i  functions: updating Node.js 18 (1st Gen) function processMailQueue(us-central1)...
+i  functions: updating Node.js 18 (1st Gen) function sendDailyReminders(us-central1)...
++  functions[onRescheduleRequest(us-central1)] Successful update operation.
++  functions[processMailQueue(us-central1)] Successful update operation.
++  functions[onUserCreated(us-central1)] Successful update operation.
++  functions[onAppointmentConfirmed(us-central1)] Successful update operation.
++  functions[sendDailyReminders(us-central1)] Successful update operation.
+
++  Deploy complete!
+
+Project Console: https://console.firebase.google.com/project/veenutrition-79fba/overview
+PS C:\Users\brent\Documents\DietPro (4)\DietPro> firebase functions:log --only processMailQueue
+2025-05-24T22:59:53.816537Z ? processMailQueue: Resend API key not configured
+2025-05-24T22:59:57.707352Z ? processMailQueue: Email failed to info@veenutrition.com
+2025-05-24T22:59:57.720664630Z D processMailQueue: Function execution took 3944 ms, finished with status: 'ok'
+2025-05-24T23:00:06.087421641Z D processMailQueue: Function execution started
+2025-05-24T23:00:06.092998Z ? processMailQueue: Processing email from queue: info@veenutrition.com
+2025-05-24T23:00:06.093023Z ? processMailQueue: Resend API key not configured
+2025-05-24T23:00:06.167569Z ? processMailQueue: Email failed to info@veenutrition.com
+2025-05-24T23:00:06.169274037Z D processMailQueue: Function execution took 81 ms, finished with status: 'ok'
+2025-05-24T23:00:08.589291497Z D processMailQueue: Function execution started
+2025-05-24T23:00:08.593329Z ? processMailQueue: Processing email from queue: info@veenutrition.com
+2025-05-24T23:00:08.593636Z ? processMailQueue: Resend API key not configured
+2025-05-24T23:00:08.665328Z ? processMailQueue: Email failed to info@veenutrition.com
+2025-05-24T23:00:08.666494628Z D processMailQueue: Function execution took 77 ms, finished with status: 'ok'
+2025-05-24T23:00:10.204552610Z D processMailQueue: Function execution started
+2025-05-24T23:00:10.208429Z ? processMailQueue: Processing email from queue: info@veenutrition.com
+2025-05-24T23:00:10.208656Z ? processMailQueue: Resend API key not configured
+2025-05-24T23:00:10.299501Z ? processMailQueue: Email failed to info@veenutrition.com
+2025-05-24T23:00:10.300677390Z D processMailQueue: Function execution took 96 ms, finished with status: 'ok'
+2025-05-24T23:00:13.989137153Z D processMailQueue: Function execution started
+2025-05-24T23:00:13.993874Z ? processMailQueue: Resend API key not configured
+2025-05-24T23:00:13.993886Z ? processMailQueue: Processing email from queue: info@veenutrition.com
+2025-05-24T23:00:14.053611Z ? processMailQueue: Email failed to info@veenutrition.com
+2025-05-24T23:00:14.055349590Z D processMailQueue: Function execution took 66 ms, finished with status: 'ok'
+2025-05-24T23:02:01.052522789Z D processMailQueue: Function execution started
+2025-05-24T23:02:01.057375Z ? processMailQueue: Processing email from queue: info@veenutrition.com
+2025-05-24T23:02:01.057554Z ? processMailQueue: Resend API key not configured
+2025-05-24T23:02:01.124231Z ? processMailQueue: Email failed to info@veenutrition.com
+2025-05-24T23:02:01.125651985Z D processMailQueue: Function execution took 73 ms, finished with status: 'ok'
+2025-05-24T23:04:37.721494Z N processMailQueue: {"@type":"type.googleapis.com/google.cloud.audit.AuditLog","authenticationInfo":{"principalEmail":"Brentlf@gmail.com","principalSubject":"user:Brentlf@gmail.com"},"requestMetadata":{"callerIp":"84.83.116.246","callerSuppliedUserAgent":"FirebaseCLI/14.4.0,gzip(gfe),gzip(gfe)","requestAttributes":{"time":"2025-05-24T23:04:38.163207Z","auth":{}},"destinationAttributes":{}},"serviceName":"cloudfunctions.googleapis.com","methodName":"google.cloud.functions.v1.CloudFunctionsService.UpdateFunction","authorizationInfo":[{"resource":"projects/veenutrition-79fba/locations/us-central1/functions/processMailQueue","permission":"cloudfunctions.functions.update","granted":true,"resourceAttributes":{},"permissionType":"ADMIN_WRITE"}],"resourceName":"projects/veenutrition-79fba/locations/us-central1/functions/processMailQueue","request":{"updateMask":"name,sourceUploadUrl,entryPoint,runtime,dockerRegistry,labels,eventTrigger.eventType,eventTrigger.resource,eventTrigger.failurePolicy,minInstances,maxInstances,ingressSettings,environmentVariables,serviceAccountEmail,availableMemoryMb,timeout,vpcConnector,vpcConnectorEgressSettings,sourceToken,buildEnvironmentVariables","function":{"eventTrigger":{"resource":"projects/veenutrition-79fba/databases/(default)/documents/mail/{mailId}","eventType":"providers/cloud.firestore/eventTypes/document.create"},"sourceUploadUrl":"https://storage.googleapis.com/uploads-243108003689.us-central1.cloudfunctions.appspot.com/cd241670-0715-408f-b024-4224a6ee9d7d.zip?GoogleAccessId=service-58051802559@gcf-admin-robot.iam.gserviceaccount.com&Expires=1748129629&Signature=UNi%2B9Z7mna8uu0zvCffrPiSR9ahaFzF3%2FfNIiMkOhCuyVAXjz5XJ6bQynb9H8MUu99Y6W4%2BodEMiC2%2F6KoZoKS0BHSghR7o%2FNLaGKoVgGmfcGLM9k2oG2alcVn0blN8DPMkDMPU7Et%2FwuE2EulAXg2iCBDL6UsUwYEvZcHXOI9Ta5gQPAMMKBCT5hdkjzMJ5BXbm28i3MYnlCYLRkbKSuovmPrA1VXs1qmK%2FubBUcMQatPvi%2BlHx6NXOfQ%2F5K4U0dfObSK7Pk7FyYD2JNbQRmuPKyJFLF%2Bkq4CndOH%2FJ%2BMM%2BWujy1jxb1AICHZ3m5onewSbMWK5APQiUdA4Qnx3i%2FA%3D%3D","entryPoint":"processMailQueue","dockerRegistry":"ARTIFACT_REGISTRY","name":"projects/veenutrition-79fba/locations/us-central1/functions/processMailQueue","sourceToken":"f85ad259-d80d-40a9-8dc8-7fa87bafbb5a","labels":{"firebase-functions-hash":"e0291f85931e7e854beb170ca34233903581d5cb","deployment-tool":"cli-firebase"},"runtime":"nodejs18"},"@type":"type.googleapis.com/google.cloud.functions.v1.UpdateFunctionRequest"},"resourceLocation":{"currentLocations":["us-central1"]}}
+2025-05-24T23:04:59.190617Z N processMailQueue: {"@type":"type.googleapis.com/google.cloud.audit.AuditLog","status":{},"authenticationInfo":{},"serviceName":"cloudfunctions.googleapis.com","methodName":"google.cloud.functions.v1.CloudFunctionsService.UpdateFunction","resourceName":"projects/veenutrition-79fba/locations/us-central1/functions/processMailQueue"}
+2025-05-24T23:05:31.735553802Z D processMailQueue: Function execution started
+2025-05-24T23:05:31.921334Z ? processMailQueue: Processing email from queue: info@veenutrition.com
+2025-05-24T23:05:31.921978Z ? processMailQueue: Resend API key not configured
+2025-05-24T23:05:36.125262Z ? processMailQueue: Email failed to info@veenutrition.com
+2025-05-24T23:05:36.138384183Z D processMailQueue: Function execution took 4402 ms, finished with status: 'ok'
+PS C:\Users\brent\Documents\DietPro (4)\DietPro> 
