@@ -4,7 +4,7 @@ import { storage } from "./storage";
 import { mailerLiteService } from "./email";
 import { teamsService } from "./microsoft-teams";
 import Stripe from "stripe";
-import { db } from "../client/src/lib/firebase";
+import { db } from "./firebase";
 import { collection, addDoc } from "firebase/firestore";
 
 if (!process.env.STRIPE_SECRET_KEY) {
