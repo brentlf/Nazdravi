@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { MessageCircle, Send, Search, User, Clock, ArrowLeft } from "lucide-react";
 import { Link } from "wouter";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -90,9 +90,24 @@ export default function AdminMessages() {
 
   console.log('Final filtered messages:', messages.length, 'out of', allMessages?.length || 0);
 
+  const { add: addMessage, update: updateMessage, loading: sendingMessage } = useFirestoreActions("messages");
 
-
-  const { add: addMessage, loading: sendingMessage } = useFirestoreActions("messages");
+  // Mark messages as read when admin views them
+  useEffect(() => {
+    if (messages && selectedChatRoom && updateMessage) {
+      const unreadMessagesToAdmin = messages.filter(msg => 
+        msg.toUser === "admin" && (msg.read === false || msg.read === undefined)
+      );
+      
+      unreadMessagesToAdmin.forEach(async (message) => {
+        try {
+          await updateMessage(message.id, { read: true });
+        } catch (error) {
+          console.error('Failed to mark admin message as read:', error);
+        }
+      });
+    }
+  }, [messages, selectedChatRoom, updateMessage]);
 
   // Filter users based on search
   const filteredUsers = users?.filter(u => 
@@ -114,6 +129,8 @@ export default function AdminMessages() {
         text: newMessage,
         chatRoom: `${clientUserId}_admin`, // Standardized format
         createdAt: new Date(),
+        read: false,
+        messageType: "text"
       });
 
       setNewMessage("");
