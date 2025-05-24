@@ -54,6 +54,15 @@ export function DashboardOverview() {
 
   // Use userId data if available, otherwise fall back to email data
   const effectiveAppointments = appointments?.length ? appointments : appointmentsByEmail;
+  
+  // Debug logging for appointments
+  console.log("Dashboard Appointments Debug:", {
+    userId: user?.uid,
+    userEmail: user?.email,
+    appointmentsByUserId: appointments?.length || 0,
+    appointmentsByEmail: appointmentsByEmail?.length || 0,
+    effectiveAppointments: effectiveAppointments?.length || 0
+  });
 
   // Handle both date formats (Timestamp and string) and time field variations
   const processedAppointments = effectiveAppointments?.map(apt => ({
