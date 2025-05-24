@@ -8,7 +8,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { useFirestoreCollection } from "@/hooks/useFirestore";
 import { where, orderBy, limit } from "firebase/firestore";
-import { Receipt, Plus, Eye, Send, DollarSign } from "lucide-react";
+import { Receipt, Plus, Eye, Send, DollarSign, ArrowLeft } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/contexts/AuthContext";
 import { Link } from "wouter";
@@ -100,6 +100,16 @@ export default function AdminInvoices() {
 
   return (
     <div className="container mx-auto px-4 py-8">
+      {/* Back to Dashboard */}
+      <div className="mb-6">
+        <Link href="/admin">
+          <Button variant="ghost" className="mb-4">
+            <ArrowLeft className="w-4 h-4 mr-2" />
+            Back to Admin Dashboard
+          </Button>
+        </Link>
+      </div>
+
       {/* Header */}
       <div className="flex justify-between items-center mb-8">
         <div>
