@@ -1,6 +1,6 @@
 // MailerLite Email Service for Vee Nutrition
 
-const MAILERLITE_API_URL = 'https://api.mailerlite.com/api/v2';
+const MAILERLITE_API_URL = 'https://connect.mailerlite.com/api';
 const API_KEY = process.env.MAILERLITE_API_KEY;
 
 if (!API_KEY) {
@@ -35,14 +35,23 @@ export class MailerLiteService {
     }
 
     try {
-      // Use MailerLite's transactional email API
-      const response = await fetch(`${MAILERLITE_API_URL}/subscribers/${params.to}/emails`, {
+      // Use MailerLite's newer API for sending emails
+      const response = await fetch(`${MAILERLITE_API_URL}/emails`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'X-MailerLite-ApiKey': this.apiKey,
+          'Accept': 'application/json',
+          'Authorization': `Bearer ${this.apiKey}`,
         },
         body: JSON.stringify({
+          to: [{
+            email: params.to,
+            name: params.toName || params.to,
+          }],
+          from: {
+            email: 'info@veenutrition.com',
+            name: 'Vee Nutrition',
+          },
           subject: params.subject,
           html: params.html,
           text: params.text || '',
@@ -55,9 +64,7 @@ export class MailerLiteService {
       } else {
         const errorText = await response.text();
         console.error('MailerLite API error:', response.status, errorText);
-        
-        // Try alternative approach with campaigns
-        return await this.sendViaCampaign(params);
+        return false;
       }
     } catch (error) {
       console.error('Email sending failed:', error);
