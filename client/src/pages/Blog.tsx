@@ -124,7 +124,7 @@ export default function Blog() {
                   {/* Featured Image */}
                   <div className="relative overflow-hidden">
                     <img 
-                      src={post.image || "https://images.unsplash.com/photo-1498837167922-ddd27525d352?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=400"} 
+                      src={post.featuredImage || post.image || "https://images.unsplash.com/photo-1498837167922-ddd27525d352?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=400"} 
                       alt={post.title}
                       className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300"
                     />
