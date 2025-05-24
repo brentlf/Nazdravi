@@ -175,10 +175,15 @@ export default function Blog() {
                         )}
                       </div>
                       <Button variant="ghost" size="sm" asChild>
-                        <Link href={post.mediumurl || '#'} className="group/btn" target="_blank">
+                        <a 
+                          href={post.mediumUrl || '#'} 
+                          className="group/btn flex items-center" 
+                          target="_blank" 
+                          rel="noopener noreferrer"
+                        >
                           Read More
                           <ArrowRight className="w-4 h-4 ml-1 group-hover/btn:translate-x-1 transition-transform" />
-                        </Link>
+                        </a>
                       </Button>
                     </div>
                   </CardContent>
