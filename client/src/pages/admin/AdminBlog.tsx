@@ -391,12 +391,75 @@ export default function AdminBlog() {
                     {/* Right Column - Content */}
                     <div className="space-y-4">
                       <div>
-                        <Label htmlFor="content">Content</Label>
+                        <div className="flex items-center justify-between mb-2">
+                          <Label htmlFor="content">Content</Label>
+                          <Button 
+                            type="button" 
+                            variant="outline" 
+                            size="sm"
+                            onClick={() => {
+                              const template = `<h2>Introduction</h2>
+<p>Start with an engaging introduction that hooks your readers and explains what they'll learn in this article.</p>
+
+<h2>Main Topic: Benefits of Proper Nutrition</h2>
+<p>Explain the main concept or topic here. Use clear, concise language that your audience can easily understand.</p>
+
+<h3>Key Point 1: Energy Levels</h3>
+<p>Break down complex topics into digestible subsections. This makes your content easier to read and understand.</p>
+<ul>
+  <li>Stable blood sugar levels throughout the day</li>
+  <li>Reduced afternoon energy crashes</li>
+  <li>Better mental clarity and focus</li>
+</ul>
+
+<h3>Key Point 2: Long-term Health</h3>
+<p>Continue with another important aspect of your topic.</p>
+
+<blockquote>
+"Proper nutrition is the foundation of good health and a vibrant life." - This is how you add quotes or testimonials
+</blockquote>
+
+<h2>Practical Tips</h2>
+<p>Always include actionable advice your readers can implement:</p>
+<ol>
+  <li><strong>Start small:</strong> Make one healthy change at a time</li>
+  <li><strong>Plan ahead:</strong> Meal prep on weekends</li>
+  <li><strong>Stay consistent:</strong> Focus on progress, not perfection</li>
+</ol>
+
+<h2>Conclusion</h2>
+<p>Summarize the key points and encourage readers to take action. End with a call-to-action that relates to your services.</p>
+
+<p><em>Ready to transform your nutrition? Book a consultation today to create your personalized plan!</em></p>`;
+                              setFormData(prev => ({ ...prev, content: template }));
+                            }}
+                          >
+                            Use Template
+                          </Button>
+                        </div>
+                        
+                        {/* Formatting Guide */}
+                        <Card className="mb-4 p-4 bg-blue-50 dark:bg-blue-900/20 border-blue-200 dark:border-blue-800">
+                          <div className="text-sm">
+                            <h4 className="font-semibold mb-2 text-blue-800 dark:text-blue-200">HTML Formatting Guide:</h4>
+                            <div className="grid grid-cols-2 gap-2 text-blue-700 dark:text-blue-300">
+                              <span><code>&lt;h2&gt;</code> Main headers</span>
+                              <span><code>&lt;h3&gt;</code> Sub headers</span>
+                              <span><code>&lt;p&gt;</code> Paragraphs</span>
+                              <span><code>&lt;strong&gt;</code> Bold text</span>
+                              <span><code>&lt;em&gt;</code> Italic text</span>
+                              <span><code>&lt;ul&gt;&lt;li&gt;</code> Bullet lists</span>
+                              <span><code>&lt;ol&gt;&lt;li&gt;</code> Numbered lists</span>
+                              <span><code>&lt;blockquote&gt;</code> Quotes</span>
+                            </div>
+                          </div>
+                        </Card>
+                        
                         <Textarea
                           id="content"
                           value={formData.content}
                           onChange={(e) => setFormData(prev => ({ ...prev, content: e.target.value }))}
-                          placeholder="Write your blog post content here..."
+                          placeholder="Write your blog post content using HTML formatting..."
                           rows={20}
                           className="font-mono text-sm"
                         />
