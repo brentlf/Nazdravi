@@ -31,11 +31,14 @@ export class MailerLiteService {
         from: 'info@veenutrition.com'
       };
 
-      await db.collection('mail').add(emailDoc);
-      console.log(`Email queued for Firebase Functions delivery to ${params.to}`);
+      console.log('Attempting to write to Firebase mail collection...');
+      const docRef = await db.collection('mail').add(emailDoc);
+      console.log(`✓ Email successfully queued in Firebase with ID: ${docRef.id}`);
+      console.log(`Firebase Functions should now process email to ${params.to}`);
       return true;
     } catch (error) {
-      console.error('Email queueing failed:', error);
+      console.error('✗ Failed to write to Firebase mail collection:', error);
+      console.error('Check Firebase credentials and project configuration');
       return false;
     }
   }
