@@ -56,8 +56,8 @@ export default function AdminEmailScheduler() {
     setSending(true);
     try {
       await emailService.sendAppointmentReminder(
-        "test@example.com",
-        "Test User",
+        "info@veenutrition.com",
+        "Vee Nutrition Team",
         tomorrow.toLocaleDateString(),
         "10:00",
         "Initial Consultation"
@@ -65,7 +65,7 @@ export default function AdminEmailScheduler() {
       
       toast({
         title: "Test email sent!",
-        description: "Check your test email inbox to verify the reminder format.",
+        description: "Check info@veenutrition.com inbox to verify the reminder format.",
       });
     } catch (error) {
       toast({
