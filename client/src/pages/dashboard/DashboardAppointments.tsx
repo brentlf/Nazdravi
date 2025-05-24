@@ -71,8 +71,12 @@ export default function DashboardAppointments() {
 
   useEffect(() => {
     if (user?.uid && consentRecords) {
-      // Look for any consent record where consentGiven is true
-      const hasValidConsent = consentRecords.some(record => record.consentGiven === true);
+      // Check if any consent record has the required consents (based on your Firebase structure)
+      const hasValidConsent = consentRecords.some(record => 
+        record.languageConfirmation === true && 
+        record.privateServiceConsent === true &&
+        record.status === "completed"
+      );
       setHasConsent(hasValidConsent);
     }
   }, [consentRecords, user?.uid]);
