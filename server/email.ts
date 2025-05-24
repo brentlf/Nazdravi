@@ -1,4 +1,4 @@
-import fetch from 'node-fetch';
+// MailerLite Email Service for Vee Nutrition
 
 const MAILERLITE_API_URL = 'https://api.mailerlite.com/api/v2';
 const API_KEY = process.env.MAILERLITE_API_KEY;
