@@ -115,12 +115,22 @@ export default function AdminHome() {
   return (
     <div className="min-h-screen py-20 bg-gray-50 dark:bg-gray-900">
       <div className="container mx-auto px-4">
-        {/* Header */}
+        {/* Header with Navigation */}
         <div className="mb-8">
-          <h1 className="text-3xl font-bold mb-2">Admin Dashboard</h1>
-          <p className="text-muted-foreground">
-            Overview of your nutrition practice and client management
-          </p>
+          <div className="flex items-center justify-between">
+            <div>
+              <h1 className="text-3xl font-bold mb-2">Admin Dashboard</h1>
+              <p className="text-muted-foreground">
+                Overview of your nutrition practice and client management
+              </p>
+            </div>
+            <Button variant="outline" asChild>
+              <Link href="/dashboard">
+                <Users className="mr-2 h-4 w-4" />
+                Switch to Client View
+              </Link>
+            </Button>
+          </div>
         </div>
 
         {/* Quick Stats */}
