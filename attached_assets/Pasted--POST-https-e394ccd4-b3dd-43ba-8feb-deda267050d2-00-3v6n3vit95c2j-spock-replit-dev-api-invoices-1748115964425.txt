@@ -1,0 +1,39 @@
+ 
+ POST https://e394ccd4-b3dd-43ba-8feb-deda267050d2-00-3v6n3vit95c2j.spock.replit.dev/api/invoices/create 500 (Internal Server Error)
+handleCreateInvoice	@	/src/pages/admin/Adm…?t=1748115655015:68
+onClick	@	/src/pages/admin/Adm…t=1748115655015:385
+callCallback2	@	/@fs/home/runner/wor….js?v=cf324a50:3674
+invokeGuardedCallbackDev	@	/@fs/home/runner/wor….js?v=cf324a50:3699
+invokeGuardedCallback	@	/@fs/home/runner/wor….js?v=cf324a50:3733
+invokeGuardedCallbackAndCatchFirstError	@	/@fs/home/runner/wor….js?v=cf324a50:3736
+executeDispatch	@	/@fs/home/runner/wor….js?v=cf324a50:7014
+processDispatchQueueItemsInOrder	@	/@fs/home/runner/wor….js?v=cf324a50:7034
+processDispatchQueue	@	/@fs/home/runner/wor….js?v=cf324a50:7043
+dispatchEventsForPlugins	@	/@fs/home/runner/wor….js?v=cf324a50:7051
+(anonymous)	@	/@fs/home/runner/wor….js?v=cf324a50:7174
+batchedUpdates$1	@	/@fs/home/runner/wor…js?v=cf324a50:18913
+batchedUpdates	@	/@fs/home/runner/wor….js?v=cf324a50:3579
+dispatchEventForPluginEventSystem	@	/@fs/home/runner/wor….js?v=cf324a50:7173
+dispatchEventWithEnableCapturePhaseSelectiveHydrationWithoutDiscreteEventReplay	@	/@fs/home/runner/wor….js?v=cf324a50:5478
+dispatchEvent	@	/@fs/home/runner/wor….js?v=cf324a50:5472
+dispatchDiscreteEvent	@	/@fs/home/runner/wor….js?v=cf324a50:5449
+
+ 
+ POST https://e394ccd4-b3dd-43ba-8feb-deda267050d2-00-3v6n3vit95c2j.spock.replit.dev/api/invoices/create 500 (Internal Server Error)
+handleCreateInvoice	@	/src/pages/admin/Adm…?t=1748115655015:68
+onClick	@	/src/pages/admin/Adm…t=1748115655015:385
+callCallback2	@	/@fs/home/runner/wor….js?v=cf324a50:3674
+invokeGuardedCallbackDev	@	/@fs/home/runner/wor….js?v=cf324a50:3699
+invokeGuardedCallback	@	/@fs/home/runner/wor….js?v=cf324a50:3733
+invokeGuardedCallbackAndCatchFirstError	@	/@fs/home/runner/wor….js?v=cf324a50:3736
+executeDispatch	@	/@fs/home/runner/wor….js?v=cf324a50:7014
+processDispatchQueueItemsInOrder	@	/@fs/home/runner/wor….js?v=cf324a50:7034
+processDispatchQueue	@	/@fs/home/runner/wor….js?v=cf324a50:7043
+dispatchEventsForPlugins	@	/@fs/home/runner/wor….js?v=cf324a50:7051
+(anonymous)	@	/@fs/home/runner/wor….js?v=cf324a50:7174
+batchedUpdates$1	@	/@fs/home/runner/wor…js?v=cf324a50:18913
+batchedUpdates	@	/@fs/home/runner/wor….js?v=cf324a50:3579
+dispatchEventForPluginEventSystem	@	/@fs/home/runner/wor….js?v=cf324a50:7173
+dispatchEventWithEnableCapturePhaseSelectiveHydrationWithoutDiscreteEventReplay	@	/@fs/home/runner/wor….js?v=cf324a50:5478
+dispatchEvent	@	/@fs/home/runner/wor….js?v=cf324a50:5472
+dispatchDiscreteEvent
