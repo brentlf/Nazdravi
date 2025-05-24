@@ -45,20 +45,20 @@ export default function Home() {
   const testimonials = [
     {
       name: "Sarah M.",
-      result: "Lost 12kg in 6 months",
-      quote: "Working with Vee completely transformed my relationship with food. I lost 12kg and finally feel confident in my body. The support was incredible!",
+      result: t("lost-weight", "home"),
+      quote: t("testimonial-1", "home"),
       image: "https://images.unsplash.com/photo-1494790108755-2616b612b47c?w=100&h=100&fit=crop&crop=face"
     },
     {
       name: "Marcus T.",
-      result: "Improved energy levels",
-      quote: "The personalized meal plans were game-changing. I finally understand how to eat for my body and my goals. Highly recommend!",
+      result: t("gained-confidence", "home"),
+      quote: t("testimonial-2", "home"),
       image: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop&crop=face"
     },
     {
       name: "Emma K.",
-      result: "Sustainable lifestyle change",
-      quote: "The 24/7 support made all the difference. Whenever I had questions or needed motivation, help was just a message away.",
+      result: t("improved-health", "home"),
+      quote: t("testimonial-3", "home"),
       image: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=100&h=100&fit=crop&crop=face"
     }
   ];
@@ -113,15 +113,15 @@ export default function Home() {
               <div className="mt-12 flex flex-wrap justify-center lg:justify-start items-center gap-6 text-white/80">
                 <div className="flex items-center space-x-2">
                   <Users className="w-5 h-5 text-primary-400" />
-                  <span className="text-sm">500+ Happy Clients</span>
+                  <span className="text-sm">{t("happy-clients", "home")}</span>
                 </div>
                 <div className="flex items-center space-x-2">
                   <Award className="w-5 h-5 text-primary-400" />
-                  <span className="text-sm">Certified Nutritionist</span>
+                  <span className="text-sm">{t("certified-nutritionist", "home")}</span>
                 </div>
                 <div className="flex items-center space-x-2">
                   <Clock className="w-5 h-5 text-primary-400" />
-                  <span className="text-sm">5+ Years Experience</span>
+                  <span className="text-sm">{t("years-experience", "home")}</span>
                 </div>
               </div>
             </div>
@@ -136,11 +136,10 @@ export default function Home() {
         <div className="container mx-auto px-4">
           <div className="text-center mb-16">
             <h2 className="text-3xl sm:text-4xl font-bold mb-4">
-              Comprehensive Nutrition Services
+              {t("comprehensive-services", "home")}
             </h2>
             <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-              From initial consultation to ongoing support, we provide everything you need 
-              for your nutrition journey
+              {t("services-subtitle", "home")}
             </p>
           </div>
 
