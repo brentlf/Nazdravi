@@ -70,10 +70,10 @@ export default function Home() {
       {/* Hero Section */}
       <section className="relative overflow-hidden py-20 lg:py-32">
         <div 
-          className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-0"
+          className="absolute inset-0 bg-cover bg-center bg-no-repeat"
           style={{ backgroundImage: `url(${heroImage})` }}
         ></div>
-        <div className="absolute inset-0 bg-gradient-to-br from-primary-50 via-white to-primary-100 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900"></div>
+        <div className="absolute inset-0 bg-gradient-to-r from-white/90 via-white/80 to-white/85 dark:from-gray-900/90 dark:via-gray-900/80 dark:to-gray-900/85"></div>
         <div className="container mx-auto px-4">
           <div className="grid lg:grid-cols-2 gap-12 items-center">
             {/* Content */}
@@ -82,9 +82,9 @@ export default function Home() {
                 🌱 Transform Your Health Today
               </Badge>
               
-              <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold bg-gradient-to-r from-primary-600 to-primary-800 bg-clip-text text-transparent">
+              <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 dark:text-white relative z-10">
                 Transform Your Health with 
-                <span className="block">Personalized Nutrition</span>
+                <span className="block text-primary-600 dark:text-primary-400">Personalized Nutrition</span>
               </h1>
               
               <p className="text-xl text-muted-foreground max-w-2xl">
