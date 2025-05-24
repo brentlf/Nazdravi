@@ -26,7 +26,7 @@ const messageSchema = z.object({
 type MessageFormData = z.infer<typeof messageSchema>;
 
 export function MessageThread() {
-  const { user } = useAuth();
+  const { effectiveUser: user, isAdminViewingClient } = useAuth();
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const { add: addMessage, loading: sending } = useFirestoreActions("messages");
 

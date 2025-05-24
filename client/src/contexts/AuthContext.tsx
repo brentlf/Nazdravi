@@ -17,11 +17,15 @@ interface AuthContextType {
   user: User | null;
   firebaseUser: FirebaseUser | null;
   loading: boolean;
+  isAdminViewingClient: boolean;
+  viewingClientUser: User | null;
+  effectiveUser: User | null; // The user data to actually use (client if admin is viewing, otherwise regular user)
   signIn: (email: string, password: string) => Promise<void>;
   signUp: (email: string, password: string, name: string) => Promise<void>;
   signInWithGoogle: () => Promise<void>;
   signOut: () => Promise<void>;
   updateUserProfile: (data: Partial<User>) => Promise<void>;
+  setViewingClient: (clientId: string | null) => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -42,6 +46,10 @@ export function AuthProvider({ children }: AuthProviderProps) {
   const [user, setUser] = useState<User | null>(null);
   const [firebaseUser, setFirebaseUser] = useState<FirebaseUser | null>(null);
   const [loading, setLoading] = useState(true);
+  const [viewingClientUser, setViewingClientUser] = useState<User | null>(null);
+
+  const isAdminViewingClient = user?.role === "admin" && viewingClientUser !== null;
+  const effectiveUser = isAdminViewingClient ? viewingClientUser : user;
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
@@ -151,15 +159,44 @@ export function AuthProvider({ children }: AuthProviderProps) {
     setUser({ ...user, ...data });
   };
 
+  const setViewingClient = async (clientId: string | null) => {
+    if (!clientId) {
+      setViewingClientUser(null);
+      return;
+    }
+
+    try {
+      const clientDoc = await getDoc(doc(db, "users", clientId));
+      if (clientDoc.exists()) {
+        const clientData = clientDoc.data();
+        setViewingClientUser({
+          uid: clientId,
+          role: clientData.role || "client",
+          name: clientData.name || "",
+          email: clientData.email || "",
+          photoURL: clientData.photoURL || undefined,
+          preferredLanguage: clientData.preferredLanguage || "en",
+          createdAt: clientData.createdAt?.toDate() || new Date(),
+        });
+      }
+    } catch (error) {
+      console.error("Error fetching client data:", error);
+    }
+  };
+
   const value: AuthContextType = {
     user,
     firebaseUser,
     loading,
+    isAdminViewingClient,
+    viewingClientUser,
+    effectiveUser,
     signIn,
     signUp,
     signInWithGoogle,
     signOut: handleSignOut,
     updateUserProfile,
+    setViewingClient,
   };
 
   return (

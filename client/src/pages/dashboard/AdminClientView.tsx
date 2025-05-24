@@ -16,12 +16,13 @@ import {
 import { useFirestoreCollection } from "@/hooks/useFirestore";
 import { User as UserType } from "@/types";
 import { where, orderBy } from "firebase/firestore";
-import { DashboardOverview } from "@/components/dashboard/DashboardOverview";
+import { useAuth } from "@/contexts/AuthContext";
 
 export default function AdminClientView() {
   const [selectedClientId, setSelectedClientId] = useState<string>("");
   const [searchTerm, setSearchTerm] = useState("");
   const [, setLocation] = useLocation();
+  const { setViewingClient } = useAuth();
 
   // Fetch all client users
   const { data: clients, loading } = useFirestoreCollection<UserType>("users", [
@@ -37,10 +38,9 @@ export default function AdminClientView() {
 
   const selectedClient = clients?.find(client => client.uid === selectedClientId);
 
-  const handleClientSelect = (clientId: string) => {
+  const handleClientSelect = async (clientId: string) => {
     setSelectedClientId(clientId);
-    // Store the selected client for the dashboard to use
-    sessionStorage.setItem('adminViewingClient', clientId);
+    await setViewingClient(clientId);
     setLocation('/dashboard');
   };
 

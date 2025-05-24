@@ -18,7 +18,7 @@ import { Appointment, Message, Progress } from "@/types";
 import { where, orderBy, limit } from "firebase/firestore";
 
 export function DashboardOverview() {
-  const { user } = useAuth();
+  const { effectiveUser: user, isAdminViewingClient } = useAuth();
 
 
 
