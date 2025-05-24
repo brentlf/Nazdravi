@@ -18,15 +18,37 @@ export default function DashboardDocuments() {
     ] : undefined
   );
 
-  const handleDownloadDocument = (doc: Plan) => {
+  const handleDownloadDocument = async (doc: Plan) => {
     if (doc.downloadURL) {
-      const link = window.document.createElement('a');
-      link.href = doc.downloadURL;
-      link.download = doc.fileName || doc.title;
-      link.target = '_blank';
-      window.document.body.appendChild(link);
-      link.click();
-      window.document.body.removeChild(link);
+      try {
+        // Fetch the file as a blob for proper download
+        const response = await fetch(doc.downloadURL);
+        const blob = await response.blob();
+        
+        // Create download link
+        const link = window.document.createElement('a');
+        const url = window.URL.createObjectURL(blob);
+        link.href = url;
+        link.download = doc.fileName || `${doc.title}.pdf`;
+        
+        // Force download
+        window.document.body.appendChild(link);
+        link.click();
+        
+        // Cleanup
+        window.document.body.removeChild(link);
+        window.URL.revokeObjectURL(url);
+      } catch (error) {
+        console.error('Download failed:', error);
+        // Fallback to direct link
+        const link = window.document.createElement('a');
+        link.href = doc.downloadURL;
+        link.download = doc.fileName || `${doc.title}.pdf`;
+        link.target = '_blank';
+        window.document.body.appendChild(link);
+        link.click();
+        window.document.body.removeChild(link);
+      }
     }
   };
 

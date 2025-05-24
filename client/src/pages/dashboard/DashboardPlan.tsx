@@ -28,15 +28,37 @@ export default function DashboardPlan() {
 
   const latestPlan = plans?.[0];
 
-  const handleDownload = (plan: Plan) => {
+  const handleDownload = async (plan: Plan) => {
     if (plan.downloadURL) {
-      const link = window.document.createElement('a');
-      link.href = plan.downloadURL;
-      link.download = plan.fileName || plan.title;
-      link.target = '_blank';
-      window.document.body.appendChild(link);
-      link.click();
-      window.document.body.removeChild(link);
+      try {
+        // Fetch the file as a blob
+        const response = await fetch(plan.downloadURL);
+        const blob = await response.blob();
+        
+        // Create a download link
+        const link = window.document.createElement('a');
+        const url = window.URL.createObjectURL(blob);
+        link.href = url;
+        link.download = plan.fileName || `${plan.title}.pdf`;
+        
+        // Force download
+        window.document.body.appendChild(link);
+        link.click();
+        
+        // Cleanup
+        window.document.body.removeChild(link);
+        window.URL.revokeObjectURL(url);
+      } catch (error) {
+        console.error('Download failed:', error);
+        // Fallback to direct link
+        const link = window.document.createElement('a');
+        link.href = plan.downloadURL;
+        link.download = plan.fileName || `${plan.title}.pdf`;
+        link.target = '_blank';
+        window.document.body.appendChild(link);
+        link.click();
+        window.document.body.removeChild(link);
+      }
     } else {
       alert('Download URL not available for this document.');
     }
