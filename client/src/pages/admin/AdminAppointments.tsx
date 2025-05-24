@@ -33,7 +33,8 @@ import {
 import { useToast } from "@/hooks/use-toast";
 import { useFirestoreCollection, useFirestoreActions } from "@/hooks/useFirestore";
 import { Appointment } from "@/types";
-import { orderBy, where } from "firebase/firestore";
+import { collection, query, where, getDocs, orderBy } from "firebase/firestore";
+import { db } from "@/lib/firebase";
 
 export default function AdminAppointments() {
   const [searchTerm, setSearchTerm] = useState("");
@@ -45,9 +46,7 @@ export default function AdminAppointments() {
   const { toast } = useToast();
 
   // Fetch appointments
-  const { data: appointments, loading } = useFirestoreCollection<Appointment>("appointments", [
-    orderBy("date", "desc")
-  ]);
+  const { data: appointments, loading } = useFirestoreCollection<Appointment>("appointments");
 
   const { update: updateAppointment, loading: actionLoading } = useFirestoreActions("appointments");
 
@@ -103,14 +102,39 @@ export default function AdminAppointments() {
     }
 
     try {
+      // Check availability before updating (if changing to a different slot)
+      if (editDate !== selectedAppointment.date || editTimeslot !== selectedAppointment.timeslot) {
+        // Check for conflicts with other appointments
+        const appointmentsRef = collection(db, "appointments");
+        const conflictQuery = query(
+          appointmentsRef,
+          where("date", "==", editDate),
+          where("timeslot", "==", editTimeslot),
+          where("status", "in", ["requested", "confirmed"])
+        );
+        
+        const conflictSnapshot = await getDocs(conflictQuery);
+        const hasConflict = conflictSnapshot.docs.some((doc: any) => doc.id !== selectedAppointment.id);
+        
+        if (hasConflict) {
+          toast({
+            title: "Time slot unavailable",
+            description: "This time slot is already booked. Please select a different time.",
+            variant: "destructive",
+          });
+          return;
+        }
+      }
+
       await updateAppointment(selectedAppointment.id!, { 
         date: editDate, 
-        timeslot: editTimeslot 
+        timeslot: editTimeslot,
+        status: "confirmed" // Automatically confirm when admin makes direct changes
       });
       
       toast({
         title: "Appointment updated",
-        description: "Appointment date and time have been successfully changed.",
+        description: "Appointment date and time have been successfully changed and confirmed.",
       });
       
       setIsEditingAppointment(false);
@@ -247,7 +271,7 @@ export default function AdminAppointments() {
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="all">All Statuses</SelectItem>
-                  <SelectItem value="pending">Pending</SelectItem>
+                  <SelectItem value="requested">Requested</SelectItem>
                   <SelectItem value="confirmed">Confirmed</SelectItem>
                   <SelectItem value="done">Completed</SelectItem>
                   <SelectItem value="reschedule_requested">Reschedule Requested</SelectItem>
@@ -401,7 +425,7 @@ export default function AdminAppointments() {
                             )}
 
                             <DialogFooter className="gap-2 flex-wrap">
-                              {selectedAppointment?.status === "pending" && (
+                              {selectedAppointment?.status === "requested" && (
                                 <>
                                   <Button
                                     variant="outline"
