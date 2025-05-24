@@ -32,52 +32,48 @@ export default function AdminMessages() {
     where("role", "==", "client")
   ]);
 
-  // Fetch messages for selected chat room - using multiple queries to ensure we get all messages
-  const { data: messagesByChatRoom } = useFirestoreCollection<Message>(
+  // Simple approach: Get all messages and filter them
+  const { data: allMessages, loading: messagesLoading } = useFirestoreCollection<Message>(
     "messages",
-    selectedChatRoom ? [
-      where("chatRoom", "==", selectedChatRoom),
-      orderBy("createdAt", "asc")
-    ] : undefined
+    [orderBy("createdAt", "asc")]
   );
 
-  const { data: messagesByFromUser } = useFirestoreCollection<Message>(
-    "messages", 
-    selectedChatRoom && user ? [
-      where("fromUser", "==", user.uid),
-      orderBy("createdAt", "asc")
-    ] : undefined
-  );
-
-  const { data: messagesToUser } = useFirestoreCollection<Message>(
-    "messages",
-    selectedChatRoom && user ? [
-      where("toUser", "==", user.uid), 
-      orderBy("createdAt", "asc")
-    ] : undefined
-  );
-
-  // Combine and deduplicate messages, then filter by chat room
-  const allMessages = [
-    ...(messagesByChatRoom || []),
-    ...(messagesByFromUser || []),
-    ...(messagesToUser || [])
-  ];
-
-  // Remove duplicates and filter by chat room
-  const uniqueMessages = allMessages.filter((message, index, self) => 
-    index === self.findIndex(m => m.id === message.id)
-  );
-
-  const messages = uniqueMessages
-    .filter(message => message.chatRoom === selectedChatRoom)
-    .sort((a, b) => {
-      const dateA = a.createdAt instanceof Date ? a.createdAt : (a.createdAt as any).toDate();
-      const dateB = b.createdAt instanceof Date ? b.createdAt : (b.createdAt as any).toDate();
-      return dateA.getTime() - dateB.getTime();
+  // Filter messages for the selected chat room
+  const messages = allMessages?.filter(message => {
+    // Debug logging
+    console.log('Checking message:', {
+      messageId: message.id,
+      fromUser: message.fromUser,
+      toUser: message.toUser,
+      chatRoom: message.chatRoom,
+      selectedChatRoom,
+      text: message.text.substring(0, 20) + '...'
     });
+    
+    // Check if message belongs to this chat room
+    if (message.chatRoom === selectedChatRoom) {
+      console.log('Message matches chat room:', message.id);
+      return true;
+    }
+    
+    // Also check if it's a message involving the selected client
+    if (selectedChatRoom && user) {
+      const clientUserId = selectedChatRoom.replace(`${user.uid}_`, "").replace(`_${user.uid}`, "");
+      const isRelevant = (
+        (message.fromUser === user.uid && message.toUser === clientUserId) ||
+        (message.fromUser === clientUserId && message.toUser === user.uid)
+      );
+      if (isRelevant) {
+        console.log('Message matches user pair:', message.id);
+      }
+      return isRelevant;
+    }
+    
+    return false;
+  }) || [];
 
-  const messagesLoading = false;
+  console.log('Filtered messages count:', messages.length);
+  console.log('Total messages count:', allMessages?.length || 0);
 
   const { add: addMessage, loading: sendingMessage } = useFirestoreActions("messages");
 
