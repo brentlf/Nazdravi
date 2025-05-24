@@ -33,6 +33,11 @@ export default function AdminInvoices() {
     limit(20)
   ]);
 
+  // Check if an appointment already has an invoice
+  const hasExistingInvoice = (appointmentId: string) => {
+    return invoices?.some(invoice => invoice.appointmentId === appointmentId);
+  };
+
   const handleCreateInvoice = async (appointmentData: Appointment) => {
     try {
       const invoiceData = {
@@ -142,30 +147,42 @@ export default function AdminInvoices() {
               <div>
                 <Label>Select Completed Session</Label>
                 <div className="mt-2 space-y-2 max-h-60 overflow-y-auto">
-                  {completedAppointments?.map((appointment) => (
-                    <div 
-                      key={appointment.id}
-                      className={`p-3 border rounded-lg cursor-pointer transition-colors ${
-                        selectedAppointment?.id === appointment.id 
-                          ? 'border-primary bg-primary-50' 
-                          : 'border-gray-200 hover:border-gray-300'
-                      }`}
-                      onClick={() => setSelectedAppointment(appointment)}
-                    >
-                      <div className="flex justify-between items-start">
-                        <div>
-                          <p className="font-medium">{appointment.name}</p>
-                          <p className="text-sm text-muted-foreground">{appointment.email}</p>
-                          <p className="text-sm text-muted-foreground">
-                            {new Date(appointment.date).toLocaleDateString()} - {appointment.type}
-                          </p>
+                  {completedAppointments?.map((appointment) => {
+                    const alreadyInvoiced = hasExistingInvoice(appointment.id);
+                    return (
+                      <div 
+                        key={appointment.id}
+                        className={`p-3 border rounded-lg transition-colors ${
+                          alreadyInvoiced 
+                            ? 'border-gray-200 bg-gray-50 opacity-60' 
+                            : selectedAppointment?.id === appointment.id 
+                              ? 'border-primary bg-primary-50 cursor-pointer' 
+                              : 'border-gray-200 hover:border-gray-300 cursor-pointer'
+                        }`}
+                        onClick={() => !alreadyInvoiced && setSelectedAppointment(appointment)}
+                      >
+                        <div className="flex justify-between items-start">
+                          <div className="flex-1">
+                            <div className="flex items-center gap-2">
+                              <p className="font-medium">{appointment.name}</p>
+                              {alreadyInvoiced && (
+                                <Badge variant="secondary" className="text-xs">
+                                  Already Invoiced
+                                </Badge>
+                              )}
+                            </div>
+                            <p className="text-sm text-muted-foreground">{appointment.email}</p>
+                            <p className="text-sm text-muted-foreground">
+                              {new Date(appointment.date).toLocaleDateString()} - {appointment.type}
+                            </p>
+                          </div>
+                          <Badge variant="outline">
+                            {appointment.type === "Initial" ? "€95" : "€75"}
+                          </Badge>
                         </div>
-                        <Badge variant="outline">
-                          {appointment.type === "Initial" ? "€95" : "€75"}
-                        </Badge>
                       </div>
-                    </div>
-                  ))}
+                    );
+                  })}
                 </div>
               </div>
 
