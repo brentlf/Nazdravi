@@ -443,7 +443,7 @@ export default function AdminBlog() {
                             {post.published ? "Published" : "Draft"}
                           </Badge>
                           <Badge variant="outline">
-                            {post.lang.toUpperCase()}
+                            {(post.lang || "EN").toUpperCase()}
                           </Badge>
                         </div>
                         <p className="text-sm text-muted-foreground mb-2 line-clamp-2">
