@@ -182,10 +182,14 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // Generate invoice number
       const invoiceNumber = `INV-${Date.now()}`;
       
-      // Create Stripe payment intent
+      // Create Stripe payment intent with multiple payment methods
       const paymentIntent = await stripe.paymentIntents.create({
         amount: Math.round(amount * 100), // Convert to pence
         currency: "gbp",
+        payment_method_types: [
+          'card',           // Credit/debit cards, Maestro
+          'ideal',          // iDEAL payments for Dutch clients
+        ],
         metadata: {
           invoiceNumber,
           appointmentId,
