@@ -651,8 +651,11 @@ export default function DashboardAppointments() {
                     </div>
                   )}
 
-                  {/* Appointment Management Buttons */}
-                  {(appointment.status === "pending" || appointment.status === "confirmed") && (
+                  {/* Debug appointment status */}
+                  {console.log('Appointment status debug:', appointment.status, appointment)}
+
+                  {/* Appointment Management Buttons - Show for all manageable statuses */}
+                  {(appointment.status === "pending" || appointment.status === "confirmed" || appointment.status === "reschedule_requested") && (
                     <div className="mt-4 flex flex-wrap gap-2">
                       {/* Temporarily always show edit buttons for testing */}
                       {true || canModifyAppointment(appointment) ? (
