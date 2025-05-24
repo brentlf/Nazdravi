@@ -1,7 +1,7 @@
 import { createContext, useContext, useState, useEffect, ReactNode } from "react";
 import { i18n } from "@/lib/i18n";
 import { Language } from "@/types";
-import { translations } from "@/lib/translations";
+import { translate } from "@/lib/translationUtils";
 
 interface LanguageContextType {
   language: Language;
@@ -32,24 +32,7 @@ export function LanguageProvider({ children }: LanguageProviderProps) {
   };
 
   const t = (key: string, namespace = "common", params?: Record<string, string>) => {
-    try {
-      // First try to get translation in current language
-      const currentLangTranslation = (translations as any)[language]?.[namespace]?.[key];
-      if (currentLangTranslation) {
-        return currentLangTranslation;
-      }
-      
-      // Fallback to English if not found in current language
-      const englishTranslation = (translations as any)['en']?.[namespace]?.[key];
-      if (englishTranslation) {
-        return englishTranslation;
-      }
-      
-      // Final fallback to the key itself
-      return key;
-    } catch (error) {
-      return key;
-    }
+    return translate(key, namespace as any, language, { params });
   };
 
   useEffect(() => {
