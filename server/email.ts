@@ -35,15 +35,72 @@ export class MailerLiteService {
     }
 
     try {
-      // For now, log the email details and return success
-      // This allows the system to work while we figure out the correct MailerLite API
-      console.log('Email would be sent:', {
-        to: params.to,
-        subject: params.subject,
-        from: 'Vee Nutrition <info@veenutrition.com>'
+      // First, ensure subscriber exists
+      const subscriberResponse = await fetch(`${MAILERLITE_API_URL}/subscribers`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+          'Authorization': `Bearer ${this.apiKey}`,
+        },
+        body: JSON.stringify({
+          email: params.to,
+          name: params.toName || '',
+          status: 'active'
+        }),
       });
-      
-      return true;
+
+      // Create campaign
+      const campaignData = {
+        name: `${params.subject} - ${Date.now()}`,
+        type: 'regular',
+        emails: [{
+          subject: params.subject,
+          from_name: 'Vee Nutrition',
+          from: 'info@veenutrition.com',
+          content: params.html || params.text || ''
+        }]
+      };
+
+      const campaignResponse = await fetch(`${MAILERLITE_API_URL}/campaigns`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+          'Authorization': `Bearer ${this.apiKey}`,
+        },
+        body: JSON.stringify(campaignData),
+      });
+
+      if (campaignResponse.ok) {
+        const campaign = await campaignResponse.json();
+        
+        // Send campaign to specific subscriber
+        const sendResponse = await fetch(`${MAILERLITE_API_URL}/campaigns/${campaign.data.id}/actions/send`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+            'Authorization': `Bearer ${this.apiKey}`,
+          },
+          body: JSON.stringify({
+            delivery_schedule: 'now'
+          }),
+        });
+
+        if (sendResponse.ok) {
+          console.log(`Email sent successfully to ${params.to}`);
+          return true;
+        } else {
+          const sendError = await sendResponse.json();
+          console.error('MailerLite send error:', sendResponse.status, sendError);
+          return false;
+        }
+      } else {
+        const campaignError = await campaignResponse.json();
+        console.error('MailerLite campaign error:', campaignResponse.status, campaignError);
+        return false;
+      }
     } catch (error) {
       console.error('Email sending failed:', error);
       return false;
