@@ -4,8 +4,9 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { useFirestoreCollection } from "@/hooks/useFirestore";
 import { where, orderBy } from "firebase/firestore";
-import { Receipt, CreditCard, Calendar, Eye } from "lucide-react";
+import { Receipt, CreditCard, Calendar, Eye, ArrowLeft } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
+import { Link } from "wouter";
 import type { Invoice } from "@shared/firebase-schema";
 
 export default function DashboardInvoices() {
@@ -70,6 +71,16 @@ export default function DashboardInvoices() {
   return (
     <div className="min-h-screen py-20 bg-gray-50 dark:bg-gray-900">
       <div className="container mx-auto px-4">
+        {/* Back to Dashboard */}
+        <div className="mb-6">
+          <Link href="/dashboard">
+            <Button variant="ghost" className="mb-4">
+              <ArrowLeft className="w-4 h-4 mr-2" />
+              Back to Dashboard
+            </Button>
+          </Link>
+        </div>
+
         {/* Header */}
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100">My Invoices</h1>
