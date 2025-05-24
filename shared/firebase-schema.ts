@@ -36,6 +36,10 @@ export const appointmentSchema = z.object({
   consultationNotes: z.string().optional(),
   followUpRequired: z.boolean().optional(),
   consultationLanguage: z.enum(["english", "czech"]),
+  // Video consultation fields
+  teamsJoinUrl: z.string().optional(),
+  teamsMeetingId: z.string().optional(),
+  price: z.number().optional(),
 });
 
 // Message Schema
@@ -173,6 +177,27 @@ export const unavailableSlotSchema = z.object({
   createdAt: z.date(),
 });
 
+// Invoice Schema
+export const invoiceSchema = z.object({
+  id: z.string().optional(),
+  appointmentId: z.string(),
+  userId: z.string(),
+  clientName: z.string(),
+  clientEmail: z.string(),
+  invoiceNumber: z.string(),
+  amount: z.number(),
+  currency: z.string().default("GBP"),
+  description: z.string(),
+  sessionDate: z.string(),
+  sessionType: z.enum(["Initial", "Follow-up"]),
+  status: z.enum(["pending", "paid", "overdue", "cancelled"]),
+  createdAt: z.date(),
+  dueDate: z.date(),
+  paidAt: z.date().optional(),
+  stripePaymentIntentId: z.string().optional(),
+  paymentUrl: z.string().optional(),
+});
+
 // Firebase Collection Names
 export const COLLECTIONS = {
   USERS: 'users',
@@ -187,6 +212,7 @@ export const COLLECTIONS = {
   CONSENT_RECORDS: 'consentRecords',
   HEALTH_ASSESSMENTS: 'healthAssessments',
   UNAVAILABLE_SLOTS: 'unavailableSlots',
+  INVOICES: 'invoices',
 } as const;
 
 // Type exports
@@ -202,6 +228,7 @@ export type NewsletterSubscriber = z.infer<typeof newsletterSchema>;
 export type ConsentRecord = z.infer<typeof consentRecordSchema>;
 export type HealthAssessment = z.infer<typeof healthAssessmentSchema>;
 export type UnavailableSlot = z.infer<typeof unavailableSlotSchema>;
+export type Invoice = z.infer<typeof invoiceSchema>;
 
 // Form validation schemas (for frontend forms)
 export const loginSchema = z.object({

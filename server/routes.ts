@@ -2,6 +2,14 @@ import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
 import { mailerLiteService } from "./email";
+import Stripe from "stripe";
+
+if (!process.env.STRIPE_SECRET_KEY) {
+  throw new Error('Missing required Stripe secret: STRIPE_SECRET_KEY');
+}
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
+  apiVersion: "2023-10-16",
+});
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // Email notification endpoints
@@ -117,6 +125,136 @@ export async function registerRoutes(app: Express): Promise<Server> {
     } catch (error) {
       console.error("Daily reminders error:", error);
       res.status(500).json({ error: "Internal server error" });
+    }
+  });
+
+  // Microsoft Teams Meeting Creation
+  app.post("/api/teams/create-meeting", async (req, res) => {
+    try {
+      const { subject, startTime, endTime, attendeeEmail, attendeeName } = req.body;
+      
+      // For now, we'll create a placeholder Teams meeting URL
+      // In production, you'll need Microsoft Graph API credentials
+      const teamsJoinUrl = `https://teams.microsoft.com/l/meetup-join/placeholder/${Date.now()}`;
+      const teamsMeetingId = `meeting_${Date.now()}`;
+      
+      res.json({
+        teamsJoinUrl,
+        teamsMeetingId,
+        subject,
+        startTime,
+        endTime
+      });
+    } catch (error) {
+      console.error("Teams meeting creation error:", error);
+      res.status(500).json({ error: "Failed to create Teams meeting" });
+    }
+  });
+
+  // Invoice Creation
+  app.post("/api/invoices/create", async (req, res) => {
+    try {
+      const { 
+        appointmentId, 
+        userId, 
+        clientName, 
+        clientEmail, 
+        amount, 
+        description, 
+        sessionDate, 
+        sessionType 
+      } = req.body;
+
+      if (!appointmentId || !userId || !clientName || !clientEmail || !amount) {
+        return res.status(400).json({ error: "Missing required invoice fields" });
+      }
+
+      // Generate invoice number
+      const invoiceNumber = `INV-${Date.now()}`;
+      
+      // Create Stripe payment intent
+      const paymentIntent = await stripe.paymentIntents.create({
+        amount: Math.round(amount * 100), // Convert to pence
+        currency: "gbp",
+        metadata: {
+          invoiceNumber,
+          appointmentId,
+          userId,
+          clientEmail
+        }
+      });
+
+      const invoiceData = {
+        invoiceNumber,
+        appointmentId,
+        userId,
+        clientName,
+        clientEmail,
+        amount,
+        currency: "GBP",
+        description,
+        sessionDate,
+        sessionType,
+        status: "pending",
+        createdAt: new Date(),
+        dueDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000), // 7 days from now
+        stripePaymentIntentId: paymentIntent.id,
+        paymentUrl: `${req.protocol}://${req.get('host')}/pay-invoice/${invoiceNumber}`
+      };
+
+      res.json({
+        invoice: invoiceData,
+        clientSecret: paymentIntent.client_secret
+      });
+    } catch (error) {
+      console.error("Invoice creation error:", error);
+      res.status(500).json({ error: "Failed to create invoice" });
+    }
+  });
+
+  // Payment processing for invoices
+  app.post("/api/invoices/pay", async (req, res) => {
+    try {
+      const { paymentIntentId, invoiceNumber } = req.body;
+
+      if (!paymentIntentId || !invoiceNumber) {
+        return res.status(400).json({ error: "Missing payment details" });
+      }
+
+      // Confirm payment with Stripe
+      const paymentIntent = await stripe.paymentIntents.retrieve(paymentIntentId);
+      
+      if (paymentIntent.status === 'succeeded') {
+        res.json({
+          success: true,
+          message: "Payment successful",
+          invoiceNumber,
+          paidAt: new Date()
+        });
+      } else {
+        res.status(400).json({ error: "Payment not completed" });
+      }
+    } catch (error) {
+      console.error("Payment processing error:", error);
+      res.status(500).json({ error: "Failed to process payment" });
+    }
+  });
+
+  // Get invoice details
+  app.get("/api/invoices/:invoiceNumber", async (req, res) => {
+    try {
+      const { invoiceNumber } = req.params;
+      
+      // In a real implementation, you'd fetch from your database
+      // For now, return a placeholder response
+      res.json({
+        invoiceNumber,
+        status: "pending",
+        message: "Invoice details would be fetched from database"
+      });
+    } catch (error) {
+      console.error("Get invoice error:", error);
+      res.status(500).json({ error: "Failed to get invoice details" });
     }
   });
 
