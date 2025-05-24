@@ -106,7 +106,7 @@ export default function DashboardProgress() {
   
   const weightEntries = progressEntries?.filter(entry => entry.weightKg) || [];
   const weightChange = weightEntries.length >= 2 
-    ? (weightEntries[0].weightKg || 0) - (weightEntries[weightEntries.length - 1].weightKg || 0)
+    ? (weightEntries[weightEntries.length - 1].weightKg || 0) - (weightEntries[0].weightKg || 0)
     : 0;
 
   const avgWaterThisMonth = entriesThisMonth.length > 0 

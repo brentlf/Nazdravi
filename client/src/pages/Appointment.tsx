@@ -37,10 +37,10 @@ export default function Appointment() {
         {/* Page Header */}
         <div className="text-center mb-12">
           <h1 className="text-3xl sm:text-4xl font-bold mb-4">
-            {t("book-consultation", "appointment")}
+            Book Consultation
           </h1>
           <p className="text-xl text-muted-foreground">
-            {t("language-service-notice", "appointment")}
+            Professional nutrition counseling in English and Czech
           </p>
         </div>
 
@@ -50,7 +50,7 @@ export default function Appointment() {
             <Globe className="h-4 w-4 text-blue-600" />
             <AlertDescription>
               <p className="text-sm text-blue-800 dark:text-blue-200">
-                <strong>{t("language-services-title", "appointment")}</strong> {t("language-services-description", "appointment")}
+                <strong>Language Services:</strong> All consultations are conducted in English. Czech language support available upon request with advance notice.
               </p>
             </AlertDescription>
           </Alert>
@@ -62,7 +62,7 @@ export default function Appointment() {
           <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 mb-8">
             <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
               <Shield className="w-5 h-5" />
-              {t("booking-requirements", "appointment")}
+              Booking Requirements
             </h3>
             
             <div className="space-y-3">
