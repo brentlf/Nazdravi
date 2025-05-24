@@ -325,7 +325,35 @@ export const onRescheduleRequest = functions.firestore
     }
   });
 
-// 4. Daily Appointment Reminders (scheduled function)
+// 4. Mail Queue Processor (triggers on new mail documents)
+export const processMailQueue = functions.firestore
+  .document('mail/{mailId}')
+  .onCreate(async (snap, context) => {
+    const mailData = snap.data();
+    
+    if (mailData && mailData.to && mailData.subject) {
+      console.log(`Processing email from queue: ${mailData.to}`);
+      
+      const success = await mailerLite.sendEmail(
+        mailData.to,
+        mailData.toName || '',
+        mailData.subject,
+        mailData.html || '',
+        mailData.text || ''
+      );
+      
+      // Update the document with the result
+      await snap.ref.update({
+        status: success ? 'sent' : 'failed',
+        processedAt: admin.firestore.FieldValue.serverTimestamp(),
+        success: success
+      });
+      
+      console.log(`Email ${success ? 'sent successfully' : 'failed'} to ${mailData.to}`);
+    }
+  });
+
+// 5. Daily Appointment Reminders (scheduled function)
 export const sendDailyReminders = functions.pubsub
   .schedule('0 18 * * *') // Run every day at 6 PM
   .timeZone('Europe/Amsterdam') // Adjust to your timezone
