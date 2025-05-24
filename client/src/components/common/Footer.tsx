@@ -109,26 +109,26 @@ export function Footer() {
         {/* Bottom Bar */}
         <div className="border-t border-gray-800 mt-12 pt-8 flex flex-col md:flex-row justify-between items-center">
           <p className="text-gray-400 text-sm">
-            © {currentYear} Vee Nutrition. All rights reserved.
+            © {currentYear} Vee Nutrition. {t("all-rights-reserved", "home")}
           </p>
           <div className="flex space-x-6 mt-4 md:mt-0">
             <Link
               href="/privacy-policy"
               className="text-gray-400 hover:text-primary-400 text-sm transition-colors duration-200"
             >
-              Privacy Policy
+              {t("privacy-policy", "home")}
             </Link>
             <Link
               href="/terms-of-service"
               className="text-gray-400 hover:text-primary-400 text-sm transition-colors duration-200"
             >
-              Terms of Service
+              {t("terms-of-service", "home")}
             </Link>
             <Link
               href="/cookie-policy"
               className="text-gray-400 hover:text-primary-400 text-sm transition-colors duration-200"
             >
-              Cookie Policy
+              {t("cookie-policy", "home")}
             </Link>
           </div>
         </div>
