@@ -141,13 +141,6 @@ export default function AdminHome() {
       color: "bg-purple-500 hover:bg-purple-600"
     },
     {
-      title: "Invoice Management",
-      description: `Create invoices and track payments (€${thisMonthRevenue.toFixed(2)} this month)`,
-      icon: Receipt,
-      href: "/admin/invoices",
-      color: "bg-orange-500 hover:bg-orange-600"
-    },
-    {
       title: "Blog Management",
       description: "Create and manage blog posts with images",
       icon: FileText,
@@ -206,7 +199,7 @@ export default function AdminHome() {
         </div>
 
         {/* Quick Stats */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+        <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-6 mb-8">
           {quickStats.map((stat, index) => {
             const Icon = stat.icon;
             return (
