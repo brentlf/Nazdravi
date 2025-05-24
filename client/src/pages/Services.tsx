@@ -87,23 +87,23 @@ export default function Services() {
   const processSteps = [
     {
       step: "1",
-      title: "Book Consultation",
-      description: "Schedule your initial appointment through our online booking system"
+      title: t("step-1-title", "services"),
+      description: t("step-1-desc", "services")
     },
     {
       step: "2",
-      title: "Assessment",
-      description: "Comprehensive evaluation of your health, goals, and lifestyle"
+      title: t("step-2-title", "services"),
+      description: t("step-2-desc", "services")
     },
     {
       step: "3",
-      title: "Plan Creation",
-      description: "Receive your personalized nutrition plan and recommendations"
+      title: t("step-3-title", "services"),
+      description: t("step-3-desc", "services")
     },
     {
       step: "4",
-      title: "Ongoing Support",
-      description: "Regular check-ins and adjustments to ensure continued success"
+      title: t("step-4-title", "services"),
+      description: t("step-4-desc", "services")
     }
   ];
 
@@ -184,10 +184,10 @@ export default function Services() {
         <div className="container mx-auto px-4">
           <div className="text-center mb-16">
             <h2 className="text-3xl md:text-4xl font-bold mb-4">
-              What's Included
+              {t("whats-included", "services")}
             </h2>
             <p className="text-xl text-muted-foreground">
-              Every service comes with comprehensive support and resources
+              {t("comprehensive-support", "services")}
             </p>
           </div>
 
@@ -215,10 +215,10 @@ export default function Services() {
         <div className="container mx-auto px-4">
           <div className="text-center mb-16">
             <h2 className="text-3xl md:text-4xl font-bold mb-4">
-              How It Works
+              {t("how-it-works", "services")}
             </h2>
             <p className="text-xl text-muted-foreground">
-              Simple steps to start your nutrition journey
+              {t("simple-steps", "services")}
             </p>
           </div>
 
@@ -250,44 +250,40 @@ export default function Services() {
         <div className="container mx-auto px-4">
           <div className="text-center mb-16">
             <h2 className="text-3xl md:text-4xl font-bold mb-4">
-              Frequently Asked Questions
+              {t("faq-title", "services")}
             </h2>
           </div>
 
           <div className="max-w-3xl mx-auto space-y-6">
             <Card>
               <CardHeader>
-                <CardTitle className="text-lg">What can I expect from my first consultation?</CardTitle>
+                <CardTitle className="text-lg">{t("faq-1-question", "services")}</CardTitle>
               </CardHeader>
               <CardContent>
                 <p className="text-muted-foreground">
-                  Your initial consultation includes a comprehensive health assessment, discussion of your goals, 
-                  dietary analysis, and creation of your personalized nutrition plan. You'll also get access to 
-                  our client dashboard and resources.
+                  {t("faq-1-answer", "services")}
                 </p>
               </CardContent>
             </Card>
 
             <Card>
               <CardHeader>
-                <CardTitle className="text-lg">How often should I schedule follow-up sessions?</CardTitle>
+                <CardTitle className="text-lg">{t("faq-2-question", "services")}</CardTitle>
               </CardHeader>
               <CardContent>
                 <p className="text-muted-foreground">
-                  We recommend follow-up sessions every 2-4 weeks, depending on your goals and progress. 
-                  Regular check-ins help ensure you stay on track and allow for timely adjustments to your plan.
+                  {t("faq-2-answer", "services")}
                 </p>
               </CardContent>
             </Card>
 
             <Card>
               <CardHeader>
-                <CardTitle className="text-lg">Do you provide meal plans and recipes?</CardTitle>
+                <CardTitle className="text-lg">{t("faq-3-question", "services")}</CardTitle>
               </CardHeader>
               <CardContent>
                 <p className="text-muted-foreground">
-                  Yes! All clients receive personalized meal plans with recipes, shopping lists, and preparation tips. 
-                  Plans are tailored to your preferences, dietary restrictions, and lifestyle.
+                  {t("faq-3-answer", "services")}
                 </p>
               </CardContent>
             </Card>
