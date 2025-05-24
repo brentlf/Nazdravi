@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { FileText, Upload, Download, Search, Plus, Calendar, User } from "lucide-react";
+import { FileText, Upload, Download, Search, Plus, Calendar, User, ArrowLeft } from "lucide-react";
+import { Link } from "wouter";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -106,8 +107,14 @@ export default function AdminPlans() {
   return (
     <div className="min-h-screen py-20 bg-gray-50 dark:bg-gray-900">
       <div className="container mx-auto px-4">
-        {/* Header */}
+        {/* Header with Back Navigation */}
         <div className="mb-8">
+          <Button variant="ghost" size="sm" className="mb-4" asChild>
+            <Link href="/admin">
+              <ArrowLeft className="mr-2 h-4 w-4" />
+              Back to Admin Dashboard
+            </Link>
+          </Button>
           <h1 className="text-3xl font-bold mb-2">Nutrition Plans</h1>
           <p className="text-muted-foreground">
             Manage client nutrition plans and documents
