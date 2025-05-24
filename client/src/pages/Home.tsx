@@ -282,11 +282,10 @@ export default function Home() {
         <div className="container mx-auto px-4">
           <div className="max-w-4xl mx-auto text-center">
             <h2 className="text-3xl sm:text-4xl font-bold text-white mb-4">
-              Stay Updated on Your Health Journey
+              {t("stay-updated", "home")}
             </h2>
             <p className="text-xl text-primary-100 mb-8 max-w-2xl mx-auto">
-              Get weekly nutrition tips, healthy recipes, and exclusive content delivered to your inbox. 
-              Plus, download our free meal planning guide!
+              {t("newsletter-description", "home")}
             </p>
 
             <NewsletterForm />
@@ -301,30 +300,29 @@ export default function Home() {
             <Card className="bg-gradient-to-br from-primary-500 to-primary-600 text-white">
               <CardContent className="p-8 md:p-12 text-center">
                 <h2 className="text-3xl md:text-4xl font-bold mb-6">
-                  Ready to Start Your Health Journey?
+                  {t("ready-health-journey", "home")}
                 </h2>
                 <p className="text-lg text-primary-100 mb-8 max-w-2xl mx-auto">
-                  Book your initial consultation today and take the first step towards a healthier, 
-                  more confident you. I'm here to support you every step of the way.
+                  {t("ready-description", "home")}
                 </p>
                 
                 <div className="flex flex-col sm:flex-row gap-4 justify-center">
                   <Button size="lg" variant="secondary" asChild>
                     <Link href="/appointment">
                       <Calendar className="mr-2 h-5 w-5" />
-                      Book a Consultation
+                      {t("book-consultation-btn", "home")}
                     </Link>
                   </Button>
                   <Button size="lg" variant="outline" className="border-white text-white hover:bg-white hover:text-primary-600" asChild>
                     <Link href="/contact">
-                      Contact Directly
+                      {t("contact-directly", "home")}
                     </Link>
                   </Button>
                 </div>
                 
                 {/* Contact Info */}
                 <div className="mt-8 text-primary-100 text-sm">
-                  <p>Or contact me directly at:</p>
+                  <p>{t("contact-info", "home")}</p>
                   <p className="font-medium">info@vee-nutrition.com | +31 6 12345678</p>
                 </div>
               </CardContent>

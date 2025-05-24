@@ -17,11 +17,11 @@ export function Footer() {
   ];
 
   const services = [
-    { name: "Initial Consultation", href: "/services#initial" },
-    { name: "Follow-up Sessions", href: "/services#followup" },
-    { name: "Complete Program", href: "/services#program" },
-    { name: "Meal Planning", href: "/services#meal-planning" },
-    { name: "Progress Tracking", href: "/services#progress" },
+    { name: t("initial-consultation", "home"), href: "/services#initial" },
+    { name: t("followup-sessions", "home"), href: "/services#followup" },
+    { name: t("complete-program", "home"), href: "/services#program" },
+    { name: t("meal-planning", "home"), href: "/services#meal-planning" },
+    { name: t("progress-tracking", "home"), href: "/services#progress" },
   ];
 
   return (
@@ -37,7 +37,7 @@ export function Footer() {
               <span className="font-bold text-xl text-primary-400">Vee Nutrition</span>
             </div>
             <p className="text-gray-300 mb-6">
-              Transform your health with personalized nutrition guidance and sustainable lifestyle changes.
+              {t("footer-description", "home")}
             </p>
             <div className="flex space-x-4">
               <Button variant="ghost" size="sm" className="h-10 w-10 p-0 bg-gray-800 hover:bg-gray-700">
@@ -54,7 +54,7 @@ export function Footer() {
 
           {/* Quick Links */}
           <div>
-            <h3 className="font-semibold text-lg mb-6">Quick Links</h3>
+            <h3 className="font-semibold text-lg mb-6">{t("quick-links", "home")}</h3>
             <ul className="space-y-3">
               {quickLinks.map((link) => (
                 <li key={link.href}>
