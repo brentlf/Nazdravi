@@ -110,7 +110,7 @@ export default function AdminAppointments() {
           appointmentsRef,
           where("date", "==", editDate),
           where("timeslot", "==", editTimeslot),
-          where("status", "in", ["requested", "confirmed"])
+          where("status", "in", ["pending", "confirmed"])
         );
         
         const conflictSnapshot = await getDocs(conflictQuery);
@@ -159,7 +159,7 @@ export default function AdminAppointments() {
 
   const getStatusIcon = (status: string) => {
     switch (status) {
-      case "requested":
+      case "pending":
         return <AlertCircle className="w-4 h-4 text-yellow-500" />;
       case "confirmed":
         return <CheckCircle className="w-4 h-4 text-green-500" />;
@@ -176,7 +176,7 @@ export default function AdminAppointments() {
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case "requested":
+      case "pending":
         return "bg-yellow-100 text-yellow-800 dark:bg-yellow-900/20 dark:text-yellow-400";
       case "confirmed":
         return "bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-400";
@@ -199,8 +199,8 @@ export default function AdminAppointments() {
 
   const getStatusLabel = (status: string) => {
     switch (status) {
-      case "requested":
-        return "Requested";
+      case "pending":
+        return "Pending";
       case "confirmed":
         return "Confirmed";
       case "done":
@@ -271,7 +271,7 @@ export default function AdminAppointments() {
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="all">All Statuses</SelectItem>
-                  <SelectItem value="requested">Requested</SelectItem>
+                  <SelectItem value="pending">Pending</SelectItem>
                   <SelectItem value="confirmed">Confirmed</SelectItem>
                   <SelectItem value="done">Completed</SelectItem>
                   <SelectItem value="reschedule_requested">Reschedule Requested</SelectItem>
@@ -607,8 +607,8 @@ export default function AdminAppointments() {
           <Card>
             <CardContent className="p-6 text-center">
               <AlertCircle className="w-8 h-8 text-yellow-500 mx-auto mb-2" />
-              <p className="text-2xl font-bold">{filteredAppointments.filter(a => a.status === "requested").length}</p>
-              <p className="text-sm text-muted-foreground">Requested</p>
+              <p className="text-2xl font-bold">{filteredAppointments.filter(a => a.status === "pending").length}</p>
+              <p className="text-sm text-muted-foreground">Pending</p>
             </CardContent>
           </Card>
           
