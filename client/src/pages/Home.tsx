@@ -83,28 +83,22 @@ export default function Home() {
             {/* Left Content */}
             <div className="text-center lg:text-left">
               <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-white mb-6 leading-tight">
-                {t("title", "hero").split("Better Health").map((part, index) => 
-                  index === 0 ? (
-                    <span key={index}>{part}<span className="text-primary-400">Better Health</span></span>
-                  ) : (
-                    <span key={index}>{part}</span>
-                  )
-                )}
+                {t("hero-title", "home")}
               </h1>
               <p className="text-xl text-gray-200 mb-8 max-w-2xl">
-                {t("subtitle", "hero")}
+                {t("hero-subtitle", "home")}
               </p>
               
               {/* CTA Buttons */}
               <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
                 <Button size="lg" asChild className="bg-primary-500 hover:bg-primary-600">
                   <Link href="/appointment">
-                    {t("cta_primary", "hero")}
+                    {t("get-started", "home")}
                   </Link>
                 </Button>
                 <Button size="lg" variant="outline" className="border-white text-white hover:bg-white hover:text-gray-900">
                   <Link href="/about">
-                    {t("cta_secondary", "hero")}
+                    {t("learn-more", "home")}
                   </Link>
                 </Button>
               </div>
