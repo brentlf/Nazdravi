@@ -17,6 +17,7 @@ import {
 import { Link } from "wouter";
 import { useFirestoreCollection } from "@/hooks/useFirestore";
 import { User, Appointment, Message } from "@/types";
+import type { Invoice } from "@shared/firebase-schema";
 import { where, orderBy, limit } from "firebase/firestore";
 
 export default function AdminHome() {
@@ -33,6 +34,11 @@ export default function AdminHome() {
   const { data: messages } = useFirestoreCollection<Message>("messages", [
     orderBy("createdAt", "desc"),
     limit(10)
+  ]);
+
+  const { data: invoices } = useFirestoreCollection<Invoice>("invoices", [
+    orderBy("createdAt", "desc"),
+    limit(20)
   ]);
 
   // Helper function to get sender name
@@ -59,6 +65,15 @@ export default function AdminHome() {
   const unreadMessages = messages?.filter(msg => 
     msg.toUser === "admin" && (msg.read === false || msg.read === undefined) // Only unread messages to admin
   ).length || 0;
+
+  // Invoice statistics
+  const totalInvoices = invoices?.length || 0;
+  const pendingInvoices = invoices?.filter(inv => inv.status === 'pending').length || 0;
+  const paidInvoices = invoices?.filter(inv => inv.status === 'paid').length || 0;
+  const thisMonthRevenue = invoices?.filter(inv => 
+    inv.status === 'paid' && 
+    new Date(inv.createdAt).getMonth() === new Date().getMonth()
+  ).reduce((sum, inv) => sum + inv.amount, 0) || 0;
 
   const quickStats = [
     {
@@ -92,6 +107,14 @@ export default function AdminHome() {
       color: "text-primary-600",
       bgColor: "bg-primary-50 dark:bg-primary-900/20",
       href: "/admin/messages"
+    },
+    {
+      title: "Pending Invoices",
+      value: pendingInvoices.toString(),
+      icon: Receipt,
+      color: "text-orange-600",
+      bgColor: "bg-orange-50 dark:bg-orange-900/20",
+      href: "/admin/invoices"
     }
   ];
 
@@ -116,6 +139,13 @@ export default function AdminHome() {
       icon: FileText,
       href: "/admin/documents",
       color: "bg-purple-500 hover:bg-purple-600"
+    },
+    {
+      title: "Invoice Management",
+      description: `Create invoices and track payments (€${thisMonthRevenue.toFixed(2)} this month)`,
+      icon: Receipt,
+      href: "/admin/invoices",
+      color: "bg-orange-500 hover:bg-orange-600"
     },
     {
       title: "Blog Management",

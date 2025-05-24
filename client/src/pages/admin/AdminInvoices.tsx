@@ -34,7 +34,8 @@ export default function AdminInvoices() {
   ]);
 
   // Check if an appointment already has an invoice
-  const hasExistingInvoice = (appointmentId: string) => {
+  const hasExistingInvoice = (appointmentId: string | undefined) => {
+    if (!appointmentId) return false;
     return invoices?.some(invoice => invoice.appointmentId === appointmentId);
   };
 
