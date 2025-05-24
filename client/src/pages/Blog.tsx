@@ -151,7 +151,7 @@ export default function Blog() {
                     {/* Title */}
                     <h2 className="text-xl font-semibold mb-3 group-hover:text-primary-600 transition-colors line-clamp-2">
                       <a 
-                        href={post.mediumurl || '#'} 
+                        href={post.mediumUrl || '#'} 
                         target="_blank" 
                         rel="noopener noreferrer"
                         className="hover:text-primary-600 transition-colors"
