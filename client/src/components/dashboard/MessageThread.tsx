@@ -28,7 +28,7 @@ type MessageFormData = z.infer<typeof messageSchema>;
 export function MessageThread() {
   const { effectiveUser: user, isAdminViewingClient } = useAuth();
   const messagesEndRef = useRef<HTMLDivElement>(null);
-  const { add: addMessage, loading: sending } = useFirestoreActions("messages");
+  const { add: addMessage, update: updateMessage, loading: sending } = useFirestoreActions("messages");
 
   // Create chat room ID (user_admin format)
   const chatRoom = user ? `${user.uid}_admin` : "";
