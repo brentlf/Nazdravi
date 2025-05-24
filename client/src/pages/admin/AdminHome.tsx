@@ -11,7 +11,8 @@ import {
   CheckCircle,
   AlertTriangle,
   CalendarX,
-  Mail
+  Mail,
+  Receipt
 } from "lucide-react";
 import { Link } from "wouter";
 import { useFirestoreCollection } from "@/hooks/useFirestore";
