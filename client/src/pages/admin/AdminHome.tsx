@@ -10,7 +10,8 @@ import {
   Clock,
   CheckCircle,
   AlertTriangle,
-  CalendarX
+  CalendarX,
+  Mail
 } from "lucide-react";
 import { Link } from "wouter";
 import { useFirestoreCollection } from "@/hooks/useFirestore";
@@ -135,6 +136,13 @@ export default function AdminHome() {
       icon: Users,
       href: "/admin/users",
       color: "bg-orange-500 hover:bg-orange-600"
+    },
+    {
+      title: "Email Automation",
+      description: "Send appointment reminders and manage email notifications",
+      icon: Mail,
+      href: "/admin/emails",
+      color: "bg-indigo-500 hover:bg-indigo-600"
     }
   ];
 
