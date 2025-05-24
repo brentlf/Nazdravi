@@ -1,7 +1,7 @@
 import { createContext, useContext, useState, useEffect, ReactNode } from "react";
 import { i18n } from "@/lib/i18n";
 import { Language } from "@/types";
-import { translate } from "@/lib/translationUtils";
+import { translations } from "@/lib/translations";
 
 interface LanguageContextType {
   language: Language;
@@ -32,7 +32,24 @@ export function LanguageProvider({ children }: LanguageProviderProps) {
   };
 
   const t = (key: string, namespace = "common", params?: Record<string, string>) => {
-    return translate(key, namespace as any, language, { params });
+    try {
+      // Try current language first
+      const currentLangTranslation = (translations as any)[language]?.[namespace]?.[key];
+      if (currentLangTranslation) {
+        return currentLangTranslation;
+      }
+      
+      // Fallback to English
+      const englishTranslation = (translations as any)['en']?.[namespace]?.[key];
+      if (englishTranslation) {
+        return englishTranslation;
+      }
+      
+      // Convert kebab-case to readable as final fallback
+      return key.split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
+    } catch (error) {
+      return key.split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
+    }
   };
 
   useEffect(() => {
