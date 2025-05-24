@@ -66,12 +66,14 @@ export default function AdminMessages() {
       return true;
     }
     
-    // Also check direct user-to-user messages
+    // Also check direct user-to-user messages (including both old and new admin formats)
     const isDirectMessage = (
       (message.fromUser === user.uid && message.toUser === clientUserId) ||
       (message.fromUser === clientUserId && message.toUser === user.uid) ||
       (message.fromUser === "admin" && message.toUser === clientUserId) ||
-      (message.fromUser === clientUserId && message.toUser === "admin")
+      (message.fromUser === clientUserId && message.toUser === "admin") ||
+      (message.fromUser === user.uid && message.toUser === "admin") ||
+      (message.toUser === user.uid && message.fromUser === clientUserId)
     );
     
     if (isDirectMessage) {
