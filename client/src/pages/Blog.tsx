@@ -8,12 +8,9 @@ import { Badge } from "@/components/ui/badge";
 import { useFirestoreCollection } from "@/hooks/useFirestore";
 import { BlogPost } from "@/types";
 import { where, orderBy } from "firebase/firestore";
-import { useLanguage } from "@/contexts/LanguageContext";
-
 export default function Blog() {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState<string>("");
-  const { t } = useLanguage();
 
   // Fetch from the correct "blogs" collection
   const { data: blogPosts, loading } = useFirestoreCollection<any>("blogs");
@@ -72,10 +69,10 @@ export default function Blog() {
       <section className="container mx-auto px-4 mb-16">
         <div className="text-center max-w-4xl mx-auto">
           <h1 className="text-4xl md:text-5xl font-bold mb-6">
-            {t("nutrition-blog", "blog")}
+            Nutrition Blog & Resources
           </h1>
           <p className="text-xl text-muted-foreground mb-8">
-            {t("blog-subtitle", "blog")}
+            Expert insights, practical tips, and evidence-based guidance to support your nutrition journey
           </p>
         </div>
       </section>
@@ -87,7 +84,7 @@ export default function Blog() {
           <div className="flex-1 relative">
             <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
             <Input
-              placeholder={t("search-articles", "blog")}
+              placeholder="Search articles..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               className="pl-9"
@@ -101,7 +98,7 @@ export default function Blog() {
               size="sm"
               onClick={() => setSelectedCategory("")}
             >
-              {t("all-topics", "blog")}
+              All Topics
             </Button>
             {uniqueCategories.slice(0, 5).map((category) => (
               <Button

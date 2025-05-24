@@ -10,7 +10,7 @@ interface ProgressChartProps {
 }
 
 export function ProgressChart({ progressData }: ProgressChartProps) {
-  // Process weight data
+  // Process weight data - sort by date ascending for correct chart display
   const weightData = progressData
     .filter(entry => entry.weightKg)
     .map(entry => ({
@@ -18,9 +18,9 @@ export function ProgressChart({ progressData }: ProgressChartProps) {
       weight: entry.weightKg,
       fullDate: entry.date
     }))
-    .reverse();
+    .sort((a, b) => new Date(a.fullDate).getTime() - new Date(b.fullDate).getTime());
 
-  // Process water data  
+  // Process water data - sort by date ascending for correct chart display
   const waterData = progressData
     .filter(entry => entry.waterLitres)
     .map(entry => ({
@@ -28,7 +28,7 @@ export function ProgressChart({ progressData }: ProgressChartProps) {
       water: entry.waterLitres,
       fullDate: entry.date
     }))
-    .reverse();
+    .sort((a, b) => new Date(a.fullDate).getTime() - new Date(b.fullDate).getTime());
 
   // Calculate weight trend
   const weightTrend = weightData.length >= 2 
