@@ -73,7 +73,7 @@ export default function Home() {
           className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-100 z-0"
           style={{ backgroundImage: `url(${heroImage})` }}
         ></div>
-        <div className="absolute inset-0 bg-gradient-to-r from-white/95 via-white/90 to-white/95 dark:from-gray-900/95 dark:via-gray-900/90 dark:to-gray-900/95 z-10"></div>
+        <div className="absolute inset-0 bg-gradient-to-r from-white/40 via-white/30 to-white/40 dark:from-gray-900/40 dark:via-gray-900/30 dark:to-gray-900/40 z-10"></div>
         <div className="container mx-auto px-4 relative z-20">
           <div className="grid lg:grid-cols-2 gap-12 items-center">
             {/* Content */}
