@@ -122,14 +122,7 @@ export default function Home() {
               </div>
             </div>
 
-            {/* Image */}
-            <div className="relative">
-              <img 
-                src={heroImage} 
-                alt="Professional nutritionist consultation" 
-                className="rounded-2xl shadow-2xl w-full h-auto object-cover max-w-lg mx-auto"
-              />
-            </div>
+
           </div>
         </div>
       </section>
