@@ -70,14 +70,14 @@ export default function Home() {
       {/* Hero Section */}
       <section className="relative overflow-hidden py-20 lg:py-32">
         <div 
-          className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+          className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-100 z-0"
           style={{ backgroundImage: `url(${heroImage})` }}
         ></div>
-        <div className="absolute inset-0 bg-gradient-to-r from-white/90 via-white/80 to-white/85 dark:from-gray-900/90 dark:via-gray-900/80 dark:to-gray-900/85"></div>
-        <div className="container mx-auto px-4">
+        <div className="absolute inset-0 bg-gradient-to-r from-white/95 via-white/90 to-white/95 dark:from-gray-900/95 dark:via-gray-900/90 dark:to-gray-900/95 z-10"></div>
+        <div className="container mx-auto px-4 relative z-20">
           <div className="grid lg:grid-cols-2 gap-12 items-center">
             {/* Content */}
-            <div className="space-y-8">
+            <div className="space-y-8 relative z-30">
               <Badge variant="secondary" className="w-fit">
                 🌱 Transform Your Health Today
               </Badge>
