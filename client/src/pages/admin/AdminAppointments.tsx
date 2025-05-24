@@ -607,8 +607,8 @@ export default function AdminAppointments() {
           <Card>
             <CardContent className="p-6 text-center">
               <AlertCircle className="w-8 h-8 text-yellow-500 mx-auto mb-2" />
-              <p className="text-2xl font-bold">{filteredAppointments.filter(a => a.status === "pending").length}</p>
-              <p className="text-sm text-muted-foreground">Pending Review</p>
+              <p className="text-2xl font-bold">{filteredAppointments.filter(a => a.status === "requested").length}</p>
+              <p className="text-sm text-muted-foreground">Requested</p>
             </CardContent>
           </Card>
           
