@@ -14,6 +14,7 @@ import {
 } from "@/components/ui/form";
 import { useToast } from "@/hooks/use-toast";
 import { useFirestoreActions } from "@/hooks/useFirestore";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 const newsletterSchema = z.object({
   email: z.string().email("Please enter a valid email address"),
@@ -25,6 +26,7 @@ export function NewsletterForm() {
   const [isSubmitted, setIsSubmitted] = useState(false);
   const { toast } = useToast();
   const { add, loading } = useFirestoreActions("newsletter_subscribers");
+  const { t } = useLanguage();
 
   const form = useForm<NewsletterFormData>({
     resolver: zodResolver(newsletterSchema),
@@ -85,7 +87,7 @@ export function NewsletterForm() {
                     <Input
                       {...field}
                       type="email"
-                      placeholder="Enter your email address"
+                      placeholder={t("email-placeholder", "home")}
                       className="bg-white border-0 text-gray-900 placeholder:text-gray-500"
                     />
                   </FormControl>
@@ -103,7 +105,7 @@ export function NewsletterForm() {
               ) : (
                 <>
                   <Mail className="mr-2 h-4 w-4" />
-                  Subscribe
+                  {t("subscribe", "home")}
                 </>
               )}
             </Button>
@@ -115,15 +117,15 @@ export function NewsletterForm() {
       <div className="mt-8 bg-white/10 backdrop-blur-sm rounded-2xl p-6">
         <div className="flex items-center justify-center space-x-3 mb-4">
           <Gift className="w-6 h-6 text-white" />
-          <h3 className="text-lg font-semibold text-white">Free Bonus</h3>
+          <h3 className="text-lg font-semibold text-white">{t("free-bonus", "home")}</h3>
         </div>
         <p className="text-white/90 text-sm text-center">
-          Download our "7-Day Meal Planning Guide" instantly when you subscribe!
+          {t("meal-planning-guide", "home")}
         </p>
       </div>
 
       <p className="text-white/80 text-sm mt-4 text-center">
-        No spam, unsubscribe anytime. Your privacy is important to us.
+        {t("privacy-notice", "home")}
       </p>
     </div>
   );
