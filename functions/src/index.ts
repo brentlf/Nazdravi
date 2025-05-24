@@ -11,33 +11,32 @@ interface EmailTemplate {
   text?: string;
 }
 
-class MailerLiteService {
+class ResendEmailService {
   async sendEmail(to: string, toName: string, subject: string, html: string, text?: string): Promise<boolean> {
-    const MAILERLITE_API_KEY = functions.config().mailerlite.apikey;
+    const RESEND_API_KEY = process.env.RESEND_API_KEY;
     
-    if (!MAILERLITE_API_KEY) {
-      console.error('MailerLite API key not configured');
+    if (!RESEND_API_KEY) {
+      console.error('Resend API key not configured');
       return false;
     }
 
     return new Promise((resolve) => {
-      // First, let's try the direct email approach
       const postData = JSON.stringify({
-        email: to,
-        name: toName,
-        fields: {
-          name: toName
-        }
+        from: 'Vee Nutrition <info@veenutrition.com>',
+        to: [`${toName} <${to}>`],
+        subject: subject,
+        html: html,
+        text: text || ''
       });
 
       const options = {
-        hostname: 'api.mailerlite.com',
+        hostname: 'api.resend.com',
         port: 443,
-        path: '/api/v2/subscribers',
+        path: '/emails',
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'X-MailerLite-ApiKey': MAILERLITE_API_KEY,
+          'Authorization': `Bearer ${RESEND_API_KEY}`,
           'Content-Length': Buffer.byteLength(postData)
         }
       };
@@ -50,13 +49,13 @@ class MailerLiteService {
         });
         
         res.on('end', () => {
-          console.log('MailerLite response:', res.statusCode, responseData);
+          console.log('Resend response:', res.statusCode, responseData);
           
           if (res.statusCode === 200 || res.statusCode === 201) {
-            console.log(`Email recipient added successfully: ${to}`);
+            console.log(`Email sent successfully to: ${to}`);
             resolve(true);
           } else {
-            console.error('MailerLite API error:', res.statusCode, responseData);
+            console.error('Resend API error:', res.statusCode, responseData);
             resolve(false);
           }
         });
@@ -263,7 +262,7 @@ class MailerLiteService {
   }
 }
 
-const mailerLite = new MailerLiteService();
+const emailService = new ResendEmailService();
 
 // 1. New User Account Created
 export const onUserCreated = functions.firestore
@@ -274,7 +273,7 @@ export const onUserCreated = functions.firestore
     
     console.log('New user created:', userData.email);
     
-    const template = mailerLite.getAccountConfirmationTemplate(name);
+    const template = emailService.getAccountConfirmationTemplate(name);
     
     // Add to email queue
     await admin.firestore().collection('mail').add({
@@ -300,7 +299,7 @@ export const onAppointmentConfirmed = functions.firestore
     if (before.status !== 'confirmed' && after.status === 'confirmed') {
       console.log('Appointment confirmed:', after.clientEmail);
       
-      const template = mailerLite.getAppointmentConfirmationTemplate(
+      const template = emailService.getAppointmentConfirmationTemplate(
         after.clientName,
         after.date,
         after.time,
@@ -332,7 +331,7 @@ export const onRescheduleRequest = functions.firestore
     if (!before.rescheduleRequested && after.rescheduleRequested) {
       console.log('Reschedule requested for:', after.clientEmail);
       
-      const template = mailerLite.getRescheduleRequestTemplate(
+      const template = emailService.getRescheduleRequestTemplate(
         after.clientName,
         after.clientEmail,
         after.date,
@@ -367,7 +366,7 @@ export const processMailQueue = functions.firestore
     console.log('Processing email from queue:', mailData.to);
     
     try {
-      const success = await mailerLite.sendEmail(
+      const success = await emailService.sendEmail(
         mailData.to,
         mailData.toName || mailData.to,
         mailData.subject,
@@ -388,7 +387,7 @@ export const processMailQueue = functions.firestore
         });
         console.log('Email failed to', mailData.to);
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error('Email sending failed:', error);
       await snap.ref.update({
         status: 'failed',
@@ -418,7 +417,7 @@ export const sendDailyReminders = functions.pubsub
     const promises = appointmentsSnapshot.docs.map(async (doc) => {
       const appointment = doc.data();
       
-      const template = mailerLite.getAppointmentReminderTemplate(
+      const template = emailService.getAppointmentReminderTemplate(
         appointment.clientName,
         appointment.date,
         appointment.time,

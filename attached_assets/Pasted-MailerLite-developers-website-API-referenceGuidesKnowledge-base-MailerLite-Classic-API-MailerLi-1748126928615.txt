@@ -1,0 +1,258 @@
+MailerLite developers website
+API referenceGuidesKnowledge base MailerLite Classic API 
+
+MailerLite API 
+
+E-commerce API 
+
+E-commerce API
+List e-commerce shops
+Create/update shop
+Fetch a shop
+Fetch total shops count
+Delete a shop
+E-commerce Cart API
+E-commerce Cart Items API
+E-commerce Categories API
+E-commerce Categories Products API
+E-commerce Customers API
+E-commerce Import API
+E-commerce Orders API
+E-commerce Products API
+#E-commerce API
+MailerLite E-commerce API allows to connect an external shop to your MailerLite account. E-commerce API endpoints enable additional MailerLite features such as E-commerce Automation (abandoned cart automations, post-purchase emails, etc.), product import into your newsletters, sales tracking and more.
+
+#List e-commerce shops
+If you want to get a list of all available shops connected to your account, send this GET request
+
+GET https://connect.mailerlite.com/api/ecommerce/shops
+#Request parameters
+Parameter	Type	Required	Limitations
+limit	integer	no	Defaults to 50
+page	integer	no	Defaults to 1
+#Response
+{
+  "data": [
+    {
+      "id": "31986843064993537",
+      "name": "shop name",
+      "url": "https://shop-url.com",
+      "currency": "USD",
+      "enabled": true,
+      "enable_popups": false,
+      "group": {
+        "id": "1",
+        "name": "dummy group",
+        "total": 20,
+        "open_rate": {
+          "float": 0,
+          "string": "0%"
+        },
+        "click_rate": {
+          "float": 0,
+          "string": "0%"
+        },
+        "created_at": "2021-08-06 10:17:45"
+      },
+      "created_at": "2021-09-01 14:03:50",
+      "updated_at": "2021-09-01 14:03:50",
+      "currency_sign": "$"
+    }
+  ],
+  "links": {
+    "first": "https://connect.mailerlite.com/api/ecommerce/shops?page=1",
+    "last": "https://connect.mailerlite.com/api/ecommerce/shops?page=1",
+    "prev": null,
+    "next": null
+  },
+  "meta": {
+    "current_page": 1,
+    "from": 1,
+    "last_page": 1,
+    "links": [
+      {
+        "url": null,
+        "label": "&laquo; Previous",
+        "active": false
+      },
+      {
+        "url": "https://connect.mailerlite.com/api/ecommerce/shops?page=1",
+        "label": "1",
+        "active": true
+      },
+      {
+        "url": null,
+        "label": "Next &raquo;",
+        "active": false
+      }
+    ],
+    "path": "https://connect.mailerlite.com/api/ecommerce/shops",
+    "per_page": 50,
+    "to": 1,
+    "total": 1
+  }
+}
+#Create/update shop
+You can create or update a shop.
+
+To create a shop, send this POST request
+
+POST https://connect.mailerlite.com/api/ecommerce/shops
+To update a shop, send this PUT request
+
+PUT https://connect.mailerlite.com/api/ecommerce/shops/(:shop_id)
+#Request body
+Parameter	Type	Required	Limitations
+name	string	yes	Shop name
+url	string	yes	Shop URL address
+currency	string	yes	ISO 4217 currency code that the shop uses.
+platform	string	no	The platform of the shop (e.g. shopify)
+group_id	integer	no	The id of the group that the shop's subscribers are automatically added to.
+enable_popups	boolean	no	Enables popups to the shop (the shop must have the universal script added to it). Defaults to false.
+enabled	boolean	no	Enable/disable the ecommerce functionality for the shop. Defaults to false.
+access_data	string	no	Platform specific information for the platform to access the shop (e.g. shopify access token or woocommerce keys). Shouldn't be needed for third party users.
+{
+    "name": "shop name",
+    "url": "https://shop-url.com",
+    "currency": "EUR",
+    "group_id": 1234567890,
+    "enable_popups": false,
+    "enabled": true
+}
+#Response
+If the shop was created:
+
+Response Code: 201 Created
+{
+  "data": {
+    "id": "31986843064993537",
+    "name": "shop name",
+    "url": "https://shop-url.com",
+    "currency": "USD",
+    "enabled": true,
+    "enable_popups": false,
+    "group": {
+      "id": "1",
+      "name": "dummy group",
+      "total": 20,
+      "open_rate": {
+        "float": 0,
+        "string": "0%"
+      },
+      "click_rate": {
+        "float": 0,
+        "string": "0%"
+      },
+      "created_at": "2021-08-06 10:17:45"
+    },
+    "created_at": "2021-09-01 14:03:50",
+    "updated_at": "2021-09-01 14:03:50",
+    "currency_sign": "$"
+  }
+}
+#Error
+Response Code: 422 Unprocessable Entity
+The error response will contain information about the invalid data.
+
+{
+  "message": "The given data was invalid.",
+  "errors": {
+    "url": ["The shop url must be provided."]
+  }
+}
+#Fetch a shop
+To fetch a shop, send this GET request
+
+GET https://connect.mailerlite.com/api/ecommerce/shops/(:shop_id)
+#Request parameters
+Parameter	Type	Required	Limitations
+id	integer	yes	Must provide either valid shop id
+GET https://connect.mailerlite.com/api/ecommerce/shops/31986843064993537
+#Response
+If shop exists:
+
+Response Code: 200 OK
+{
+  "data": {
+    "id": "31986843064993537",
+    "name": "shop name",
+    "url": "https://shop-url.com",
+    "currency": "USD",
+    "enabled": true,
+    "enable_popups": false,
+    "group": {
+      "id": "1",
+      "name": "dummy group",
+      "total": 20,
+      "open_rate": {
+        "float": 0,
+        "string": "0%"
+      },
+      "click_rate": {
+        "float": 0,
+        "string": "0%"
+      },
+      "created_at": "2021-08-06 10:17:45"
+    },
+    "created_at": "2021-09-01 14:03:50",
+    "updated_at": "2021-09-01 14:03:50",
+    "currency_sign": "$"
+  }
+}
+#Error
+If the shop cannot be found:
+
+Response Code: 404 Not Found
+#Fetch total shops count
+If you want to fetch total shops count, send this GET request
+
+GET https://connect.mailerlite.com/api/ecommerce/shops?limit=0
+#Request parameters
+Parameter	Type	Required	Limitations
+limit	integer	yes	Value must be 0
+#Response
+Response Code: 200 OK
+{
+  "total": 100
+}
+#Delete a shop
+If you want to delete a shop, send this DELETE request
+
+DELETE https://connect.mailerlite.com/api/ecommerce/shops/:id
+#Request
+Parameter	Type	Required	Limitations
+id	integer	yes	Valid shop id for the account
+#Response
+Response code: 200 OK
+{
+  "data": {
+    "id": "31986843064993537",
+    "name": "shop name",
+    "url": "https://shop-url.com",
+    "currency": "USD",
+    "enabled": true,
+    "enable_popups": false,
+    "group": {
+      "id": "1",
+      "name": "dummy group",
+      "total": 20,
+      "open_rate": {
+        "float": 0,
+        "string": "0%"
+      },
+      "click_rate": {
+        "float": 0,
+        "string": "0%"
+      },
+      "created_at": "2021-08-06 10:17:45"
+    },
+    "created_at": "2021-09-01 14:03:50",
+    "updated_at": "2021-09-01 14:03:50",
+    "currency_sign": "$"
+  }
+}
+#Error
+Response code: 404 Not Found
+Last Updated: 15/05/2025, 13:57:40
+E-commerce Cart API 
+
