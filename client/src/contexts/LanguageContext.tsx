@@ -32,12 +32,12 @@ export function LanguageProvider({ children }: LanguageProviderProps) {
   };
 
   const t = (key: string, namespace = "common", params?: Record<string, string>) => {
-    import('../lib/translations').then(({ translations }) => {
-      const translation = translations[language]?.[namespace]?.[key];
+    try {
+      const translation = (translations as any)[language]?.[namespace]?.[key];
       return translation || key;
-    });
-    // Temporary fallback while async import loads
-    return key;
+    } catch (error) {
+      return key;
+    }
   };
 
   useEffect(() => {
