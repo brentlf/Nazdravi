@@ -1,6 +1,7 @@
 import { createContext, useContext, useState, useEffect, ReactNode } from "react";
 import { i18n } from "@/lib/i18n";
 import { Language } from "@/types";
+import { translations } from "@/lib/translations";
 
 interface LanguageContextType {
   language: Language;
@@ -31,7 +32,12 @@ export function LanguageProvider({ children }: LanguageProviderProps) {
   };
 
   const t = (key: string, namespace = "common", params?: Record<string, string>) => {
-    return i18n.translate(key, namespace, params);
+    import('../lib/translations').then(({ translations }) => {
+      const translation = translations[language]?.[namespace]?.[key];
+      return translation || key;
+    });
+    // Temporary fallback while async import loads
+    return key;
   };
 
   useEffect(() => {
