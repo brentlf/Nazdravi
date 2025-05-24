@@ -452,7 +452,7 @@ export default function AdminBlog() {
                         <div className="flex items-center gap-4 text-xs text-muted-foreground">
                           <span>Created: {new Date(post.createdAt).toLocaleDateString()}</span>
                           <span>Updated: {new Date(post.updatedAt).toLocaleDateString()}</span>
-                          {post.tags.length > 0 && (
+                          {(post.tags && post.tags.length > 0) && (
                             <span>Tags: {post.tags.join(', ')}</span>
                           )}
                         </div>
