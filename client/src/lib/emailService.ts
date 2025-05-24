@@ -11,13 +11,7 @@ interface EmailNotificationService {
 class EmailService implements EmailNotificationService {
   async sendWelcomeEmail(email: string, name: string): Promise<void> {
     try {
-      await apiRequest('/api/emails/welcome', {
-        method: 'POST',
-        body: JSON.stringify({ email, name }),
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
+      await apiRequest('POST', '/api/emails/welcome', { email, name });
       console.log('Welcome email sent successfully');
     } catch (error) {
       console.error('Failed to send welcome email:', error);
@@ -33,13 +27,7 @@ class EmailService implements EmailNotificationService {
     type: string
   ): Promise<void> {
     try {
-      await apiRequest('/api/emails/appointment-confirmation', {
-        method: 'POST',
-        body: JSON.stringify({ email, name, date, time, type }),
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
+      await apiRequest('POST', '/api/emails/appointment-confirmation', { email, name, date, time, type });
       console.log('Appointment confirmation email sent successfully');
     } catch (error) {
       console.error('Failed to send appointment confirmation email:', error);
