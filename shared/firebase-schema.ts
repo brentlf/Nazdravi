@@ -186,7 +186,7 @@ export const invoiceSchema = z.object({
   clientEmail: z.string(),
   invoiceNumber: z.string(),
   amount: z.number(),
-  currency: z.string().default("GBP"),
+  currency: z.string().default("EUR"),
   description: z.string(),
   sessionDate: z.string(),
   sessionType: z.enum(["Initial", "Follow-up"]),

@@ -137,7 +137,7 @@ export default function PayInvoice() {
           invoiceNumber,
           clientName: "Client Name",
           amount: 85.00,
-          currency: "GBP",
+          currency: "EUR",
           description: "Nutrition Consultation - Initial Assessment",
           sessionDate: new Date().toISOString().split('T')[0],
           sessionType: "Initial",

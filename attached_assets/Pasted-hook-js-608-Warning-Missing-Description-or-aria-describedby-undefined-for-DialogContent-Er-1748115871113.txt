@@ -1,0 +1,90 @@
+hook.js:608 Warning: Missing `Description` or `aria-describedby={undefined}` for {DialogContent}. Error Component Stack
+    at DescriptionWarning (/@fs/home/runner/wor…s?v=cf324a50:331:29)
+    at /@fs/home/runner/wor…s?v=cf324a50:235:13
+    at /@fs/home/runner/wor…s?v=cf324a50:158:58
+    at Presence (/@fs/home/runner/wor…js?v=cf324a50:24:11)
+    at /@fs/home/runner/wor…s?v=cf324a50:149:64
+    at /@fs/home/runner/wor…js?v=cf324a50:79:13
+    at /@fs/home/runner/wor…js?v=cf324a50:56:13
+    at /@fs/home/runner/wor…js?v=cf324a50:42:13
+    at /@fs/home/runner/wor…s?v=cf324a50:260:22
+    at Presence (/@fs/home/runner/wor…js?v=cf324a50:24:11)
+    at Provider (/@fs/home/runner/wor…js?v=cf324a50:38:15)
+    at DialogPortal (/@fs/home/runner/wor…s?v=cf324a50:111:11)
+    at _c3 (/src/components/ui/dialog.tsx:52:12)
+    at Provider (/@fs/home/runner/wor…js?v=cf324a50:38:15)
+    at Dialog (/@fs/home/runner/wor….js?v=cf324a50:52:5)
+    at div (<anonymous>)
+    at div (<anonymous>)
+    at AdminInvoices (/src/pages/admin/Adm…1748115655015:32:53)
+    at main (<anonymous>)
+    at div (<anonymous>)
+    at Layout (App.tsx:56:19)
+    at RouteGuard (/src/components/comm…outeGuard.tsx:21:30)
+    at Route (/@fs/home/runner/wor…s?v=cf324a50:323:16)
+    at Switch (/@fs/home/runner/wor…s?v=cf324a50:379:17)
+    at Router (<anonymous>)
+    at Provider (/@fs/home/runner/wor…js?v=cf324a50:38:15)
+    at TooltipProvider (/@fs/home/runner/wor….js?v=cf324a50:63:5)
+    at AuthProvider (/src/contexts/AuthContext.tsx:41:32)
+    at LanguageProvider (/src/contexts/LanguageContext.tsx:32:36)
+    at ThemeProvider (/src/contexts/ThemeContext.tsx:29:33)
+    at QueryClientProvider (/@fs/home/runner/wor…s?v=cf324a50:2805:3)
+    at App (<anonymous>)
+
+/api/invoices/create:1 
+ Failed to load resource: the server responded with a status of 500 (Internal Server Error)
+
+ Chrome is moving towards a new experience that allows users to choose to browse without third-party cookies.
+ Warning: Missing `Description` or `aria-describedby={undefined}` for {DialogContent}. Error Component Stack
+    at DescriptionWarning (/@fs/home/runner/wor…s?v=cf324a50:331:29)
+    at /@fs/home/runner/wor…s?v=cf324a50:235:13
+    at /@fs/home/runner/wor…s?v=cf324a50:158:58
+    at Presence (/@fs/home/runner/wor…js?v=cf324a50:24:11)
+    at /@fs/home/runner/wor…s?v=cf324a50:149:64
+    at /@fs/home/runner/wor…js?v=cf324a50:79:13
+    at /@fs/home/runner/wor…js?v=cf324a50:56:13
+    at /@fs/home/runner/wor…js?v=cf324a50:42:13
+    at /@fs/home/runner/wor…s?v=cf324a50:260:22
+    at Presence (/@fs/home/runner/wor…js?v=cf324a50:24:11)
+    at Provider (/@fs/home/runner/wor…js?v=cf324a50:38:15)
+    at DialogPortal (/@fs/home/runner/wor…s?v=cf324a50:111:11)
+    at _c3 (/src/components/ui/dialog.tsx:52:12)
+    at Provider (/@fs/home/runner/wor…js?v=cf324a50:38:15)
+    at Dialog (/@fs/home/runner/wor….js?v=cf324a50:52:5)
+    at div (<anonymous>)
+    at div (<anonymous>)
+    at AdminInvoices (/src/pages/admin/Adm…1748115655015:32:53)
+    at main (<anonymous>)
+    at div (<anonymous>)
+    at Layout (App.tsx:56:19)
+    at RouteGuard (/src/components/comm…outeGuard.tsx:21:30)
+    at Route (/@fs/home/runner/wor…s?v=cf324a50:323:16)
+    at Switch (/@fs/home/runner/wor…s?v=cf324a50:379:17)
+    at Router (<anonymous>)
+    at Provider (/@fs/home/runner/wor…js?v=cf324a50:38:15)
+    at TooltipProvider (/@fs/home/runner/wor….js?v=cf324a50:63:5)
+    at AuthProvider (/src/contexts/AuthContext.tsx:41:32)
+    at LanguageProvider (/src/contexts/LanguageContext.tsx:32:36)
+    at ThemeProvider (/src/contexts/ThemeContext.tsx:29:33)
+    at QueryClientProvider (/@fs/home/runner/wor…s?v=cf324a50:2805:3)
+    at App (<anonymous>)
+ 
+ POST https://e394ccd4-b3dd-43ba-8feb-deda267050d2-00-3v6n3vit95c2j.spock.replit.dev/api/invoices/create 500 (Internal Server Error)
+handleCreateInvoice	@	/src/pages/admin/Adm…?t=1748115655015:68
+onClick	@	/src/pages/admin/Adm…t=1748115655015:385
+callCallback2	@	/@fs/home/runner/wor….js?v=cf324a50:3674
+invokeGuardedCallbackDev	@	/@fs/home/runner/wor….js?v=cf324a50:3699
+invokeGuardedCallback	@	/@fs/home/runner/wor….js?v=cf324a50:3733
+invokeGuardedCallbackAndCatchFirstError	@	/@fs/home/runner/wor….js?v=cf324a50:3736
+executeDispatch	@	/@fs/home/runner/wor….js?v=cf324a50:7014
+processDispatchQueueItemsInOrder	@	/@fs/home/runner/wor….js?v=cf324a50:7034
+processDispatchQueue	@	/@fs/home/runner/wor….js?v=cf324a50:7043
+dispatchEventsForPlugins	@	/@fs/home/runner/wor….js?v=cf324a50:7051
+(anonymous)	@	/@fs/home/runner/wor….js?v=cf324a50:7174
+batchedUpdates$1	@	/@fs/home/runner/wor…js?v=cf324a50:18913
+batchedUpdates	@	/@fs/home/runner/wor….js?v=cf324a50:3579
+dispatchEventForPluginEventSystem	@	/@fs/home/runner/wor….js?v=cf324a50:7173
+dispatchEventWithEnableCapturePhaseSelectiveHydrationWithoutDiscreteEventReplay	@	/@fs/home/runner/wor….js?v=cf324a50:5478
+dispatchEvent	@	/@fs/home/runner/wor….js?v=cf324a50:5472
+dispatchDiscreteEvent
