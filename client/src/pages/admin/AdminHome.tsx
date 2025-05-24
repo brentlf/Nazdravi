@@ -143,6 +143,13 @@ export default function AdminHome() {
       icon: Mail,
       href: "/admin/emails",
       color: "bg-indigo-500 hover:bg-indigo-600"
+    },
+    {
+      title: "Invoice Management",
+      description: "Create invoices and manage payments for completed sessions",
+      icon: Receipt,
+      href: "/admin/invoices",
+      color: "bg-emerald-500 hover:bg-emerald-600"
     }
   ];
 
