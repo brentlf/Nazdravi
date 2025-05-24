@@ -18,6 +18,7 @@ import {
 } from "@/components/ui/form";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/contexts/AuthContext";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 const loginSchema = z.object({
   email: z.string().email("Please enter a valid email address"),
@@ -32,6 +33,7 @@ export default function Login() {
   const [, setLocation] = useLocation();
   const { toast } = useToast();
   const { signIn, signInWithGoogle, user } = useAuth();
+  const { t } = useLanguage();
 
   const form = useForm<LoginFormData>({
     resolver: zodResolver(loginSchema),

@@ -13,6 +13,7 @@ import { useLanguage } from "@/contexts/LanguageContext";
 export default function Blog() {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState<string>("");
+  const { t } = useLanguage();
 
   // Fetch from the correct "blogs" collection
   const { data: blogPosts, loading } = useFirestoreCollection<any>("blogs");
@@ -71,11 +72,10 @@ export default function Blog() {
       <section className="container mx-auto px-4 mb-16">
         <div className="text-center max-w-4xl mx-auto">
           <h1 className="text-4xl md:text-5xl font-bold mb-6">
-            Nutrition Blog
+            {t("nutrition-blog", "blog")}
           </h1>
           <p className="text-xl text-muted-foreground mb-8">
-            Evidence-based nutrition insights, practical tips, and the latest research 
-            to support your health journey.
+            {t("blog-subtitle", "blog")}
           </p>
         </div>
       </section>
@@ -87,7 +87,7 @@ export default function Blog() {
           <div className="flex-1 relative">
             <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
             <Input
-              placeholder="Search articles..."
+              placeholder={t("search-articles", "blog")}
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               className="pl-9"
@@ -101,7 +101,7 @@ export default function Blog() {
               size="sm"
               onClick={() => setSelectedCategory("")}
             >
-              All Topics
+              {t("all-topics", "blog")}
             </Button>
             {uniqueCategories.slice(0, 5).map((category) => (
               <Button
@@ -146,7 +146,7 @@ export default function Blog() {
                       <span>{post.date || 'Recent'}</span>
                       <span className="mx-2">•</span>
                       <Clock className="w-4 h-4 mr-1" />
-                      <span>{calculateReadTime(post.excerpt || '')} min read</span>
+                      <span>{calculateReadTime(post.excerpt || '')} {t("min-read", "blog")}</span>
                     </div>
 
                     {/* Title */}
@@ -182,7 +182,7 @@ export default function Blog() {
                           target="_blank" 
                           rel="noopener noreferrer"
                         >
-                          Read More
+                          {t("read-more", "blog")}
                           <ArrowRight className="w-4 h-4 ml-1 group-hover/btn:translate-x-1 transition-transform" />
                         </a>
                       </Button>
@@ -198,12 +198,12 @@ export default function Blog() {
             <div className="w-16 h-16 bg-muted rounded-full flex items-center justify-center mx-auto mb-4">
               <Search className="w-8 h-8 text-muted-foreground" />
             </div>
-            <h3 className="text-xl font-semibold mb-2">No articles found</h3>
+            <h3 className="text-xl font-semibold mb-2">{t("no-articles-found", "blog")}</h3>
             <p className="text-muted-foreground mb-6">
-              Try adjusting your search terms or browse different categories.
+              {t("no-articles-description", "blog")}
             </p>
             <Button onClick={() => { setSearchTerm(""); setSelectedCategory(""); }}>
-              Clear Filters
+              {t("clear-filters", "blog")}
             </Button>
           </div>
         )}
@@ -214,14 +214,13 @@ export default function Blog() {
         <Card className="bg-gradient-to-r from-primary-500 to-primary-600 text-white">
           <CardContent className="p-12 text-center">
             <h2 className="text-3xl font-bold mb-4">
-              Never Miss a New Article
+              {t("never-miss-article", "blog")}
             </h2>
             <p className="text-primary-100 mb-8 max-w-2xl mx-auto">
-              Subscribe to our newsletter to get the latest nutrition insights, 
-              recipes, and health tips delivered directly to your inbox.
+              {t("newsletter-description", "blog")}
             </p>
             <Button size="lg" variant="secondary" asChild>
-              <Link href="/#newsletter">Subscribe Now</Link>
+              <Link href="/#newsletter">{t("subscribe-now", "blog")}</Link>
             </Button>
           </CardContent>
         </Card>
