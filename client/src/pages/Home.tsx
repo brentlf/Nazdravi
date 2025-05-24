@@ -42,17 +42,17 @@ export default function Home() {
   const testimonials = [
     {
       name: "Sarah M.",
-      quote: "Vee helped me completely transform my relationship with food. I've lost 15kg and feel amazing!",
+      quote: "Vee completely transformed my approach to nutrition. The personalized plan was easy to follow and the results were incredible!",
       rating: 5
     },
     {
-      name: "Michael K.",
-      quote: "The personalized approach made all the difference. Finally found a sustainable way to eat healthy.",
+      name: "Michael R.",
+      quote: "The expertise and support Vee provides is unmatched. I finally understand how to properly nourish my body.",
       rating: 5
     },
     {
       name: "Emma L.",
-      quote: "Amazing support and practical advice. The meal plans actually fit into my busy lifestyle.",
+      quote: "Best investment I've ever made for my health. Vee's guidance helped me achieve goals I thought were impossible.",
       rating: 5
     }
   ];
@@ -75,13 +75,12 @@ export default function Home() {
             </Badge>
             
             <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold mb-6 bg-gradient-to-r from-primary-600 to-primary-800 bg-clip-text text-transparent">
-              Your Personal Path to 
-              <span className="block">Nutrition Success</span>
+              Transform Your Health with 
+              <span className="block">Personalized Nutrition</span>
             </h1>
             
             <p className="text-xl md:text-2xl text-muted-foreground mb-8 max-w-3xl mx-auto">
-              Professional nutrition counseling that fits your lifestyle. Get personalized meal plans, 
-              ongoing support, and achieve lasting results with evidence-based guidance.
+              Personalized nutrition counseling designed to help you achieve your health goals through sustainable lifestyle changes and expert guidance.
             </p>
             
             <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
@@ -122,10 +121,10 @@ export default function Home() {
         <div className="container mx-auto px-4">
           <div className="text-center mb-16">
             <h2 className="text-3xl md:text-4xl font-bold mb-4">
-              Comprehensive Nutrition Support
+              Your journey to better health starts here
             </h2>
             <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-              Everything you need to succeed on your health journey, backed by science and personalized to you.
+              As a certified nutritional therapist, I specialize in helping individuals transform their relationship with food and achieve lasting health results. My passion is helping people discover the power of nutrition and create sustainable habits that support their overall wellbeing.
             </p>
           </div>
 
@@ -161,7 +160,7 @@ export default function Home() {
         <div className="container mx-auto px-4">
           <div className="text-center mb-16">
             <h2 className="text-3xl md:text-4xl font-bold mb-4">
-              Success Stories
+              What Our Clients Say
             </h2>
             <p className="text-xl text-muted-foreground">
               Real results from real people who transformed their health
@@ -190,10 +189,10 @@ export default function Home() {
       <section className="py-20 bg-primary-600 text-white">
         <div className="container mx-auto px-4 text-center">
           <h2 className="text-3xl md:text-4xl font-bold mb-4">
-            Ready to Start Your Health Journey?
+            Ready to Start Your Transformation?
           </h2>
           <p className="text-xl mb-8 opacity-90">
-            Book your free consultation today and take the first step towards a healthier you.
+            Book your free consultation today and take the first step towards a healthier, happier you.
           </p>
           <Button size="lg" variant="secondary" asChild>
             <Link href="/appointment">
