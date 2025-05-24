@@ -32,6 +32,17 @@ export default function AdminHome() {
     limit(10)
   ]);
 
+  // Helper function to get sender name
+  const getSenderName = (message: Message) => {
+    if (message.fromUser === "admin") {
+      return "Vee Nutrition";
+    }
+    
+    // Find the user who sent the message
+    const sender = users?.find(user => user.uid === message.fromUser);
+    return sender?.name || "Unknown Client";
+  };
+
   // Calculate stats
   const totalUsers = users?.length || 0;
   const clientUsers = users?.filter(user => user.role === "client").length || 0;
@@ -222,7 +233,7 @@ export default function AdminHome() {
                           <MessageCircle className="w-4 h-4 text-primary-600 dark:text-primary-400" />
                         </div>
                         <div className="flex-1 min-w-0">
-                          <p className="text-sm font-medium">From Client</p>
+                          <p className="text-sm font-medium">{getSenderName(message)}</p>
                           <p className="text-sm text-muted-foreground truncate">{message.text}</p>
                           <p className="text-xs text-muted-foreground mt-1">
                             {new Date(message.createdAt).toLocaleDateString()}
