@@ -84,7 +84,7 @@ export default function AdminDocuments() {
       const downloadURL = await getDownloadURL(uploadResult.ref);
 
       // Save document metadata to Firestore
-      await addDocument({
+      const documentData = {
         userId: uploadData.clientUserId,
         title: uploadData.title,
         description: uploadData.description,
@@ -94,7 +94,10 @@ export default function AdminDocuments() {
         fileSize: uploadData.file.size,
         fileType: uploadData.file.type,
         createdAt: new Date()
-      });
+      };
+      
+      console.log('Uploading document with data:', documentData);
+      await addDocument(documentData);
 
       toast({
         title: "Document uploaded",

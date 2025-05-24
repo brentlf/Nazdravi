@@ -19,16 +19,36 @@ export default function DashboardPlan() {
     orderBy("createdAt", "desc")
   ]);
 
+  // Debug logging to check data flow
+  console.log('DashboardPlan Debug:', {
+    userId: user?.uid,
+    plansFound: plans?.length || 0,
+    plans: plans,
+    loading
+  });
+
   const latestPlan = plans?.[0];
 
   const handleDownload = (plan: Plan) => {
-    // In a real app, this would download from Firebase Storage
-    alert(`Downloading ${plan.title}... This would download the PDF from Firebase Storage.`);
+    if (plan.downloadURL) {
+      const link = window.document.createElement('a');
+      link.href = plan.downloadURL;
+      link.download = plan.fileName || plan.title;
+      link.target = '_blank';
+      window.document.body.appendChild(link);
+      link.click();
+      window.document.body.removeChild(link);
+    } else {
+      alert('Download URL not available for this document.');
+    }
   };
 
   const handleViewOnline = (plan: Plan) => {
-    // In a real app, this would open the PDF viewer
-    alert(`Opening ${plan.title} in viewer... This would open a PDF viewer component.`);
+    if (plan.downloadURL) {
+      window.open(plan.downloadURL, '_blank');
+    } else {
+      alert('Document URL not available for viewing.');
+    }
   };
 
   if (loading) {
