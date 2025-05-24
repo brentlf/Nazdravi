@@ -32,14 +32,52 @@ export default function AdminMessages() {
     where("role", "==", "client")
   ]);
 
-  // Fetch messages for selected chat room
-  const { data: messages, loading: messagesLoading } = useFirestoreCollection<Message>(
+  // Fetch messages for selected chat room - using multiple queries to ensure we get all messages
+  const { data: messagesByChatRoom } = useFirestoreCollection<Message>(
     "messages",
     selectedChatRoom ? [
       where("chatRoom", "==", selectedChatRoom),
       orderBy("createdAt", "asc")
     ] : undefined
   );
+
+  const { data: messagesByFromUser } = useFirestoreCollection<Message>(
+    "messages", 
+    selectedChatRoom && user ? [
+      where("fromUser", "==", user.uid),
+      orderBy("createdAt", "asc")
+    ] : undefined
+  );
+
+  const { data: messagesToUser } = useFirestoreCollection<Message>(
+    "messages",
+    selectedChatRoom && user ? [
+      where("toUser", "==", user.uid), 
+      orderBy("createdAt", "asc")
+    ] : undefined
+  );
+
+  // Combine and deduplicate messages, then filter by chat room
+  const allMessages = [
+    ...(messagesByChatRoom || []),
+    ...(messagesByFromUser || []),
+    ...(messagesToUser || [])
+  ];
+
+  // Remove duplicates and filter by chat room
+  const uniqueMessages = allMessages.filter((message, index, self) => 
+    index === self.findIndex(m => m.id === message.id)
+  );
+
+  const messages = uniqueMessages
+    .filter(message => message.chatRoom === selectedChatRoom)
+    .sort((a, b) => {
+      const dateA = a.createdAt instanceof Date ? a.createdAt : (a.createdAt as any).toDate();
+      const dateB = b.createdAt instanceof Date ? b.createdAt : (b.createdAt as any).toDate();
+      return dateA.getTime() - dateB.getTime();
+    });
+
+  const messagesLoading = false;
 
   const { add: addMessage, loading: sendingMessage } = useFirestoreActions("messages");
 
@@ -234,10 +272,24 @@ export default function AdminMessages() {
                             <p className={`text-xs mt-1 ${
                               message.fromUser === user?.uid ? 'text-blue-100' : 'text-muted-foreground'
                             }`}>
-                              {new Date(message.createdAt).toLocaleTimeString([], {
-                                hour: '2-digit',
-                                minute: '2-digit'
-                              })}
+                              {(() => {
+                                try {
+                                  let date;
+                                  if (message.createdAt instanceof Date) {
+                                    date = message.createdAt;
+                                  } else if (message.createdAt && typeof message.createdAt === 'object' && 'toDate' in message.createdAt) {
+                                    date = (message.createdAt as any).toDate();
+                                  } else {
+                                    date = new Date();
+                                  }
+                                  return date.toLocaleTimeString([], {
+                                    hour: '2-digit',
+                                    minute: '2-digit'
+                                  });
+                                } catch (error) {
+                                  return 'Just now';
+                                }
+                              })()}
                             </p>
                           </div>
                         </div>
