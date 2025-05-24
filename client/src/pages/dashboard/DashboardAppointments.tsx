@@ -627,6 +627,33 @@ export default function DashboardAppointments() {
                       <p className="text-sm">{appointment.goals}</p>
                     </div>
                     
+                    {/* Teams Meeting Link for Confirmed Appointments */}
+                    {appointment.status === 'confirmed' && appointment.teamsJoinUrl && (
+                      <div className="p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-200 dark:border-blue-800">
+                        <div className="flex items-center gap-3 mb-2">
+                          <div className="w-8 h-8 bg-blue-100 dark:bg-blue-900 rounded-full flex items-center justify-center">
+                            <svg className="w-4 h-4 text-blue-600" fill="currentColor" viewBox="0 0 24 24">
+                              <path d="M20.54 3H3.46A1.46 1.46 0 002 4.46v15.08A1.46 1.46 0 003.46 21h17.08A1.46 1.46 0 0022 19.54V4.46A1.46 1.46 0 0020.54 3zM8 17.23A4.77 4.77 0 113.23 12.5 4.77 4.77 0 018 17.23zm8 0a4.77 4.77 0 11-4.77-4.73A4.77 4.77 0 0116 17.23z"/>
+                            </svg>
+                          </div>
+                          <div>
+                            <h4 className="font-semibold text-blue-800 dark:text-blue-200">Video Consultation Ready</h4>
+                            <p className="text-sm text-blue-600 dark:text-blue-300">Your Microsoft Teams meeting is set up</p>
+                          </div>
+                        </div>
+                        <Button 
+                          onClick={() => window.open(appointment.teamsJoinUrl, '_blank')}
+                          className="w-full bg-blue-600 hover:bg-blue-700 text-white"
+                          size="sm"
+                        >
+                          <svg className="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M20.54 3H3.46A1.46 1.46 0 002 4.46v15.08A1.46 1.46 0 003.46 21h17.08A1.46 1.46 0 0022 19.54V4.46A1.46 1.46 0 0020.54 3zM8 17.23A4.77 4.77 0 113.23 12.5 4.77 4.77 0 018 17.23zm8 0a4.77 4.77 0 11-4.77-4.73A4.77 4.77 0 0116 17.23z"/>
+                          </svg>
+                          Join Teams Meeting
+                        </Button>
+                      </div>
+                    )}
+                    
                     <div className="flex items-center text-sm text-muted-foreground">
                       <Calendar className="w-4 h-4 mr-1" />
                       <span>Booked on {parseCreatedAt(appointment).toLocaleDateString()}</span>

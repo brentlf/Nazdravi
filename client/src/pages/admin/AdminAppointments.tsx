@@ -102,7 +102,7 @@ export default function AdminAppointments() {
             teamsMeetingId = teamsData.teamsMeetingId;
             
             // Update appointment with Teams meeting details
-            await update(appointment.id, {
+            await updateAppointment(appointment.id, {
               ...appointment,
               status: newStatus,
               teamsJoinUrl,
@@ -110,7 +110,7 @@ export default function AdminAppointments() {
             });
           } else {
             // Still confirm appointment even if Teams meeting creation fails
-            await update(appointment.id, {
+            await updateAppointment(appointment.id, {
               ...appointment,
               status: newStatus,
             });
