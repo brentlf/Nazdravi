@@ -33,17 +33,17 @@ export function MessageThread() {
   // Create chat room ID (user_admin format)
   const chatRoom = user ? `${user.uid}_admin` : "";
 
-  // Fetch messages with fallback approach - try both current format and legacy format
+  // Fetch messages with fallback approach - try without orderBy first to test
   const { data: messagesNew } = useFirestoreCollection<Message>("messages", 
-    user ? [where("chatRoom", "==", chatRoom), orderBy("createdAt", "asc")] : []
+    user ? [where("chatRoom", "==", chatRoom)] : []
   );
   
   const { data: messagesLegacy } = useFirestoreCollection<Message>("messages", 
-    user ? [where("fromUser", "==", user.uid), orderBy("createdAt", "asc")] : []
+    user ? [where("fromUser", "==", user.uid)] : []
   );
   
   const { data: messagesLegacyTo } = useFirestoreCollection<Message>("messages", 
-    user ? [where("toUser", "==", user.uid), orderBy("createdAt", "asc")] : []
+    user ? [where("toUser", "==", user.uid)] : []
   );
 
   // Combine all messages and deduplicate
@@ -63,15 +63,18 @@ export function MessageThread() {
 
   const loading = !messagesNew && !messagesLegacy && !messagesLegacyTo;
 
-  // Debug logging to see what's happening
+  // Debug logging to see what's happening with each query
   useEffect(() => {
     console.log("MessageThread Debug:", {
       user: user?.uid,
       chatRoom,
-      messagesCount: messages?.length || 0,
+      messagesNew: messagesNew?.length || 0,
+      messagesLegacy: messagesLegacy?.length || 0,
+      messagesLegacyTo: messagesLegacyTo?.length || 0,
+      totalMessages: messages?.length || 0,
       loading
     });
-  }, [user, chatRoom, messages, loading]);
+  }, [user, chatRoom, messagesNew, messagesLegacy, messagesLegacyTo, messages, loading]);
 
   const form = useForm<MessageFormData>({
     resolver: zodResolver(messageSchema),
