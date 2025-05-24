@@ -56,6 +56,13 @@ export default function AdminMessages() {
     
     // Check if message belongs to any of these chat rooms
     if (possibleChatRooms.includes(message.chatRoom)) {
+      console.log('Message matched chat room:', {
+        messageId: message.id,
+        fromUser: message.fromUser,
+        chatRoom: message.chatRoom,
+        selectedChatRoom,
+        text: message.text.substring(0, 30)
+      });
       return true;
     }
     
@@ -63,12 +70,23 @@ export default function AdminMessages() {
     const isDirectMessage = (
       (message.fromUser === user.uid && message.toUser === clientUserId) ||
       (message.fromUser === clientUserId && message.toUser === user.uid) ||
-      (message.fromUser === user.uid && message.toUser === "admin") ||
+      (message.fromUser === "admin" && message.toUser === clientUserId) ||
       (message.fromUser === clientUserId && message.toUser === "admin")
     );
     
+    if (isDirectMessage) {
+      console.log('Message matched direct message:', {
+        messageId: message.id,
+        fromUser: message.fromUser,
+        toUser: message.toUser,
+        text: message.text.substring(0, 30)
+      });
+    }
+    
     return isDirectMessage;
   }) || [];
+
+  console.log('Final filtered messages:', messages.length, 'out of', allMessages?.length || 0);
 
 
 
