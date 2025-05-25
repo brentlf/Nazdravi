@@ -86,16 +86,8 @@ export default function AdminHome() {
       href: "/admin/users"
     },
     {
-      title: "Pending Appointments",
-      value: pendingAppointments.toString(),
-      icon: Clock,
-      color: "text-yellow-600",
-      bgColor: "bg-yellow-50 dark:bg-yellow-900/20",
-      href: "/admin/appointments"
-    },
-    {
-      title: "This Month's Appointments",
-      value: thisMonthAppointments.toString(),
+      title: "Appointment Management",
+      value: `${pendingAppointments} pending`,
       icon: Calendar,
       color: "text-green-600",
       bgColor: "bg-green-50 dark:bg-green-900/20",
