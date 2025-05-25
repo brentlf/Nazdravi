@@ -241,12 +241,18 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   // Admin notification email routes
   app.post("/api/emails/admin/new-appointment", async (req, res) => {
+    console.log('🔍 DEBUG: New appointment admin email route called');
+    console.log('🔍 DEBUG: Request body:', req.body);
+    
     try {
       const { clientName, clientEmail, appointmentType, date, time } = req.body;
       
       if (!clientName || !clientEmail) {
+        console.log('❌ DEBUG: Missing required fields');
         return res.status(400).json({ success: false, error: "Missing required fields: clientName and clientEmail" });
       }
+      
+      console.log('🔍 DEBUG: Calling sendAdminNewAppointment...');
       
       // Send admin email directly using mailerLiteService
       const success = await mailerLiteService.sendAdminNewAppointment({
@@ -257,13 +263,17 @@ export async function registerRoutes(app: Express): Promise<Server> {
         time: time || ''
       });
 
+      console.log('🔍 DEBUG: sendAdminNewAppointment result:', success);
+
       if (success) {
+        console.log('✅ DEBUG: Admin new appointment notification sent successfully');
         res.json({ success: true, message: "Admin new appointment notification sent successfully" });
       } else {
+        console.log('❌ DEBUG: Failed to send admin notification email');
         res.status(500).json({ success: false, error: "Failed to send admin notification email" });
       }
     } catch (error: any) {
-      console.error("Error sending admin new appointment notification:", error);
+      console.error("❌ DEBUG: Error sending admin new appointment notification:", error);
       res.status(500).json({ success: false, error: error.message });
     }
   });

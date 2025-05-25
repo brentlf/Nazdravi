@@ -30,10 +30,19 @@ interface SendEmailParams {
 
 export class MailerLiteService {
   async sendEmail(params: SendEmailParams): Promise<boolean> {
+    console.log('🔍 DEBUG: sendEmail called with params:', {
+      to: params.to,
+      subject: params.subject,
+      hasHtml: !!params.html,
+      hasText: !!params.text
+    });
+
     try {
       const resendApiKey = process.env.RESEND_API_KEY;
+      console.log('🔍 DEBUG: RESEND_API_KEY exists:', !!resendApiKey);
+      
       if (!resendApiKey) {
-        console.error('RESEND_API_KEY environment variable is not set');
+        console.error('❌ RESEND_API_KEY environment variable is not set');
         return false;
       }
 
@@ -45,7 +54,8 @@ export class MailerLiteService {
         text: params.text || ''
       };
 
-      console.log(`Sending email via Resend to: ${params.to}`);
+      console.log('🔍 DEBUG: Email data prepared:', emailData);
+      console.log('📧 Sending email via Resend API...');
       
       const response = await fetch('https://api.resend.com/emails', {
         method: 'POST',
@@ -56,17 +66,19 @@ export class MailerLiteService {
         body: JSON.stringify(emailData)
       });
 
+      console.log('🔍 DEBUG: Resend API response status:', response.status);
+
       if (response.ok) {
         const result = await response.json();
-        console.log(`✓ Email sent successfully via Resend. ID: ${result.id}`);
+        console.log('✅ Email sent successfully via Resend. ID:', result.id);
         return true;
       } else {
         const error = await response.text();
-        console.error('Resend API error:', response.status, error);
+        console.error('❌ Resend API error:', response.status, error);
         return false;
       }
     } catch (error) {
-      console.error('Error sending email via Resend:', error);
+      console.error('❌ Error sending email via Resend:', error);
       return false;
     }
   }
