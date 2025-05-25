@@ -71,6 +71,8 @@ export default function AdminHome() {
   const totalInvoices = invoices?.length || 0;
   const pendingInvoices = invoices?.filter(inv => inv.status === 'pending').length || 0;
   const paidInvoices = invoices?.filter(inv => inv.status === 'paid').length || 0;
+  const penaltyInvoices = invoices?.filter(inv => inv.invoiceType === 'penalty').length || 0;
+  const pendingPenalties = invoices?.filter(inv => inv.invoiceType === 'penalty' && inv.status === 'pending').length || 0;
   const thisMonthRevenue = invoices?.filter(inv => 
     inv.status === 'paid' && 
     new Date(inv.createdAt).getMonth() === new Date().getMonth()
@@ -110,12 +112,14 @@ export default function AdminHome() {
       href: "/admin/messages"
     },
     {
-      title: "Pending Invoices",
-      value: pendingInvoices.toString(),
+      title: "Invoice Management",
+      value: `${pendingInvoices} pending`,
+      subtitle: `${penaltyInvoices} penalty invoices`,
       icon: Receipt,
       color: "text-orange-600",
       bgColor: "bg-orange-50 dark:bg-orange-900/20",
-      href: "/admin/invoices"
+      href: "/admin/invoices",
+      badge: pendingPenalties > 0 ? `${pendingPenalties} penalty` : null
     }
   ];
 
@@ -227,6 +231,14 @@ export default function AdminHome() {
                   </div>
                   <div className="space-y-2">
                     <p className="text-3xl font-bold">{stat.value}</p>
+                    {stat.subtitle && (
+                      <p className="text-sm text-muted-foreground">{stat.subtitle}</p>
+                    )}
+                    {stat.badge && (
+                      <Badge variant="outline" className="text-xs text-red-600 border-red-600">
+                        {stat.badge}
+                      </Badge>
+                    )}
                     <Button size="sm" variant="outline" asChild className="w-full">
                       <Link href={stat.href}>View Details</Link>
                     </Button>

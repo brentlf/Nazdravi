@@ -193,7 +193,7 @@ export const invoiceSchema = z.object({
   description: z.string(),
   sessionDate: z.string().optional(), // Optional for subscription invoices
   sessionType: z.enum(["Initial", "Follow-up"]).optional(), // Optional for subscription invoices
-  invoiceType: z.enum(["session", "subscription"]).default("session"),
+  invoiceType: z.enum(["session", "subscription", "penalty"]).default("session"),
   subscriptionMonth: z.number().optional(), // For subscription invoices
   subscriptionYear: z.number().optional(), // For subscription invoices
   status: z.enum(["pending", "paid", "overdue", "cancelled"]),
