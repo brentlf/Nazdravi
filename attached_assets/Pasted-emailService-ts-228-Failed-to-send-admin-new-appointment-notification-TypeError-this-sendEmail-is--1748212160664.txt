@@ -1,0 +1,31 @@
+emailService.ts:228 Failed to send admin new appointment notification: TypeError: this.sendEmail is not a function
+    at EmailService.sendAdminNewAppointment (emailService.ts:207:18)
+    at handleTestAdminNewAppointment (AdminEmailScheduler.tsx:290:26)
+    at HTMLUnknownElement.callCallback2 (chunk-RPCDYKBN.js?v=1a8e8de5:3674:22)
+    at Object.invokeGuardedCallbackDev (chunk-RPCDYKBN.js?v=1a8e8de5:3699:24)
+    at invokeGuardedCallback (chunk-RPCDYKBN.js?v=1a8e8de5:3733:39)
+    at invokeGuardedCallbackAndCatchFirstError (chunk-RPCDYKBN.js?v=1a8e8de5:3736:33)
+    at executeDispatch (chunk-RPCDYKBN.js?v=1a8e8de5:7014:11)
+    at processDispatchQueueItemsInOrder (chunk-RPCDYKBN.js?v=1a8e8de5:7034:15)
+    at processDispatchQueue (chunk-RPCDYKBN.js?v=1a8e8de5:7043:13)
+    at dispatchEventsForPlugins (chunk-RPCDYKBN.js?v=1a8e8de5:7051:11)
+overrideMethod @ hook.js:608
+sendAdminNewAppointment @ emailService.ts:228
+handleTestAdminNewAppointment @ AdminEmailScheduler.tsx:290
+callCallback2 @ chunk-RPCDYKBN.js?v=1a8e8de5:3674
+invokeGuardedCallbackDev @ chunk-RPCDYKBN.js?v=1a8e8de5:3699
+invokeGuardedCallback @ chunk-RPCDYKBN.js?v=1a8e8de5:3733
+invokeGuardedCallbackAndCatchFirstError @ chunk-RPCDYKBN.js?v=1a8e8de5:3736
+executeDispatch @ chunk-RPCDYKBN.js?v=1a8e8de5:7014
+processDispatchQueueItemsInOrder @ chunk-RPCDYKBN.js?v=1a8e8de5:7034
+processDispatchQueue @ chunk-RPCDYKBN.js?v=1a8e8de5:7043
+dispatchEventsForPlugins @ chunk-RPCDYKBN.js?v=1a8e8de5:7051
+(anonymous) @ chunk-RPCDYKBN.js?v=1a8e8de5:7174
+batchedUpdates$1 @ chunk-RPCDYKBN.js?v=1a8e8de5:18913
+batchedUpdates @ chunk-RPCDYKBN.js?v=1a8e8de5:3579
+dispatchEventForPluginEventSystem @ chunk-RPCDYKBN.js?v=1a8e8de5:7173
+dispatchEventWithEnableCapturePhaseSelectiveHydrationWithoutDiscreteEventReplay @ chunk-RPCDYKBN.js?v=1a8e8de5:5478
+dispatchEvent @ chunk-RPCDYKBN.js?v=1a8e8de5:5472
+dispatchDiscreteEvent @ chunk-RPCDYKBN.js?v=1a8e8de5:5449
+emailService.ts:244 Admin health update notification sent successfully
+emailService.ts:264 Admin payment received notification sent successfully

@@ -203,25 +203,14 @@ class EmailService implements EmailNotificationService {
     time: string
   ): Promise<void> {
     try {
-      // Use the working client email approach directly
-      await this.sendEmail({
-        to: 'info@veenutrition.com',
-        toName: 'Admin Team', 
-        subject: `New Appointment Request - ${clientName}`,
-        html: `
-          <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
-            <h2 style="color: #A5CBA4;">New Appointment Request</h2>
-            <div style="background-color: #f5f5f5; padding: 20px; border-radius: 8px; margin: 20px 0;">
-              <p><strong>Client:</strong> ${clientName}</p>
-              <p><strong>Email:</strong> ${clientEmail}</p>
-              <p><strong>Type:</strong> ${appointmentType}</p>
-              <p><strong>Date:</strong> ${date}</p>
-              <p><strong>Time:</strong> ${time}</p>
-            </div>
-            <p>Please review and confirm this appointment in your admin dashboard.</p>
-          </div>
-        `,
-        text: `New appointment request from ${clientName} (${clientEmail}) for ${appointmentType} on ${date} at ${time}.`
+      // Use the working client email infrastructure (appointment confirmation approach)
+      await apiRequest('POST', '/api/emails/appointment-confirmation', {
+        email: 'info@veenutrition.com',
+        name: 'Admin Team',
+        date: date,
+        time: time,
+        type: `New Appointment Request - ${appointmentType}`,
+        customMessage: `New appointment request from ${clientName} (${clientEmail}). Please review and confirm in your admin dashboard.`
       });
       console.log('Admin new appointment notification sent successfully');
     } catch (error) {
