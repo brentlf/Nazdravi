@@ -131,11 +131,19 @@ export default function DashboardProfile() {
     resolver: zodResolver(preferencesSchema),
     defaultValues: {
       preferredLanguage: "english",
-      currentLocation: "uk",
+      currentLocation: "uk", 
       emailNotifications: true,
       servicePlan: "pay-as-you-go",
     },
   });
+
+  // Update form when user data loads
+  useEffect(() => {
+    if (user) {
+      preferencesForm.setValue("servicePlan", user.servicePlan || "pay-as-you-go");
+      preferencesForm.setValue("emailNotifications", user.emailNotifications ?? true);
+    }
+  }, [user, preferencesForm]);
 
   // Password form
   const passwordForm = useForm<PasswordFormData>({
@@ -597,6 +605,60 @@ export default function DashboardProfile() {
                     </div>
                   )}
                 </div>
+
+                {/* Program Status Display */}
+                {user?.servicePlan === "complete-program" && (
+                  <div className="p-4 bg-purple-50 dark:bg-purple-900/20 border border-purple-200 dark:border-purple-800 rounded-lg">
+                    <h4 className="font-medium text-purple-900 dark:text-purple-100 mb-3 flex items-center gap-2">
+                      <Crown className="w-4 h-4" />
+                      Complete Program Status
+                    </h4>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-sm">
+                      <div>
+                        <span className="text-gray-600 dark:text-gray-400">Start Date:</span>
+                        <div className="font-medium text-gray-900 dark:text-white">
+                          {user.programStartDate 
+                            ? new Date(user.programStartDate).toLocaleDateString()
+                            : "Not set"
+                          }
+                        </div>
+                      </div>
+                      <div>
+                        <span className="text-gray-600 dark:text-gray-400">End Date:</span>
+                        <div className="font-medium text-gray-900 dark:text-white">
+                          {user.programEndDate 
+                            ? new Date(user.programEndDate).toLocaleDateString()
+                            : "Not set"
+                          }
+                        </div>
+                      </div>
+                      <div>
+                        <span className="text-gray-600 dark:text-gray-400">Status:</span>
+                        <div className="font-medium">
+                          {user.programEndDate ? (
+                            new Date(user.programEndDate) > new Date() ? (
+                              <span className="text-green-600">Active</span>
+                            ) : (
+                              <span className="text-red-600">Expired</span>
+                            )
+                          ) : (
+                            <span className="text-yellow-600">Pending Setup</span>
+                          )}
+                        </div>
+                      </div>
+                      <div>
+                        <span className="text-gray-600 dark:text-gray-400">Days Remaining:</span>
+                        <div className="font-medium text-gray-900 dark:text-white">
+                          {user.programEndDate ? (
+                            Math.max(0, Math.ceil((new Date(user.programEndDate).getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24)))
+                          ) : (
+                            "N/A"
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                )}
 
                 <div className="space-y-3">
                   <Label>Notification Preferences</Label>
