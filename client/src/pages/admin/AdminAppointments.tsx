@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Search, Calendar, Clock, CheckCircle, XCircle, AlertCircle, Filter, ArrowLeft, CalendarX, RotateCcw, Edit } from "lucide-react";
+import { Search, Calendar, Clock, CheckCircle, XCircle, AlertCircle, Filter, ArrowLeft, CalendarX, RotateCcw, Edit, FileText, Mail, Euro, UserCheck, ClipboardList } from "lucide-react";
 import { Link } from "wouter";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -102,6 +102,106 @@ export default function AdminAppointments() {
   const statusOverview = getStatusOverview();
 
   const { update: updateAppointment, loading: actionLoading } = useFirestoreActions("appointments");
+
+  // Helper function to get action item icons for each appointment
+  const getActionItemIcons = (appointment: any) => {
+    const icons = [];
+    
+    // Invoice needed (completed appointments without invoices)
+    if (appointment.status === 'done' && !appointment.invoiceGenerated) {
+      icons.push(
+        <Euro key="invoice" className="w-4 h-4 text-orange-500" title="Invoice needed" />
+      );
+    }
+
+    // Missing consent form
+    if (!appointment.consentFormSubmitted) {
+      icons.push(
+        <FileText key="consent" className="w-4 h-4 text-red-500" title="Consent form missing" />
+      );
+    }
+
+    // Pre-evaluation pending
+    if (!appointment.preEvaluationCompleted && appointment.status !== 'cancelled') {
+      icons.push(
+        <ClipboardList key="pre-eval" className="w-4 h-4 text-yellow-500" title="Pre-evaluation pending" />
+      );
+    }
+
+    // Late reschedule (within 4 hours)
+    if (appointment.rescheduleHistory && appointment.rescheduleHistory.length > 0) {
+      const lastReschedule = appointment.rescheduleHistory[appointment.rescheduleHistory.length - 1];
+      const appointmentTime = new Date(`${appointment.date}T${appointment.timeslot}`);
+      const rescheduleTime = new Date(lastReschedule.timestamp);
+      const hoursDifference = (appointmentTime.getTime() - rescheduleTime.getTime()) / (1000 * 60 * 60);
+      
+      if (hoursDifference <= 4) {
+        icons.push(
+          <RotateCcw key="late-change" className="w-4 h-4 text-purple-500" title="Late reschedule" />
+        );
+      }
+    }
+
+    // No-show
+    if (appointment.status === 'no-show') {
+      icons.push(
+        <CalendarX key="no-show" className="w-4 h-4 text-red-500" title="No-show" />
+      );
+    }
+
+    return icons;
+  };
+
+  // Helper function to get email history icons
+  const getEmailHistoryIcons = (appointment: any) => {
+    const icons = [];
+    
+    // This would typically come from email tracking data
+    // For now, we'll show based on appointment status and actions
+    
+    // Confirmation email (sent when appointment is confirmed)
+    if (appointment.status === 'confirmed' || appointment.status === 'done') {
+      icons.push(
+        <CheckCircle key="confirm" className="w-4 h-4 text-green-500" title="Confirmation sent" />
+      );
+    }
+
+    // Reminder email (sent 24h before)
+    if (appointment.status === 'confirmed') {
+      const appointmentDate = new Date(`${appointment.date}T${appointment.timeslot}`);
+      const now = new Date();
+      const hoursDiff = (appointmentDate.getTime() - now.getTime()) / (1000 * 60 * 60);
+      
+      if (hoursDiff <= 24) {
+        icons.push(
+          <Clock key="reminder" className="w-4 h-4 text-blue-500" title="Reminder sent" />
+        );
+      }
+    }
+
+    // Invoice email (sent after completion)
+    if (appointment.status === 'done' && appointment.invoiceGenerated) {
+      icons.push(
+        <Euro key="invoice-email" className="w-4 h-4 text-orange-500" title="Invoice sent" />
+      );
+    }
+
+    // Reschedule notification
+    if (appointment.rescheduleHistory && appointment.rescheduleHistory.length > 0) {
+      icons.push(
+        <RotateCcw key="reschedule-email" className="w-4 h-4 text-purple-500" title="Reschedule notice sent" />
+      );
+    }
+
+    // Cancellation email
+    if (appointment.status === 'cancelled') {
+      icons.push(
+        <XCircle key="cancel-email" className="w-4 h-4 text-red-500" title="Cancellation sent" />
+      );
+    }
+
+    return icons;
+  };
 
   // Filter appointments
   const filteredAppointments = appointments?.filter(appointment => {
@@ -502,6 +602,8 @@ export default function AdminAppointments() {
                     <TableHead>Type</TableHead>
                     <TableHead>Date & Time</TableHead>
                     <TableHead>Status</TableHead>
+                    <TableHead>Action Items</TableHead>
+                    <TableHead>Email History</TableHead>
                     <TableHead>Booked</TableHead>
                     <TableHead className="text-right">Actions</TableHead>
                   </TableRow>
@@ -540,6 +642,24 @@ export default function AdminAppointments() {
                           <Badge className={getStatusColor(appointment.status)}>
                             {getStatusLabel(appointment.status)}
                           </Badge>
+                        </div>
+                      </TableCell>
+                      <TableCell>
+                        <div className="flex items-center space-x-1">
+                          {getActionItemIcons(appointment).length > 0 ? (
+                            getActionItemIcons(appointment)
+                          ) : (
+                            <span className="text-xs text-muted-foreground">-</span>
+                          )}
+                        </div>
+                      </TableCell>
+                      <TableCell>
+                        <div className="flex items-center space-x-1">
+                          {getEmailHistoryIcons(appointment).length > 0 ? (
+                            getEmailHistoryIcons(appointment)
+                          ) : (
+                            <span className="text-xs text-muted-foreground">-</span>
+                          )}
                         </div>
                       </TableCell>
                       <TableCell>
