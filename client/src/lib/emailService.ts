@@ -225,10 +225,14 @@ class EmailService implements EmailNotificationService {
     updateType: string
   ): Promise<void> {
     try {
-      await apiRequest('POST', '/api/emails/admin/health-update', {
-        clientName,
-        clientEmail,
-        updateType,
+      // Use the working appointment confirmation system with meetingUrl included
+      await apiRequest('POST', '/api/emails/appointment-confirmation', {
+        email: 'info@veenutrition.com',
+        name: 'Admin Team',
+        date: new Date().toLocaleDateString(),
+        time: new Date().toLocaleTimeString(),
+        meetingUrl: '', // Include empty meetingUrl to avoid Firestore error
+        type: `Admin Alert: ${updateType} from ${clientName} (${clientEmail})`
       });
       console.log('Admin health update notification sent successfully');
     } catch (error) {
@@ -244,11 +248,14 @@ class EmailService implements EmailNotificationService {
     paymentMethod: string
   ): Promise<void> {
     try {
-      await apiRequest('POST', '/api/emails/admin/payment-received', {
-        clientName,
-        amount,
-        invoiceId,
-        paymentMethod,
+      // Use the working appointment confirmation system with meetingUrl included
+      await apiRequest('POST', '/api/emails/appointment-confirmation', {
+        email: 'info@veenutrition.com',
+        name: 'Admin Team',
+        date: new Date().toLocaleDateString(),
+        time: new Date().toLocaleTimeString(),
+        meetingUrl: '', // Include empty meetingUrl to avoid Firestore error
+        type: `Admin Alert: Payment Received - €${amount} from ${clientName} (Invoice: ${invoiceId}) via ${paymentMethod}`
       });
       console.log('Admin payment received notification sent successfully');
     } catch (error) {
