@@ -44,10 +44,13 @@ export default function AdminInvoices() {
     return invoices?.some(invoice => invoice.appointmentId === appointmentId);
   };
 
-  // Filter appointments that can be invoiced (completed or no-show) and haven't been invoiced yet
-  const completedAppointments = allAppointments?.filter(apt => 
-    (apt.status === "done" || apt.status === "no-show") && !hasExistingInvoice(apt.id)
-  ) || [];
+  // Filter appointments that could potentially need invoicing and haven't been invoiced yet
+  // Include: completed, no-show, cancelled (for potential fees), and even confirmed (for advance billing)
+  const invoiceableAppointments = allAppointments?.filter(apt => {
+    // Exclude only pending appointments that haven't happened yet
+    const excludeStatuses = ['pending'];
+    return !excludeStatuses.includes(apt.status) && !hasExistingInvoice(apt.id);
+  }) || [];
 
   // Intelligent penalty detection based on appointment data and business policy
   const detectApplicablePenalties = (appointment: Appointment) => {
@@ -272,9 +275,12 @@ export default function AdminInvoices() {
             
             <div className="space-y-6">
               <div>
-                <Label>Select Completed Session</Label>
+                <Label>Select Appointment for Invoice</Label>
+                <p className="text-sm text-muted-foreground mt-1">
+                  Choose any appointment that requires billing (completed sessions, penalties, fees, etc.)
+                </p>
                 <div className="mt-2 space-y-2 max-h-60 overflow-y-auto">
-                  {completedAppointments?.map((appointment) => {
+                  {invoiceableAppointments?.map((appointment) => {
                     const alreadyInvoiced = hasExistingInvoice(appointment.id);
                     return (
                       <div 
@@ -312,13 +318,32 @@ export default function AdminInvoices() {
                             </p>
                             <div className="flex items-center gap-2 mt-1">
                               <Badge 
-                                variant={appointment.status === 'no-show' ? 'destructive' : 'secondary'}
+                                variant={
+                                  appointment.status === 'no-show' ? 'destructive' : 
+                                  appointment.status === 'done' ? 'default' :
+                                  appointment.status === 'cancelled' ? 'outline' : 'secondary'
+                                }
                                 className="text-xs"
                               >
-                                {appointment.status === 'no-show' ? 'No-Show' : 'Completed'}
+                                {appointment.status === 'no-show' ? 'No-Show' : 
+                                 appointment.status === 'done' ? 'Completed' :
+                                 appointment.status === 'cancelled' ? 'Cancelled' :
+                                 appointment.status === 'confirmed' ? 'Confirmed' :
+                                 appointment.status}
                               </Badge>
+                              
+                              {/* Show billing type indicator */}
                               {appointment.status === 'no-show' && (
-                                <span className="text-xs text-red-600">Penalty Applied</span>
+                                <span className="text-xs text-red-600 font-medium">50% Penalty Fee</span>
+                              )}
+                              {appointment.status === 'done' && (
+                                <span className="text-xs text-green-600 font-medium">Session Payment</span>
+                              )}
+                              {appointment.status === 'cancelled' && (
+                                <span className="text-xs text-orange-600 font-medium">Potential Reschedule Fee</span>
+                              )}
+                              {appointment.status === 'confirmed' && (
+                                <span className="text-xs text-blue-600 font-medium">Advance Billing</span>
                               )}
                             </div>
                           </div>
