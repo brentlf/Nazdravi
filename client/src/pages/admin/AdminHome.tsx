@@ -19,6 +19,7 @@ import { useFirestoreCollection } from "@/hooks/useFirestore";
 import { User, Appointment, Message } from "@/types";
 import type { Invoice } from "@shared/firebase-schema";
 import { where, orderBy, limit } from "firebase/firestore";
+import { AppointmentsCalendar } from "@/components/admin/AppointmentsCalendar";
 
 export default function AdminHome() {
   // Fetch dashboard data
@@ -227,45 +228,8 @@ export default function AdminHome() {
         <div className="grid lg:grid-cols-3 gap-8 lg:items-stretch">
           {/* Recent Activity */}
           <div className="lg:col-span-2 grid grid-rows-2 gap-8">
-            {/* Pending Appointments */}
-            <Card>
-              <CardHeader className="flex flex-row items-center justify-between">
-                <CardTitle className="flex items-center gap-2">
-                  <Clock className="w-5 h-5" />
-                  Pending Appointments
-                </CardTitle>
-                <Button variant="outline" size="sm" asChild>
-                  <Link href="/admin/appointments">View All</Link>
-                </Button>
-              </CardHeader>
-              <CardContent>
-                {appointments && pendingAppointments > 0 ? (
-                  <div className="space-y-4">
-                    {appointments
-                      .filter(apt => apt.status === "pending")
-                      .slice(0, 3)
-                      .map((appointment) => (
-                        <div key={appointment.id} className="flex items-center justify-between p-4 bg-yellow-50 dark:bg-yellow-900/20 rounded-lg">
-                          <div>
-                            <p className="font-medium">{appointment.name}</p>
-                            <p className="text-sm text-muted-foreground">
-                              {appointment.type} - {new Date(appointment.date).toLocaleDateString()} at {appointment.timeslot}
-                            </p>
-                          </div>
-                          <Badge className="bg-yellow-100 text-yellow-800 dark:bg-yellow-900/20 dark:text-yellow-400">
-                            Pending
-                          </Badge>
-                        </div>
-                      ))}
-                  </div>
-                ) : (
-                  <div className="text-center py-8">
-                    <CheckCircle className="w-12 h-12 text-green-500 mx-auto mb-4" />
-                    <p className="text-muted-foreground">No pending appointments</p>
-                  </div>
-                )}
-              </CardContent>
-            </Card>
+            {/* Appointments Overview Calendar */}
+            <AppointmentsCalendar appointments={appointments || []} />
 
             {/* Recent Messages */}
             <Card>
