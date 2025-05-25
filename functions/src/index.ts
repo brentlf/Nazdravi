@@ -269,7 +269,7 @@ export const onUserCreated = functions.firestore
   .document('users/{userId}')
   .onCreate(async (snap, context) => {
     const userData = snap.data();
-    const name = userData.displayName || userData.email;
+    const name = userData.name || userData.displayName || userData.email;
     
     console.log('New user created:', userData.email);
     
