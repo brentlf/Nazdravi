@@ -367,9 +367,19 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       console.log("Extracted params:", { originalInvoiceId, newAmount, reason });
 
-      if (!originalInvoiceId || newAmount === undefined || newAmount === null || newAmount <= 0) {
-        console.log("Validation failed:", { originalInvoiceId, newAmount, reason, type: typeof newAmount });
-        return res.status(400).json({ error: "Missing or invalid parameters" });
+      if (!originalInvoiceId) {
+        console.log("Missing originalInvoiceId:", originalInvoiceId);
+        return res.status(400).json({ error: "Missing invoice ID" });
+      }
+      
+      if (newAmount === undefined || newAmount === null) {
+        console.log("Missing newAmount:", { newAmount, type: typeof newAmount });
+        return res.status(400).json({ error: "Missing new amount" });
+      }
+      
+      if (typeof newAmount !== 'number' || newAmount <= 0) {
+        console.log("Invalid newAmount:", { newAmount, type: typeof newAmount, isNumber: typeof newAmount === 'number' });
+        return res.status(400).json({ error: "Invalid amount - must be a positive number" });
       }
 
       // Get original invoice from Firebase
@@ -472,10 +482,35 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(404).json({ error: "Invoice data not found" });
       }
 
+      // Fetch real client data from users collection
+      let clientEmail = invoice.clientEmail;
+      let clientName = invoice.clientName;
+      
+      // If we have a userId, fetch the real client data
+      if (invoice.userId) {
+        try {
+          const userDoc = await db.collection("users").doc(invoice.userId).get();
+          if (userDoc.exists) {
+            const userData = userDoc.data();
+            clientEmail = userData?.email || invoice.clientEmail;
+            clientName = userData?.displayName || userData?.username || invoice.clientName;
+          }
+        } catch (error) {
+          console.log('Could not fetch user data, using invoice data:', error);
+        }
+      }
+
+      console.log('Sending reminder to:', { 
+        originalEmail: invoice.clientEmail,
+        actualEmail: clientEmail, 
+        clientName: clientName,
+        invoiceNumber: invoice.invoiceNumber 
+      });
+
       // Send payment reminder email
       const success = await mailerLiteService.sendPaymentReminder(
-        invoice.clientEmail,
-        invoice.clientName,
+        clientEmail,
+        clientName,
         invoice.amount,
         invoice.invoiceNumber,
         invoice.paymentUrl || `${req.protocol}://${req.get('host')}/pay-invoice/${invoice.invoiceNumber}`
