@@ -203,13 +203,14 @@ class EmailService implements EmailNotificationService {
     time: string
   ): Promise<void> {
     try {
-      // Use the working admin notification approach (direct sending like other admin emails)
-      await apiRequest('POST', '/api/emails/admin/new-appointment', {
-        clientName,
-        clientEmail,
-        appointmentType,
-        date,
-        time
+      // Use the working appointment confirmation system with meetingUrl included
+      await apiRequest('POST', '/api/emails/appointment-confirmation', {
+        email: 'info@veenutrition.com',
+        name: 'Admin Team',
+        date: date,
+        time: time,
+        meetingUrl: '', // Include empty meetingUrl to avoid Firestore error
+        type: `Admin Alert: New ${appointmentType} request from ${clientName} (${clientEmail})`
       });
       console.log('Admin new appointment notification sent successfully');
     } catch (error) {
