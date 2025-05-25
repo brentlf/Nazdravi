@@ -287,7 +287,9 @@ export default function AdminUsers() {
                       </TableCell>
                       <TableCell>
                         <span className="text-sm">
-                          {user.preferredLanguage === "en" ? "🇺🇸 English" : "🇳🇱 Nederlands"}
+                          {user.preferredLanguage === "en" ? "🇺🇸 English" : 
+                           user.preferredLanguage === "cs" ? "🇨🇿 Czech" : 
+                           user.preferredLanguage === "af" ? "🇿🇦 Afrikaans" : "🇺🇸 English"}
                         </span>
                       </TableCell>
                       <TableCell>
@@ -313,10 +315,10 @@ export default function AdminUsers() {
                           </DropdownMenuTrigger>
                           <DropdownMenuContent align="end">
                             <DropdownMenuItem asChild>
-                              <button className="w-full">
+                              <Link href={`/admin/users/${user.uid}`} className="flex w-full">
                                 <Edit className="w-4 h-4 mr-2" />
-                                Edit User
-                              </button>
+                                View Profile
+                              </Link>
                             </DropdownMenuItem>
                             
                             <DropdownMenuSeparator />
