@@ -320,6 +320,204 @@ class ResendEmailService {
       text: `New appointment booked by ${appointment.clientName} (${appointment.clientEmail}) for ${appointment.date} at ${appointment.time}. Type: ${appointment.type}`
     };
   }
+
+  getRescheduleConfirmationTemplate(name: string, newDate: string, newTime: string, type: string): EmailTemplate {
+    return {
+      subject: 'Reschedule Confirmed - Vee Nutrition',
+      html: `
+        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; background-color: #f8faf8;">
+          <div style="background-color: white; padding: 30px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
+            <div style="text-align: center; margin-bottom: 30px;">
+              <h1 style="color: #A5CBA4; margin: 0;">🌿 Vee Nutrition</h1>
+            </div>
+            
+            <h2 style="color: #333; margin-bottom: 20px;">✅ Reschedule Confirmed</h2>
+            
+            <p style="color: #666; line-height: 1.6; margin-bottom: 20px;">
+              Hi ${name}, your reschedule request has been approved! Here are your new appointment details:
+            </p>
+            
+            <div style="background-color: #A5CBA4; color: white; padding: 25px; border-radius: 8px; margin: 20px 0;">
+              <h3 style="margin: 0 0 15px 0; font-size: 18px;">📅 New Appointment Details</h3>
+              <p style="margin: 5px 0; font-size: 16px;"><strong>Type:</strong> ${type}</p>
+              <p style="margin: 5px 0; font-size: 16px;"><strong>New Date:</strong> ${newDate}</p>
+              <p style="margin: 5px 0; font-size: 16px;"><strong>New Time:</strong> ${newTime}</p>
+            </div>
+            
+            <div style="border-top: 1px solid #eee; padding-top: 20px; margin-top: 30px; text-align: center; color: #999; font-size: 14px;">
+              <p>Vee Nutrition | Your Health, Our Priority</p>
+              <p>We look forward to seeing you at your new appointment time!</p>
+            </div>
+          </div>
+        </div>
+      `,
+      text: `Reschedule confirmed! Your ${type} appointment has been moved to ${newDate} at ${newTime}.`
+    };
+  }
+
+  getInvoiceGeneratedTemplate(name: string, amount: number, invoiceId: string): EmailTemplate {
+    return {
+      subject: 'Session Complete - Invoice Ready - Vee Nutrition',
+      html: `
+        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; background-color: #f8faf8;">
+          <div style="background-color: white; padding: 30px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
+            <div style="text-align: center; margin-bottom: 30px;">
+              <h1 style="color: #A5CBA4; margin: 0;">🌿 Vee Nutrition</h1>
+            </div>
+            
+            <h2 style="color: #333; margin-bottom: 20px;">💳 Invoice Ready</h2>
+            
+            <p style="color: #666; line-height: 1.6; margin-bottom: 20px;">
+              Hi ${name}, thank you for your session! Your invoice is ready for payment.
+            </p>
+            
+            <div style="background-color: #f0f8f0; padding: 20px; border-radius: 8px; margin: 20px 0;">
+              <h3 style="color: #A5CBA4; margin-top: 0;">Invoice Details</h3>
+              <p style="margin: 5px 0; color: #666;"><strong>Invoice ID:</strong> ${invoiceId}</p>
+              <p style="margin: 5px 0; color: #666;"><strong>Amount:</strong> €${amount}</p>
+              <p style="margin: 5px 0; color: #666;"><strong>Payment Methods:</strong> Credit Card, iDEAL</p>
+            </div>
+            
+            <div style="text-align: center; margin: 30px 0;">
+              <a href="https://your-domain.replit.app/dashboard/invoices" style="background-color: #A5CBA4; color: white; padding: 12px 25px; text-decoration: none; border-radius: 5px; font-weight: bold;">
+                Pay Invoice Now
+              </a>
+            </div>
+            
+            <div style="border-top: 1px solid #eee; padding-top: 20px; margin-top: 30px; text-align: center; color: #999; font-size: 14px;">
+              <p>Vee Nutrition | Professional Nutrition Services</p>
+              <p>Thank you for choosing us for your nutrition journey!</p>
+            </div>
+          </div>
+        </div>
+      `,
+      text: `Session complete! Your invoice (${invoiceId}) for €${amount} is ready for payment. Visit your dashboard to pay online.`
+    };
+  }
+
+  getLateRescheduleTemplate(name: string, date: string, time: string): EmailTemplate {
+    return {
+      subject: 'Late Reschedule Fee Applied - Vee Nutrition',
+      html: `
+        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; background-color: #f8faf8;">
+          <div style="background-color: white; padding: 30px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
+            <div style="text-align: center; margin-bottom: 30px;">
+              <h1 style="color: #A5CBA4; margin: 0;">🌿 Vee Nutrition</h1>
+            </div>
+            
+            <h2 style="color: #333; margin-bottom: 20px;">⚠️ Late Reschedule Notice</h2>
+            
+            <p style="color: #666; line-height: 1.6; margin-bottom: 20px;">
+              Hi ${name}, your reschedule request for ${date} at ${time} was within our 4 working hour policy window.
+            </p>
+            
+            <div style="background-color: #fff3cd; padding: 20px; border-radius: 8px; margin: 20px 0; border-left: 4px solid #ffc107;">
+              <h3 style="color: #856404; margin-top: 0;">Late Reschedule Fee</h3>
+              <p style="margin: 5px 0; color: #856404;"><strong>Fee Applied:</strong> €5</p>
+              <p style="margin: 5px 0; color: #856404;"><strong>Reason:</strong> Reschedule within 4 working hours</p>
+            </div>
+            
+            <p style="color: #666; line-height: 1.6; margin: 20px 0;">
+              This fee helps us manage our scheduling efficiently. We understand emergencies happen - for future appointments, please provide more notice when possible.
+            </p>
+            
+            <div style="border-top: 1px solid #eee; padding-top: 20px; margin-top: 30px; text-align: center; color: #999; font-size: 14px;">
+              <p>Vee Nutrition | Professional Scheduling Policy</p>
+              <p>Working Hours: Mon-Fri 9am-10pm, Sat 9am-12pm</p>
+            </div>
+          </div>
+        </div>
+      `,
+      text: `Late reschedule notice: A €5 fee has been applied for rescheduling your ${date} ${time} appointment within 4 working hours.`
+    };
+  }
+
+  getNoShowTemplate(name: string, date: string, time: string, penaltyAmount: number): EmailTemplate {
+    return {
+      subject: 'Missed Appointment - No-Show Fee Applied - Vee Nutrition',
+      html: `
+        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; background-color: #f8faf8;">
+          <div style="background-color: white; padding: 30px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
+            <div style="text-align: center; margin-bottom: 30px;">
+              <h1 style="color: #A5CBA4; margin: 0;">🌿 Vee Nutrition</h1>
+            </div>
+            
+            <h2 style="color: #333; margin-bottom: 20px;">❌ Missed Appointment Notice</h2>
+            
+            <p style="color: #666; line-height: 1.6; margin-bottom: 20px;">
+              Hi ${name}, we missed you at your appointment on ${date} at ${time}.
+            </p>
+            
+            <div style="background-color: #f8d7da; padding: 20px; border-radius: 8px; margin: 20px 0; border-left: 4px solid #dc3545;">
+              <h3 style="color: #721c24; margin-top: 0;">No-Show Penalty</h3>
+              <p style="margin: 5px 0; color: #721c24;"><strong>Fee Applied:</strong> €${penaltyAmount}</p>
+              <p style="margin: 5px 0; color: #721c24;"><strong>Rate:</strong> 50% of original appointment cost</p>
+            </div>
+            
+            <p style="color: #666; line-height: 1.6; margin: 20px 0;">
+              We understand that unexpected situations arise. To avoid future no-show fees, please cancel or reschedule at least 4 working hours in advance.
+            </p>
+            
+            <div style="text-align: center; margin: 30px 0;">
+              <a href="https://your-domain.replit.app/book" style="background-color: #A5CBA4; color: white; padding: 12px 25px; text-decoration: none; border-radius: 5px; font-weight: bold;">
+                Book New Appointment
+              </a>
+            </div>
+            
+            <div style="border-top: 1px solid #eee; padding-top: 20px; margin-top: 30px; text-align: center; color: #999; font-size: 14px;">
+              <p>Vee Nutrition | We're Here When You're Ready</p>
+              <p>Let's get back on track with your nutrition journey</p>
+            </div>
+          </div>
+        </div>
+      `,
+      text: `Missed appointment notice: A €${penaltyAmount} no-show fee (50% of appointment cost) has been applied for your missed ${date} ${time} appointment.`
+    };
+  }
+
+  getAppointmentCancelledTemplate(name: string, date: string, time: string, reason?: string): EmailTemplate {
+    return {
+      subject: 'Appointment Cancelled - Vee Nutrition',
+      html: `
+        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; background-color: #f8faf8;">
+          <div style="background-color: white; padding: 30px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
+            <div style="text-align: center; margin-bottom: 30px;">
+              <h1 style="color: #A5CBA4; margin: 0;">🌿 Vee Nutrition</h1>
+            </div>
+            
+            <h2 style="color: #333; margin-bottom: 20px;">❌ Appointment Cancelled</h2>
+            
+            <p style="color: #666; line-height: 1.6; margin-bottom: 20px;">
+              Hi ${name}, we need to cancel your upcoming appointment scheduled for ${date} at ${time}.
+            </p>
+            
+            ${reason ? `
+            <div style="background-color: #f8d7da; padding: 20px; border-radius: 8px; margin: 20px 0; border-left: 4px solid #dc3545;">
+              <h3 style="color: #721c24; margin-top: 0;">Cancellation Reason</h3>
+              <p style="margin: 0; color: #721c24;">${reason}</p>
+            </div>
+            ` : ''}
+            
+            <p style="color: #666; line-height: 1.6; margin: 20px 0;">
+              We sincerely apologize for any inconvenience. Please reschedule at your earliest convenience so we can continue supporting your nutrition journey.
+            </p>
+            
+            <div style="text-align: center; margin: 30px 0;">
+              <a href="https://your-domain.replit.app/book" style="background-color: #A5CBA4; color: white; padding: 12px 25px; text-decoration: none; border-radius: 5px; font-weight: bold;">
+                Reschedule Appointment
+              </a>
+            </div>
+            
+            <div style="border-top: 1px solid #eee; padding-top: 20px; margin-top: 30px; text-align: center; color: #999; font-size: 14px;">
+              <p>Vee Nutrition | Your Health, Our Priority</p>
+              <p>We're here when you're ready to continue</p>
+            </div>
+          </div>
+        </div>
+      `,
+      text: `Appointment cancelled: Your ${date} ${time} appointment has been cancelled. ${reason ? `Reason: ${reason}` : ''} Please reschedule at your convenience.`
+    };
+  }
 }
 
 const emailService = new ResendEmailService();
