@@ -207,6 +207,13 @@ export function DashboardOverview() {
       icon: Receipt,
       href: "/dashboard/invoices",
       color: "bg-orange-500 hover:bg-orange-600"
+    },
+    {
+      title: "Profile Settings",
+      description: "Manage your account and health info",
+      icon: User,
+      href: "/dashboard/profile",
+      color: "bg-gray-500 hover:bg-gray-600"
     }
   ];
 
