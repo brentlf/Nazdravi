@@ -149,27 +149,27 @@ export default function DashboardProfile() {
 
   // Load existing data when component mounts
   useEffect(() => {
-    if (latestHealthAssessment) {
+    if (healthAssessment) {
       healthForm.reset({
-        age: latestHealthAssessment.age?.toString() || "",
-        height: latestHealthAssessment.height || "",
-        weight: latestHealthAssessment.weight || "",
-        chronicConditions: latestHealthAssessment.chronicConditions || "",
-        currentMedication: latestHealthAssessment.currentMedication || "",
-        gpContact: latestHealthAssessment.gpContact || "",
-        emergencyContact: latestHealthAssessment.emergencyContact || "",
+        age: healthAssessment.age?.toString() || "",
+        height: healthAssessment.height || "",
+        weight: healthAssessment.weight || "",
+        chronicConditions: healthAssessment.chronicConditions || "",
+        currentMedication: healthAssessment.currentMedication || "",
+        gpContact: healthAssessment.gpContact || "",
+        emergencyContact: healthAssessment.emergencyContact || "",
       });
     }
 
-    if (latestConsentRecord) {
+    if (consentRecord) {
       preferencesForm.reset({
-        preferredLanguage: latestConsentRecord.preferredLanguage || "english",
-        currentLocation: latestConsentRecord.currentLocation || "uk",
+        preferredLanguage: consentRecord.preferredLanguage || "english",
+        currentLocation: consentRecord.currentLocation || "uk",
         emailNotifications: true,
         smsNotifications: false,
       });
     }
-  }, [latestHealthAssessment, latestConsentRecord, healthForm, preferencesForm]);
+  }, [healthAssessment, consentRecord, healthForm, preferencesForm]);
 
   // Handle profile update
   const onProfileSubmit = async (data: ProfileFormData) => {
@@ -200,9 +200,7 @@ export default function DashboardProfile() {
     setIsLoading(true);
     try {
       // Save health assessment update
-      const { add: saveHealthAssessment } = useFirestoreActions("healthAssessments");
-      
-      await saveHealthAssessment({
+      await addDoc(collection(db, "healthAssessments"), {
         userId: user?.uid || "",
         assessmentDate: new Date(),
         age: parseInt(data.age),
@@ -256,7 +254,7 @@ export default function DashboardProfile() {
       });
 
       // Notify admin of language preference changes
-      if (data.preferredLanguage !== latestConsentRecord?.preferredLanguage) {
+      if (data.preferredLanguage !== consentRecord?.preferredLanguage) {
         try {
           await emailService.sendPreferencesUpdateNotification(
             "admin@veenutrition.com",
@@ -424,7 +422,7 @@ export default function DashboardProfile() {
                     <Input
                       id="height"
                       {...healthForm.register("height")}
-                      placeholder="e.g., 170cm or 5'7\""
+                      placeholder="e.g., 170cm or 5'7 inches"
                     />
                   </div>
                   <div>
