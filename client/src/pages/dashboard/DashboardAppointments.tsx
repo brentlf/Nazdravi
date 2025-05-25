@@ -39,6 +39,7 @@ import { useFirestoreCollection, useFirestoreActions } from "@/hooks/useFirestor
 import { Appointment } from "@/types";
 import { where, orderBy } from "firebase/firestore";
 import { useAvailableSlots } from "@/hooks/useAvailableSlots";
+import { useCancellationPolicy } from "@/hooks/useCancellationPolicy";
 import { Link } from "wouter";
 
 const appointmentSchema = z.object({

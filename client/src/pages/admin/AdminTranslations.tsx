@@ -211,6 +211,7 @@ export default function AdminTranslations() {
                   <SelectItem value="all">All Languages</SelectItem>
                   <SelectItem value="en">🇺🇸 English</SelectItem>
                   <SelectItem value="cs">🇨🇿 Czech</SelectItem>
+                  <SelectItem value="af">🇿🇦 Afrikaans</SelectItem>
                 </SelectContent>
               </Select>
 
