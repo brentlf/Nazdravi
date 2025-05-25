@@ -222,6 +222,66 @@ class ResendEmailService {
     };
   }
 
+  getPaymentReminderTemplate(name: string, amount: number, invoiceNumber: string, paymentUrl: string): EmailTemplate {
+    return {
+      subject: `Payment Reminder - Invoice ${invoiceNumber}`,
+      html: `
+        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; background-color: #f8faf8;">
+          <div style="background-color: white; padding: 30px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
+            <div style="text-align: center; margin-bottom: 30px;">
+              <h1 style="color: #A5CBA4; margin: 0;">🌿 Vee Nutrition</h1>
+            </div>
+            
+            <h2 style="color: #333; margin-bottom: 20px;">💰 Payment Reminder</h2>
+            
+            <p style="color: #666; line-height: 1.6; margin-bottom: 20px;">
+              Dear ${name},
+            </p>
+            
+            <p style="color: #666; line-height: 1.6; margin-bottom: 20px;">
+              This is a friendly reminder that payment for your invoice is still pending.
+            </p>
+            
+            <div style="background-color: #fff3cd; padding: 20px; border-radius: 8px; margin: 20px 0; border-left: 4px solid #ffc107;">
+              <h3 style="margin: 0 0 10px 0; color: #856404;">Invoice Details</h3>
+              <p style="margin: 5px 0; color: #856404;"><strong>Invoice Number:</strong> ${invoiceNumber}</p>
+              <p style="margin: 5px 0; color: #856404;"><strong>Amount Due:</strong> €${amount.toFixed(2)}</p>
+            </div>
+
+            <p style="color: #666; line-height: 1.6; margin-bottom: 20px;">
+              You can complete your payment securely using the link below:
+            </p>
+            
+            <div style="text-align: center; margin: 30px 0;">
+              <a href="${paymentUrl}" style="background-color: #A5CBA4; color: white; padding: 12px 30px; text-decoration: none; border-radius: 5px; display: inline-block; font-weight: bold;">Pay Invoice</a>
+            </div>
+
+            <p style="color: #666; line-height: 1.6; margin-bottom: 20px;">
+              If you have any questions about this invoice or need assistance with payment, please don't hesitate to contact us.
+            </p>
+            
+            <div style="border-top: 1px solid #eee; padding-top: 20px; margin-top: 30px; text-align: center; color: #999; font-size: 14px;">
+              <p>Vee Nutrition | Transforming Lives Through Nutrition</p>
+              <p>Email: info@veenutrition.com</p>
+            </div>
+          </div>
+        </div>
+      `,
+      text: `Payment Reminder - Invoice ${invoiceNumber}
+
+Dear ${name},
+
+This is a friendly reminder that payment for invoice ${invoiceNumber} (€${amount.toFixed(2)}) is still pending.
+
+You can pay online at: ${paymentUrl}
+
+If you have any questions, please contact us.
+
+Best regards,
+Vee Nutrition Team`
+    };
+  }
+
   getRescheduleRequestTemplate(clientName: string, clientEmail: string, originalDate: string, originalTime: string, reason?: string): EmailTemplate {
     return {
       subject: `Reschedule Request from ${clientName}`,

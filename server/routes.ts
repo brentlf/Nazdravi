@@ -367,8 +367,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       console.log("Extracted params:", { originalInvoiceId, newAmount, reason });
 
-      if (!originalInvoiceId || !newAmount || newAmount <= 0) {
-        console.log("Validation failed:", { originalInvoiceId, newAmount, reason });
+      if (!originalInvoiceId || newAmount === undefined || newAmount === null || newAmount <= 0) {
+        console.log("Validation failed:", { originalInvoiceId, newAmount, reason, type: typeof newAmount });
         return res.status(400).json({ error: "Missing or invalid parameters" });
       }
 
