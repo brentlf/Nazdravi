@@ -11,10 +11,32 @@ export function useAvailableSlots(selectedDate: string) {
   const [availableSlots, setAvailableSlots] = useState<TimeSlot[]>([]);
   const [loading, setLoading] = useState(false);
 
-  // 30-minute appointments starting only at the top of each hour
-  const defaultSlots = [
-    "09:00", "10:00", "11:00", "13:00", "14:00", "15:00", "16:00", "17:00"
-  ];
+  // Enhanced scheduling rules: day-specific time slots
+  const getTimeSlotsByDay = (date: string): string[] => {
+    const selectedDate = new Date(date);
+    const dayOfWeek = selectedDate.getDay(); // 0 = Sunday, 1 = Monday, etc.
+    
+    // Sundays: No bookings allowed
+    if (dayOfWeek === 0) {
+      return [];
+    }
+    
+    // Saturdays: 8:00 to 11:00
+    if (dayOfWeek === 6) {
+      return ["08:00", "09:00", "10:00", "11:00"];
+    }
+    
+    // Tuesdays & Thursdays: allow booking up to 21:00
+    if (dayOfWeek === 2 || dayOfWeek === 4) {
+      return [
+        "09:00", "10:00", "11:00", "13:00", "14:00", "15:00", "16:00", "17:00",
+        "18:00", "19:00", "20:00", "21:00"
+      ];
+    }
+    
+    // All other days (Monday, Wednesday, Friday): last slot = 17:00
+    return ["09:00", "10:00", "11:00", "13:00", "14:00", "15:00", "16:00", "17:00"];
+  };
 
   useEffect(() => {
     if (!selectedDate) return;
@@ -48,8 +70,19 @@ export function useAvailableSlots(selectedDate: string) {
         const unavailableSnapshot = await getDocs(unavailableQuery);
         const unavailableSlots = unavailableSnapshot.docs.flatMap(doc => doc.data().timeslots || []);
 
-        // Create availability array
-        const slots: TimeSlot[] = defaultSlots.map(time => ({
+        // Get day-specific time slots
+        const daySlots = getTimeSlotsByDay(selectedDate);
+        
+        // If no slots available for this day (e.g., Sundays), return empty array
+        if (daySlots.length === 0) {
+          setAvailableSlots([]);
+          return;
+        }
+
+        console.log(`Day-specific slots for ${selectedDate}:`, daySlots);
+
+        // Create availability array using day-specific slots
+        const slots: TimeSlot[] = daySlots.map(time => ({
           time,
           available: !bookedSlots.includes(time) && !unavailableSlots.includes(time)
         }));
