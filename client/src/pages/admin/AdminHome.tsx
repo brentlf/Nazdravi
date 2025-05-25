@@ -121,20 +121,6 @@ export default function AdminHome() {
 
   const quickActions = [
     {
-      title: "Review Appointments",
-      description: "Confirm or manage pending appointment requests",
-      icon: Calendar,
-      href: "/admin/appointments",
-      color: "bg-blue-500 hover:bg-blue-600"
-    },
-    {
-      title: "Client Messages",
-      description: "View and respond to client messages",
-      icon: MessageCircle,
-      href: "/admin/messages",
-      color: "bg-green-500 hover:bg-green-600"
-    },
-    {
       title: "Client Documents",
       description: "Upload nutrition plans and documents for clients",
       icon: FileText,
@@ -156,25 +142,11 @@ export default function AdminHome() {
       color: "bg-red-500 hover:bg-red-600"
     },
     {
-      title: "Manage Users",
-      description: "View and manage client accounts",
-      icon: Users,
-      href: "/admin/users",
-      color: "bg-orange-500 hover:bg-orange-600"
-    },
-    {
       title: "Email Automation",
       description: "Send appointment reminders and manage email notifications",
       icon: Mail,
       href: "/admin/emails",
       color: "bg-indigo-500 hover:bg-indigo-600"
-    },
-    {
-      title: "Invoice Management",
-      description: "Create invoices and manage payments for completed sessions",
-      icon: Receipt,
-      href: "/admin/invoices",
-      color: "bg-emerald-500 hover:bg-emerald-600"
     }
   ];
 
@@ -286,6 +258,34 @@ export default function AdminHome() {
 
           {/* Quick Actions Sidebar */}
           <div className="space-y-8">
+            {/* Daily Reminder Email Tile */}
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <Mail className="w-5 h-5" />
+                  Daily Reminder Emails
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-4">
+                  <div className="text-center">
+                    <div className="w-12 h-12 bg-blue-100 dark:bg-blue-900/30 rounded-full flex items-center justify-center mx-auto mb-3">
+                      <Mail className="w-6 h-6 text-blue-600 dark:text-blue-400" />
+                    </div>
+                    <p className="text-sm text-muted-foreground mb-4">
+                      Send appointment reminders to all clients with confirmed appointments tomorrow
+                    </p>
+                  </div>
+                  <Button className="w-full" asChild>
+                    <Link href="/admin/emails">
+                      <Mail className="w-4 h-4 mr-2" />
+                      Send Daily Reminders
+                    </Link>
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+
             {/* Quick Actions */}
             <Card>
               <CardHeader>
