@@ -81,18 +81,11 @@ function AdminUserProfile() {
       
       // Get all appointments and filter client-side to avoid index issues
       const allDocsSnapshot = await getDocs(appointmentsRef);
-      console.log('Debug: Total appointments in collection:', allDocsSnapshot.size);
       
       const userAppointments = [];
       
       allDocsSnapshot.forEach(doc => {
         const data = doc.data();
-        
-        // Debug each appointment to see the structure
-        if (userAppointments.length === 0) {
-          console.log('Debug: Sample appointment structure:', Object.keys(data));
-          console.log('Debug: Sample appointment data:', data);
-        }
         
         // Check if this appointment belongs to the user using multiple field checks
         if (data.userId === userId || 
@@ -107,11 +100,6 @@ function AdminUserProfile() {
           });
         }
       });
-      
-      console.log('Debug: Found appointments for user:', userAppointments.length);
-      if (userAppointments.length > 0) {
-        console.log('Debug: Sample appointment:', userAppointments[0]);
-      }
       
       // Sort by date descending
       userAppointments.sort((a, b) => {
@@ -153,10 +141,7 @@ function AdminUserProfile() {
         }
       });
       
-      console.log('Debug: Found invoices for user:', userInvoices.length);
-      if (userInvoices.length > 0) {
-        console.log('Debug: Sample invoice:', userInvoices[0]);
-      }
+
       
       // Sort by creation date descending
       userInvoices.sort((a, b) => {
