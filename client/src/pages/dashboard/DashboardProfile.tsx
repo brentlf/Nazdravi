@@ -39,6 +39,7 @@ const preferencesSchema = z.object({
   preferredLanguage: z.enum(["english", "czech"]),
   currentLocation: z.enum(["uk", "south-africa", "czech-republic", "netherlands"]),
   emailNotifications: z.boolean().default(true),
+  servicePlan: z.enum(["pay-as-you-go", "complete-program"]).default("pay-as-you-go"),
 });
 
 // Password change schema
@@ -132,6 +133,7 @@ export default function DashboardProfile() {
       preferredLanguage: "english",
       currentLocation: "uk",
       emailNotifications: true,
+      servicePlan: "pay-as-you-go",
     },
   });
 
@@ -530,6 +532,50 @@ export default function DashboardProfile() {
                       <SelectItem value="netherlands">Netherlands</SelectItem>
                     </SelectContent>
                   </Select>
+                </div>
+
+                <div>
+                  <Label htmlFor="servicePlan">Service Plan</Label>
+                  <Select
+                    value={preferencesForm.watch("servicePlan")}
+                    onValueChange={(value) => preferencesForm.setValue("servicePlan", value as "pay-as-you-go" | "complete-program")}
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select your service plan" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="pay-as-you-go">
+                        <div className="flex flex-col">
+                          <span className="font-medium">Pay As You Go</span>
+                          <span className="text-sm text-gray-500">Individual session billing</span>
+                        </div>
+                      </SelectItem>
+                      <SelectItem value="complete-program">
+                        <div className="flex flex-col">
+                          <span className="font-medium">Complete Program (3 Months)</span>
+                          <span className="text-sm text-gray-500">Monthly billing with unlimited consultations</span>
+                        </div>
+                      </SelectItem>
+                    </SelectContent>
+                  </Select>
+                  {preferencesForm.watch("servicePlan") === "complete-program" && (
+                    <div className="mt-3 p-4 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg">
+                      <div className="flex items-start gap-3">
+                        <div className="w-6 h-6 bg-green-500 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
+                          <span className="text-white text-sm">✓</span>
+                        </div>
+                        <div>
+                          <h4 className="font-medium text-green-900 dark:text-green-100">Complete Program Benefits</h4>
+                          <ul className="text-sm text-green-700 dark:text-green-300 mt-1 space-y-1">
+                            <li>• Unlimited consultations for 3 months</li>
+                            <li>• Priority booking and support</li>
+                            <li>• Monthly billing instead of per-session</li>
+                            <li>• Comprehensive nutrition plan</li>
+                          </ul>
+                        </div>
+                      </div>
+                    </div>
+                  )}
                 </div>
 
                 <div className="space-y-3">

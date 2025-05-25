@@ -17,6 +17,7 @@ export const userSchema = z.object({
   address: z.string().optional(),
   emergencyContact: z.string().optional(),
   gpContact: z.string().optional(),
+  servicePlan: z.enum(["pay-as-you-go", "complete-program"]).default("pay-as-you-go"),
 });
 
 // Appointment Schema
