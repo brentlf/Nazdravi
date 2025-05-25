@@ -4,11 +4,13 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Checkbox } from "@/components/ui/checkbox";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useFirestoreCollection } from "@/hooks/useFirestore";
 import { orderBy, limit } from "firebase/firestore";
-import { Receipt, Plus, Eye, Send, DollarSign, ArrowLeft, AlertTriangle, RefreshCw, Clock, Ban, CheckCircle, FileText } from "lucide-react";
+import { Receipt, Plus, Eye, Send, DollarSign, ArrowLeft, AlertTriangle, RefreshCw, Clock, Ban, CheckCircle, FileText, Edit } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/contexts/AuthContext";
 import { Link } from "wouter";
@@ -19,6 +21,11 @@ export default function AdminInvoices() {
   const [isCreatingInvoice, setIsCreatingInvoice] = useState(false);
   const [includeNoShowPenalty, setIncludeNoShowPenalty] = useState(false);
   const [includeLateRescheduleFee, setIncludeLateRescheduleFee] = useState(false);
+  const [useCustomAmount, setUseCustomAmount] = useState(false);
+  const [customAmount, setCustomAmount] = useState("");
+  const [reissueInvoice, setReissueInvoice] = useState<Invoice | null>(null);
+  const [reissueAmount, setReissueAmount] = useState("");
+  const [isReissuing, setIsReissuing] = useState(false);
   const { toast } = useToast();
   const { user } = useAuth();
 
@@ -96,6 +103,11 @@ export default function AdminInvoices() {
   const calculateInvoiceTotal = () => {
     if (!selectedAppointment) return 0;
     
+    // Use custom amount if specified
+    if (useCustomAmount && customAmount) {
+      return parseFloat(customAmount) || 0;
+    }
+    
     let total = 0;
     
     // Session cost (€0 for no-show, full price for others)
@@ -151,6 +163,8 @@ export default function AdminInvoices() {
         setSelectedAppointment(null);
         setIncludeNoShowPenalty(false);
         setIncludeLateRescheduleFee(false);
+        setUseCustomAmount(false);
+        setCustomAmount("");
       } else {
         throw new Error('Failed to create invoice');
       }
@@ -161,6 +175,46 @@ export default function AdminInvoices() {
         variant: "destructive",
       });
       setIsCreatingInvoice(false);
+    }
+  };
+
+  // Handle invoice reissue
+  const handleReissueInvoice = async (invoice: Invoice, newAmount: number) => {
+    if (!user) return;
+    
+    setIsReissuing(true);
+    
+    try {
+      const response = await fetch('/api/invoices/reissue', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          originalInvoiceId: invoice.id,
+          newAmount: newAmount,
+          reason: 'Custom amount adjustment'
+        }),
+      });
+
+      if (response.ok) {
+        toast({
+          title: "Invoice Reissued",
+          description: `New invoice for €${newAmount.toFixed(2)} has been created successfully.`,
+        });
+        setReissueInvoice(null);
+        setReissueAmount("");
+        setIsReissuing(false);
+      } else {
+        throw new Error('Failed to reissue invoice');
+      }
+    } catch (error) {
+      toast({
+        title: "Failed to Reissue Invoice",
+        description: "Please try again later.",
+        variant: "destructive",
+      });
+      setIsReissuing(false);
     }
   };
 
@@ -449,11 +503,50 @@ export default function AdminInvoices() {
                                         )}
                                       </div>
 
+                                      {/* Custom Amount Control */}
+                                      <div className="flex justify-between items-center">
+                                        <div className="flex items-center space-x-2">
+                                          <Checkbox
+                                            id="custom-amount"
+                                            checked={useCustomAmount}
+                                            onCheckedChange={(checked) => {
+                                              setUseCustomAmount(checked === true);
+                                              if (!checked) setCustomAmount("");
+                                            }}
+                                          />
+                                          <div className="grid gap-1.5 leading-none">
+                                            <label 
+                                              htmlFor="custom-amount" 
+                                              className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                                            >
+                                              Use Custom Amount
+                                            </label>
+                                            <p className="text-xs text-muted-foreground">
+                                              Override calculated amount with custom value
+                                            </p>
+                                          </div>
+                                        </div>
+                                        {useCustomAmount && (
+                                          <div className="flex items-center gap-2">
+                                            <span className="text-sm">€</span>
+                                            <Input
+                                              type="number"
+                                              step="0.01"
+                                              placeholder="0.00"
+                                              value={customAmount}
+                                              onChange={(e) => setCustomAmount(e.target.value)}
+                                              className="w-20 h-8 text-sm"
+                                            />
+                                          </div>
+                                        )}
+                                      </div>
+
                                       {/* Total Amount */}
                                       <div className="flex justify-between items-center pt-3 border-t font-semibold">
                                         <span>Total Amount</span>
-                                        <Badge variant="default" className="text-base px-3 py-1">
+                                        <Badge variant={useCustomAmount ? "secondary" : "default"} className="text-base px-3 py-1">
                                           €{calculateInvoiceTotal().toFixed(2)}
+                                          {useCustomAmount && <span className="ml-1 text-xs">(Custom)</span>}
                                         </Badge>
                                       </div>
 
@@ -571,6 +664,70 @@ export default function AdminInvoices() {
                                   <Send className="w-3 h-3" />
                                 </Button>
                               )}
+                              <Dialog>
+                                <DialogTrigger asChild>
+                                  <Button
+                                    variant="ghost"
+                                    size="sm"
+                                    className="h-8 w-8 p-0"
+                                    onClick={() => {
+                                      setReissueInvoice(invoice);
+                                      setReissueAmount(invoice.amount.toString());
+                                    }}
+                                    title="Reissue Invoice"
+                                  >
+                                    <Edit className="w-3 h-3" />
+                                  </Button>
+                                </DialogTrigger>
+                                <DialogContent className="max-w-md">
+                                  <DialogHeader>
+                                    <DialogTitle>Reissue Invoice</DialogTitle>
+                                  </DialogHeader>
+                                  
+                                  {reissueInvoice && (
+                                    <div className="space-y-4">
+                                      <div className="p-3 bg-gray-50 rounded-lg">
+                                        <p className="text-sm"><strong>Client:</strong> {reissueInvoice.clientName}</p>
+                                        <p className="text-sm"><strong>Original Amount:</strong> €{reissueInvoice.amount.toFixed(2)}</p>
+                                        <p className="text-sm"><strong>Status:</strong> {reissueInvoice.status}</p>
+                                      </div>
+                                      
+                                      <div>
+                                        <Label htmlFor="reissue-amount">New Amount (EUR)</Label>
+                                        <Input
+                                          id="reissue-amount"
+                                          type="number"
+                                          step="0.01"
+                                          placeholder="0.00"
+                                          value={reissueAmount}
+                                          onChange={(e) => setReissueAmount(e.target.value)}
+                                          className="mt-1"
+                                        />
+                                      </div>
+
+                                      <div className="flex gap-2">
+                                        <Button 
+                                          onClick={() => {
+                                            setReissueInvoice(null);
+                                            setReissueAmount("");
+                                          }}
+                                          variant="outline"
+                                          className="flex-1"
+                                        >
+                                          Cancel
+                                        </Button>
+                                        <Button 
+                                          onClick={() => handleReissueInvoice(reissueInvoice, parseFloat(reissueAmount))}
+                                          disabled={isReissuing || !reissueAmount || parseFloat(reissueAmount) <= 0}
+                                          className="flex-1"
+                                        >
+                                          {isReissuing ? "Reissuing..." : `Reissue €${parseFloat(reissueAmount || "0").toFixed(2)}`}
+                                        </Button>
+                                      </div>
+                                    </div>
+                                  )}
+                                </DialogContent>
+                              </Dialog>
                             </div>
                           </TableCell>
                         </TableRow>
