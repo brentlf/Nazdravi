@@ -18,6 +18,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { useFirestoreCollection } from "@/hooks/useFirestore";
 import { Appointment, Message, Progress } from "@/types";
 import type { Invoice } from "@shared/firebase-schema";
+import ServicePlanStatusWidget from "./ServicePlanStatusWidget";
 import { where, orderBy, limit } from "firebase/firestore";
 
 export function DashboardOverview() {
@@ -235,43 +236,8 @@ export function DashboardOverview() {
         <p className="text-primary-100">Here's your nutrition journey overview</p>
       </div>
 
-      {/* Upgrade CTA for Pay-as-You-Go Users */}
-      {(!user?.servicePlan || user.servicePlan === 'pay-as-you-go') && (
-        <div className="bg-gradient-to-r from-green-50 to-blue-50 dark:from-green-900/20 dark:to-blue-900/20 border border-green-200 dark:border-green-800 rounded-xl p-6">
-          <div className="flex items-start justify-between">
-            <div className="flex-1">
-              <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2 flex items-center gap-2">
-                <span className="text-xl">🌟</span>
-                Upgrade to Complete Program
-              </h3>
-              <p className="text-gray-600 dark:text-gray-300 mb-4">
-                Get unlimited consultations for 3 months with monthly billing. Perfect for comprehensive nutrition transformation!
-              </p>
-              <div className="grid grid-cols-2 gap-3 mb-4">
-                <div className="text-sm text-gray-600 dark:text-gray-300">
-                  <span className="text-green-600 font-medium">✓</span> Unlimited consultations
-                </div>
-                <div className="text-sm text-gray-600 dark:text-gray-300">
-                  <span className="text-green-600 font-medium">✓</span> Priority booking
-                </div>
-                <div className="text-sm text-gray-600 dark:text-gray-300">
-                  <span className="text-green-600 font-medium">✓</span> Monthly billing
-                </div>
-                <div className="text-sm text-gray-600 dark:text-gray-300">
-                  <span className="text-green-600 font-medium">✓</span> Comprehensive meal planning
-                </div>
-              </div>
-            </div>
-            <div className="ml-6">
-              <Button asChild className="bg-green-600 hover:bg-green-700 text-white">
-                <Link href="/dashboard/profile">
-                  Upgrade Now
-                </Link>
-              </Button>
-            </div>
-          </div>
-        </div>
-      )}
+      {/* Service Plan Status Widget */}
+      <ServicePlanStatusWidget user={user} />
 
       {/* Quick Stats Grid */}
       <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-6">
