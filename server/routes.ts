@@ -362,9 +362,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Reissue invoice with updated amount
   app.post("/api/invoices/reissue", async (req, res) => {
     try {
+      console.log("Reissue request body:", req.body);
       const { originalInvoiceId, newAmount, reason } = req.body;
 
+      console.log("Extracted params:", { originalInvoiceId, newAmount, reason });
+
       if (!originalInvoiceId || !newAmount || newAmount <= 0) {
+        console.log("Validation failed:", { originalInvoiceId, newAmount, reason });
         return res.status(400).json({ error: "Missing or invalid parameters" });
       }
 
@@ -445,6 +449,56 @@ export async function registerRoutes(app: Express): Promise<Server> {
     } catch (error) {
       console.error("Invoice reissue error:", error);
       res.status(500).json({ error: "Failed to reissue invoice" });
+    }
+  });
+
+  // Send payment reminder email
+  app.post("/api/invoices/send-reminder", async (req, res) => {
+    try {
+      const { invoiceId } = req.body;
+
+      if (!invoiceId) {
+        return res.status(400).json({ error: "Invoice ID is required" });
+      }
+
+      // Get invoice from Firebase
+      const invoiceDoc = await db.collection("invoices").doc(invoiceId).get();
+      if (!invoiceDoc.exists) {
+        return res.status(404).json({ error: "Invoice not found" });
+      }
+
+      const invoice = invoiceDoc.data();
+      if (!invoice) {
+        return res.status(404).json({ error: "Invoice data not found" });
+      }
+
+      // Send payment reminder email
+      const success = await mailerLiteService.sendPaymentReminder(
+        invoice.clientEmail,
+        invoice.clientName,
+        invoice.amount,
+        invoice.invoiceNumber,
+        invoice.paymentUrl || `${req.protocol}://${req.get('host')}/pay-invoice/${invoice.invoiceNumber}`
+      );
+
+      if (success) {
+        // Update invoice with reminder sent timestamp
+        await db.collection("invoices").doc(invoiceId).update({
+          lastReminderSent: new Date(),
+          reminderCount: (invoice.reminderCount || 0) + 1
+        });
+
+        res.json({ 
+          success: true, 
+          message: "Payment reminder sent successfully" 
+        });
+      } else {
+        res.status(500).json({ error: "Failed to send payment reminder" });
+      }
+
+    } catch (error) {
+      console.error("Payment reminder error:", error);
+      res.status(500).json({ error: "Failed to send payment reminder" });
     }
   });
 

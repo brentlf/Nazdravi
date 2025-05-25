@@ -215,6 +215,17 @@ export class MailerLiteService {
     });
   }
 
+  async sendPaymentReminder(email: string, name: string, amount: number, invoiceNumber: string, paymentUrl: string): Promise<boolean> {
+    const template = this.getPaymentReminderTemplate(name, amount, invoiceNumber, paymentUrl);
+    return this.sendEmail({
+      to: email,
+      toName: name,
+      subject: template.subject,
+      html: template.html,
+      text: template.text
+    });
+  }
+
   private getAccountConfirmationTemplate(name: string): EmailTemplate {
     return {
       subject: 'Welcome to Vee Nutrition - Account Created Successfully',
