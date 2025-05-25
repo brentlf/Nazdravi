@@ -188,9 +188,18 @@ function AdminUserProfile() {
         
         consentSnapshot.forEach(doc => {
           const data = doc.data();
+          console.log('Debug: Consent form structure:', {
+            docId: doc.id,
+            userId: data.userId,
+            email: data.email,
+            targetUserId: userId,
+            match: data.userId === userId
+          });
+          
           if (data.userId === userId) {
             healthData = data;
             console.log(`Found consent form for userId ${userId}:`, doc.id);
+            console.log('Consent form data keys:', Object.keys(data));
           }
         });
       } catch (error) {
