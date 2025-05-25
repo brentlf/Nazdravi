@@ -206,7 +206,7 @@ export default function AdminInvoices() {
         }
       });
       
-      const response = await fetch('/api/test-reissue', {
+      const response = await fetch('/api/invoices/reissue', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
