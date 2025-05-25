@@ -239,6 +239,151 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Admin notification email routes
+  app.post("/api/emails/admin/new-appointment", async (req, res) => {
+    try {
+      const { clientName, clientEmail, appointmentType, date, time } = req.body;
+      
+      if (!clientName || !clientEmail) {
+        return res.status(400).json({ success: false, error: "Missing required fields: clientName and clientEmail" });
+      }
+      
+      const docRef = await db.collection("mail").add({
+        to: "admin@veenutrition.com",
+        toName: "Admin Team",
+        type: "admin-new-appointment",
+        status: "pending",
+        data: {
+          clientName,
+          clientEmail,
+          appointmentType: appointmentType || 'Consultation',
+          date: date || '',
+          time: time || ''
+        },
+        createdAt: new Date()
+      });
+
+      res.json({ success: true, message: "Admin new appointment notification queued", docId: docRef.id });
+    } catch (error: any) {
+      console.error("Error queuing admin new appointment notification:", error);
+      res.status(500).json({ success: false, error: error.message });
+    }
+  });
+
+  app.post("/api/emails/admin/health-update", async (req, res) => {
+    try {
+      const { clientName, clientEmail, updateType } = req.body;
+      
+      if (!clientName || !clientEmail) {
+        return res.status(400).json({ success: false, error: "Missing required fields: clientName and clientEmail" });
+      }
+      
+      const docRef = await db.collection("mail").add({
+        to: "admin@veenutrition.com",
+        toName: "Admin Team",
+        type: "admin-health-update",
+        status: "pending",
+        data: {
+          clientName,
+          clientEmail,
+          updateType: updateType || 'Medical information updated'
+        },
+        createdAt: new Date()
+      });
+
+      res.json({ success: true, message: "Admin health update notification queued", docId: docRef.id });
+    } catch (error: any) {
+      console.error("Error queuing admin health update notification:", error);
+      res.status(500).json({ success: false, error: error.message });
+    }
+  });
+
+  app.post("/api/emails/admin/payment-received", async (req, res) => {
+    try {
+      const { clientName, amount, invoiceId, paymentMethod } = req.body;
+      
+      if (!clientName) {
+        return res.status(400).json({ success: false, error: "Missing required field: clientName" });
+      }
+      
+      const docRef = await db.collection("mail").add({
+        to: "admin@veenutrition.com",
+        toName: "Admin Team",
+        type: "admin-payment-received",
+        status: "pending",
+        data: {
+          clientName,
+          amount: amount || 0,
+          invoiceId: invoiceId || '',
+          paymentMethod: paymentMethod || 'Online'
+        },
+        createdAt: new Date()
+      });
+
+      res.json({ success: true, message: "Admin payment received notification queued", docId: docRef.id });
+    } catch (error: any) {
+      console.error("Error queuing admin payment received notification:", error);
+      res.status(500).json({ success: false, error: error.message });
+    }
+  });
+
+  app.post("/api/emails/admin/plan-upgrade", async (req, res) => {
+    try {
+      const { clientName, planType, previousPlan } = req.body;
+      
+      if (!clientName || !planType) {
+        return res.status(400).json({ success: false, error: "Missing required fields: clientName and planType" });
+      }
+      
+      const docRef = await db.collection("mail").add({
+        to: "admin@veenutrition.com",
+        toName: "Admin Team",
+        type: "admin-plan-upgrade",
+        status: "pending",
+        data: {
+          clientName,
+          planType,
+          previousPlan: previousPlan || 'pay-as-you-go'
+        },
+        createdAt: new Date()
+      });
+
+      res.json({ success: true, message: "Admin plan upgrade notification queued", docId: docRef.id });
+    } catch (error: any) {
+      console.error("Error queuing admin plan upgrade notification:", error);
+      res.status(500).json({ success: false, error: error.message });
+    }
+  });
+
+  app.post("/api/emails/admin/client-message", async (req, res) => {
+    try {
+      const { clientName, clientEmail, messageType, urgency } = req.body;
+      
+      if (!clientName || !clientEmail) {
+        return res.status(400).json({ success: false, error: "Missing required fields: clientName and clientEmail" });
+      }
+      
+      const docRef = await db.collection("mail").add({
+        to: "admin@veenutrition.com",
+        toName: "Admin Team",
+        type: "admin-client-message",
+        status: "pending",
+        data: {
+          clientName,
+          clientEmail,
+          messageType: messageType || 'General inquiry',
+          urgency: urgency || 'normal'
+        },
+        createdAt: new Date()
+      });
+
+      res.json({ success: true, message: "Admin client message notification queued", docId: docRef.id });
+    } catch (error: any) {
+      console.error("Error queuing admin client message notification:", error);
+      res.status(500).json({ success: false, error: error.message });
+    }
+  });
+
   const httpServer = createServer(app);
   return httpServer;
 }
