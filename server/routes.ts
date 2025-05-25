@@ -10,6 +10,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
     console.log(`🔍 MIDDLEWARE DEBUG: ${req.method} ${req.path} - ${req.url}`);
     next();
   });
+
+  // Test route to verify our server is handling these requests
+  app.get('/api/emails/test', (req, res) => {
+    console.log('🚨 TEST ROUTE HIT - Server is working!');
+    res.json({ success: true, message: 'Server routes are working' });
+  });
   
   // Email automation test routes
   app.post("/api/emails/appointment-confirmation", async (req, res) => {
