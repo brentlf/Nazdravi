@@ -161,6 +161,90 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Monthly subscription invoice creation for complete program users
+  app.post("/api/subscription-invoices", async (req: Request, res: Response) => {
+    try {
+      const { userId, clientName, clientEmail, amount, month, year } = req.body;
+
+      if (!userId || !clientName || !clientEmail || !amount || !month || !year) {
+        return res.status(400).json({ error: "Missing required fields for subscription invoice" });
+      }
+
+      // Check if invoice already exists for this month/year
+      const existingInvoiceSnapshot = await db.collection("invoices")
+        .where("userId", "==", userId)
+        .where("subscriptionMonth", "==", month)
+        .where("subscriptionYear", "==", year)
+        .where("invoiceType", "==", "subscription")
+        .get();
+      
+      if (!existingInvoiceSnapshot.empty) {
+        return res.status(409).json({ 
+          error: "Subscription invoice already exists for this month",
+          invoiceId: existingInvoiceSnapshot.docs[0].id
+        });
+      }
+
+      // Generate subscription invoice number
+      const invoiceNumber = `SUB-${year}-${month.toString().padStart(2, '0')}-${Date.now()}`;
+      
+      // Create Stripe payment intent for subscription
+      const currency = "eur";
+      const paymentMethodTypes = ['card', 'ideal'];
+
+      const paymentIntent = await stripe.paymentIntents.create({
+        amount: Math.round(amount * 100), // Convert to cents
+        currency: currency,
+        payment_method_types: paymentMethodTypes,
+        metadata: {
+          invoiceNumber,
+          userId,
+          clientEmail,
+          subscriptionMonth: month.toString(),
+          subscriptionYear: year.toString(),
+          invoiceType: "subscription"
+        }
+      });
+
+      const monthNames = [
+        "January", "February", "March", "April", "May", "June",
+        "July", "August", "September", "October", "November", "December"
+      ];
+
+      const invoiceData = {
+        invoiceNumber,
+        userId,
+        clientName,
+        clientEmail,
+        amount,
+        currency: currency.toUpperCase(),
+        description: `Complete Program - ${monthNames[month - 1]} ${year} Subscription`,
+        invoiceType: "subscription",
+        subscriptionMonth: month,
+        subscriptionYear: year,
+        status: "pending",
+        stripePaymentIntentId: paymentIntent.id,
+        paymentUrl: `${req.protocol}://${req.get('host')}/payment/${paymentIntent.id}`,
+        createdAt: new Date().toISOString(),
+        dueDate: new Date(year, month, 15).toISOString(), // 15th of the month
+      };
+
+      const docRef = await db.collection("invoices").add(invoiceData);
+      
+      res.json({ 
+        success: true, 
+        invoiceId: docRef.id,
+        invoice: { id: docRef.id, ...invoiceData },
+        paymentUrl: invoiceData.paymentUrl,
+        clientSecret: paymentIntent.client_secret
+      });
+
+    } catch (error) {
+      console.error("Error creating subscription invoice:", error);
+      res.status(500).json({ error: "Failed to create subscription invoice" });
+    }
+  });
+
   // Invoice Creation
   app.post("/api/invoices/create", async (req, res) => {
     try {

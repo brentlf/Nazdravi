@@ -181,7 +181,7 @@ export const unavailableSlotSchema = z.object({
 // Invoice Schema
 export const invoiceSchema = z.object({
   id: z.string().optional(),
-  appointmentId: z.string(),
+  appointmentId: z.string().optional(), // Optional for subscription invoices
   userId: z.string(),
   clientName: z.string(),
   clientEmail: z.string(),
@@ -189,8 +189,11 @@ export const invoiceSchema = z.object({
   amount: z.number(),
   currency: z.string().default("EUR"),
   description: z.string(),
-  sessionDate: z.string(),
-  sessionType: z.enum(["Initial", "Follow-up"]),
+  sessionDate: z.string().optional(), // Optional for subscription invoices
+  sessionType: z.enum(["Initial", "Follow-up"]).optional(), // Optional for subscription invoices
+  invoiceType: z.enum(["session", "subscription"]).default("session"),
+  subscriptionMonth: z.number().optional(), // For subscription invoices
+  subscriptionYear: z.number().optional(), // For subscription invoices
   status: z.enum(["pending", "paid", "overdue", "cancelled"]),
   createdAt: z.date(),
   dueDate: z.date(),

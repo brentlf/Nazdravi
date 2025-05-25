@@ -51,6 +51,7 @@ import AdminAvailability from "@/pages/admin/AdminAvailability";
 import AdminDocuments from "@/pages/admin/AdminDocuments";
 import AdminBlog from "@/pages/admin/AdminBlog";
 import AdminInvoices from "@/pages/admin/AdminInvoices";
+import AdminSubscriptions from "@/pages/admin/AdminSubscriptions";
 import PayInvoice from "@/pages/PayInvoice";
 import AdminEmailScheduler from "@/pages/admin/AdminEmailScheduler";
 
@@ -192,6 +193,11 @@ function Router() {
       <Route path="/admin/invoices">
         <RouteGuard role="admin">
           <Layout><AdminInvoices /></Layout>
+        </RouteGuard>
+      </Route>
+      <Route path="/admin/subscriptions">
+        <RouteGuard role="admin">
+          <Layout><AdminSubscriptions /></Layout>
         </RouteGuard>
       </Route>
       <Route path="/admin-client-view">
