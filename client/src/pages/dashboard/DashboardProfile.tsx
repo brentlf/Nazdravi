@@ -300,20 +300,38 @@ export default function DashboardProfile() {
         emailNotifications: data.emailNotifications,
       };
 
-      // If switching to complete program, set start and end dates
-      if (data.servicePlan === "complete-program" && currentUserData?.servicePlan !== "complete-program") {
-        const now = new Date();
-        const endDate = new Date();
-        endDate.setMonth(endDate.getMonth() + 3); // 3 months from now
-        
-        // Store as Timestamps for Firebase compatibility
-        updateData.programStartDate = Timestamp.fromDate(now);
-        updateData.programEndDate = Timestamp.fromDate(endDate);
-        
-        console.log("Setting program dates:", {
-          start: updateData.programStartDate,
-          end: updateData.programEndDate
-        });
+      // Only set new program dates if:
+      // 1. Switching to complete program from pay-as-you-go, OR
+      // 2. User had complete program but it's expired (past end date)
+      if (data.servicePlan === "complete-program") {
+        const shouldSetNewDates = 
+          // Case 1: Switching from pay-as-you-go to complete program
+          currentUserData?.servicePlan !== "complete-program" ||
+          // Case 2: Had complete program but it's expired
+          (currentUserData?.programEndDate && (() => {
+            const endDate = currentUserData.programEndDate.toDate ? 
+              currentUserData.programEndDate.toDate() : 
+              new Date(currentUserData.programEndDate);
+            return endDate <= new Date(); // Program has expired
+          })());
+
+        if (shouldSetNewDates) {
+          const now = new Date();
+          const endDate = new Date();
+          endDate.setMonth(endDate.getMonth() + 3); // 3 months from now
+          
+          // Store as Timestamps for Firebase compatibility
+          updateData.programStartDate = Timestamp.fromDate(now);
+          updateData.programEndDate = Timestamp.fromDate(endDate);
+          
+          console.log("Setting NEW program dates:", {
+            start: now.toISOString(),
+            end: endDate.toISOString(),
+            reason: currentUserData?.servicePlan !== "complete-program" ? "switching from pay-as-you-go" : "previous program expired"
+          });
+        } else {
+          console.log("Preserving existing program dates - program is still active");
+        }
       }
 
       // Note: When switching back to pay-as-you-go, we keep the program dates for reference
