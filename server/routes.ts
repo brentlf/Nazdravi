@@ -669,41 +669,6 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   return httpServer;
 }
-          originalInvoiceId: originalInvoiceId,
-          creditNoteNumber: creditNoteNumber,
-          reissueReason: reason,
-          userId: originalInvoice.userId,
-          clientEmail: originalInvoice.clientEmail
-        }
-      });
-
-      // Update original invoice with credit note reference
-      await db.collection("invoices").doc(originalInvoiceId).update({
-        status: "credited",
-        creditNoteNumber: creditNoteNumber,
-        creditedAt: new Date(),
-        creditReason: reason,
-        isActive: false // Hide from main invoice list
-      });
-
-      // Create new invoice with reissue information
-      const newInvoiceData = {
-        ...originalInvoice,
-        invoiceNumber: newInvoiceNumber,
-        amount: newAmount,
-        status: "pending",
-        createdAt: new Date(),
-        dueDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000), // 7 days from now
-        stripePaymentIntentId: paymentIntent.id,
-        paymentUrl: `${req.protocol}://${req.get('host')}/pay-invoice/${newInvoiceNumber}`,
-        originalInvoiceId: originalInvoiceId,
-        creditNoteNumber: creditNoteNumber,
-        reissueReason: reason,
-        originalAmount: originalInvoice.amount,
-        isReissued: true,
-        isActive: true,
-        description: `${originalInvoice.description} (Reissued: ${reason})`
-      };
 
       // Save new invoice to Firebase
       const docRef = await db.collection("invoices").add(newInvoiceData);
