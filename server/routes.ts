@@ -10,25 +10,25 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const { email, name, date, time, meetingUrl } = req.body;
       
-      console.log("Attempting to write appointment-confirmation to Firebase:", { email, name, date, time });
-      console.log("Firebase db object:", typeof db, !!db);
-      
-      // Queue email in Firebase with correct format
+      // Queue email in Firebase with correct format - ensure meetingUrl has default value
       const docRef = await db.collection("mail").add({
         to: email,
         toName: name,
         type: "appointment-confirmation",
         status: "pending",
-        data: { name, date, time, meetingUrl },
+        data: { 
+          name, 
+          date, 
+          time, 
+          meetingUrl: meetingUrl || '',
+          type: 'Consultation'
+        },
         createdAt: new Date()
       });
-      
-      console.log("Successfully wrote appointment-confirmation to Firebase with doc ID:", docRef.id);
 
       res.json({ success: true, message: "Appointment confirmation email queued", docId: docRef.id });
     } catch (error: any) {
       console.error("Error queuing appointment confirmation email:", error);
-      console.error("Full error details:", error.stack);
       res.status(500).json({ success: false, error: error.message });
     }
   });
@@ -37,17 +37,23 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const { email, name, date, time, meetingUrl } = req.body;
       
-      // Queue email in Firebase with correct format
-      await db.collection("mail").add({
+      // Queue email in Firebase with correct format - ensure meetingUrl has default value
+      const docRef = await db.collection("mail").add({
         to: email,
         toName: name,
         type: "appointment-reminder",
         status: "pending",
-        data: { name, date, time, meetingUrl },
+        data: { 
+          name, 
+          date, 
+          time, 
+          meetingUrl: meetingUrl || '',
+          type: 'Consultation'
+        },
         createdAt: new Date()
       });
 
-      res.json({ success: true, message: "Appointment reminder email queued" });
+      res.json({ success: true, message: "Appointment reminder email queued", docId: docRef.id });
     } catch (error: any) {
       console.error("Error queuing appointment reminder email:", error);
       res.status(500).json({ success: false, error: error.message });
@@ -58,17 +64,24 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const { email, name, originalDate, originalTime, newDate, newTime } = req.body;
       
-      // Queue email in Firebase with correct format
-      await db.collection("mail").add({
-        to: email,
-        toName: name,
+      // Queue email in Firebase with correct format - this goes to admin
+      const docRef = await db.collection("mail").add({
+        to: "admin@veenutrition.com", // Admin notification email
+        toName: "Admin Team",
         type: "reschedule-request",
         status: "pending",
-        data: { name, originalDate, originalTime, newDate, newTime },
+        data: { 
+          name, 
+          email, // Include client email in data 
+          originalDate, 
+          originalTime, 
+          newDate, 
+          newTime 
+        },
         createdAt: new Date()
       });
 
-      res.json({ success: true, message: "Reschedule request email queued" });
+      res.json({ success: true, message: "Reschedule request email queued", docId: docRef.id });
     } catch (error: any) {
       console.error("Error queuing reschedule request email:", error);
       res.status(500).json({ success: false, error: error.message });
