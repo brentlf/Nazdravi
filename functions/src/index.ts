@@ -744,7 +744,7 @@ export const processMailQueue = functions.firestore
             mailData.data.name,
             mailData.data.date,
             mailData.data.time,
-            mailData.data.meetingUrl || ''
+            mailData.data.type || 'Consultation'
           );
           break;
         case 'appointment-reminder':
@@ -752,16 +752,16 @@ export const processMailQueue = functions.firestore
             mailData.data.name,
             mailData.data.date,
             mailData.data.time,
-            mailData.data.meetingUrl || ''
+            mailData.data.type || 'Consultation'
           );
           break;
         case 'reschedule-request':
           template = emailService.getRescheduleRequestTemplate(
             mailData.data.name,
+            mailData.data.email || mailData.to,
             mailData.data.originalDate,
             mailData.data.originalTime,
-            mailData.data.newDate,
-            mailData.data.newTime
+            mailData.data.reason
           );
           break;
         case 'appointment-cancelled':
