@@ -1,0 +1,18 @@
+hook.js:608 Error fetching appointments: FirebaseError: The query requires an index. You can create it here: https://console.firebase.google.com/v1/r/project/veenutrition-79fba/firestore/indexes?create_composite=Cldwcm9qZWN0cy92ZWVudXRyaXRpb24tNzlmYmEvZGF0YWJhc2VzLyhkZWZhdWx0KS9jb2xsZWN0aW9uR3JvdXBzL2FwcG9pbnRtZW50cy9pbmRleGVzL18QARoKCgZ1c2VySWQQARoICgRkYXRlEAIaDAoIX19uYW1lX18QAg
+overrideMethod @ hook.js:608
+hook.js:608 Error fetching invoices: FirebaseError: The query requires an index. You can create it here: https://console.firebase.google.com/v1/r/project/veenutrition-79fba/firestore/indexes?create_composite=ClNwcm9qZWN0cy92ZWVudXRyaXRpb24tNzlmYmEvZGF0YWJhc2VzLyhkZWZhdWx0KS9jb2xsZWN0aW9uR3JvdXBzL2ludm9pY2VzL2luZGV4ZXMvXxABGgoKBnVzZXJJZBABGg0KCWNyZWF0ZWRBdBACGgwKCF9fbmFtZV9fEAI
+overrideMethod @ hook.js:608
+hook.js:608 Error fetching invoices: FirebaseError: The query requires an index. You can create it here: https://console.firebase.google.com/v1/r/project/veenutrition-79fba/firestore/indexes?create_composite=ClNwcm9qZWN0cy92ZWVudXRyaXRpb24tNzlmYmEvZGF0YWJhc2VzLyhkZWZhdWx0KS9jb2xsZWN0aW9uR3JvdXBzL2ludm9pY2VzL2luZGV4ZXMvXxABGgoKBnVzZXJJZBABGg0KCWNyZWF0ZWRBdBACGgwKCF9fbmFtZV9fEAI
+overrideMethod @ hook.js:608
+ Dashboard Appointments Debug: ObjectappointmentsByEmail: 0appointmentsByUser: 0appointmentsByUserId: 0totalAppointments: 0userEmail: "brentlf@gmail.com"userId: "k8auIVCVCuVLQNttjmH2cynH8W92"[[Prototype]]: Object
+ Dashboard Appointments Debug: ObjectappointmentsByEmail: 0appointmentsByUser: 0appointmentsByUserId: 0totalAppointments: 0userEmail: "craziesreviews@gmail.com"userId: "ETyOD7S76BYI2ceQqMRysV5ozJi2"[[Prototype]]: Object
+ Dashboard Appointments Debug: ObjectappointmentsByEmail: 0appointmentsByUser: 0appointmentsByUserId: 0totalAppointments: 0userEmail: "craziesreviews@gmail.com"userId: "ETyOD7S76BYI2ceQqMRysV5ozJi2"[[Prototype]]: Object
+ Dashboard Appointments Debug: ObjectappointmentsByEmail: 0appointmentsByUser: 0appointmentsByUserId: 0totalAppointments: 0userEmail: "craziesreviews@gmail.com"userId: "ETyOD7S76BYI2ceQqMRysV5ozJi2"[[Prototype]]: Object
+hook.js:608 Error loading user data: FirebaseError: The query requires an index. You can create it here: https://console.firebase.google.com/v1/r/project/veenutrition-79fba/firestore/indexes?create_composite=Clxwcm9qZWN0cy92ZWVudXRyaXRpb24tNzlmYmEvZGF0YWJhc2VzLyhkZWZhdWx0KS9jb2xsZWN0aW9uR3JvdXBzL2hlYWx0aEFzc2Vzc21lbnRzL2luZGV4ZXMvXxABGgoKBnVzZXJJZBABGg0KCWNyZWF0ZWRBdBACGgwKCF9fbmFtZV9fEAI
+overrideMethod @ hook.js:608
+
+                
+          
+          
+          
+         Chrome is moving towards a new experience that allows users to choose to browse without third-party cookies.

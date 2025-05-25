@@ -79,57 +79,40 @@ function AdminUserProfile() {
     try {
       const appointmentsRef = collection(db, 'appointments');
       
-      // First, let's see what appointments exist in the collection
-      console.log('Debugging: Fetching appointments for user:', { userId, email: user.email });
-      
-      // Get all appointments to debug structure
+      // Get all appointments and filter client-side to avoid index issues
       const allDocsSnapshot = await getDocs(appointmentsRef);
       console.log('Debug: Total appointments in collection:', allDocsSnapshot.size);
       
-      if (!allDocsSnapshot.empty) {
-        const sampleDoc = allDocsSnapshot.docs[0].data();
-        console.log('Debug: Sample appointment structure:', Object.keys(sampleDoc));
-        console.log('Debug: Sample appointment data:', sampleDoc);
-      }
+      const userAppointments = [];
       
-      // Try both userId and email queries
-      const queries = [
-        query(appointmentsRef, where('userId', '==', userId)),
-        query(appointmentsRef, where('email', '==', user.email)),
-        query(appointmentsRef, where('clientEmail', '==', user.email))
-      ];
-      
-      let allAppointments = [];
-      
-      for (const q of queries) {
-        try {
-          const querySnapshot = await getDocs(q);
-          console.log('Debug: Query result size:', querySnapshot.size);
-          const appointmentData = querySnapshot.docs.map(doc => ({
+      allDocsSnapshot.forEach(doc => {
+        const data = doc.data();
+        
+        // Check if this appointment belongs to the user using multiple field checks
+        if (data.userId === userId || 
+            data.email === user.email || 
+            data.clientEmail === user.email ||
+            data.userEmail === user.email) {
+          userAppointments.push({
             id: doc.id,
-            ...doc.data()
-          }));
-          allAppointments.push(...appointmentData);
-        } catch (error) {
-          console.log('Query failed, trying next...', (error as any).message);
+            ...data
+          });
         }
+      });
+      
+      console.log('Debug: Found appointments for user:', userAppointments.length);
+      if (userAppointments.length > 0) {
+        console.log('Debug: Sample appointment:', userAppointments[0]);
       }
-      
-      console.log('Debug: Found appointments:', allAppointments.length);
-      
-      // Remove duplicates based on document ID
-      const uniqueAppointments = allAppointments.filter((appointment, index, self) => 
-        index === self.findIndex(a => a.id === appointment.id)
-      );
       
       // Sort by date descending
-      uniqueAppointments.sort((a, b) => {
+      userAppointments.sort((a, b) => {
         const dateA = new Date((a as any).date || 0);
         const dateB = new Date((b as any).date || 0);
         return dateB.getTime() - dateA.getTime();
       });
       
-      setAppointments(uniqueAppointments);
+      setAppointments(userAppointments);
     } catch (error) {
       console.error('Error fetching appointments:', error);
     }
@@ -141,56 +124,40 @@ function AdminUserProfile() {
     try {
       const invoicesRef = collection(db, 'invoices');
       
-      // Debug invoices collection
-      console.log('Debugging: Fetching invoices for user:', { userId, email: user.email });
-      
+      // Get all invoices and filter client-side to avoid index issues
       const allInvoicesSnapshot = await getDocs(invoicesRef);
       console.log('Debug: Total invoices in collection:', allInvoicesSnapshot.size);
       
-      if (!allInvoicesSnapshot.empty) {
-        const sampleInvoice = allInvoicesSnapshot.docs[0].data();
-        console.log('Debug: Sample invoice structure:', Object.keys(sampleInvoice));
-        console.log('Debug: Sample invoice data:', sampleInvoice);
-      }
+      const userInvoices = [];
       
-      // Try multiple field combinations for invoices
-      const queries = [
-        query(invoicesRef, where('userId', '==', userId)),
-        query(invoicesRef, where('clientEmail', '==', user.email)),
-        query(invoicesRef, where('email', '==', user.email))
-      ];
-      
-      let allInvoices = [];
-      
-      for (const q of queries) {
-        try {
-          const querySnapshot = await getDocs(q);
-          console.log('Debug: Invoice query result size:', querySnapshot.size);
-          const invoiceData = querySnapshot.docs.map(doc => ({
+      allInvoicesSnapshot.forEach(doc => {
+        const data = doc.data();
+        
+        // Check if this invoice belongs to the user using multiple field checks
+        if (data.userId === userId || 
+            data.clientEmail === user.email || 
+            data.email === user.email ||
+            data.userEmail === user.email) {
+          userInvoices.push({
             id: doc.id,
-            ...doc.data()
-          }));
-          allInvoices.push(...invoiceData);
-        } catch (error) {
-          console.log('Invoice query failed, trying next...', (error as any).message);
+            ...data
+          });
         }
+      });
+      
+      console.log('Debug: Found invoices for user:', userInvoices.length);
+      if (userInvoices.length > 0) {
+        console.log('Debug: Sample invoice:', userInvoices[0]);
       }
-      
-      console.log('Debug: Found invoices:', allInvoices.length);
-      
-      // Remove duplicates based on document ID
-      const uniqueInvoices = allInvoices.filter((invoice, index, self) => 
-        index === self.findIndex(i => i.id === invoice.id)
-      );
       
       // Sort by creation date descending
-      uniqueInvoices.sort((a, b) => {
+      userInvoices.sort((a, b) => {
         const dateA = (a as any).createdAt?.toDate ? (a as any).createdAt.toDate() : new Date((a as any).createdAt || 0);
         const dateB = (b as any).createdAt?.toDate ? (b as any).createdAt.toDate() : new Date((b as any).createdAt || 0);
         return dateB.getTime() - dateA.getTime();
       });
       
-      setInvoices(uniqueInvoices);
+      setInvoices(userInvoices);
     } catch (error) {
       console.error('Error fetching invoices:', error);
     }
@@ -200,48 +167,45 @@ function AdminUserProfile() {
     if (!userId || !user) return;
     
     try {
-      // Try to fetch from consentForms collection first
-      const consentFormsRef = collection(db, 'consentForms');
-      const consentQueries = [
-        query(consentFormsRef, where('userId', '==', userId)),
-        query(consentFormsRef, where('email', '==', user.email))
-      ];
-      
       let healthData = null;
       
-      for (const q of consentQueries) {
-        try {
-          const querySnapshot = await getDocs(q);
-          if (!querySnapshot.empty) {
-            healthData = querySnapshot.docs[0].data();
-            break;
+      // Try to fetch from consentForms collection first
+      try {
+        const consentFormsRef = collection(db, 'consentForms');
+        const consentSnapshot = await getDocs(consentFormsRef);
+        console.log('Debug: Total consent forms in collection:', consentSnapshot.size);
+        
+        consentSnapshot.forEach(doc => {
+          const data = doc.data();
+          if (data.userId === userId || data.email === user.email) {
+            healthData = data;
           }
-        } catch (error) {
-          console.log('Consent form query failed, trying next...', (error as any).message);
-        }
+        });
+      } catch (error) {
+        console.log('Error fetching consent forms:', (error as any).message);
       }
       
       // If no consent form found, try preEvaluationForms
       if (!healthData) {
-        const preEvalQueries = [
-          query(collection(db, 'preEvaluationForms'), where('userId', '==', userId)),
-          query(collection(db, 'preEvaluationForms'), where('email', '==', user.email))
-        ];
-        
-        for (const q of preEvalQueries) {
-          try {
-            const querySnapshot = await getDocs(q);
-            if (!querySnapshot.empty) {
-              healthData = querySnapshot.docs[0].data();
-              break;
+        try {
+          const preEvalRef = collection(db, 'preEvaluationForms');
+          const preEvalSnapshot = await getDocs(preEvalRef);
+          console.log('Debug: Total pre-evaluation forms in collection:', preEvalSnapshot.size);
+          
+          preEvalSnapshot.forEach(doc => {
+            const data = doc.data();
+            if (data.userId === userId || data.email === user.email) {
+              healthData = data;
             }
-          } catch (error) {
-            console.log('Pre-evaluation query failed, trying next...', (error as any).message);
-          }
+          });
+        } catch (error) {
+          console.log('Error fetching pre-evaluation forms:', (error as any).message);
         }
       }
       
+      console.log('Debug: Found health data:', healthData ? 'Yes' : 'No');
       if (healthData) {
+        console.log('Debug: Health data structure:', Object.keys(healthData));
         setPreEvaluationForm(healthData);
         
         // Update user object with health information from forms
