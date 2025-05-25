@@ -693,8 +693,36 @@ export default function AdminInvoices() {
                                   variant="ghost"
                                   size="sm"
                                   className="h-8 w-8 p-0"
-                                  onClick={() => window.open(invoice.paymentUrl || '#', '_blank')}
-                                  title="Send Reminder"
+                                  onClick={async () => {
+                                    try {
+                                      const response = await fetch('/api/invoices/send-reminder', {
+                                        method: 'POST',
+                                        headers: { 'Content-Type': 'application/json' },
+                                        body: JSON.stringify({ invoiceId: invoice.id })
+                                      });
+
+                                      if (response.ok) {
+                                        toast({
+                                          title: "Reminder Sent",
+                                          description: `Payment reminder sent to ${invoice.clientEmail}`,
+                                        });
+                                      } else {
+                                        const error = await response.json();
+                                        toast({
+                                          title: "Failed to Send Reminder",
+                                          description: error.error || "Please try again",
+                                          variant: "destructive",
+                                        });
+                                      }
+                                    } catch (error) {
+                                      toast({
+                                        title: "Failed to Send Reminder",
+                                        description: "Please try again",
+                                        variant: "destructive",
+                                      });
+                                    }
+                                  }}
+                                  title="Send Payment Reminder"
                                 >
                                   <Send className="w-3 h-3" />
                                 </Button>
