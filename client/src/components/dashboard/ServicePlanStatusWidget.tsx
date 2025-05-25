@@ -38,6 +38,17 @@ export default function ServicePlanStatusWidget({ user }: ServicePlanStatusWidge
     }
     
     const programEndDate = new Date(currentUser.programEndDate);
+    
+    // Check if the date is valid
+    if (isNaN(programEndDate.getTime())) {
+      return {
+        status: 'pending',
+        daysRemaining: 90,
+        endDate: null,
+        isExpiring: false
+      };
+    }
+    
     const now = new Date();
     const daysRemaining = Math.ceil((programEndDate.getTime() - now.getTime()) / (1000 * 60 * 60 * 24));
     
@@ -78,7 +89,7 @@ export default function ServicePlanStatusWidget({ user }: ServicePlanStatusWidge
                   </Badge>
                 </div>
                 <p className="text-gray-600 dark:text-gray-300 mb-4">
-                  Your 3-month Complete Program ended on {programStatus.endDate.toLocaleDateString()}. 
+                  Your 3-month Complete Program ended on {programStatus.endDate?.toLocaleDateString() || 'Unknown date'}. 
                   You've been automatically switched back to Pay As You Go billing.
                 </p>
                 <div className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400">

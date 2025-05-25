@@ -18,8 +18,8 @@ export const userSchema = z.object({
   emergencyContact: z.string().optional(),
   gpContact: z.string().optional(),
   servicePlan: z.enum(["pay-as-you-go", "complete-program"]).default("pay-as-you-go"),
-  programStartDate: z.date().optional(), // When complete program started
-  programEndDate: z.date().optional(), // When complete program expires
+  programStartDate: z.string().optional(), // When complete program started (ISO string)
+  programEndDate: z.string().optional(), // When complete program expires (ISO string)
 });
 
 // Appointment Schema

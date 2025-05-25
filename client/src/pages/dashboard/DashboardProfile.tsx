@@ -267,8 +267,9 @@ export default function DashboardProfile() {
         const endDate = new Date();
         endDate.setMonth(endDate.getMonth() + 3); // 3 months from now
         
-        updateData.programStartDate = now;
-        updateData.programEndDate = endDate;
+        // Store as ISO strings for Firebase compatibility
+        updateData.programStartDate = now.toISOString();
+        updateData.programEndDate = endDate.toISOString();
       }
 
       // If switching back to pay-as-you-go, clear program dates
