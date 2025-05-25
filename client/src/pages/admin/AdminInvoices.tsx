@@ -223,6 +223,60 @@ export default function AdminInvoices() {
         </Dialog>
       </div>
 
+      {/* Penalty Policy Overview */}
+      <Card className="mb-8 border-orange-200 bg-orange-50 dark:bg-orange-950/30">
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2 text-orange-800 dark:text-orange-200">
+            <Receipt className="w-5 h-5" />
+            Penalty & Fee Structure
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="grid md:grid-cols-3 gap-6">
+            <div className="space-y-2">
+              <h4 className="font-semibold text-orange-900 dark:text-orange-100">Session Rates</h4>
+              <div className="space-y-1 text-sm">
+                <div className="flex justify-between">
+                  <span>Initial Consultation:</span>
+                  <Badge variant="outline" className="bg-white">€95</Badge>
+                </div>
+                <div className="flex justify-between">
+                  <span>Follow-up Session:</span>
+                  <Badge variant="outline" className="bg-white">€75</Badge>
+                </div>
+              </div>
+            </div>
+            
+            <div className="space-y-2">
+              <h4 className="font-semibold text-orange-900 dark:text-orange-100">No-Show Penalties</h4>
+              <div className="space-y-1 text-sm">
+                <div className="flex justify-between">
+                  <span>Initial (50% penalty):</span>
+                  <Badge variant="destructive" className="bg-red-100 text-red-800">€47.50</Badge>
+                </div>
+                <div className="flex justify-between">
+                  <span>Follow-up (50% penalty):</span>
+                  <Badge variant="destructive" className="bg-red-100 text-red-800">€37.50</Badge>
+                </div>
+              </div>
+            </div>
+            
+            <div className="space-y-2">
+              <h4 className="font-semibold text-orange-900 dark:text-orange-100">Late Reschedule Fee</h4>
+              <div className="space-y-1 text-sm">
+                <div className="flex justify-between">
+                  <span>Within 4 working hours:</span>
+                  <Badge variant="destructive" className="bg-red-100 text-red-800">€5</Badge>
+                </div>
+                <p className="text-xs text-orange-700 dark:text-orange-300 mt-2">
+                  Auto-generated from Admin → Appointments → "Mark No-Show"
+                </p>
+              </div>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+
       {/* Invoice Statistics */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
         <Card>
