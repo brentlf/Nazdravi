@@ -226,6 +226,35 @@ function AdminUserProfile() {
       }
       
       console.log('Debug: Found health data:', healthData ? 'Yes' : 'No');
+      
+      // Let's check what collections actually exist and have data
+      if (!healthData) {
+        console.log('No health data found. Let me check other possible collections...');
+        
+        // Check if there are any other collections that might contain health data
+        const possibleCollections = ['users', 'healthAssessments', 'medicalInfo', 'clientProfiles'];
+        
+        for (const collectionName of possibleCollections) {
+          try {
+            const testRef = collection(db, collectionName);
+            const testSnapshot = await getDocs(testRef);
+            if (testSnapshot.size > 0) {
+              console.log(`Found ${testSnapshot.size} documents in ${collectionName} collection`);
+              
+              // Check if any contain health-related data for this user
+              testSnapshot.forEach(doc => {
+                const data = doc.data();
+                if (data.userId === userId && (data.medicalConditions || data.allergies || data.medications || data.emergencyContact)) {
+                  console.log(`Found health data in ${collectionName} collection:`, doc.id);
+                  healthData = data;
+                }
+              });
+            }
+          } catch (error) {
+            console.log(`No access to ${collectionName} collection`);
+          }
+        }
+      }
       if (healthData) {
         console.log('Debug: Health data structure:', Object.keys(healthData));
         setPreEvaluationForm(healthData);
