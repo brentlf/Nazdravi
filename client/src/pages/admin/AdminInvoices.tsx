@@ -150,11 +150,8 @@ export default function AdminInvoices() {
           clientEmail: appointmentData.email,
           sessionType: appointmentData.type,
           sessionDate: appointmentData.date,
-          sessionTime: appointmentData.timeslot,
           amount: calculateInvoiceTotal(),
-          includeNoShowPenalty,
-          includeLateRescheduleFee,
-          appointmentStatus: appointmentData.status
+          description: `${appointmentData.type} consultation - ${appointmentData.date}${includeNoShowPenalty ? ' (No-show penalty)' : ''}${includeLateRescheduleFee ? ' (Late reschedule fee)' : ''}${useCustomAmount ? ' (Custom amount)' : ''}`
         }),
       });
 
