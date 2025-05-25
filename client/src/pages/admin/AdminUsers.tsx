@@ -199,6 +199,8 @@ export default function AdminUsers() {
                   <TableRow>
                     <TableHead>User</TableHead>
                     <TableHead>Role</TableHead>
+                    <TableHead>Service Plan</TableHead>
+                    <TableHead>Program Dates</TableHead>
                     <TableHead>Language</TableHead>
                     <TableHead>Joined</TableHead>
                     <TableHead className="text-right">Actions</TableHead>
@@ -237,13 +239,69 @@ export default function AdminUsers() {
                         </Badge>
                       </TableCell>
                       <TableCell>
+                        <div className="text-sm">
+                          {user.role === "client" ? (
+                            <Badge variant={user.servicePlan === "complete-program" ? "default" : "secondary"}>
+                              {user.servicePlan === "complete-program" ? "Complete Program" : "Pay As You Go"}
+                            </Badge>
+                          ) : (
+                            <span className="text-muted-foreground">N/A</span>
+                          )}
+                        </div>
+                      </TableCell>
+                      <TableCell>
+                        <div className="text-sm">
+                          {user.role === "client" && user.servicePlan === "complete-program" && user.programStartDate ? (
+                            <div>
+                              <div className="text-xs text-muted-foreground">Start:</div>
+                              <div>{(() => {
+                                try {
+                                  const startDate = user.programStartDate && typeof user.programStartDate === 'object' && 'toDate' in user.programStartDate ? 
+                                    (user.programStartDate as any).toDate() : 
+                                    new Date(user.programStartDate);
+                                  return startDate.toLocaleDateString();
+                                } catch {
+                                  return "Invalid Date";
+                                }
+                              })()}</div>
+                              {user.programEndDate && (
+                                <>
+                                  <div className="text-xs text-muted-foreground mt-1">End:</div>
+                                  <div>{(() => {
+                                    try {
+                                      const endDate = user.programEndDate && typeof user.programEndDate === 'object' && 'toDate' in user.programEndDate ? 
+                                        (user.programEndDate as any).toDate() : 
+                                        new Date(user.programEndDate);
+                                      return endDate.toLocaleDateString();
+                                    } catch {
+                                      return "Invalid Date";
+                                    }
+                                  })()}</div>
+                                </>
+                              )}
+                            </div>
+                          ) : (
+                            <span className="text-muted-foreground">N/A</span>
+                          )}
+                        </div>
+                      </TableCell>
+                      <TableCell>
                         <span className="text-sm">
                           {user.preferredLanguage === "en" ? "🇺🇸 English" : "🇳🇱 Nederlands"}
                         </span>
                       </TableCell>
                       <TableCell>
                         <span className="text-sm text-muted-foreground">
-                          {new Date(user.createdAt).toLocaleDateString()}
+                          {(() => {
+                            try {
+                              const joinDate = user.createdAt && typeof user.createdAt === 'object' && 'toDate' in user.createdAt ? 
+                                (user.createdAt as any).toDate() : 
+                                new Date(user.createdAt);
+                              return joinDate.toLocaleDateString();
+                            } catch {
+                              return "Invalid Date";
+                            }
+                          })()}
                         </span>
                       </TableCell>
                       <TableCell className="text-right">

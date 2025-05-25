@@ -224,9 +224,9 @@ export default function AdminHome() {
         </div>
 
         {/* Main Content Grid */}
-        <div className="grid lg:grid-cols-3 gap-8">
+        <div className="grid lg:grid-cols-3 gap-8 lg:items-stretch">
           {/* Recent Activity */}
-          <div className="lg:col-span-2 space-y-8">
+          <div className="lg:col-span-2 grid grid-rows-2 gap-8">
             {/* Pending Appointments */}
             <Card>
               <CardHeader className="flex flex-row items-center justify-between">
