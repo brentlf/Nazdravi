@@ -22,7 +22,7 @@ class ResendEmailService {
 
     return new Promise((resolve) => {
       const postData = JSON.stringify({
-        from: 'Vee Nutrition <onboarding@resend.dev>',
+        from: 'Vee Nutrition <info@veenutrition.com>',
         to: [`${toName} <${to}>`],
         subject: subject,
         html: html,
