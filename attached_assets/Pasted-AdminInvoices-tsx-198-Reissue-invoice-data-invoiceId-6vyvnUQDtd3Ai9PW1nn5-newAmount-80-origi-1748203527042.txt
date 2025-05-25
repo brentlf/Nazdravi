@@ -1,0 +1,44 @@
+AdminInvoices.tsx:198 Reissue invoice data: {invoiceId: '6vyvnUQDtd3Ai9PW1nn5', newAmount: 80, originalAmount: 85, requestBody: {…}}invoiceId: "6vyvnUQDtd3Ai9PW1nn5"newAmount: 80originalAmount: 85requestBody: newAmount: 80originalInvoiceId: "6vyvnUQDtd3Ai9PW1nn5"reason: "Amount adjustment"[[Prototype]]: Objectconstructor: ƒ Object()hasOwnProperty: ƒ hasOwnProperty()isPrototypeOf: ƒ isPrototypeOf()propertyIsEnumerable: ƒ propertyIsEnumerable()toLocaleString: ƒ toLocaleString()toString: ƒ toString()valueOf: ƒ valueOf()__defineGetter__: ƒ __defineGetter__()__defineSetter__: ƒ __defineSetter__()__lookupGetter__: ƒ __lookupGetter__()__lookupSetter__: ƒ __lookupSetter__()__proto__: (...)get __proto__: ƒ __proto__()set __proto__: ƒ __proto__()[[Prototype]]: Objectconstructor: ƒ Object()hasOwnProperty: ƒ hasOwnProperty()isPrototypeOf: ƒ isPrototypeOf()propertyIsEnumerable: ƒ propertyIsEnumerable()toLocaleString: ƒ toLocaleString()toString: ƒ toString()valueOf: ƒ valueOf()__defineGetter__: ƒ __defineGetter__()__defineSetter__: ƒ __defineSetter__()__lookupGetter__: ƒ __lookupGetter__()__lookupSetter__: ƒ __lookupSetter__()__proto__: (...)get __proto__: ƒ __proto__()set __proto__: ƒ __proto__()
+AdminInvoices.tsx:209 
+            
+            
+           POST https://e394ccd4-b3dd-43ba-8feb-deda267050d2-00-3v6n3vit95c2j.spock.replit.dev/api/invoices/reissue 400 (Bad Request)
+handleReissueInvoice @ AdminInvoices.tsx:209
+onClick @ AdminInvoices.tsx:811
+callCallback2 @ /@fs/home/runner/wor….js?v=1a8e8de5:3674
+invokeGuardedCallbackDev @ /@fs/home/runner/wor….js?v=1a8e8de5:3699
+invokeGuardedCallback @ /@fs/home/runner/wor….js?v=1a8e8de5:3733
+invokeGuardedCallbackAndCatchFirstError @ /@fs/home/runner/wor….js?v=1a8e8de5:3736
+executeDispatch @ /@fs/home/runner/wor….js?v=1a8e8de5:7014
+processDispatchQueueItemsInOrder @ /@fs/home/runner/wor….js?v=1a8e8de5:7034
+processDispatchQueue @ /@fs/home/runner/wor….js?v=1a8e8de5:7043
+dispatchEventsForPlugins @ /@fs/home/runner/wor….js?v=1a8e8de5:7051
+(anonymous) @ /@fs/home/runner/wor….js?v=1a8e8de5:7174
+batchedUpdates$1 @ /@fs/home/runner/wor…js?v=1a8e8de5:18913
+batchedUpdates @ /@fs/home/runner/wor….js?v=1a8e8de5:3579
+dispatchEventForPluginEventSystem @ /@fs/home/runner/wor….js?v=1a8e8de5:7173
+dispatchEventWithEnableCapturePhaseSelectiveHydrationWithoutDiscreteEventReplay @ /@fs/home/runner/wor….js?v=1a8e8de5:5478
+dispatchEvent @ /@fs/home/runner/wor….js?v=1a8e8de5:5472
+dispatchDiscreteEvent @ /@fs/home/runner/wor….js?v=1a8e8de5:5449
+AdminInvoices.tsx:198 Reissue invoice data: {invoiceId: '6vyvnUQDtd3Ai9PW1nn5', newAmount: 80, originalAmount: 85, requestBody: {…}}invoiceId: "6vyvnUQDtd3Ai9PW1nn5"newAmount: 80originalAmount: 85requestBody: newAmount: 80originalInvoiceId: "6vyvnUQDtd3Ai9PW1nn5"reason: "Amount adjustment"[[Prototype]]: Objectconstructor: ƒ Object()hasOwnProperty: ƒ hasOwnProperty()isPrototypeOf: ƒ isPrototypeOf()propertyIsEnumerable: ƒ propertyIsEnumerable()toLocaleString: ƒ toLocaleString()toString: ƒ toString()valueOf: ƒ valueOf()__defineGetter__: ƒ __defineGetter__()__defineSetter__: ƒ __defineSetter__()__lookupGetter__: ƒ __lookupGetter__()__lookupSetter__: ƒ __lookupSetter__()__proto__: (...)get __proto__: ƒ __proto__()set __proto__: ƒ __proto__()[[Prototype]]: Objectconstructor: ƒ Object()hasOwnProperty: ƒ hasOwnProperty()isPrototypeOf: ƒ isPrototypeOf()propertyIsEnumerable: ƒ propertyIsEnumerable()toLocaleString: ƒ toLocaleString()toString: ƒ toString()valueOf: ƒ valueOf()__defineGetter__: ƒ __defineGetter__()__defineSetter__: ƒ __defineSetter__()__lookupGetter__: ƒ __lookupGetter__()__lookupSetter__: ƒ __lookupSetter__()__proto__: (...)get __proto__: ƒ __proto__()set __proto__: ƒ __proto__()
+AdminInvoices.tsx:209 
+            
+            
+           POST https://e394ccd4-b3dd-43ba-8feb-deda267050d2-00-3v6n3vit95c2j.spock.replit.dev/api/invoices/reissue 400 (Bad Request)
+handleReissueInvoice @ AdminInvoices.tsx:209
+onClick @ AdminInvoices.tsx:811
+callCallback2 @ /@fs/home/runner/wor….js?v=1a8e8de5:3674
+invokeGuardedCallbackDev @ /@fs/home/runner/wor….js?v=1a8e8de5:3699
+invokeGuardedCallback @ /@fs/home/runner/wor….js?v=1a8e8de5:3733
+invokeGuardedCallbackAndCatchFirstError @ /@fs/home/runner/wor….js?v=1a8e8de5:3736
+executeDispatch @ /@fs/home/runner/wor….js?v=1a8e8de5:7014
+processDispatchQueueItemsInOrder @ /@fs/home/runner/wor….js?v=1a8e8de5:7034
+processDispatchQueue @ /@fs/home/runner/wor….js?v=1a8e8de5:7043
+dispatchEventsForPlugins @ /@fs/home/runner/wor….js?v=1a8e8de5:7051
+(anonymous) @ /@fs/home/runner/wor….js?v=1a8e8de5:7174
+batchedUpdates$1 @ /@fs/home/runner/wor…js?v=1a8e8de5:18913
+batchedUpdates @ /@fs/home/runner/wor….js?v=1a8e8de5:3579
+dispatchEventForPluginEventSystem @ /@fs/home/runner/wor….js?v=1a8e8de5:7173
+dispatchEventWithEnableCapturePhaseSelectiveHydrationWithoutDiscreteEventReplay @ /@fs/home/runner/wor….js?v=1a8e8de5:5478
+dispatchEvent @ /@fs/home/runner/wor….js?v=1a8e8de5:5472
+dispatchDiscreteEvent @ /@fs/home/runner/wor….js?v=1a8e8de5:5449

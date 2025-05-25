@@ -14,6 +14,15 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
 });
 
 export async function registerRoutes(app: Express): Promise<Server> {
+  // Debug middleware to catch all requests
+  app.use('/api/invoices/reissue', (req, res, next) => {
+    console.log("MIDDLEWARE HIT - Reissue route accessed");
+    console.log("Method:", req.method);
+    console.log("URL:", req.url);
+    console.log("Body:", req.body);
+    next();
+  });
+
   // Email notification endpoints
   app.post("/api/emails/welcome", async (req, res) => {
     try {
