@@ -31,27 +31,42 @@ interface SendEmailParams {
 export class MailerLiteService {
   async sendEmail(params: SendEmailParams): Promise<boolean> {
     try {
-      // Trigger Firebase Functions by writing to Firestore
-      // This will automatically trigger your Firebase Functions for email sending
-      const emailDoc = {
-        to: params.to,
-        toName: params.toName || '',
+      const resendApiKey = process.env.RESEND_API_KEY;
+      if (!resendApiKey) {
+        console.error('RESEND_API_KEY environment variable is not set');
+        return false;
+      }
+
+      const emailData = {
+        from: 'info@veenutrition.com',
+        to: [params.to],
         subject: params.subject,
         html: params.html,
-        text: params.text || '',
-        status: 'pending',
-        timestamp: new Date(),
-        from: 'info@veenutrition.com'
+        text: params.text || ''
       };
 
-      console.log('Attempting to write to Firebase mail collection...');
-      const docRef = await db.collection('mail').add(emailDoc);
-      console.log(`✓ Email successfully queued in Firebase with ID: ${docRef.id}`);
-      console.log(`Firebase Functions should now process email to ${params.to}`);
-      return true;
+      console.log(`Sending email via Resend to: ${params.to}`);
+      
+      const response = await fetch('https://api.resend.com/emails', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${resendApiKey}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(emailData)
+      });
+
+      if (response.ok) {
+        const result = await response.json();
+        console.log(`✓ Email sent successfully via Resend. ID: ${result.id}`);
+        return true;
+      } else {
+        const error = await response.text();
+        console.error('Resend API error:', response.status, error);
+        return false;
+      }
     } catch (error) {
-      console.error('✗ Failed to write to Firebase mail collection:', error);
-      console.error('Check Firebase credentials and project configuration');
+      console.error('Error sending email via Resend:', error);
       return false;
     }
   }
