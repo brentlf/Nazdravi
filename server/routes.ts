@@ -10,8 +10,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const { email, name, date, time, meetingUrl } = req.body;
       
+      console.log("Attempting to write appointment-confirmation to Firebase:", { email, name, date, time });
+      console.log("Firebase db object:", typeof db, !!db);
+      
       // Queue email in Firebase with correct format
-      await db.collection("mail").add({
+      const docRef = await db.collection("mail").add({
         to: email,
         toName: name,
         type: "appointment-confirmation",
@@ -19,10 +22,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
         data: { name, date, time, meetingUrl },
         createdAt: new Date()
       });
+      
+      console.log("Successfully wrote appointment-confirmation to Firebase with doc ID:", docRef.id);
 
-      res.json({ success: true, message: "Appointment confirmation email queued" });
+      res.json({ success: true, message: "Appointment confirmation email queued", docId: docRef.id });
     } catch (error: any) {
       console.error("Error queuing appointment confirmation email:", error);
+      console.error("Full error details:", error.stack);
       res.status(500).json({ success: false, error: error.message });
     }
   });
