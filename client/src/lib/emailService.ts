@@ -292,6 +292,16 @@ class EmailService implements EmailNotificationService {
       throw error;
     }
   }
+
+  async sendAdminRescheduleRequest(clientName: string, clientEmail: string, originalDate: string, originalTime: string, reason?: string): Promise<void> {
+    await apiRequest("POST", "/api/emails/admin/reschedule-request", {
+      clientName,
+      clientEmail,
+      originalDate,
+      originalTime,
+      reason
+    });
+  }
 }
 
 export const emailService = new EmailService();

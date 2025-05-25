@@ -383,6 +383,32 @@ export default function AdminEmailScheduler() {
     }
   };
 
+  const handleTestAdminRescheduleRequest = async () => {
+    setSending(true);
+    try {
+      await emailService.sendAdminRescheduleRequest(
+        "Test Client",
+        "testclient@example.com",
+        tomorrow.toLocaleDateString(),
+        "10:00",
+        "Family emergency"
+      );
+      
+      toast({
+        title: "Test admin reschedule request notification sent!",
+        description: "Check info@veenutrition.com inbox to verify the notification format.",
+      });
+    } catch (error) {
+      toast({
+        title: "Test email failed",
+        description: "Please check your email configuration.",
+        variant: "destructive",
+      });
+    } finally {
+      setSending(false);
+    }
+  };
+
   const handleTestAdminClientMessage = async () => {
     setSending(true);
     try {
