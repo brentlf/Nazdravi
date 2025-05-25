@@ -139,14 +139,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
       createdAt: new Date(),
     });
 
-    // Send welcome email automatically
-    try {
-      await emailService.sendWelcomeEmail(email, name);
-      console.log('Welcome email sent to new user:', email);
-    } catch (error) {
-      console.error('Failed to send welcome email:', error);
-      // Don't fail registration if email fails
-    }
+    // Welcome email is sent automatically by Firebase Function when user document is created
   };
 
   const signInWithGoogle = async () => {
