@@ -9,7 +9,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { useFirestoreCollection } from "@/hooks/useFirestore";
 import { where, orderBy, limit } from "firebase/firestore";
-import { Receipt, Plus, Eye, Send, DollarSign, ArrowLeft, AlertTriangle } from "lucide-react";
+import { Receipt, Plus, Eye, Send, DollarSign, ArrowLeft, AlertTriangle, RefreshCw } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/contexts/AuthContext";
 import { Link } from "wouter";
@@ -20,6 +20,9 @@ export default function AdminInvoices() {
   const [selectedAppointment, setSelectedAppointment] = useState<Appointment | null>(null);
   const [includeNoShowPenalty, setIncludeNoShowPenalty] = useState(false);
   const [includeLateRescheduleFee, setIncludeLateRescheduleFee] = useState(false);
+  const [reissueInvoice, setReissueInvoice] = useState<Invoice | null>(null);
+  const [newAmount, setNewAmount] = useState("");
+  const [isReissuing, setIsReissuing] = useState(false);
   const { toast } = useToast();
   const { user } = useAuth();
 
@@ -35,9 +38,9 @@ export default function AdminInvoices() {
     limit(20)
   ]);
 
-  // Filter appointments that can be invoiced (completed or no-show)
+  // Filter appointments that can be invoiced (completed or no-show) and haven't been invoiced yet
   const completedAppointments = allAppointments?.filter(apt => 
-    apt.status === "done" || apt.status === "no-show"
+    (apt.status === "done" || apt.status === "no-show") && !hasExistingInvoice(apt.id)
   ) || [];
 
   // Check if an appointment already has an invoice
@@ -169,6 +172,46 @@ export default function AdminInvoices() {
       setSelectedAppointment(null);
       setIncludeNoShowPenalty(false);
       setIncludeLateRescheduleFee(false);
+    }
+  };
+
+  const handleReissueInvoice = async () => {
+    if (!reissueInvoice || !newAmount) return;
+    
+    setIsReissuing(true);
+    try {
+      const response = await fetch("/api/invoices/reissue", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          invoiceId: reissueInvoice.id,
+          newAmount: parseFloat(newAmount),
+          reason: "Admin updated amount"
+        }),
+      });
+
+      if (response.ok) {
+        const result = await response.json();
+        toast({
+          title: "Invoice Reissued Successfully",
+          description: `New invoice ${result.invoice.invoiceNumber} created with updated amount €${newAmount}`,
+        });
+        setReissueInvoice(null);
+        setNewAmount("");
+        setIsReissuing(false);
+      } else {
+        throw new Error('Failed to reissue invoice');
+      }
+    } catch (error) {
+      console.error('Error reissuing invoice:', error);
+      toast({
+        title: "Failed to Reissue Invoice",
+        description: "Please try again later.",
+        variant: "destructive",
+      });
+      setIsReissuing(false);
     }
   };
 
@@ -585,6 +628,17 @@ export default function AdminInvoices() {
                           Send Reminder
                         </Button>
                       )}
+                      <Button 
+                        variant="outline" 
+                        size="sm"
+                        onClick={() => {
+                          setReissueInvoice(invoice);
+                          setNewAmount(invoice.amount.toString());
+                        }}
+                      >
+                        <RefreshCw className="w-4 h-4 mr-1" />
+                        Reissue
+                      </Button>
                     </div>
                   </div>
                 </div>
