@@ -225,10 +225,14 @@ class EmailService implements EmailNotificationService {
     updateType: string
   ): Promise<void> {
     try {
-      await apiRequest('POST', '/api/emails/admin/health-update', {
-        clientName,
-        clientEmail,
-        updateType,
+      // Use the working appointment confirmation system with all fields defined
+      await apiRequest('POST', '/api/emails/appointment-confirmation', {
+        email: 'info@veenutrition.com',
+        name: 'Admin Team',
+        date: new Date().toLocaleDateString(),
+        time: new Date().toLocaleTimeString(),
+        meetingUrl: '', // Keep as empty string to avoid undefined
+        type: `Admin Alert: Health Info Update - ${updateType} from ${clientName} (${clientEmail})`
       });
       console.log('Admin health update notification sent successfully');
     } catch (error) {
@@ -244,11 +248,14 @@ class EmailService implements EmailNotificationService {
     paymentMethod: string
   ): Promise<void> {
     try {
-      await apiRequest('POST', '/api/emails/admin/payment-received', {
-        clientName,
-        amount,
-        invoiceId,
-        paymentMethod,
+      // Use the working appointment confirmation system with all fields defined
+      await apiRequest('POST', '/api/emails/appointment-confirmation', {
+        email: 'info@veenutrition.com',
+        name: 'Admin Team',
+        date: new Date().toLocaleDateString(),
+        time: new Date().toLocaleTimeString(),
+        meetingUrl: '', // Keep as empty string to avoid undefined
+        type: `Admin Alert: Payment Received - €${amount} from ${clientName} (Invoice: ${invoiceId}) via ${paymentMethod}`
       });
       console.log('Admin payment received notification sent successfully');
     } catch (error) {
@@ -263,10 +270,14 @@ class EmailService implements EmailNotificationService {
     previousPlan: string
   ): Promise<void> {
     try {
-      await apiRequest('POST', '/api/emails/admin/plan-upgrade', {
-        clientName,
-        planType,
-        previousPlan,
+      // Use the working appointment confirmation system with all fields defined
+      await apiRequest('POST', '/api/emails/appointment-confirmation', {
+        email: 'info@veenutrition.com',
+        name: 'Admin Team',
+        date: new Date().toLocaleDateString(),
+        time: new Date().toLocaleTimeString(),
+        meetingUrl: '', // Keep as empty string to avoid undefined
+        type: `Admin Alert: Plan Upgrade - ${clientName} upgraded from ${previousPlan} to ${planType}`
       });
       console.log('Admin plan upgrade notification sent successfully');
     } catch (error) {
@@ -282,11 +293,14 @@ class EmailService implements EmailNotificationService {
     urgency: string
   ): Promise<void> {
     try {
-      await apiRequest('POST', '/api/emails/admin/client-message', {
-        clientName,
-        clientEmail,
-        messageType,
-        urgency,
+      // Use the working appointment confirmation system with all fields defined
+      await apiRequest('POST', '/api/emails/appointment-confirmation', {
+        email: 'info@veenutrition.com',
+        name: 'Admin Team',
+        date: new Date().toLocaleDateString(),
+        time: new Date().toLocaleTimeString(),
+        meetingUrl: '', // Keep as empty string to avoid undefined
+        type: `Admin Alert: New Client Message - ${messageType} from ${clientName} (${clientEmail}) - Priority: ${urgency}`
       });
       console.log('Admin client message notification sent successfully');
     } catch (error) {
@@ -296,12 +310,14 @@ class EmailService implements EmailNotificationService {
   }
 
   async sendAdminRescheduleRequest(clientName: string, clientEmail: string, originalDate: string, originalTime: string, reason?: string): Promise<void> {
-    await apiRequest("POST", "/api/emails/admin/reschedule-request", {
-      clientName,
-      clientEmail,
-      originalDate,
-      originalTime,
-      reason
+    // Use the working appointment confirmation system with all fields defined
+    await apiRequest('POST', '/api/emails/appointment-confirmation', {
+      email: 'info@veenutrition.com',
+      name: 'Admin Team',
+      date: new Date().toLocaleDateString(),
+      time: new Date().toLocaleTimeString(),
+      meetingUrl: '', // Keep as empty string to avoid undefined
+      type: `Admin Alert: Reschedule Request - ${clientName} (${clientEmail}) wants to reschedule from ${originalDate} ${originalTime}. Reason: ${reason || 'Not specified'}`
     });
   }
 }
