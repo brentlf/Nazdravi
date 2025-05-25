@@ -21,17 +21,23 @@ export default function ServicePlanStatusWidget({ user }: ServicePlanStatusWidge
 
   const isCompleteProgramUser = currentUser.servicePlan === 'complete-program';
   
-  // For complete program users, we need to track program validity
-  // Let's assume program starts when they select it and lasts 3 months
-  // In a real implementation, you'd store programStartDate and programEndDate in user schema
+  // Get program status based on actual database dates
   const getProgramStatus = () => {
     if (!isCompleteProgramUser) return null;
     
-    // Mock program dates - in real implementation, get from user data
-    const programStartDate = new Date('2024-11-01'); // Example start date
-    const programEndDate = new Date(programStartDate);
-    programEndDate.setMonth(programEndDate.getMonth() + 3); // 3 months later
+    // Check if we have program dates from the database
+    if (!currentUser.programStartDate || !currentUser.programEndDate) {
+      // If no dates are set but user has complete program, it means they just selected it
+      // but the database hasn't been updated yet with dates
+      return {
+        status: 'pending',
+        daysRemaining: 90, // Default 3 months
+        endDate: null,
+        isExpiring: false
+      };
+    }
     
+    const programEndDate = new Date(currentUser.programEndDate);
     const now = new Date();
     const daysRemaining = Math.ceil((programEndDate.getTime() - now.getTime()) / (1000 * 60 * 60 * 24));
     

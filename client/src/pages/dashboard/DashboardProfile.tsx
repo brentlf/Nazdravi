@@ -247,29 +247,49 @@ export default function DashboardProfile() {
   const onPreferencesSubmit = async (data: PreferencesFormData) => {
     setIsLoading(true);
     try {
-      // Update user preferences
-      await updateUserProfile({
+      const updateData: any = {
         preferredLanguage: data.preferredLanguage,
-      });
+        servicePlan: data.servicePlan,
+        emailNotifications: data.emailNotifications,
+      };
 
-      // Notify admin of language preference changes
-      if (data.preferredLanguage !== consentRecord?.preferredLanguage) {
-        try {
-          await emailService.sendPreferencesUpdateNotification(
-            "admin@veenutrition.com",
-            user?.name || "Client",
-            user?.email || "",
-            data.preferredLanguage,
-            data.currentLocation
-          );
-        } catch (emailError) {
-          console.error("Failed to send admin notification:", emailError);
-        }
+      // If switching to complete program, set start and end dates
+      if (data.servicePlan === "complete-program" && user?.servicePlan !== "complete-program") {
+        const now = new Date();
+        const endDate = new Date();
+        endDate.setMonth(endDate.getMonth() + 3); // 3 months from now
+        
+        updateData.programStartDate = now;
+        updateData.programEndDate = endDate;
+      }
+
+      // If switching back to pay-as-you-go, clear program dates
+      if (data.servicePlan === "pay-as-you-go") {
+        updateData.programStartDate = null;
+        updateData.programEndDate = null;
+      }
+
+      // Update user preferences
+      await updateUserProfile(updateData);
+
+      // Notify admin of preference changes
+      try {
+        await emailService.sendPreferencesUpdateNotification(
+          "admin@veenutrition.com",
+          user?.name || "Client",
+          user?.email || "",
+          data.preferredLanguage,
+          data.currentLocation
+        );
+      } catch (emailError) {
+        console.error("Failed to send admin notification:", emailError);
       }
 
       toast({
-        title: "Preferences updated",
-        description: "Your preferences have been updated successfully.",
+        title: data.servicePlan === "complete-program" ? "Welcome to Complete Program!" : "Preferences updated",
+        description: data.servicePlan === "complete-program" 
+          ? "Your 3-month unlimited access program starts now."
+          : "Your preferences have been updated successfully.",
       });
     } catch (error) {
       toast({
