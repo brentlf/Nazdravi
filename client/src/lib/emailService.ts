@@ -193,6 +193,105 @@ class EmailService implements EmailNotificationService {
       throw error;
     }
   }
+
+  // Admin notification methods
+  async sendAdminNewAppointment(
+    clientName: string,
+    clientEmail: string,
+    appointmentType: string,
+    date: string,
+    time: string
+  ): Promise<void> {
+    try {
+      await apiRequest('POST', '/api/emails/admin/new-appointment', {
+        clientName,
+        clientEmail,
+        appointmentType,
+        date,
+        time,
+      });
+      console.log('Admin new appointment notification sent successfully');
+    } catch (error) {
+      console.error('Failed to send admin new appointment notification:', error);
+      throw error;
+    }
+  }
+
+  async sendAdminHealthUpdate(
+    clientName: string,
+    clientEmail: string,
+    updateType: string
+  ): Promise<void> {
+    try {
+      await apiRequest('POST', '/api/emails/admin/health-update', {
+        clientName,
+        clientEmail,
+        updateType,
+      });
+      console.log('Admin health update notification sent successfully');
+    } catch (error) {
+      console.error('Failed to send admin health update notification:', error);
+      throw error;
+    }
+  }
+
+  async sendAdminPaymentReceived(
+    clientName: string,
+    amount: number,
+    invoiceId: string,
+    paymentMethod: string
+  ): Promise<void> {
+    try {
+      await apiRequest('POST', '/api/emails/admin/payment-received', {
+        clientName,
+        amount,
+        invoiceId,
+        paymentMethod,
+      });
+      console.log('Admin payment received notification sent successfully');
+    } catch (error) {
+      console.error('Failed to send admin payment received notification:', error);
+      throw error;
+    }
+  }
+
+  async sendAdminPlanUpgrade(
+    clientName: string,
+    planType: string,
+    previousPlan: string
+  ): Promise<void> {
+    try {
+      await apiRequest('POST', '/api/emails/admin/plan-upgrade', {
+        clientName,
+        planType,
+        previousPlan,
+      });
+      console.log('Admin plan upgrade notification sent successfully');
+    } catch (error) {
+      console.error('Failed to send admin plan upgrade notification:', error);
+      throw error;
+    }
+  }
+
+  async sendAdminClientMessage(
+    clientName: string,
+    clientEmail: string,
+    messageType: string,
+    urgency: string
+  ): Promise<void> {
+    try {
+      await apiRequest('POST', '/api/emails/admin/client-message', {
+        clientName,
+        clientEmail,
+        messageType,
+        urgency,
+      });
+      console.log('Admin client message notification sent successfully');
+    } catch (error) {
+      console.error('Failed to send admin client message notification:', error);
+      throw error;
+    }
+  }
 }
 
 export const emailService = new EmailService();

@@ -249,7 +249,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }
       
       const docRef = await db.collection("mail").add({
-        to: "admin@veenutrition.com",
+        to: "info@veenutrition.com", // Test emails go to info@ for verification
         toName: "Admin Team",
         type: "admin-new-appointment",
         status: "pending",
@@ -279,7 +279,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }
       
       const docRef = await db.collection("mail").add({
-        to: "admin@veenutrition.com",
+        to: "info@veenutrition.com", // Test emails go to info@ for verification
         toName: "Admin Team",
         type: "admin-health-update",
         status: "pending",
@@ -307,7 +307,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }
       
       const docRef = await db.collection("mail").add({
-        to: "admin@veenutrition.com",
+        to: "info@veenutrition.com", // Test emails go to info@ for verification
         toName: "Admin Team",
         type: "admin-payment-received",
         status: "pending",
@@ -336,7 +336,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }
       
       const docRef = await db.collection("mail").add({
-        to: "admin@veenutrition.com",
+        to: "info@veenutrition.com", // Test emails go to info@ for verification
         toName: "Admin Team",
         type: "admin-plan-upgrade",
         status: "pending",
@@ -364,7 +364,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }
       
       const docRef = await db.collection("mail").add({
-        to: "admin@veenutrition.com",
+        to: "info@veenutrition.com", // Test emails go to info@ for verification
         toName: "Admin Team",
         type: "admin-client-message",
         status: "pending",

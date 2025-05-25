@@ -283,6 +283,131 @@ export default function AdminEmailScheduler() {
     }
   };
 
+  // Admin notification test functions
+  const handleTestAdminNewAppointment = async () => {
+    setSending(true);
+    try {
+      await emailService.sendAdminNewAppointment(
+        "Test Client",
+        "testclient@example.com",
+        "Initial Consultation",
+        tomorrow.toLocaleDateString(),
+        "10:00"
+      );
+      
+      toast({
+        title: "Test admin new appointment notification sent!",
+        description: "Check info@veenutrition.com inbox to verify the notification format.",
+      });
+    } catch (error) {
+      toast({
+        title: "Test email failed",
+        description: "Please check your email configuration.",
+        variant: "destructive",
+      });
+    } finally {
+      setSending(false);
+    }
+  };
+
+  const handleTestAdminHealthUpdate = async () => {
+    setSending(true);
+    try {
+      await emailService.sendAdminHealthUpdate(
+        "Test Client",
+        "testclient@example.com",
+        "Medical History Update"
+      );
+      
+      toast({
+        title: "Test admin health update notification sent!",
+        description: "Check info@veenutrition.com inbox to verify the notification format.",
+      });
+    } catch (error) {
+      toast({
+        title: "Test email failed",
+        description: "Please check your email configuration.",
+        variant: "destructive",
+      });
+    } finally {
+      setSending(false);
+    }
+  };
+
+  const handleTestAdminPaymentReceived = async () => {
+    setSending(true);
+    try {
+      await emailService.sendAdminPaymentReceived(
+        "Test Client",
+        95.00,
+        "INV-TEST123",
+        "Credit Card"
+      );
+      
+      toast({
+        title: "Test admin payment notification sent!",
+        description: "Check info@veenutrition.com inbox to verify the notification format.",
+      });
+    } catch (error) {
+      toast({
+        title: "Test email failed",
+        description: "Please check your email configuration.",
+        variant: "destructive",
+      });
+    } finally {
+      setSending(false);
+    }
+  };
+
+  const handleTestAdminPlanUpgrade = async () => {
+    setSending(true);
+    try {
+      await emailService.sendAdminPlanUpgrade(
+        "Test Client",
+        "Complete Program",
+        "Pay-as-you-go"
+      );
+      
+      toast({
+        title: "Test admin plan upgrade notification sent!",
+        description: "Check info@veenutrition.com inbox to verify the notification format.",
+      });
+    } catch (error) {
+      toast({
+        title: "Test email failed",
+        description: "Please check your email configuration.",
+        variant: "destructive",
+      });
+    } finally {
+      setSending(false);
+    }
+  };
+
+  const handleTestAdminClientMessage = async () => {
+    setSending(true);
+    try {
+      await emailService.sendAdminClientMessage(
+        "Test Client",
+        "testclient@example.com",
+        "General Inquiry",
+        "Normal"
+      );
+      
+      toast({
+        title: "Test admin client message notification sent!",
+        description: "Check info@veenutrition.com inbox to verify the notification format.",
+      });
+    } catch (error) {
+      toast({
+        title: "Test email failed",
+        description: "Please check your email configuration.",
+        variant: "destructive",
+      });
+    } finally {
+      setSending(false);
+    }
+  };
+
   return (
     <div className="min-h-screen py-20 bg-gray-50 dark:bg-gray-900">
       <div className="container mx-auto px-4 max-w-4xl">
