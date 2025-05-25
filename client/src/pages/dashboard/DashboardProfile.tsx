@@ -309,6 +309,11 @@ export default function DashboardProfile() {
         // Store as ISO strings for Firebase compatibility
         updateData.programStartDate = now.toISOString();
         updateData.programEndDate = endDate.toISOString();
+        
+        console.log("Setting program dates:", {
+          start: updateData.programStartDate,
+          end: updateData.programEndDate
+        });
       }
 
       // Note: When switching back to pay-as-you-go, we keep the program dates for reference
@@ -317,8 +322,13 @@ export default function DashboardProfile() {
       // Update Firebase document
       await setDoc(doc(db, "users", user?.uid || ""), updateData, { merge: true });
       
+      console.log("Firebase update completed, updateData:", updateData);
+      
       // Update local state
-      setCurrentUserData({ ...currentUserData, ...updateData });
+      const newUserData = { ...currentUserData, ...updateData };
+      setCurrentUserData(newUserData);
+      
+      console.log("Local state updated:", newUserData);
 
       // Update user preferences
       await updateUserProfile(updateData);
@@ -649,13 +659,16 @@ export default function DashboardProfile() {
                   )}
                 </div>
 
-                {/* Program Status Display */}
+                {/* Program Status Display - READ ONLY */}
                 {currentUserData?.servicePlan === "complete-program" && (
                   <div className="p-4 bg-purple-50 dark:bg-purple-900/20 border border-purple-200 dark:border-purple-800 rounded-lg">
                     <h4 className="font-medium text-purple-900 dark:text-purple-100 mb-3 flex items-center gap-2">
                       <Crown className="w-4 h-4" />
-                      Complete Program Status
+                      Complete Program Status (Read Only)
                     </h4>
+                    <p className="text-xs text-purple-700 dark:text-purple-300 mb-3">
+                      These dates are automatically set and cannot be modified.
+                    </p>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-sm">
                       <div>
                         <span className="text-gray-600 dark:text-gray-400">Start Date:</span>
