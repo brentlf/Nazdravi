@@ -39,7 +39,6 @@ const preferencesSchema = z.object({
   preferredLanguage: z.enum(["english", "czech"]),
   currentLocation: z.enum(["uk", "south-africa", "czech-republic", "netherlands"]),
   emailNotifications: z.boolean().default(true),
-  smsNotifications: z.boolean().default(false),
 });
 
 // Password change schema
@@ -133,7 +132,6 @@ export default function DashboardProfile() {
       preferredLanguage: "english",
       currentLocation: "uk",
       emailNotifications: true,
-      smsNotifications: false,
     },
   });
 
@@ -166,7 +164,6 @@ export default function DashboardProfile() {
         preferredLanguage: consentRecord.preferredLanguage || "english",
         currentLocation: consentRecord.currentLocation || "uk",
         emailNotifications: true,
-        smsNotifications: false,
       });
     }
   }, [healthAssessment, consentRecord, healthForm, preferencesForm]);
@@ -539,18 +536,6 @@ export default function DashboardProfile() {
                       />
                       <Label htmlFor="emailNotifications" className="text-sm">
                         Email notifications for appointments and updates
-                      </Label>
-                    </div>
-                    <div className="flex items-center space-x-2">
-                      <input
-                        type="checkbox"
-                        id="smsNotifications"
-                        checked={preferencesForm.watch("smsNotifications")}
-                        onChange={(e) => preferencesForm.setValue("smsNotifications", e.target.checked)}
-                        className="rounded border-gray-300"
-                      />
-                      <Label htmlFor="smsNotifications" className="text-sm">
-                        SMS notifications for appointment reminders
                       </Label>
                     </div>
                   </div>
