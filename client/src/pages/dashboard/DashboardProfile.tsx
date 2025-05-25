@@ -725,7 +725,10 @@ export default function DashboardProfile() {
                         <span className="text-gray-600 dark:text-gray-400">Days Remaining:</span>
                         <div className="font-medium text-gray-900 dark:text-white">
                           {currentUserData.programEndDate ? (() => {
-                            const endDate = new Date(currentUserData.programEndDate);
+                            // Handle Firebase Timestamp objects
+                            const endDate = currentUserData.programEndDate.toDate ? 
+                              currentUserData.programEndDate.toDate() : 
+                              new Date(currentUserData.programEndDate);
                             if (isNaN(endDate.getTime())) {
                               return "N/A";
                             }
