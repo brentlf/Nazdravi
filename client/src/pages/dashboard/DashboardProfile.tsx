@@ -636,8 +636,8 @@ export default function DashboardProfile() {
                       <div>
                         <span className="text-gray-600 dark:text-gray-400">Start Date:</span>
                         <div className="font-medium text-gray-900 dark:text-white">
-                          {user.programStartDate 
-                            ? new Date(user.programStartDate).toLocaleDateString()
+                          {currentUserData.programStartDate 
+                            ? new Date(currentUserData.programStartDate).toLocaleDateString()
                             : "Not set"
                           }
                         </div>
@@ -645,8 +645,8 @@ export default function DashboardProfile() {
                       <div>
                         <span className="text-gray-600 dark:text-gray-400">End Date:</span>
                         <div className="font-medium text-gray-900 dark:text-white">
-                          {user.programEndDate 
-                            ? new Date(user.programEndDate).toLocaleDateString()
+                          {currentUserData.programEndDate 
+                            ? new Date(currentUserData.programEndDate).toLocaleDateString()
                             : "Not set"
                           }
                         </div>
@@ -654,8 +654,8 @@ export default function DashboardProfile() {
                       <div>
                         <span className="text-gray-600 dark:text-gray-400">Status:</span>
                         <div className="font-medium">
-                          {user.programEndDate ? (
-                            new Date(user.programEndDate) > new Date() ? (
+                          {currentUserData.programEndDate ? (
+                            new Date(currentUserData.programEndDate) > new Date() ? (
                               <span className="text-green-600">Active</span>
                             ) : (
                               <span className="text-red-600">Expired</span>
@@ -668,8 +668,8 @@ export default function DashboardProfile() {
                       <div>
                         <span className="text-gray-600 dark:text-gray-400">Days Remaining:</span>
                         <div className="font-medium text-gray-900 dark:text-white">
-                          {user.programEndDate ? (
-                            Math.max(0, Math.ceil((new Date(user.programEndDate).getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24)))
+                          {currentUserData.programEndDate ? (
+                            Math.max(0, Math.ceil((new Date(currentUserData.programEndDate).getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24)))
                           ) : (
                             "N/A"
                           )}
