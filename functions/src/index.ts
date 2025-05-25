@@ -706,15 +706,38 @@ export const processMailQueue = functions.firestore
       return;
     }
     
-    console.log('Processing email from queue:', mailData.to);
+    console.log('Processing email from queue:', mailData.to, 'Type:', mailData.type);
     
     try {
+      let template;
+      
+      switch (mailData.type) {
+        case 'payment-reminder':
+          template = emailService.getPaymentReminderTemplate(
+            mailData.toName,
+            mailData.amount,
+            mailData.invoiceNumber,
+            mailData.paymentUrl
+          );
+          break;
+        case 'account-confirmation':
+          template = emailService.getAccountConfirmationTemplate(mailData.toName);
+          break;
+        default:
+          // Use existing data if template type not found
+          template = {
+            subject: mailData.subject || 'Notification from Vee Nutrition',
+            html: mailData.html || '',
+            text: mailData.text || ''
+          };
+      }
+      
       const success = await emailService.sendEmail(
         mailData.to,
-        mailData.toName || mailData.to,
-        mailData.subject,
-        mailData.html,
-        mailData.text
+        mailData.toName || 'Client',
+        template.subject,
+        template.html,
+        template.text
       );
       
       if (success) {
@@ -734,7 +757,7 @@ export const processMailQueue = functions.firestore
       console.error('Email sending failed:', error);
       await snap.ref.update({
         status: 'failed',
-        error: error.message,
+        error: error?.message || 'Unknown error',
         failedAt: admin.firestore.FieldValue.serverTimestamp(),
       });
     }
@@ -783,59 +806,3 @@ export const sendDailyReminders = functions.pubsub
     console.log(`Queued ${promises.length} reminder emails`);
   });
 
-// 6. Email Queue Processor - Process emails from mail collection
-export const processMailQueue = functions.firestore
-  .document('mail/{mailId}')
-  .onCreate(async (snap, context) => {
-    const mailData = snap.data();
-    
-    if (mailData.status !== 'pending') {
-      return null;
-    }
-
-    try {
-      let template;
-      
-      switch (mailData.type) {
-        case 'payment-reminder':
-          template = emailService.getPaymentReminderTemplate(
-            mailData.toName,
-            mailData.amount,
-            mailData.invoiceNumber,
-            mailData.paymentUrl
-          );
-          break;
-        case 'account-confirmation':
-          template = emailService.getAccountConfirmationTemplate(mailData.toName);
-          break;
-        default:
-          console.log('Unknown email type:', mailData.type);
-          return null;
-      }
-
-      const success = await emailService.sendEmail({
-        to: mailData.to,
-        toName: mailData.toName,
-        subject: template.subject,
-        html: template.html,
-        text: template.text
-      });
-
-      // Update mail document status
-      await snap.ref.update({
-        status: success ? 'sent' : 'failed',
-        processedAt: admin.firestore.FieldValue.serverTimestamp(),
-        sentAt: success ? admin.firestore.FieldValue.serverTimestamp() : null
-      });
-
-      console.log(`Email ${mailData.type} ${success ? 'sent' : 'failed'} to:`, mailData.to);
-      
-    } catch (error) {
-      console.error('Error processing mail:', error);
-      await snap.ref.update({
-        status: 'failed',
-        error: error.message,
-        processedAt: admin.firestore.FieldValue.serverTimestamp()
-      });
-    }
-  });
