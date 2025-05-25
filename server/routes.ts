@@ -451,40 +451,224 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.status(500).json({ error: "Failed to process reissue" });
     }
   });
-      
-      if (newAmount === undefined || newAmount === null) {
-        console.log("Missing newAmount:", { newAmount, type: typeof newAmount });
-        return res.status(400).json({ error: "Missing new amount" });
-      }
-      
-      if (typeof newAmount !== 'number' || newAmount <= 0) {
-        console.log("Invalid newAmount:", { newAmount, type: typeof newAmount, isNumber: typeof newAmount === 'number' });
-        return res.status(400).json({ error: "Invalid amount - must be a positive number" });
-      }
 
-      // Get original invoice from Firebase
-      const originalInvoiceDoc = await db.collection("invoices").doc(originalInvoiceId).get();
-      if (!originalInvoiceDoc.exists) {
-        return res.status(404).json({ error: "Original invoice not found" });
+  // Send payment reminder email
+  app.post("/api/invoices/send-reminder", async (req: Request, res: Response) => {
+    try {
+      const { invoiceId } = req.body;
+
+      if (!invoiceId) {
+        return res.status(400).json({ error: "Invoice ID is required" });
       }
 
-      const originalInvoice = originalInvoiceDoc.data();
+      // Get invoice from Firebase
+      const invoiceDoc = await db.collection("invoices").doc(invoiceId).get();
+      if (!invoiceDoc.exists) {
+        return res.status(404).json({ error: "Invoice not found" });
+      }
+
+      const invoice = invoiceDoc.data();
+      if (!invoice) {
+        return res.status(404).json({ error: "Invoice data not found" });
+      }
+
+      // Fetch real client data from users collection
+      let clientEmail = invoice.clientEmail;
+      let clientName = invoice.clientName;
       
-      // Generate credit note and new invoice numbers
-      const timestamp = Date.now();
-      const creditNoteNumber = `CN-${timestamp}`;
-      const newInvoiceNumber = `INV-${timestamp}`;
+      // If we have a userId, fetch the real client data
+      if (invoice.userId) {
+        try {
+          const userDoc = await db.collection("users").doc(invoice.userId).get();
+          if (userDoc.exists) {
+            const userData = userDoc.data();
+            clientEmail = userData?.email || invoice.clientEmail;
+            clientName = userData?.displayName || userData?.username || invoice.clientName;
+          }
+        } catch (error) {
+          console.log('Could not fetch user data, using invoice data:', error);
+        }
+      }
 
-      // Create new Stripe payment intent with updated amount
-      const currency = "eur";
-      const paymentMethodTypes = ['card', 'ideal'];
+      console.log('Sending reminder to:', { 
+        originalEmail: invoice.clientEmail,
+        actualEmail: clientEmail, 
+        clientName: clientName,
+        invoiceNumber: invoice.invoiceNumber 
+      });
 
-      const paymentIntent = await stripe.paymentIntents.create({
-        amount: Math.round(newAmount * 100), // Convert to cents
-        currency: currency,
-        payment_method_types: paymentMethodTypes,
-        metadata: {
-          invoiceNumber: newInvoiceNumber,
+      // Queue payment reminder email in Firebase for processing
+      const paymentUrl = invoice.paymentUrl || `${req.protocol}://${req.get('host')}/pay-invoice/${invoice.invoiceNumber}`;
+      
+      try {
+        await db.collection("mail").add({
+          to: clientEmail,
+          toName: clientName,
+          type: 'payment-reminder',
+          status: 'pending',
+          invoiceId: invoiceId,
+          amount: invoice.amount,
+          invoiceNumber: invoice.invoiceNumber,
+          paymentUrl: paymentUrl,
+          createdAt: new Date()
+        });
+
+        console.log('Payment reminder queued in Firebase mail collection for:', clientEmail);
+
+        // Update invoice with reminder sent timestamp
+        await db.collection("invoices").doc(invoiceId).update({
+          lastReminderSent: new Date(),
+          reminderCount: (invoice.reminderCount || 0) + 1
+        });
+
+        res.json({ 
+          success: true, 
+          message: "Payment reminder queued successfully" 
+        });
+      } catch (error) {
+        console.error('Failed to queue payment reminder:', error);
+        res.status(500).json({ error: "Failed to queue payment reminder" });
+      }
+
+    } catch (error) {
+      console.error("Send payment reminder error:", error);
+      res.status(500).json({ error: "Failed to send payment reminder" });
+    }
+  });
+
+  // Send no-show notice email
+  app.post("/api/emails/no-show", async (req: Request, res: Response) => {
+    try {
+      const { email, name, date, time, penaltyAmount } = req.body;
+      
+      const mailData = {
+        to: email,
+        toName: name,
+        type: 'no-show',
+        status: 'pending',
+        date: date,
+        time: time,
+        penaltyAmount: penaltyAmount,
+        createdAt: new Date()
+      };
+
+      const docRef = await db.collection("mail").add(mailData);
+      console.log("✓ Email successfully queued in Firebase with ID:", docRef.id);
+      console.log("Firebase Functions should now process email to", email);
+
+      res.json({ 
+        message: "No-show notice email queued successfully",
+        emailId: docRef.id 
+      });
+    } catch (error) {
+      console.error("No-show notice email error:", error);
+      res.status(500).json({ error: "Failed to send no-show notice email" });
+    }
+  });
+
+  // Email automation test routes
+  app.post("/api/emails/invoice-generated", async (req: Request, res: Response) => {
+    try {
+      const { email = "test@example.com", name = "Test Client", amount = 75, invoiceId = "TEST-001" } = req.body;
+      
+      const mailData = {
+        to: email,
+        toName: name,
+        type: 'invoice-generated',
+        status: 'pending',
+        amount: amount,
+        invoiceId: invoiceId,
+        createdAt: new Date()
+      };
+
+      const docRef = await db.collection("mail").add(mailData);
+      console.log("✓ Invoice email queued in Firebase with ID:", docRef.id);
+
+      res.json({ message: "Invoice email queued successfully", emailId: docRef.id });
+    } catch (error) {
+      console.error("Invoice email error:", error);
+      res.status(500).json({ error: "Failed to queue invoice email" });
+    }
+  });
+
+  app.post("/api/emails/payment-reminder", async (req: Request, res: Response) => {
+    try {
+      const { email = "test@example.com", name = "Test Client", amount = 75, invoiceNumber = "INV-001", paymentUrl = "https://example.com/pay" } = req.body;
+      
+      const mailData = {
+        to: email,
+        toName: name,
+        type: 'payment-reminder',
+        status: 'pending',
+        amount: amount,
+        invoiceNumber: invoiceNumber,
+        paymentUrl: paymentUrl,
+        createdAt: new Date()
+      };
+
+      const docRef = await db.collection("mail").add(mailData);
+      console.log("✓ Payment reminder queued in Firebase with ID:", docRef.id);
+
+      res.json({ message: "Payment reminder queued successfully", emailId: docRef.id });
+    } catch (error) {
+      console.error("Payment reminder error:", error);
+      res.status(500).json({ error: "Failed to queue payment reminder" });
+    }
+  });
+
+  app.post("/api/emails/late-reschedule", async (req: Request, res: Response) => {
+    try {
+      const { email = "test@example.com", name = "Test Client", date = "2025-01-30", time = "10:00" } = req.body;
+      
+      const mailData = {
+        to: email,
+        toName: name,
+        type: 'late-reschedule',
+        status: 'pending',
+        date: date,
+        time: time,
+        createdAt: new Date()
+      };
+
+      const docRef = await db.collection("mail").add(mailData);
+      console.log("✓ Late reschedule email queued in Firebase with ID:", docRef.id);
+
+      res.json({ message: "Late reschedule email queued successfully", emailId: docRef.id });
+    } catch (error) {
+      console.error("Late reschedule email error:", error);
+      res.status(500).json({ error: "Failed to queue late reschedule email" });
+    }
+  });
+
+  app.post("/api/emails/appointment-cancelled", async (req: Request, res: Response) => {
+    try {
+      const { email = "test@example.com", name = "Test Client", date = "2025-01-30", time = "10:00", reason = "Schedule conflict" } = req.body;
+      
+      const mailData = {
+        to: email,
+        toName: name,
+        type: 'appointment-cancelled',
+        status: 'pending',
+        date: date,
+        time: time,
+        reason: reason,
+        createdAt: new Date()
+      };
+
+      const docRef = await db.collection("mail").add(mailData);
+      console.log("✓ Cancellation email queued in Firebase with ID:", docRef.id);
+
+      res.json({ message: "Cancellation email queued successfully", emailId: docRef.id });
+    } catch (error) {
+      console.error("Cancellation email error:", error);
+      res.status(500).json({ error: "Failed to queue cancellation email" });
+    }
+  });
+
+  const httpServer = createServer(app);
+
+  return httpServer;
+}
           originalInvoiceId: originalInvoiceId,
           creditNoteNumber: creditNoteNumber,
           reissueReason: reason,
@@ -710,6 +894,105 @@ export async function registerRoutes(app: Express): Promise<Server> {
     } catch (error) {
       console.error("No-show notice email error:", error);
       res.status(500).json({ error: "Failed to send no-show notice email" });
+    }
+  });
+
+  // Email automation test routes
+  app.post("/api/emails/invoice-generated", async (req, res) => {
+    try {
+      const { email, name, amount, invoiceId } = req.body;
+      
+      const mailData = {
+        to: email,
+        toName: name,
+        type: 'invoice-generated',
+        status: 'pending',
+        amount: amount,
+        invoiceId: invoiceId,
+        createdAt: new Date()
+      };
+
+      const docRef = await db.collection("mail").add(mailData);
+      console.log("✓ Invoice email queued in Firebase with ID:", docRef.id);
+
+      res.json({ message: "Invoice email queued successfully", emailId: docRef.id });
+    } catch (error) {
+      console.error("Invoice email error:", error);
+      res.status(500).json({ error: "Failed to queue invoice email" });
+    }
+  });
+
+  app.post("/api/emails/payment-reminder", async (req, res) => {
+    try {
+      const { email, name, amount, invoiceNumber, paymentUrl } = req.body;
+      
+      const mailData = {
+        to: email,
+        toName: name,
+        type: 'payment-reminder',
+        status: 'pending',
+        amount: amount,
+        invoiceNumber: invoiceNumber,
+        paymentUrl: paymentUrl,
+        createdAt: new Date()
+      };
+
+      const docRef = await db.collection("mail").add(mailData);
+      console.log("✓ Payment reminder queued in Firebase with ID:", docRef.id);
+
+      res.json({ message: "Payment reminder queued successfully", emailId: docRef.id });
+    } catch (error) {
+      console.error("Payment reminder error:", error);
+      res.status(500).json({ error: "Failed to queue payment reminder" });
+    }
+  });
+
+  app.post("/api/emails/late-reschedule", async (req, res) => {
+    try {
+      const { email, name, date, time } = req.body;
+      
+      const mailData = {
+        to: email,
+        toName: name,
+        type: 'late-reschedule',
+        status: 'pending',
+        date: date,
+        time: time,
+        createdAt: new Date()
+      };
+
+      const docRef = await db.collection("mail").add(mailData);
+      console.log("✓ Late reschedule email queued in Firebase with ID:", docRef.id);
+
+      res.json({ message: "Late reschedule email queued successfully", emailId: docRef.id });
+    } catch (error) {
+      console.error("Late reschedule email error:", error);
+      res.status(500).json({ error: "Failed to queue late reschedule email" });
+    }
+  });
+
+  app.post("/api/emails/appointment-cancelled", async (req, res) => {
+    try {
+      const { email, name, date, time, reason } = req.body;
+      
+      const mailData = {
+        to: email,
+        toName: name,
+        type: 'appointment-cancelled',
+        status: 'pending',
+        date: date,
+        time: time,
+        reason: reason,
+        createdAt: new Date()
+      };
+
+      const docRef = await db.collection("mail").add(mailData);
+      console.log("✓ Cancellation email queued in Firebase with ID:", docRef.id);
+
+      res.json({ message: "Cancellation email queued successfully", emailId: docRef.id });
+    } catch (error) {
+      console.error("Cancellation email error:", error);
+      res.status(500).json({ error: "Failed to queue cancellation email" });
     }
   });
 
