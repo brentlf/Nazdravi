@@ -13,8 +13,18 @@ import { useAuth } from "@/contexts/AuthContext";
 import { doc, getDoc, setDoc, addDoc, collection, query, where, orderBy, limit, getDocs } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { User, Lock, Heart, Globe, Mail, Phone, Crown } from "lucide-react";
+import { User, Lock, Heart, Globe, Mail, Phone, Crown, AlertTriangle } from "lucide-react";
 import { emailService } from "@/lib/emailService";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 
 // Profile update schema
 const profileSchema = z.object({
@@ -65,6 +75,7 @@ export default function DashboardProfile() {
   const [healthAssessment, setHealthAssessment] = useState<any>(null);
   const [consentRecord, setConsentRecord] = useState<any>(null);
   const [currentUserData, setCurrentUserData] = useState<any>(null);
+  const [showCompleteProgramDialog, setShowCompleteProgramDialog] = useState(false);
 
   // Load user data
   useEffect(() => {
@@ -271,6 +282,16 @@ export default function DashboardProfile() {
 
   // Handle preferences update
   const onPreferencesSubmit = async (data: PreferencesFormData) => {
+    // Check if user is switching to complete program
+    if (data.servicePlan === "complete-program" && currentUserData?.servicePlan !== "complete-program") {
+      setShowCompleteProgramDialog(true);
+      return;
+    }
+
+    await updatePreferences(data);
+  };
+
+  const updatePreferences = async (data: PreferencesFormData) => {
     setIsLoading(true);
     try {
       const updateData: any = {
@@ -280,7 +301,7 @@ export default function DashboardProfile() {
       };
 
       // If switching to complete program, set start and end dates
-      if (data.servicePlan === "complete-program" && user?.servicePlan !== "complete-program") {
+      if (data.servicePlan === "complete-program" && currentUserData?.servicePlan !== "complete-program") {
         const now = new Date();
         const endDate = new Date();
         endDate.setMonth(endDate.getMonth() + 3); // 3 months from now
@@ -290,11 +311,14 @@ export default function DashboardProfile() {
         updateData.programEndDate = endDate.toISOString();
       }
 
-      // If switching back to pay-as-you-go, clear program dates
-      if (data.servicePlan === "pay-as-you-go") {
-        updateData.programStartDate = null;
-        updateData.programEndDate = null;
-      }
+      // Note: When switching back to pay-as-you-go, we keep the program dates for reference
+      // This prevents users from repeatedly switching to get new 3-month periods
+
+      // Update Firebase document
+      await setDoc(doc(db, "users", user?.uid || ""), updateData, { merge: true });
+      
+      // Update local state
+      setCurrentUserData({ ...currentUserData, ...updateData });
 
       // Update user preferences
       await updateUserProfile(updateData);
@@ -637,7 +661,10 @@ export default function DashboardProfile() {
                         <span className="text-gray-600 dark:text-gray-400">Start Date:</span>
                         <div className="font-medium text-gray-900 dark:text-white">
                           {currentUserData.programStartDate 
-                            ? new Date(currentUserData.programStartDate).toLocaleDateString()
+                            ? (() => {
+                                const date = new Date(currentUserData.programStartDate);
+                                return isNaN(date.getTime()) ? "Invalid Date" : date.toLocaleDateString();
+                              })()
                             : "Not set"
                           }
                         </div>
@@ -646,7 +673,10 @@ export default function DashboardProfile() {
                         <span className="text-gray-600 dark:text-gray-400">End Date:</span>
                         <div className="font-medium text-gray-900 dark:text-white">
                           {currentUserData.programEndDate 
-                            ? new Date(currentUserData.programEndDate).toLocaleDateString()
+                            ? (() => {
+                                const date = new Date(currentUserData.programEndDate);
+                                return isNaN(date.getTime()) ? "Invalid Date" : date.toLocaleDateString();
+                              })()
                             : "Not set"
                           }
                         </div>
@@ -654,13 +684,17 @@ export default function DashboardProfile() {
                       <div>
                         <span className="text-gray-600 dark:text-gray-400">Status:</span>
                         <div className="font-medium">
-                          {currentUserData.programEndDate ? (
-                            new Date(currentUserData.programEndDate) > new Date() ? (
+                          {currentUserData.programEndDate ? (() => {
+                            const endDate = new Date(currentUserData.programEndDate);
+                            if (isNaN(endDate.getTime())) {
+                              return <span className="text-yellow-600">Invalid Date</span>;
+                            }
+                            return endDate > new Date() ? (
                               <span className="text-green-600">Active</span>
                             ) : (
                               <span className="text-red-600">Expired</span>
-                            )
-                          ) : (
+                            );
+                          })() : (
                             <span className="text-yellow-600">Pending Setup</span>
                           )}
                         </div>
@@ -668,11 +702,13 @@ export default function DashboardProfile() {
                       <div>
                         <span className="text-gray-600 dark:text-gray-400">Days Remaining:</span>
                         <div className="font-medium text-gray-900 dark:text-white">
-                          {currentUserData.programEndDate ? (
-                            Math.max(0, Math.ceil((new Date(currentUserData.programEndDate).getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24)))
-                          ) : (
-                            "N/A"
-                          )}
+                          {currentUserData.programEndDate ? (() => {
+                            const endDate = new Date(currentUserData.programEndDate);
+                            if (isNaN(endDate.getTime())) {
+                              return "N/A";
+                            }
+                            return Math.max(0, Math.ceil((endDate.getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24)));
+                          })() : "N/A"}
                         </div>
                       </div>
                     </div>
@@ -783,6 +819,67 @@ export default function DashboardProfile() {
           </Card>
         </TabsContent>
       </Tabs>
+
+      {/* Complete Program Confirmation Dialog */}
+      <AlertDialog open={showCompleteProgramDialog} onOpenChange={setShowCompleteProgramDialog}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle className="flex items-center gap-2">
+              <AlertTriangle className="w-5 h-5 text-amber-500" />
+              Upgrade to Complete Program?
+            </AlertDialogTitle>
+            <AlertDialogDescription className="space-y-3">
+              <p>
+                You're about to upgrade to our <strong>Complete Program (3 Months)</strong>. 
+                Here's what you need to know:
+              </p>
+              
+              <div className="bg-purple-50 dark:bg-purple-900/20 p-4 rounded-lg border border-purple-200 dark:border-purple-800">
+                <h4 className="font-medium text-purple-900 dark:text-purple-100 mb-2">Program Benefits:</h4>
+                <ul className="text-sm space-y-1 text-purple-800 dark:text-purple-200">
+                  <li>• Unlimited consultations for 3 months</li>
+                  <li>• Priority booking and support</li>
+                  <li>• Monthly billing instead of per-session</li>
+                  <li>• Comprehensive nutrition plan</li>
+                </ul>
+              </div>
+
+              <div className="bg-amber-50 dark:bg-amber-900/20 p-4 rounded-lg border border-amber-200 dark:border-amber-800">
+                <h4 className="font-medium text-amber-900 dark:text-amber-100 mb-2">Important Notes:</h4>
+                <ul className="text-sm space-y-1 text-amber-800 dark:text-amber-200">
+                  <li>• Your 3-month program starts immediately</li>
+                  <li>• You cannot change the start/end dates once set</li>
+                  <li>• Switching back to Pay As You Go won't reset the 3-month period</li>
+                  <li>• This prevents multiple 3-month periods from being created</li>
+                </ul>
+              </div>
+
+              <p className="text-sm">
+                Are you sure you want to proceed with the Complete Program upgrade?
+              </p>
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel onClick={() => {
+              // Reset form to current value
+              preferencesForm.setValue("servicePlan", currentUserData?.servicePlan || "pay-as-you-go");
+            }}>
+              Cancel
+            </AlertDialogCancel>
+            <AlertDialogAction
+              onClick={() => {
+                setShowCompleteProgramDialog(false);
+                const formData = preferencesForm.getValues();
+                updatePreferences({ ...formData, servicePlan: "complete-program" });
+              }}
+              className="bg-purple-600 hover:bg-purple-700"
+            >
+              <Crown className="w-4 h-4 mr-2" />
+              Start Complete Program
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 }
