@@ -8,6 +8,11 @@ interface EmailNotificationService {
   sendAppointmentReminder: (email: string, name: string, date: string, time: string, type: string) => Promise<void>;
   sendHealthUpdateNotification: (adminEmail: string, clientName: string, clientEmail: string, chronicConditions: string, medications: string) => Promise<void>;
   sendPreferencesUpdateNotification: (adminEmail: string, clientName: string, clientEmail: string, language: string, location: string) => Promise<void>;
+  sendInvoiceGenerated: (email: string, name: string, amount: number, invoiceId: string) => Promise<void>;
+  sendPaymentReminder: (email: string, name: string, amount: number, invoiceNumber: string, paymentUrl: string) => Promise<void>;
+  sendLateRescheduleNotice: (email: string, name: string, date: string, time: string) => Promise<void>;
+  sendNoShowNotice: (email: string, name: string, date: string, time: string, penaltyAmount: number) => Promise<void>;
+  sendAppointmentCancelled: (email: string, name: string, date: string, time: string, reason?: string) => Promise<void>;
 }
 
 class EmailService implements EmailNotificationService {
@@ -135,6 +140,56 @@ class EmailService implements EmailNotificationService {
       console.log('Preferences update notification sent successfully');
     } catch (error) {
       console.error('Failed to send preferences update notification:', error);
+      throw error;
+    }
+  }
+
+  async sendInvoiceGenerated(email: string, name: string, amount: number, invoiceId: string): Promise<void> {
+    try {
+      await apiRequest('POST', '/api/emails/invoice-generated', { email, name, amount, invoiceId });
+      console.log('Invoice generated email sent successfully');
+    } catch (error) {
+      console.error('Failed to send invoice generated email:', error);
+      throw error;
+    }
+  }
+
+  async sendPaymentReminder(email: string, name: string, amount: number, invoiceNumber: string, paymentUrl: string): Promise<void> {
+    try {
+      await apiRequest('POST', '/api/emails/payment-reminder', { email, name, amount, invoiceNumber, paymentUrl });
+      console.log('Payment reminder email sent successfully');
+    } catch (error) {
+      console.error('Failed to send payment reminder email:', error);
+      throw error;
+    }
+  }
+
+  async sendLateRescheduleNotice(email: string, name: string, date: string, time: string): Promise<void> {
+    try {
+      await apiRequest('POST', '/api/emails/late-reschedule', { email, name, date, time });
+      console.log('Late reschedule notice email sent successfully');
+    } catch (error) {
+      console.error('Failed to send late reschedule notice email:', error);
+      throw error;
+    }
+  }
+
+  async sendNoShowNotice(email: string, name: string, date: string, time: string, penaltyAmount: number): Promise<void> {
+    try {
+      await apiRequest('POST', '/api/emails/no-show', { email, name, date, time, penaltyAmount });
+      console.log('No-show notice email sent successfully');
+    } catch (error) {
+      console.error('Failed to send no-show notice email:', error);
+      throw error;
+    }
+  }
+
+  async sendAppointmentCancelled(email: string, name: string, date: string, time: string, reason?: string): Promise<void> {
+    try {
+      await apiRequest('POST', '/api/emails/appointment-cancelled', { email, name, date, time, reason });
+      console.log('Appointment cancelled email sent successfully');
+    } catch (error) {
+      console.error('Failed to send appointment cancelled email:', error);
       throw error;
     }
   }
