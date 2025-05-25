@@ -24,7 +24,7 @@ var __importStar = (this && this.__importStar) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.sendDailyReminders = exports.processMailQueue = exports.onRescheduleRequest = exports.onAppointmentCreated = exports.onAppointmentConfirmed = exports.onUserCreated = void 0;
-const functions = __importStar(require("firebase-functions"));
+const functions = __importStar(require("firebase-functions/v1"));
 const admin = __importStar(require("firebase-admin"));
 const https = __importStar(require("https"));
 // Initialize Firebase Admin

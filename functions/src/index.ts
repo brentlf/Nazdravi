@@ -1,4 +1,4 @@
-import * as functions from 'firebase-functions';
+import * as functions from 'firebase-functions/v1';
 import * as admin from 'firebase-admin';
 import * as https from 'https';
 
@@ -1032,7 +1032,7 @@ export const processMailQueue = functions.firestore
 export const sendDailyReminders = functions.pubsub
   .schedule('0 18 * * *') // 6 PM daily
   .timeZone('Europe/Amsterdam')
-  .onRun(async (context) => {
+  .onRun(async (context: any) => {
     console.log('Running daily appointment reminders...');
     
     const tomorrow = new Date();
