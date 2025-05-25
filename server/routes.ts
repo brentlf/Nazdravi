@@ -507,16 +507,24 @@ export async function registerRoutes(app: Express): Promise<Server> {
         invoiceNumber: invoice.invoiceNumber 
       });
 
-      // Send payment reminder email
-      const success = await mailerLiteService.sendPaymentReminder(
-        clientEmail,
-        clientName,
-        invoice.amount,
-        invoice.invoiceNumber,
-        invoice.paymentUrl || `${req.protocol}://${req.get('host')}/pay-invoice/${invoice.invoiceNumber}`
-      );
+      // Queue payment reminder email in Firebase for processing
+      const paymentUrl = invoice.paymentUrl || `${req.protocol}://${req.get('host')}/pay-invoice/${invoice.invoiceNumber}`;
+      
+      try {
+        await db.collection("mail").add({
+          to: clientEmail,
+          toName: clientName,
+          type: 'payment-reminder',
+          status: 'pending',
+          invoiceId: invoiceId,
+          amount: invoice.amount,
+          invoiceNumber: invoice.invoiceNumber,
+          paymentUrl: paymentUrl,
+          createdAt: new Date()
+        });
 
-      if (success) {
+        console.log('Payment reminder queued in Firebase mail collection for:', clientEmail);
+
         // Update invoice with reminder sent timestamp
         await db.collection("invoices").doc(invoiceId).update({
           lastReminderSent: new Date(),
@@ -525,10 +533,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
         res.json({ 
           success: true, 
-          message: "Payment reminder sent successfully" 
+          message: "Payment reminder queued successfully" 
         });
-      } else {
-        res.status(500).json({ error: "Failed to send payment reminder" });
+      } catch (error) {
+        console.error('Failed to queue payment reminder:', error);
+        res.status(500).json({ error: "Failed to queue payment reminder" });
       }
 
     } catch (error) {

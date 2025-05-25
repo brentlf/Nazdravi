@@ -782,3 +782,60 @@ export const sendDailyReminders = functions.pubsub
     await Promise.all(promises);
     console.log(`Queued ${promises.length} reminder emails`);
   });
+
+// 6. Email Queue Processor - Process emails from mail collection
+export const processMailQueue = functions.firestore
+  .document('mail/{mailId}')
+  .onCreate(async (snap, context) => {
+    const mailData = snap.data();
+    
+    if (mailData.status !== 'pending') {
+      return null;
+    }
+
+    try {
+      let template;
+      
+      switch (mailData.type) {
+        case 'payment-reminder':
+          template = emailService.getPaymentReminderTemplate(
+            mailData.toName,
+            mailData.amount,
+            mailData.invoiceNumber,
+            mailData.paymentUrl
+          );
+          break;
+        case 'account-confirmation':
+          template = emailService.getAccountConfirmationTemplate(mailData.toName);
+          break;
+        default:
+          console.log('Unknown email type:', mailData.type);
+          return null;
+      }
+
+      const success = await emailService.sendEmail({
+        to: mailData.to,
+        toName: mailData.toName,
+        subject: template.subject,
+        html: template.html,
+        text: template.text
+      });
+
+      // Update mail document status
+      await snap.ref.update({
+        status: success ? 'sent' : 'failed',
+        processedAt: admin.firestore.FieldValue.serverTimestamp(),
+        sentAt: success ? admin.firestore.FieldValue.serverTimestamp() : null
+      });
+
+      console.log(`Email ${mailData.type} ${success ? 'sent' : 'failed'} to:`, mailData.to);
+      
+    } catch (error) {
+      console.error('Error processing mail:', error);
+      await snap.ref.update({
+        status: 'failed',
+        error: error.message,
+        processedAt: admin.firestore.FieldValue.serverTimestamp()
+      });
+    }
+  });
