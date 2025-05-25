@@ -50,6 +50,7 @@ export default function AdminAppointments() {
   const [isEditingAppointment, setIsEditingAppointment] = useState(false);
   const [editDate, setEditDate] = useState("");
   const [editTimeslot, setEditTimeslot] = useState("");
+  const [actionLoading, setActionLoading] = useState(false);
   const { toast } = useToast();
 
   // Fetch appointments
