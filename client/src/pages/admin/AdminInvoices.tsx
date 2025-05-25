@@ -19,6 +19,7 @@ import type { Invoice, Appointment } from "@shared/firebase-schema";
 export default function AdminInvoices() {
   const [selectedAppointment, setSelectedAppointment] = useState<Appointment | null>(null);
   const [isCreatingInvoice, setIsCreatingInvoice] = useState(false);
+  const [includeSessionRate, setIncludeSessionRate] = useState(false);
   const [includeNoShowPenalty, setIncludeNoShowPenalty] = useState(false);
   const [includeLateRescheduleFee, setIncludeLateRescheduleFee] = useState(false);
   const [useCustomAmount, setUseCustomAmount] = useState(false);
@@ -92,11 +93,12 @@ export default function AdminInvoices() {
     }
   };
 
-  // Detect applicable penalties for an appointment
-  const detectApplicablePenalties = (appointment: Appointment) => {
+  // Detect applicable charges for an appointment
+  const detectApplicableCharges = (appointment: Appointment) => {
+    const shouldIncludeSessionRate = appointment.status === 'done'; // Default ON for completed appointments
     const shouldIncludeNoShow = appointment.status === 'no-show';
     const shouldIncludeLateReschedule = appointment.status === 'cancelled';
-    return { shouldIncludeNoShow, shouldIncludeLateReschedule };
+    return { shouldIncludeSessionRate, shouldIncludeNoShow, shouldIncludeLateReschedule };
   };
 
   // Calculate invoice total
@@ -110,8 +112,8 @@ export default function AdminInvoices() {
     
     let total = 0;
     
-    // Session cost (€0 for no-show, full price for others)
-    if (selectedAppointment.status !== 'no-show') {
+    // Session cost (only if explicitly included)
+    if (includeSessionRate) {
       total += selectedAppointment.type === "Initial" ? 95 : 75;
     }
     
@@ -161,6 +163,7 @@ export default function AdminInvoices() {
         });
         setIsCreatingInvoice(false);
         setSelectedAppointment(null);
+        setIncludeSessionRate(false);
         setIncludeNoShowPenalty(false);
         setIncludeLateRescheduleFee(false);
         setUseCustomAmount(false);
@@ -341,7 +344,7 @@ export default function AdminInvoices() {
                     </TableHeader>
                     <TableBody>
                       {toInvoiceAppointments.map((appointment) => {
-                        const { shouldIncludeNoShow, shouldIncludeLateReschedule } = detectApplicablePenalties(appointment);
+                        const { shouldIncludeSessionRate, shouldIncludeNoShow, shouldIncludeLateReschedule } = detectApplicableCharges(appointment);
                         let expectedAmount = 0;
                         
                         // Calculate expected amount
@@ -403,6 +406,7 @@ export default function AdminInvoices() {
                                     className="h-8 w-full text-xs"
                                     onClick={() => {
                                       setSelectedAppointment(appointment);
+                                      setIncludeSessionRate(shouldIncludeSessionRate);
                                       setIncludeNoShowPenalty(shouldIncludeNoShow);
                                       setIncludeLateRescheduleFee(shouldIncludeLateReschedule);
                                     }}
@@ -442,13 +446,31 @@ export default function AdminInvoices() {
                                         </div>
                                       </div>
 
-                                      <div className="flex justify-between items-center py-2 border-b">
-                                        <span>Session Cost</span>
-                                        <Badge variant="outline">
-                                          {selectedAppointment.status === 'no-show' 
-                                            ? "€0.00 (No-Show)" 
-                                            : `€${selectedAppointment.type === "Initial" ? "95.00" : "75.00"}`}
-                                        </Badge>
+                                      {/* Session Rate Control */}
+                                      <div className="flex justify-between items-center">
+                                        <div className="flex items-center space-x-2">
+                                          <Checkbox
+                                            id="session-rate"
+                                            checked={includeSessionRate}
+                                            onCheckedChange={(checked) => setIncludeSessionRate(checked === true)}
+                                          />
+                                          <div className="grid gap-1.5 leading-none">
+                                            <label 
+                                              htmlFor="session-rate" 
+                                              className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                                            >
+                                              Session Rate
+                                            </label>
+                                            <p className="text-xs text-muted-foreground">
+                                              Standard consultation fee
+                                            </p>
+                                          </div>
+                                        </div>
+                                        {includeSessionRate && (
+                                          <Badge variant="default">
+                                            €{selectedAppointment.type === "Initial" ? "95.00" : "75.00"}
+                                          </Badge>
+                                        )}
                                       </div>
 
                                       {/* No-Show Penalty Control */}
