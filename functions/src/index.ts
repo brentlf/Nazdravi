@@ -536,7 +536,210 @@ Vee Nutrition Team`
     };
   }
 
+  // Admin notification email templates
+  getAdminNewAppointmentTemplate(appointment: any): EmailTemplate {
+    return {
+      subject: `New Appointment Request - ${appointment.clientName || appointment.name}`,
+      html: `
+        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; background-color: #f8faf8;">
+          <div style="background-color: white; padding: 30px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
+            <div style="text-align: center; margin-bottom: 30px;">
+              <h1 style="color: #A5CBA4; margin: 0;">🌿 Vee Nutrition Admin</h1>
+            </div>
+            
+            <h2 style="color: #333; margin-bottom: 20px;">📅 New Appointment Request</h2>
+            
+            <p style="color: #666; line-height: 1.6; margin-bottom: 20px;">
+              A new appointment has been requested and needs your confirmation.
+            </p>
+            
+            <div style="background-color: #A5CBA4; color: white; padding: 25px; border-radius: 8px; margin: 20px 0;">
+              <h3 style="margin: 0 0 15px 0; font-size: 18px;">Client Details</h3>
+              <p style="margin: 5px 0; font-size: 16px;"><strong>Name:</strong> ${appointment.clientName || appointment.name}</p>
+              <p style="margin: 5px 0; font-size: 16px;"><strong>Email:</strong> ${appointment.clientEmail || appointment.email}</p>
+              <p style="margin: 5px 0; font-size: 16px;"><strong>Type:</strong> ${appointment.appointmentType || appointment.type}</p>
+              <p style="margin: 5px 0; font-size: 16px;"><strong>Date:</strong> ${appointment.date}</p>
+              <p style="margin: 5px 0; font-size: 16px;"><strong>Time:</strong> ${appointment.time}</p>
+            </div>
+            
+            <div style="text-align: center; margin: 30px 0;">
+              <a href="https://your-domain.replit.app/admin/appointments" style="background-color: #A5CBA4; color: white; padding: 12px 25px; text-decoration: none; border-radius: 5px; font-weight: bold;">
+                Review & Confirm
+              </a>
+            </div>
+            
+            <div style="border-top: 1px solid #eee; padding-top: 20px; margin-top: 30px; text-align: center; color: #999; font-size: 14px;">
+              <p>Vee Nutrition Admin Panel</p>
+              <p>Client awaiting confirmation</p>
+            </div>
+          </div>
+        </div>
+      `,
+      text: `New appointment request from ${appointment.clientName || appointment.name} for ${appointment.appointmentType || appointment.type} on ${appointment.date} at ${appointment.time}.`
+    };
+  }
 
+  getAdminHealthUpdateTemplate(clientName: string, clientEmail: string, updateType: string): EmailTemplate {
+    return {
+      subject: `Health Information Update - ${clientName}`,
+      html: `
+        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; background-color: #f8faf8;">
+          <div style="background-color: white; padding: 30px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
+            <div style="text-align: center; margin-bottom: 30px;">
+              <h1 style="color: #A5CBA4; margin: 0;">🌿 Vee Nutrition Admin</h1>
+            </div>
+            
+            <h2 style="color: #333; margin-bottom: 20px;">🏥 Health Information Update</h2>
+            
+            <p style="color: #666; line-height: 1.6; margin-bottom: 20px;">
+              A client has updated their health information and it may require your review.
+            </p>
+            
+            <div style="background-color: #f0f8f0; padding: 20px; border-radius: 8px; margin: 20px 0; border-left: 4px solid #A5CBA4;">
+              <h3 style="color: #A5CBA4; margin-top: 0;">Update Details</h3>
+              <p style="margin: 5px 0; color: #666;"><strong>Client:</strong> ${clientName}</p>
+              <p style="margin: 5px 0; color: #666;"><strong>Email:</strong> ${clientEmail}</p>
+              <p style="margin: 5px 0; color: #666;"><strong>Update Type:</strong> ${updateType}</p>
+            </div>
+            
+            <div style="text-align: center; margin: 30px 0;">
+              <a href="https://your-domain.replit.app/admin/users" style="background-color: #A5CBA4; color: white; padding: 12px 25px; text-decoration: none; border-radius: 5px; font-weight: bold;">
+                Review Update
+              </a>
+            </div>
+            
+            <div style="border-top: 1px solid #eee; padding-top: 20px; margin-top: 30px; text-align: center; color: #999; font-size: 14px;">
+              <p>Vee Nutrition Admin Panel</p>
+              <p>Health information updated</p>
+            </div>
+          </div>
+        </div>
+      `,
+      text: `${clientName} (${clientEmail}) has updated their health information: ${updateType}. Please review the changes.`
+    };
+  }
+
+  getAdminPaymentReceivedTemplate(clientName: string, amount: number, invoiceId: string, paymentMethod: string): EmailTemplate {
+    return {
+      subject: `Payment Received - ${clientName} - €${amount}`,
+      html: `
+        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; background-color: #f8faf8;">
+          <div style="background-color: white; padding: 30px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
+            <div style="text-align: center; margin-bottom: 30px;">
+              <h1 style="color: #A5CBA4; margin: 0;">🌿 Vee Nutrition Admin</h1>
+            </div>
+            
+            <h2 style="color: #333; margin-bottom: 20px;">💰 Payment Received</h2>
+            
+            <p style="color: #666; line-height: 1.6; margin-bottom: 20px;">
+              A payment has been successfully processed for one of your clients.
+            </p>
+            
+            <div style="background-color: #d4edda; padding: 20px; border-radius: 8px; margin: 20px 0; border-left: 4px solid #28a745;">
+              <h3 style="color: #155724; margin-top: 0;">Payment Details</h3>
+              <p style="margin: 5px 0; color: #155724;"><strong>Client:</strong> ${clientName}</p>
+              <p style="margin: 5px 0; color: #155724;"><strong>Amount:</strong> €${amount}</p>
+              <p style="margin: 5px 0; color: #155724;"><strong>Invoice:</strong> ${invoiceId}</p>
+              <p style="margin: 5px 0; color: #155724;"><strong>Method:</strong> ${paymentMethod}</p>
+            </div>
+            
+            <div style="text-align: center; margin: 30px 0;">
+              <a href="https://your-domain.replit.app/admin/invoices" style="background-color: #A5CBA4; color: white; padding: 12px 25px; text-decoration: none; border-radius: 5px; font-weight: bold;">
+                View Invoice Details
+              </a>
+            </div>
+            
+            <div style="border-top: 1px solid #eee; padding-top: 20px; margin-top: 30px; text-align: center; color: #999; font-size: 14px;">
+              <p>Vee Nutrition Admin Panel</p>
+              <p>Payment successfully processed</p>
+            </div>
+          </div>
+        </div>
+      `,
+      text: `Payment received: ${clientName} paid €${amount} for invoice ${invoiceId} via ${paymentMethod}.`
+    };
+  }
+
+  getAdminPlanUpgradeTemplate(clientName: string, planType: string, previousPlan: string): EmailTemplate {
+    return {
+      subject: `Plan Upgrade - ${clientName} upgraded to ${planType}`,
+      html: `
+        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; background-color: #f8faf8;">
+          <div style="background-color: white; padding: 30px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
+            <div style="text-align: center; margin-bottom: 30px;">
+              <h1 style="color: #A5CBA4; margin: 0;">🌿 Vee Nutrition Admin</h1>
+            </div>
+            
+            <h2 style="color: #333; margin-bottom: 20px;">⬆️ Service Plan Upgrade</h2>
+            
+            <p style="color: #666; line-height: 1.6; margin-bottom: 20px;">
+              Great news! A client has upgraded their service plan.
+            </p>
+            
+            <div style="background-color: #fff3cd; padding: 20px; border-radius: 8px; margin: 20px 0; border-left: 4px solid #ffc107;">
+              <h3 style="color: #856404; margin-top: 0;">Upgrade Details</h3>
+              <p style="margin: 5px 0; color: #856404;"><strong>Client:</strong> ${clientName}</p>
+              <p style="margin: 5px 0; color: #856404;"><strong>Previous Plan:</strong> ${previousPlan}</p>
+              <p style="margin: 5px 0; color: #856404;"><strong>New Plan:</strong> ${planType}</p>
+            </div>
+            
+            <div style="text-align: center; margin: 30px 0;">
+              <a href="https://your-domain.replit.app/admin/users" style="background-color: #A5CBA4; color: white; padding: 12px 25px; text-decoration: none; border-radius: 5px; font-weight: bold;">
+                View Client Details
+              </a>
+            </div>
+            
+            <div style="border-top: 1px solid #eee; padding-top: 20px; margin-top: 30px; text-align: center; color: #999; font-size: 14px;">
+              <p>Vee Nutrition Admin Panel</p>
+              <p>Client successfully upgraded</p>
+            </div>
+          </div>
+        </div>
+      `,
+      text: `Plan upgrade: ${clientName} upgraded from ${previousPlan} to ${planType}.`
+    };
+  }
+
+  getAdminClientMessageTemplate(clientName: string, clientEmail: string, messageType: string, urgency: string): EmailTemplate {
+    return {
+      subject: `Client Message - ${clientName} (${urgency} Priority)`,
+      html: `
+        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; background-color: #f8faf8;">
+          <div style="background-color: white; padding: 30px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
+            <div style="text-align: center; margin-bottom: 30px;">
+              <h1 style="color: #A5CBA4; margin: 0;">🌿 Vee Nutrition Admin</h1>
+            </div>
+            
+            <h2 style="color: #333; margin-bottom: 20px;">💬 New Client Message</h2>
+            
+            <p style="color: #666; line-height: 1.6; margin-bottom: 20px;">
+              You have received a new message from a client that requires your attention.
+            </p>
+            
+            <div style="background-color: ${urgency === 'High' ? '#f8d7da' : urgency === 'Medium' ? '#fff3cd' : '#d1ecf1'}; padding: 20px; border-radius: 8px; margin: 20px 0; border-left: 4px solid ${urgency === 'High' ? '#dc3545' : urgency === 'Medium' ? '#ffc107' : '#17a2b8'};">
+              <h3 style="color: ${urgency === 'High' ? '#721c24' : urgency === 'Medium' ? '#856404' : '#0c5460'}; margin-top: 0;">Message Details</h3>
+              <p style="margin: 5px 0; color: ${urgency === 'High' ? '#721c24' : urgency === 'Medium' ? '#856404' : '#0c5460'};"><strong>Client:</strong> ${clientName}</p>
+              <p style="margin: 5px 0; color: ${urgency === 'High' ? '#721c24' : urgency === 'Medium' ? '#856404' : '#0c5460'};"><strong>Email:</strong> ${clientEmail}</p>
+              <p style="margin: 5px 0; color: ${urgency === 'High' ? '#721c24' : urgency === 'Medium' ? '#856404' : '#0c5460'};"><strong>Type:</strong> ${messageType}</p>
+              <p style="margin: 5px 0; color: ${urgency === 'High' ? '#721c24' : urgency === 'Medium' ? '#856404' : '#0c5460'};"><strong>Priority:</strong> ${urgency}</p>
+            </div>
+            
+            <div style="text-align: center; margin: 30px 0;">
+              <a href="https://your-domain.replit.app/admin/messages" style="background-color: #A5CBA4; color: white; padding: 12px 25px; text-decoration: none; border-radius: 5px; font-weight: bold;">
+                View Message
+              </a>
+            </div>
+            
+            <div style="border-top: 1px solid #eee; padding-top: 20px; margin-top: 30px; text-align: center; color: #999; font-size: 14px;">
+              <p>Vee Nutrition Admin Panel</p>
+              <p>Client awaiting response</p>
+            </div>
+          </div>
+        </div>
+      `,
+      text: `New ${urgency.toLowerCase()} priority message from ${clientName} (${clientEmail}) - Type: ${messageType}. Please respond promptly.`
+    };
+  }
 }
 
 const emailService = new ResendEmailService();

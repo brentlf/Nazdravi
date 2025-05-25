@@ -1,0 +1,47 @@
+PS C:\Users\brent\Documents\DietPro (4)\DietPro\functions> firebase deploy --only functions
+
+=== Deploying to 'veenutrition-79fba'...
+
+i  deploying functions
+Running command: npm --prefix "$RESOURCE_DIR" run build
+
+> build
+> tsc
+
+src/index.ts:608:35 - error TS2339: Property 'getAdminNewAppointmentTemplate' does not exist on type 'ResendEmailService'.
+
+608     const template = emailService.getAdminNewAppointmentTemplate(appointmentData);
+                                      ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+src/index.ts:741:35 - error TS2339: Property 'getAdminNewAppointmentTemplate' does not exist on type 'ResendEmailService'.
+
+741           template = emailService.getAdminNewAppointmentTemplate({
+                                      ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+src/index.ts:750:35 - error TS2339: Property 'getAdminHealthUpdateTemplate' does not exist on type 'ResendEmailService'.
+
+750           template = emailService.getAdminHealthUpdateTemplate(
+                                      ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+src/index.ts:757:35 - error TS2339: Property 'getAdminPaymentReceivedTemplate' does not exist on type 'ResendEmailService'.
+
+757           template = emailService.getAdminPaymentReceivedTemplate(
+                                      ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+src/index.ts:765:35 - error TS2339: Property 'getAdminPlanUpgradeTemplate' does not exist on type 'ResendEmailService'.
+
+765           template = emailService.getAdminPlanUpgradeTemplate(
+                                      ~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+src/index.ts:772:35 - error TS2339: Property 'getAdminClientMessageTemplate' does not exist on type 'ResendEmailService'.
+
+772           template = emailService.getAdminClientMessageTemplate(
+                                      ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+Found 6 errors in the same file, starting at: src/index.ts:608
+
+
+Error: functions predeploy error: Command terminated with non-zero exit code 2
+
+Having trouble? Try firebase [command] --help
