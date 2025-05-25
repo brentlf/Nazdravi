@@ -369,14 +369,34 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Reissue invoice with updated amount
-  app.post("/api/invoices/reissue", async (req, res) => {
+  app.post("/api/invoices/reissue", (req, res) => {
     console.log("=== REISSUE ROUTE HIT ===");
     console.log("Request method:", req.method);
     console.log("Request URL:", req.url);
     console.log("Content-Type:", req.headers['content-type']);
+    console.log("Raw body:", req.body);
+    
+    const { originalInvoiceId, newAmount, reason } = req.body;
+    
+    // Immediate validation with detailed logging
+    if (!originalInvoiceId) {
+      console.log("VALIDATION FAILED: Missing originalInvoiceId");
+      return res.status(400).json({ error: "Missing invoice ID" });
+    }
+    
+    if (newAmount === undefined || newAmount === null || typeof newAmount !== 'number') {
+      console.log("VALIDATION FAILED: Invalid newAmount:", newAmount, typeof newAmount);
+      return res.status(400).json({ error: "Invalid amount" });
+    }
+    
+    console.log("VALIDATION PASSED - Processing reissue...");
+    
+    // Continue with async processing
+    processReissue(req, res, originalInvoiceId, newAmount, reason);
+  });
+  
+  async function processReissue(req: any, res: any, originalInvoiceId: string, newAmount: number, reason: string) {
     try {
-      console.log("Reissue request body:", req.body);
-      const { originalInvoiceId, newAmount, reason } = req.body;
 
       console.log("Raw request body:", req.body);
       console.log("Extracted params:", { originalInvoiceId, newAmount, reason, types: { 
