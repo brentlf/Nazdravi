@@ -45,11 +45,18 @@ function AdminUserProfile() {
   useEffect(() => {
     if (userId) {
       fetchUserProfile();
+    }
+  }, [userId]);
+
+  // Fetch related data after user profile is loaded
+  useEffect(() => {
+    if (user && userId) {
+      console.log('User loaded, now fetching related data for:', user.email);
       fetchUserAppointments();
       fetchUserInvoices();
       fetchPreEvaluationForm();
     }
-  }, [userId]);
+  }, [user, userId]);
 
   const fetchUserProfile = async () => {
     if (!userId) return;
