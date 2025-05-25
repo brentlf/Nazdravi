@@ -5,6 +5,12 @@ import { mailerLiteService } from "./email";
 
 export async function registerRoutes(app: Express): Promise<Server> {
   
+  // Debug middleware to log all email-related requests
+  app.use('/api/emails', (req, res, next) => {
+    console.log(`🔍 MIDDLEWARE DEBUG: ${req.method} ${req.path} - ${req.url}`);
+    next();
+  });
+  
   // Email automation test routes
   app.post("/api/emails/appointment-confirmation", async (req, res) => {
     try {
