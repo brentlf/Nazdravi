@@ -365,7 +365,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
       console.log("Reissue request body:", req.body);
       const { originalInvoiceId, newAmount, reason } = req.body;
 
-      console.log("Extracted params:", { originalInvoiceId, newAmount, reason });
+      console.log("Raw request body:", req.body);
+      console.log("Extracted params:", { originalInvoiceId, newAmount, reason, types: { 
+        originalInvoiceId: typeof originalInvoiceId, 
+        newAmount: typeof newAmount, 
+        reason: typeof reason 
+      }});
 
       if (!originalInvoiceId) {
         console.log("Missing originalInvoiceId:", originalInvoiceId);
