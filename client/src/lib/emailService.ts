@@ -6,6 +6,8 @@ interface EmailNotificationService {
   sendAppointmentConfirmation: (email: string, name: string, date: string, time: string, type: string) => Promise<void>;
   sendRescheduleRequest: (adminEmail: string, clientName: string, clientEmail: string, originalDate: string, originalTime: string, reason?: string) => Promise<void>;
   sendAppointmentReminder: (email: string, name: string, date: string, time: string, type: string) => Promise<void>;
+  sendHealthUpdateNotification: (adminEmail: string, clientName: string, clientEmail: string, chronicConditions: string, medications: string) => Promise<void>;
+  sendPreferencesUpdateNotification: (adminEmail: string, clientName: string, clientEmail: string, language: string, location: string) => Promise<void>;
 }
 
 class EmailService implements EmailNotificationService {
@@ -89,6 +91,50 @@ class EmailService implements EmailNotificationService {
       return data;
     } catch (error) {
       console.error('Failed to send daily reminders:', error);
+      throw error;
+    }
+  }
+
+  async sendHealthUpdateNotification(
+    adminEmail: string,
+    clientName: string,
+    clientEmail: string,
+    chronicConditions: string,
+    medications: string
+  ): Promise<void> {
+    try {
+      await apiRequest('POST', '/api/emails/health-update', {
+        adminEmail,
+        clientName,
+        clientEmail,
+        chronicConditions,
+        medications,
+      });
+      console.log('Health update notification sent successfully');
+    } catch (error) {
+      console.error('Failed to send health update notification:', error);
+      throw error;
+    }
+  }
+
+  async sendPreferencesUpdateNotification(
+    adminEmail: string,
+    clientName: string,
+    clientEmail: string,
+    language: string,
+    location: string
+  ): Promise<void> {
+    try {
+      await apiRequest('POST', '/api/emails/preferences-update', {
+        adminEmail,
+        clientName,
+        clientEmail,
+        language,
+        location,
+      });
+      console.log('Preferences update notification sent successfully');
+    } catch (error) {
+      console.error('Failed to send preferences update notification:', error);
       throw error;
     }
   }
