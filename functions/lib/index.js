@@ -1,88 +1,89 @@
-import * as functions from 'firebase-functions';
-import * as admin from 'firebase-admin';
-import * as https from 'https';
-
+"use strict";
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.sendDailyReminders = exports.processMailQueue = exports.onRescheduleRequest = exports.onAppointmentCreated = exports.onAppointmentConfirmed = exports.onUserCreated = void 0;
+const functions = __importStar(require("firebase-functions"));
+const admin = __importStar(require("firebase-admin"));
+const https = __importStar(require("https"));
 // Initialize Firebase Admin
 admin.initializeApp();
-
-interface EmailTemplate {
-  subject: string;
-  html: string;
-  text?: string;
-}
-
-interface SendEmailParams {
-  to: string;
-  toName?: string;
-  subject: string;
-  html: string;
-  text?: string;
-}
-
 class ResendEmailService {
-  async sendEmail(params: SendEmailParams): Promise<boolean> {
-    const RESEND_API_KEY = process.env.RESEND_API_KEY;
-    
-    if (!RESEND_API_KEY) {
-      console.error('Resend API key not configured');
-      return false;
-    }
-
-    return new Promise((resolve) => {
-      const postData = JSON.stringify({
-        from: 'Vee Nutrition <info@veenutrition.com>',
-        to: [`${params.toName || ''} <${params.to}>`],
-        subject: params.subject,
-        html: params.html,
-        text: params.text || ''
-      });
-
-      const options = {
-        hostname: 'api.resend.com',
-        port: 443,
-        path: '/emails',
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${RESEND_API_KEY}`,
-          'Content-Length': Buffer.byteLength(postData)
+    async sendEmail(params) {
+        const RESEND_API_KEY = process.env.RESEND_API_KEY;
+        if (!RESEND_API_KEY) {
+            console.error('Resend API key not configured');
+            return false;
         }
-      };
-
-      const req = https.request(options, (res) => {
-        let responseData = '';
-        
-        res.on('data', (chunk) => {
-          responseData += chunk;
+        return new Promise((resolve) => {
+            const postData = JSON.stringify({
+                from: 'Vee Nutrition <info@veenutrition.com>',
+                to: [`${params.toName || ''} <${params.to}>`],
+                subject: params.subject,
+                html: params.html,
+                text: params.text || ''
+            });
+            const options = {
+                hostname: 'api.resend.com',
+                port: 443,
+                path: '/emails',
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${RESEND_API_KEY}`,
+                    'Content-Length': Buffer.byteLength(postData)
+                }
+            };
+            const req = https.request(options, (res) => {
+                let responseData = '';
+                res.on('data', (chunk) => {
+                    responseData += chunk;
+                });
+                res.on('end', () => {
+                    console.log('Resend response:', res.statusCode, responseData);
+                    if (res.statusCode === 200 || res.statusCode === 201) {
+                        console.log(`Email sent successfully to: ${params.to}`);
+                        resolve(true);
+                    }
+                    else {
+                        console.error('Resend API error:', res.statusCode, responseData);
+                        resolve(false);
+                    }
+                });
+            });
+            req.on('error', (error) => {
+                console.error('Email sending failed:', error);
+                resolve(false);
+            });
+            req.write(postData);
+            req.end();
         });
-        
-        res.on('end', () => {
-          console.log('Resend response:', res.statusCode, responseData);
-          
-          if (res.statusCode === 200 || res.statusCode === 201) {
-            console.log(`Email sent successfully to: ${params.to}`);
-            resolve(true);
-          } else {
-            console.error('Resend API error:', res.statusCode, responseData);
-            resolve(false);
-          }
-        });
-      });
-
-      req.on('error', (error) => {
-        console.error('Email sending failed:', error);
-        resolve(false);
-      });
-
-      req.write(postData);
-      req.end();
-    });
-  }
-
-  getAccountConfirmationTemplate(name: string): EmailTemplate {
-    return {
-      subject: 'Welcome to Vee Nutrition - Account Created Successfully',
-      html: `
+    }
+    getAccountConfirmationTemplate(name) {
+        return {
+            subject: 'Welcome to Vee Nutrition - Account Created Successfully',
+            html: `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; background-color: #f8faf8;">
           <div style="background-color: white; padding: 30px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
             <div style="text-align: center; margin-bottom: 30px;">
@@ -122,14 +123,13 @@ class ResendEmailService {
           </div>
         </div>
       `,
-      text: `Welcome to Vee Nutrition, ${name}! Your account has been created successfully. Visit your dashboard to get started with your nutrition journey.`
-    };
-  }
-
-  getAppointmentConfirmationTemplate(name: string, date: string, time: string, type: string): EmailTemplate {
-    return {
-      subject: 'Appointment Confirmed - Vee Nutrition',
-      html: `
+            text: `Welcome to Vee Nutrition, ${name}! Your account has been created successfully. Visit your dashboard to get started with your nutrition journey.`
+        };
+    }
+    getAppointmentConfirmationTemplate(name, date, time, type) {
+        return {
+            subject: 'Appointment Confirmed - Vee Nutrition',
+            html: `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; background-color: #f8faf8;">
           <div style="background-color: white; padding: 30px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
             <div style="text-align: center; margin-bottom: 30px;">
@@ -179,14 +179,13 @@ class ResendEmailService {
           </div>
         </div>
       `,
-      text: `Appointment Confirmed! Hi ${name}, your ${type} appointment is confirmed for ${date} at ${time}. Please keep a food diary and prepare any questions.`
-    };
-  }
-
-  getAppointmentReminderTemplate(name: string, date: string, time: string, type: string): EmailTemplate {
-    return {
-      subject: 'Appointment Reminder - Tomorrow at Vee Nutrition',
-      html: `
+            text: `Appointment Confirmed! Hi ${name}, your ${type} appointment is confirmed for ${date} at ${time}. Please keep a food diary and prepare any questions.`
+        };
+    }
+    getAppointmentReminderTemplate(name, date, time, type) {
+        return {
+            subject: 'Appointment Reminder - Tomorrow at Vee Nutrition',
+            html: `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; background-color: #f8faf8;">
           <div style="background-color: white; padding: 30px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
             <div style="text-align: center; margin-bottom: 30px;">
@@ -226,14 +225,13 @@ class ResendEmailService {
           </div>
         </div>
       `,
-      text: `Appointment Reminder: Hi ${name}, your ${type} appointment is tomorrow (${date}) at ${time}. Please review your food diary and prepare any questions.`
-    };
-  }
-
-  getPaymentReminderTemplate(name: string, amount: number, invoiceNumber: string, paymentUrl: string): EmailTemplate {
-    return {
-      subject: `Payment Reminder - Invoice ${invoiceNumber}`,
-      html: `
+            text: `Appointment Reminder: Hi ${name}, your ${type} appointment is tomorrow (${date}) at ${time}. Please review your food diary and prepare any questions.`
+        };
+    }
+    getPaymentReminderTemplate(name, amount, invoiceNumber, paymentUrl) {
+        return {
+            subject: `Payment Reminder - Invoice ${invoiceNumber}`,
+            html: `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; background-color: #f8faf8;">
           <div style="background-color: white; padding: 30px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
             <div style="text-align: center; margin-bottom: 30px;">
@@ -275,7 +273,7 @@ class ResendEmailService {
           </div>
         </div>
       `,
-      text: `Payment Reminder - Invoice ${invoiceNumber}
+            text: `Payment Reminder - Invoice ${invoiceNumber}
 
 Dear ${name},
 
@@ -287,13 +285,12 @@ If you have any questions, please contact us.
 
 Best regards,
 Vee Nutrition Team`
-    };
-  }
-
-  getRescheduleRequestTemplate(clientName: string, clientEmail: string, originalDate: string, originalTime: string, reason?: string): EmailTemplate {
-    return {
-      subject: `Reschedule Request from ${clientName}`,
-      html: `
+        };
+    }
+    getRescheduleRequestTemplate(clientName, clientEmail, originalDate, originalTime, reason) {
+        return {
+            subject: `Reschedule Request from ${clientName}`,
+            html: `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; background-color: #f8faf8;">
           <div style="background-color: white; padding: 30px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
             <div style="text-align: center; margin-bottom: 30px;">
@@ -332,16 +329,13 @@ Vee Nutrition Team`
           </div>
         </div>
       `,
-      text: `Reschedule request from ${clientName} (${clientEmail}) for appointment on ${originalDate} at ${originalTime}. ${reason ? `Reason: ${reason}` : ''}`
-    };
-  }
-
-
-
-  getRescheduleConfirmationTemplate(name: string, newDate: string, newTime: string, type: string): EmailTemplate {
-    return {
-      subject: 'Reschedule Confirmed - Vee Nutrition',
-      html: `
+            text: `Reschedule request from ${clientName} (${clientEmail}) for appointment on ${originalDate} at ${originalTime}. ${reason ? `Reason: ${reason}` : ''}`
+        };
+    }
+    getRescheduleConfirmationTemplate(name, newDate, newTime, type) {
+        return {
+            subject: 'Reschedule Confirmed - Vee Nutrition',
+            html: `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; background-color: #f8faf8;">
           <div style="background-color: white; padding: 30px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
             <div style="text-align: center; margin-bottom: 30px;">
@@ -368,14 +362,13 @@ Vee Nutrition Team`
           </div>
         </div>
       `,
-      text: `Reschedule confirmed! Your ${type} appointment has been moved to ${newDate} at ${newTime}.`
-    };
-  }
-
-  getInvoiceGeneratedTemplate(name: string, amount: number, invoiceId: string): EmailTemplate {
-    return {
-      subject: 'Session Complete - Invoice Ready - Vee Nutrition',
-      html: `
+            text: `Reschedule confirmed! Your ${type} appointment has been moved to ${newDate} at ${newTime}.`
+        };
+    }
+    getInvoiceGeneratedTemplate(name, amount, invoiceId) {
+        return {
+            subject: 'Session Complete - Invoice Ready - Vee Nutrition',
+            html: `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; background-color: #f8faf8;">
           <div style="background-color: white; padding: 30px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
             <div style="text-align: center; margin-bottom: 30px;">
@@ -408,14 +401,13 @@ Vee Nutrition Team`
           </div>
         </div>
       `,
-      text: `Session complete! Your invoice (${invoiceId}) for €${amount} is ready for payment. Visit your dashboard to pay online.`
-    };
-  }
-
-  getLateRescheduleTemplate(name: string, date: string, time: string): EmailTemplate {
-    return {
-      subject: 'Late Reschedule Fee Applied - Vee Nutrition',
-      html: `
+            text: `Session complete! Your invoice (${invoiceId}) for €${amount} is ready for payment. Visit your dashboard to pay online.`
+        };
+    }
+    getLateRescheduleTemplate(name, date, time) {
+        return {
+            subject: 'Late Reschedule Fee Applied - Vee Nutrition',
+            html: `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; background-color: #f8faf8;">
           <div style="background-color: white; padding: 30px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
             <div style="text-align: center; margin-bottom: 30px;">
@@ -445,14 +437,13 @@ Vee Nutrition Team`
           </div>
         </div>
       `,
-      text: `Late reschedule notice: A €5 fee has been applied for rescheduling your ${date} ${time} appointment within 4 working hours.`
-    };
-  }
-
-  getNoShowTemplate(name: string, date: string, time: string, penaltyAmount: number): EmailTemplate {
-    return {
-      subject: 'Missed Appointment - No-Show Fee Applied - Vee Nutrition',
-      html: `
+            text: `Late reschedule notice: A €5 fee has been applied for rescheduling your ${date} ${time} appointment within 4 working hours.`
+        };
+    }
+    getNoShowTemplate(name, date, time, penaltyAmount) {
+        return {
+            subject: 'Missed Appointment - No-Show Fee Applied - Vee Nutrition',
+            html: `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; background-color: #f8faf8;">
           <div style="background-color: white; padding: 30px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
             <div style="text-align: center; margin-bottom: 30px;">
@@ -488,14 +479,13 @@ Vee Nutrition Team`
           </div>
         </div>
       `,
-      text: `Missed appointment notice: A €${penaltyAmount} no-show fee (50% of appointment cost) has been applied for your missed ${date} ${time} appointment.`
-    };
-  }
-
-  getAppointmentCancelledTemplate(name: string, date: string, time: string, reason?: string): EmailTemplate {
-    return {
-      subject: 'Appointment Cancelled - Vee Nutrition',
-      html: `
+            text: `Missed appointment notice: A €${penaltyAmount} no-show fee (50% of appointment cost) has been applied for your missed ${date} ${time} appointment.`
+        };
+    }
+    getAppointmentCancelledTemplate(name, date, time, reason) {
+        return {
+            subject: 'Appointment Cancelled - Vee Nutrition',
+            html: `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; background-color: #f8faf8;">
           <div style="background-color: white; padding: 30px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
             <div style="text-align: center; margin-bottom: 30px;">
@@ -532,15 +522,14 @@ Vee Nutrition Team`
           </div>
         </div>
       `,
-      text: `Appointment cancelled: Your ${date} ${time} appointment has been cancelled. ${reason ? `Reason: ${reason}` : ''} Please reschedule at your convenience.`
-    };
-  }
-
-  // Admin notification email templates
-  getAdminNewAppointmentTemplate(appointment: any): EmailTemplate {
-    return {
-      subject: `New Appointment Request - ${appointment.clientName || appointment.name}`,
-      html: `
+            text: `Appointment cancelled: Your ${date} ${time} appointment has been cancelled. ${reason ? `Reason: ${reason}` : ''} Please reschedule at your convenience.`
+        };
+    }
+    // Admin notification email templates
+    getAdminNewAppointmentTemplate(appointment) {
+        return {
+            subject: `New Appointment Request - ${appointment.clientName || appointment.name}`,
+            html: `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; background-color: #f8faf8;">
           <div style="background-color: white; padding: 30px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
             <div style="text-align: center; margin-bottom: 30px;">
@@ -575,14 +564,13 @@ Vee Nutrition Team`
           </div>
         </div>
       `,
-      text: `New appointment request from ${appointment.clientName || appointment.name} for ${appointment.appointmentType || appointment.type} on ${appointment.date} at ${appointment.time}.`
-    };
-  }
-
-  getAdminHealthUpdateTemplate(clientName: string, clientEmail: string, updateType: string): EmailTemplate {
-    return {
-      subject: `Health Information Update - ${clientName}`,
-      html: `
+            text: `New appointment request from ${appointment.clientName || appointment.name} for ${appointment.appointmentType || appointment.type} on ${appointment.date} at ${appointment.time}.`
+        };
+    }
+    getAdminHealthUpdateTemplate(clientName, clientEmail, updateType) {
+        return {
+            subject: `Health Information Update - ${clientName}`,
+            html: `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; background-color: #f8faf8;">
           <div style="background-color: white; padding: 30px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
             <div style="text-align: center; margin-bottom: 30px;">
@@ -615,14 +603,13 @@ Vee Nutrition Team`
           </div>
         </div>
       `,
-      text: `${clientName} (${clientEmail}) has updated their health information: ${updateType}. Please review the changes.`
-    };
-  }
-
-  getAdminPaymentReceivedTemplate(clientName: string, amount: number, invoiceId: string, paymentMethod: string): EmailTemplate {
-    return {
-      subject: `Payment Received - ${clientName} - €${amount}`,
-      html: `
+            text: `${clientName} (${clientEmail}) has updated their health information: ${updateType}. Please review the changes.`
+        };
+    }
+    getAdminPaymentReceivedTemplate(clientName, amount, invoiceId, paymentMethod) {
+        return {
+            subject: `Payment Received - ${clientName} - €${amount}`,
+            html: `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; background-color: #f8faf8;">
           <div style="background-color: white; padding: 30px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
             <div style="text-align: center; margin-bottom: 30px;">
@@ -656,14 +643,13 @@ Vee Nutrition Team`
           </div>
         </div>
       `,
-      text: `Payment received: ${clientName} paid €${amount} for invoice ${invoiceId} via ${paymentMethod}.`
-    };
-  }
-
-  getAdminPlanUpgradeTemplate(clientName: string, planType: string, previousPlan: string): EmailTemplate {
-    return {
-      subject: `Plan Upgrade - ${clientName} upgraded to ${planType}`,
-      html: `
+            text: `Payment received: ${clientName} paid €${amount} for invoice ${invoiceId} via ${paymentMethod}.`
+        };
+    }
+    getAdminPlanUpgradeTemplate(clientName, planType, previousPlan) {
+        return {
+            subject: `Plan Upgrade - ${clientName} upgraded to ${planType}`,
+            html: `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; background-color: #f8faf8;">
           <div style="background-color: white; padding: 30px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
             <div style="text-align: center; margin-bottom: 30px;">
@@ -696,14 +682,13 @@ Vee Nutrition Team`
           </div>
         </div>
       `,
-      text: `Plan upgrade: ${clientName} upgraded from ${previousPlan} to ${planType}.`
-    };
-  }
-
-  getAdminClientMessageTemplate(clientName: string, clientEmail: string, messageType: string, urgency: string): EmailTemplate {
-    return {
-      subject: `Client Message - ${clientName} (${urgency} Priority)`,
-      html: `
+            text: `Plan upgrade: ${clientName} upgraded from ${previousPlan} to ${planType}.`
+        };
+    }
+    getAdminClientMessageTemplate(clientName, clientEmail, messageType, urgency) {
+        return {
+            subject: `Client Message - ${clientName} (${urgency} Priority)`,
+            html: `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; background-color: #f8faf8;">
           <div style="background-color: white; padding: 30px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
             <div style="text-align: center; margin-bottom: 30px;">
@@ -737,337 +722,227 @@ Vee Nutrition Team`
           </div>
         </div>
       `,
-      text: `New ${urgency.toLowerCase()} priority message from ${clientName} (${clientEmail}) - Type: ${messageType}. Please respond promptly.`
-    };
-  }
+            text: `New ${urgency.toLowerCase()} priority message from ${clientName} (${clientEmail}) - Type: ${messageType}. Please respond promptly.`
+        };
+    }
 }
-
 const emailService = new ResendEmailService();
-
 // 1. New User Account Created
-export const onUserCreated = functions.firestore
-  .document('users/{userId}')
-  .onCreate(async (snap, context) => {
+exports.onUserCreated = functions.firestore
+    .document('users/{userId}')
+    .onCreate(async (snap, context) => {
     const userData = snap.data();
     const name = userData.name || userData.displayName || userData.email;
-    
     console.log('New user created:', userData.email);
-    
     const template = emailService.getAccountConfirmationTemplate(name);
-    
     // Add to email queue
     await admin.firestore().collection('mail').add({
-      to: userData.email,
-      toName: name,
-      subject: template.subject,
-      html: template.html,
-      text: template.text,
-      type: 'account-confirmation',
-      status: 'pending',
-      createdAt: admin.firestore.FieldValue.serverTimestamp(),
-    });
-  });
-
-// 2. Appointment Confirmed
-export const onAppointmentConfirmed = functions.firestore
-  .document('appointments/{appointmentId}')
-  .onUpdate(async (change, context) => {
-    const before = change.before.data();
-    const after = change.after.data();
-    
-    // Check if status changed to confirmed
-    if (before.status !== 'confirmed' && after.status === 'confirmed') {
-      console.log('Appointment confirmed:', after.clientEmail);
-      
-      const template = emailService.getAppointmentConfirmationTemplate(
-        after.clientName,
-        after.date,
-        after.time,
-        after.type
-      );
-      
-      // Add to email queue
-      await admin.firestore().collection('mail').add({
-        to: after.clientEmail,
-        toName: after.clientName,
+        to: userData.email,
+        toName: name,
         subject: template.subject,
         html: template.html,
         text: template.text,
-        type: 'appointment-confirmation',
+        type: 'account-confirmation',
         status: 'pending',
         createdAt: admin.firestore.FieldValue.serverTimestamp(),
-      });
-    }
-  });
-
-// 3. New Appointment Created - Admin Notification
-export const onAppointmentCreated = functions.firestore
-  .document('appointments/{appointmentId}')
-  .onCreate(async (snap, context) => {
-    const appointmentData = snap.data();
-    
-    console.log('New appointment created:', appointmentData.clientEmail);
-    
-    const template = emailService.getAdminNewAppointmentTemplate(appointmentData);
-    
-    // Send admin notification
-    await admin.firestore().collection('mail').add({
-      to: 'admin@veenutrition.com',
-      toName: 'Vee Nutrition Admin',
-      subject: template.subject,
-      html: template.html,
-      text: template.text,
-      type: 'admin-new-appointment',
-      status: 'pending',
-      createdAt: admin.firestore.FieldValue.serverTimestamp(),
     });
-    
-    console.log('Admin notification queued for new appointment');
-  });
-
-// 4. Reschedule Request
-export const onRescheduleRequest = functions.firestore
-  .document('appointments/{appointmentId}')
-  .onUpdate(async (change, context) => {
+});
+// 2. Appointment Confirmed
+exports.onAppointmentConfirmed = functions.firestore
+    .document('appointments/{appointmentId}')
+    .onUpdate(async (change, context) => {
     const before = change.before.data();
     const after = change.after.data();
-    
-    // Check if reschedule was requested
-    if (!before.rescheduleRequested && after.rescheduleRequested) {
-      console.log('Reschedule requested for:', after.clientEmail);
-      
-      const template = emailService.getRescheduleRequestTemplate(
-        after.clientName,
-        after.clientEmail,
-        after.date,
-        after.time,
-        after.rescheduleReason
-      );
-      
-      // Send to admin email
-      await admin.firestore().collection('mail').add({
+    // Check if status changed to confirmed
+    if (before.status !== 'confirmed' && after.status === 'confirmed') {
+        console.log('Appointment confirmed:', after.clientEmail);
+        const template = emailService.getAppointmentConfirmationTemplate(after.clientName, after.date, after.time, after.type);
+        // Add to email queue
+        await admin.firestore().collection('mail').add({
+            to: after.clientEmail,
+            toName: after.clientName,
+            subject: template.subject,
+            html: template.html,
+            text: template.text,
+            type: 'appointment-confirmation',
+            status: 'pending',
+            createdAt: admin.firestore.FieldValue.serverTimestamp(),
+        });
+    }
+});
+// 3. New Appointment Created - Admin Notification
+exports.onAppointmentCreated = functions.firestore
+    .document('appointments/{appointmentId}')
+    .onCreate(async (snap, context) => {
+    const appointmentData = snap.data();
+    console.log('New appointment created:', appointmentData.clientEmail);
+    const template = emailService.getAdminNewAppointmentTemplate(appointmentData);
+    // Send admin notification
+    await admin.firestore().collection('mail').add({
         to: 'admin@veenutrition.com',
         toName: 'Vee Nutrition Admin',
         subject: template.subject,
         html: template.html,
         text: template.text,
-        type: 'reschedule-request',
+        type: 'admin-new-appointment',
         status: 'pending',
         createdAt: admin.firestore.FieldValue.serverTimestamp(),
-      });
+    });
+    console.log('Admin notification queued for new appointment');
+});
+// 4. Reschedule Request
+exports.onRescheduleRequest = functions.firestore
+    .document('appointments/{appointmentId}')
+    .onUpdate(async (change, context) => {
+    const before = change.before.data();
+    const after = change.after.data();
+    // Check if reschedule was requested
+    if (!before.rescheduleRequested && after.rescheduleRequested) {
+        console.log('Reschedule requested for:', after.clientEmail);
+        const template = emailService.getRescheduleRequestTemplate(after.clientName, after.clientEmail, after.date, after.time, after.rescheduleReason);
+        // Send to admin email
+        await admin.firestore().collection('mail').add({
+            to: 'admin@veenutrition.com',
+            toName: 'Vee Nutrition Admin',
+            subject: template.subject,
+            html: template.html,
+            text: template.text,
+            type: 'reschedule-request',
+            status: 'pending',
+            createdAt: admin.firestore.FieldValue.serverTimestamp(),
+        });
     }
-  });
-
+});
 // 4. Process Mail Queue - Updated for admin email support
-export const processMailQueue = functions.firestore
-  .document('mail/{mailId}')
-  .onCreate(async (snap, context) => {
+exports.processMailQueue = functions.firestore
+    .document('mail/{mailId}')
+    .onCreate(async (snap, context) => {
     const mailData = snap.data();
-    
     if (mailData.status !== 'pending') {
-      return;
+        return;
     }
-    
     console.log('Processing email from queue:', mailData.to, 'Type:', mailData.type, 'Updated trigger');
-    
     try {
-      let template;
-      
-      switch (mailData.type) {
-        case 'payment-reminder':
-          template = emailService.getPaymentReminderTemplate(
-            mailData.toName,
-            mailData.amount,
-            mailData.invoiceNumber,
-            mailData.paymentUrl
-          );
-          break;
-        case 'account-confirmation':
-          template = emailService.getAccountConfirmationTemplate(mailData.toName);
-          break;
-        case 'no-show':
-          template = emailService.getNoShowTemplate(
-            mailData.data.name,
-            mailData.data.date,
-            mailData.data.time,
-            mailData.data.penaltyAmount
-          );
-          break;
-        case 'appointment-confirmation':
-          template = emailService.getAppointmentConfirmationTemplate(
-            mailData.data.name,
-            mailData.data.date,
-            mailData.data.time,
-            mailData.data.type || 'Consultation'
-          );
-          break;
-        case 'appointment-reminder':
-          template = emailService.getAppointmentReminderTemplate(
-            mailData.data.name,
-            mailData.data.date,
-            mailData.data.time,
-            mailData.data.type || 'Consultation'
-          );
-          break;
-        case 'reschedule-request':
-          template = emailService.getRescheduleRequestTemplate(
-            mailData.data.name,
-            mailData.data.email || mailData.to,
-            mailData.data.originalDate,
-            mailData.data.originalTime,
-            mailData.data.reason
-          );
-          break;
-        case 'appointment-cancelled':
-          template = emailService.getAppointmentCancelledTemplate(
-            mailData.data.name,
-            mailData.data.date,
-            mailData.data.time,
-            mailData.data.reason
-          );
-          break;
-        case 'late-reschedule':
-          template = emailService.getLateRescheduleTemplate(
-            mailData.data.name,
-            mailData.data.date,
-            mailData.data.time
-          );
-          break;
-        case 'invoice-generated':
-          template = emailService.getInvoiceGeneratedTemplate(
-            mailData.data.name,
-            mailData.data.amount,
-            mailData.data.invoiceId
-          );
-          break;
-        case 'admin-new-appointment':
-          template = emailService.getAdminNewAppointmentTemplate({
-            clientName: mailData.data.clientName,
-            clientEmail: mailData.data.clientEmail,
-            type: mailData.data.appointmentType,
-            date: mailData.data.date,
-            time: mailData.data.time
-          });
-          break;
-        case 'admin-health-update':
-          template = emailService.getAdminHealthUpdateTemplate(
-            mailData.data.clientName,
-            mailData.data.clientEmail,
-            mailData.data.updateType
-          );
-          break;
-        case 'admin-payment-received':
-          template = emailService.getAdminPaymentReceivedTemplate(
-            mailData.data.clientName,
-            mailData.data.amount,
-            mailData.data.invoiceId,
-            mailData.data.paymentMethod
-          );
-          break;
-        case 'admin-plan-upgrade':
-          template = emailService.getAdminPlanUpgradeTemplate(
-            mailData.data.clientName,
-            mailData.data.planType,
-            mailData.data.previousPlan
-          );
-          break;
-        case 'admin-client-message':
-          template = emailService.getAdminClientMessageTemplate(
-            mailData.data.clientName,
-            mailData.data.clientEmail,
-            mailData.data.messageType,
-            mailData.data.urgency
-          );
-          break;
-        case 'admin-reschedule-request':
-          template = emailService.getRescheduleRequestTemplate(
-            mailData.data.clientName,
-            mailData.data.clientEmail,
-            mailData.data.originalDate,
-            mailData.data.originalTime,
-            mailData.data.reason
-          );
-          break;
-        default:
-          // Use existing data if template type not found
-          template = {
-            subject: mailData.subject || 'Notification from Vee Nutrition',
-            html: mailData.html || '',
-            text: mailData.text || ''
-          };
-      }
-      
-      const success = await emailService.sendEmail({
-        to: mailData.to,
-        toName: mailData.toName || 'Client',
-        subject: template.subject,
-        html: template.html,
-        text: template.text
-      });
-      
-      if (success) {
-        await snap.ref.update({
-          status: 'sent',
-          sentAt: admin.firestore.FieldValue.serverTimestamp(),
+        let template;
+        switch (mailData.type) {
+            case 'payment-reminder':
+                template = emailService.getPaymentReminderTemplate(mailData.toName, mailData.amount, mailData.invoiceNumber, mailData.paymentUrl);
+                break;
+            case 'account-confirmation':
+                template = emailService.getAccountConfirmationTemplate(mailData.toName);
+                break;
+            case 'no-show':
+                template = emailService.getNoShowTemplate(mailData.data.name, mailData.data.date, mailData.data.time, mailData.data.penaltyAmount);
+                break;
+            case 'appointment-confirmation':
+                template = emailService.getAppointmentConfirmationTemplate(mailData.data.name, mailData.data.date, mailData.data.time, mailData.data.type || 'Consultation');
+                break;
+            case 'appointment-reminder':
+                template = emailService.getAppointmentReminderTemplate(mailData.data.name, mailData.data.date, mailData.data.time, mailData.data.type || 'Consultation');
+                break;
+            case 'reschedule-request':
+                template = emailService.getRescheduleRequestTemplate(mailData.data.name, mailData.data.email || mailData.to, mailData.data.originalDate, mailData.data.originalTime, mailData.data.reason);
+                break;
+            case 'appointment-cancelled':
+                template = emailService.getAppointmentCancelledTemplate(mailData.data.name, mailData.data.date, mailData.data.time, mailData.data.reason);
+                break;
+            case 'late-reschedule':
+                template = emailService.getLateRescheduleTemplate(mailData.data.name, mailData.data.date, mailData.data.time);
+                break;
+            case 'invoice-generated':
+                template = emailService.getInvoiceGeneratedTemplate(mailData.data.name, mailData.data.amount, mailData.data.invoiceId);
+                break;
+            case 'admin-new-appointment':
+                template = emailService.getAdminNewAppointmentTemplate({
+                    clientName: mailData.data.clientName,
+                    clientEmail: mailData.data.clientEmail,
+                    type: mailData.data.appointmentType,
+                    date: mailData.data.date,
+                    time: mailData.data.time
+                });
+                break;
+            case 'admin-health-update':
+                template = emailService.getAdminHealthUpdateTemplate(mailData.data.clientName, mailData.data.clientEmail, mailData.data.updateType);
+                break;
+            case 'admin-payment-received':
+                template = emailService.getAdminPaymentReceivedTemplate(mailData.data.clientName, mailData.data.amount, mailData.data.invoiceId, mailData.data.paymentMethod);
+                break;
+            case 'admin-plan-upgrade':
+                template = emailService.getAdminPlanUpgradeTemplate(mailData.data.clientName, mailData.data.planType, mailData.data.previousPlan);
+                break;
+            case 'admin-client-message':
+                template = emailService.getAdminClientMessageTemplate(mailData.data.clientName, mailData.data.clientEmail, mailData.data.messageType, mailData.data.urgency);
+                break;
+            case 'admin-reschedule-request':
+                template = emailService.getRescheduleRequestTemplate(mailData.data.clientName, mailData.data.clientEmail, mailData.data.originalDate, mailData.data.originalTime, mailData.data.reason);
+                break;
+            default:
+                // Use existing data if template type not found
+                template = {
+                    subject: mailData.subject || 'Notification from Vee Nutrition',
+                    html: mailData.html || '',
+                    text: mailData.text || ''
+                };
+        }
+        const success = await emailService.sendEmail({
+            to: mailData.to,
+            toName: mailData.toName || 'Client',
+            subject: template.subject,
+            html: template.html,
+            text: template.text
         });
-        console.log('Email sent successfully to', mailData.to);
-      } else {
-        await snap.ref.update({
-          status: 'failed',
-          failedAt: admin.firestore.FieldValue.serverTimestamp(),
-        });
-        console.log('Email failed to', mailData.to);
-      }
-    } catch (error: any) {
-      console.error('Email sending failed:', error);
-      await snap.ref.update({
-        status: 'failed',
-        error: error?.message || 'Unknown error',
-        failedAt: admin.firestore.FieldValue.serverTimestamp(),
-      });
+        if (success) {
+            await snap.ref.update({
+                status: 'sent',
+                sentAt: admin.firestore.FieldValue.serverTimestamp(),
+            });
+            console.log('Email sent successfully to', mailData.to);
+        }
+        else {
+            await snap.ref.update({
+                status: 'failed',
+                failedAt: admin.firestore.FieldValue.serverTimestamp(),
+            });
+            console.log('Email failed to', mailData.to);
+        }
     }
-  });
-
+    catch (error) {
+        console.error('Email sending failed:', error);
+        await snap.ref.update({
+            status: 'failed',
+            error: error?.message || 'Unknown error',
+            failedAt: admin.firestore.FieldValue.serverTimestamp(),
+        });
+    }
+});
 // 5. Daily Reminder Scheduler
-export const sendDailyReminders = functions.pubsub
-  .schedule('0 18 * * *') // 6 PM daily
-  .timeZone('Europe/Amsterdam')
-  .onRun(async (context) => {
+exports.sendDailyReminders = functions.pubsub
+    .schedule('0 18 * * *') // 6 PM daily
+    .timeZone('Europe/Amsterdam')
+    .onRun(async (context) => {
     console.log('Running daily appointment reminders...');
-    
     const tomorrow = new Date();
     tomorrow.setDate(tomorrow.getDate() + 1);
     const tomorrowString = tomorrow.toISOString().split('T')[0];
-    
     const appointmentsSnapshot = await admin.firestore()
-      .collection('appointments')
-      .where('date', '==', tomorrowString)
-      .where('status', '==', 'confirmed')
-      .get();
-    
+        .collection('appointments')
+        .where('date', '==', tomorrowString)
+        .where('status', '==', 'confirmed')
+        .get();
     const promises = appointmentsSnapshot.docs.map(async (doc) => {
-      const appointment = doc.data();
-      
-      const template = emailService.getAppointmentReminderTemplate(
-        appointment.clientName,
-        appointment.date,
-        appointment.time,
-        appointment.type
-      );
-      
-      return admin.firestore().collection('mail').add({
-        to: appointment.clientEmail,
-        toName: appointment.clientName,
-        subject: template.subject,
-        html: template.html,
-        text: template.text,
-        type: 'appointment-reminder',
-        status: 'pending',
-        createdAt: admin.firestore.FieldValue.serverTimestamp(),
-      });
+        const appointment = doc.data();
+        const template = emailService.getAppointmentReminderTemplate(appointment.clientName, appointment.date, appointment.time, appointment.type);
+        return admin.firestore().collection('mail').add({
+            to: appointment.clientEmail,
+            toName: appointment.clientName,
+            subject: template.subject,
+            html: template.html,
+            text: template.text,
+            type: 'appointment-reminder',
+            status: 'pending',
+            createdAt: admin.firestore.FieldValue.serverTimestamp(),
+        });
     });
-    
     await Promise.all(promises);
     console.log(`Queued ${promises.length} reminder emails`);
-  });
-
+});
