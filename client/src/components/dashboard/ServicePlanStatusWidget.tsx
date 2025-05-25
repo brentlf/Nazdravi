@@ -3,6 +3,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Crown, Calendar, Clock, ArrowUp, CheckCircle, AlertTriangle } from "lucide-react";
 import { Link } from "wouter";
+import { useFirestoreDocument } from "@/hooks/useFirestore";
 import type { User } from "@shared/firebase-schema";
 
 interface ServicePlanStatusWidgetProps {
@@ -10,9 +11,15 @@ interface ServicePlanStatusWidgetProps {
 }
 
 export default function ServicePlanStatusWidget({ user }: ServicePlanStatusWidgetProps) {
-  if (!user) return null;
+  // Fetch fresh user data from Firebase to get real-time updates
+  const { data: freshUserData } = useFirestoreDocument<User>("users", user?.uid || "");
+  
+  // Use fresh data if available, fallback to passed user data
+  const currentUser = freshUserData || user;
+  
+  if (!currentUser) return null;
 
-  const isCompleteProgramUser = user.servicePlan === 'complete-program';
+  const isCompleteProgramUser = currentUser.servicePlan === 'complete-program';
   
   // For complete program users, we need to track program validity
   // Let's assume program starts when they select it and lasts 3 months
