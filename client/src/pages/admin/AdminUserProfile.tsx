@@ -79,6 +79,19 @@ function AdminUserProfile() {
     try {
       const appointmentsRef = collection(db, 'appointments');
       
+      // First, let's see what appointments exist in the collection
+      console.log('Debugging: Fetching appointments for user:', { userId, email: user.email });
+      
+      // Get all appointments to debug structure
+      const allDocsSnapshot = await getDocs(appointmentsRef);
+      console.log('Debug: Total appointments in collection:', allDocsSnapshot.size);
+      
+      if (!allDocsSnapshot.empty) {
+        const sampleDoc = allDocsSnapshot.docs[0].data();
+        console.log('Debug: Sample appointment structure:', Object.keys(sampleDoc));
+        console.log('Debug: Sample appointment data:', sampleDoc);
+      }
+      
       // Try both userId and email queries
       const queries = [
         query(appointmentsRef, where('userId', '==', userId)),
@@ -91,15 +104,18 @@ function AdminUserProfile() {
       for (const q of queries) {
         try {
           const querySnapshot = await getDocs(q);
+          console.log('Debug: Query result size:', querySnapshot.size);
           const appointmentData = querySnapshot.docs.map(doc => ({
             id: doc.id,
             ...doc.data()
           }));
           allAppointments.push(...appointmentData);
         } catch (error) {
-          console.log('Query failed, trying next...', error.message);
+          console.log('Query failed, trying next...', (error as any).message);
         }
       }
+      
+      console.log('Debug: Found appointments:', allAppointments.length);
       
       // Remove duplicates based on document ID
       const uniqueAppointments = allAppointments.filter((appointment, index, self) => 
@@ -108,8 +124,8 @@ function AdminUserProfile() {
       
       // Sort by date descending
       uniqueAppointments.sort((a, b) => {
-        const dateA = new Date(a.date || 0);
-        const dateB = new Date(b.date || 0);
+        const dateA = new Date((a as any).date || 0);
+        const dateB = new Date((b as any).date || 0);
         return dateB.getTime() - dateA.getTime();
       });
       
@@ -125,6 +141,18 @@ function AdminUserProfile() {
     try {
       const invoicesRef = collection(db, 'invoices');
       
+      // Debug invoices collection
+      console.log('Debugging: Fetching invoices for user:', { userId, email: user.email });
+      
+      const allInvoicesSnapshot = await getDocs(invoicesRef);
+      console.log('Debug: Total invoices in collection:', allInvoicesSnapshot.size);
+      
+      if (!allInvoicesSnapshot.empty) {
+        const sampleInvoice = allInvoicesSnapshot.docs[0].data();
+        console.log('Debug: Sample invoice structure:', Object.keys(sampleInvoice));
+        console.log('Debug: Sample invoice data:', sampleInvoice);
+      }
+      
       // Try multiple field combinations for invoices
       const queries = [
         query(invoicesRef, where('userId', '==', userId)),
@@ -137,15 +165,18 @@ function AdminUserProfile() {
       for (const q of queries) {
         try {
           const querySnapshot = await getDocs(q);
+          console.log('Debug: Invoice query result size:', querySnapshot.size);
           const invoiceData = querySnapshot.docs.map(doc => ({
             id: doc.id,
             ...doc.data()
           }));
           allInvoices.push(...invoiceData);
         } catch (error) {
-          console.log('Invoice query failed, trying next...', error.message);
+          console.log('Invoice query failed, trying next...', (error as any).message);
         }
       }
+      
+      console.log('Debug: Found invoices:', allInvoices.length);
       
       // Remove duplicates based on document ID
       const uniqueInvoices = allInvoices.filter((invoice, index, self) => 
@@ -154,8 +185,8 @@ function AdminUserProfile() {
       
       // Sort by creation date descending
       uniqueInvoices.sort((a, b) => {
-        const dateA = a.createdAt?.toDate ? a.createdAt.toDate() : new Date(a.createdAt || 0);
-        const dateB = b.createdAt?.toDate ? b.createdAt.toDate() : new Date(b.createdAt || 0);
+        const dateA = (a as any).createdAt?.toDate ? (a as any).createdAt.toDate() : new Date((a as any).createdAt || 0);
+        const dateB = (b as any).createdAt?.toDate ? (b as any).createdAt.toDate() : new Date((b as any).createdAt || 0);
         return dateB.getTime() - dateA.getTime();
       });
       
