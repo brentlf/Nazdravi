@@ -64,15 +64,14 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const { email, name, originalDate, originalTime, newDate, newTime } = req.body;
       
-      // Queue email in Firebase with correct format - this goes to admin
+      // Queue reschedule confirmation email to client
       const docRef = await db.collection("mail").add({
-        to: "admin@veenutrition.com", // Admin notification email
-        toName: "Admin Team",
+        to: email, // Send to client
+        toName: name,
         type: "reschedule-request",
         status: "pending",
         data: { 
           name, 
-          email, // Include client email in data 
           originalDate, 
           originalTime, 
           newDate, 
@@ -81,9 +80,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
         createdAt: new Date()
       });
 
-      res.json({ success: true, message: "Reschedule request email queued", docId: docRef.id });
+      res.json({ success: true, message: "Reschedule confirmation email queued", docId: docRef.id });
     } catch (error: any) {
-      console.error("Error queuing reschedule request email:", error);
+      console.error("Error queuing reschedule confirmation email:", error);
       res.status(500).json({ success: false, error: error.message });
     }
   });
