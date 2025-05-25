@@ -84,8 +84,23 @@ function AdminUserProfile() {
       
       const userAppointments = [];
       
+      // Debug: Log first few appointments to understand structure
+      let debugCount = 0;
       allDocsSnapshot.forEach(doc => {
         const data = doc.data();
+        
+        // Debug first 3 appointments to see structure
+        if (debugCount < 3) {
+          console.log(`Appointment ${debugCount + 1} structure:`, {
+            id: doc.id,
+            fields: Object.keys(data),
+            userId: data.userId,
+            email: data.email,
+            clientEmail: data.clientEmail,
+            userEmail: data.userEmail
+          });
+          debugCount++;
+        }
         
         // Check if this appointment belongs to the user using multiple field checks
         if (data.userId === userId || 
@@ -98,8 +113,11 @@ function AdminUserProfile() {
             id: doc.id,
             ...data
           });
+          console.log(`Found matching appointment for user ${user.email}:`, doc.id);
         }
       });
+      
+      console.log(`Total appointments found for user ${user.email}: ${userAppointments.length}`);
       
       // Sort by date descending
       userAppointments.sort((a, b) => {
