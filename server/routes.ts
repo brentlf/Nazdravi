@@ -361,6 +361,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   // Reissue invoice with updated amount
   app.post("/api/invoices/reissue", async (req, res) => {
+    console.log("=== REISSUE ROUTE HIT ===");
     try {
       console.log("Reissue request body:", req.body);
       const { originalInvoiceId, newAmount, reason } = req.body;
