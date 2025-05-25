@@ -123,9 +123,6 @@ export async function registerRoutes(app: Express): Promise<Server> {
       
       console.log("=== NO-SHOW EMAIL DEBUG ===");
       console.log("Request body:", { email, name, date, time, penaltyAmount });
-      console.log("Firebase db connection status:", !!db);
-      console.log("Environment check - Project ID:", process.env.VITE_FIREBASE_PROJECT_ID);
-      console.log("Environment check - Service Account exists:", !!process.env.FIREBASE_SERVICE_ACCOUNT_KEY);
       
       // Queue email in Firebase with correct format for processMailQueue function
       const docRef = await db.collection("mail").add({
@@ -138,13 +135,28 @@ export async function registerRoutes(app: Express): Promise<Server> {
       });
       
       console.log("✅ SUCCESS: Written to Firebase with doc ID:", docRef.id);
-      console.log("Document path: mail/" + docRef.id);
+      
+      // Check if the document was processed within 10 seconds
+      setTimeout(async () => {
+        try {
+          const doc = await db.collection("mail").doc(docRef.id).get();
+          const data = doc.data();
+          console.log("📧 Email status after 10 seconds:", data?.status);
+          if (data?.status === "sent") {
+            console.log("✅ Email successfully processed and sent!");
+          } else if (data?.status === "failed") {
+            console.log("❌ Email processing failed:", data?.error);
+          } else {
+            console.log("⏳ Email still pending - Firebase Functions may not be working");
+          }
+        } catch (error) {
+          console.error("Error checking email status:", error);
+        }
+      }, 10000);
 
       res.json({ success: true, message: "No-show notice email queued", docId: docRef.id });
     } catch (error: any) {
       console.error("❌ FIREBASE ERROR:", error.message);
-      console.error("Error code:", error.code);
-      console.error("Full error stack:", error.stack);
       res.status(500).json({ success: false, error: error.message, code: error.code });
     }
   });
