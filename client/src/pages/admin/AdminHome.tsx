@@ -175,6 +175,47 @@ export default function AdminHome() {
         <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-6 mb-8">
           {quickStats.map((stat, index) => {
             const Icon = stat.icon;
+            
+            // Special handling for Daily Reminder Emails tile
+            if (stat.title === "Daily Reminder Emails") {
+              // Get tomorrow's date and appointments
+              const tomorrow = new Date();
+              tomorrow.setDate(tomorrow.getDate() + 1);
+              const tomorrowAppointments = appointments?.filter(apt => {
+                const aptDate = new Date(apt.date);
+                return aptDate.toDateString() === tomorrow.toDateString() && 
+                       apt.status === "confirmed";
+              }) || [];
+
+              return (
+                <Card key={index} className="hover:shadow-lg transition-shadow duration-200">
+                  <CardContent className="p-4">
+                    <div className="flex items-center justify-between mb-3">
+                      <h3 className="font-semibold text-sm text-muted-foreground">{stat.title}</h3>
+                      <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${stat.bgColor}`}>
+                        <Icon className={`w-4 h-4 ${stat.color}`} />
+                      </div>
+                    </div>
+                    <div className="text-center mb-3">
+                      <p className="text-xs text-muted-foreground mb-2">
+                        Send appointment reminders to all clients with confirmed appointments tomorrow
+                      </p>
+                      <Badge variant="secondary" className="text-xs">
+                        {tomorrowAppointments.length} clients
+                      </Badge>
+                    </div>
+                    <Button size="sm" asChild className="w-full">
+                      <Link href={stat.href}>
+                        <Mail className="w-3 h-3 mr-1" />
+                        Send Daily Reminders
+                      </Link>
+                    </Button>
+                  </CardContent>
+                </Card>
+              );
+            }
+            
+            // Regular stat tiles
             return (
               <Card key={index} className="hover:shadow-lg transition-shadow duration-200">
                 <CardContent className="p-6">
@@ -258,34 +299,6 @@ export default function AdminHome() {
 
           {/* Quick Actions Sidebar */}
           <div className="space-y-8">
-            {/* Daily Reminder Email Tile */}
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Mail className="w-5 h-5" />
-                  Daily Reminder Emails
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-4">
-                  <div className="text-center">
-                    <div className="w-12 h-12 bg-blue-100 dark:bg-blue-900/30 rounded-full flex items-center justify-center mx-auto mb-3">
-                      <Mail className="w-6 h-6 text-blue-600 dark:text-blue-400" />
-                    </div>
-                    <p className="text-sm text-muted-foreground mb-4">
-                      Send appointment reminders to all clients with confirmed appointments tomorrow
-                    </p>
-                  </div>
-                  <Button className="w-full" asChild>
-                    <Link href="/admin/emails">
-                      <Mail className="w-4 h-4 mr-2" />
-                      Send Daily Reminders
-                    </Link>
-                  </Button>
-                </div>
-              </CardContent>
-            </Card>
-
             {/* Quick Actions */}
             <Card>
               <CardHeader>
