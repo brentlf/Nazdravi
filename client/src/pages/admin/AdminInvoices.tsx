@@ -203,7 +203,7 @@ export default function AdminInvoices() {
         body: JSON.stringify({
           originalInvoiceId: invoice.id,
           newAmount: newAmount,
-          reason: reissueAmount !== invoice.amount.toString() ? 'Amount adjustment' : 'Invoice correction'
+          reason: newAmount !== invoice.amount ? 'Amount adjustment' : 'Invoice correction'
         }),
       });
 

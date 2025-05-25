@@ -700,6 +700,47 @@ export class MailerLiteService {
       text: `${clientName} has ${planType === 'complete-program' ? 'upgraded to' : 'renewed'} the Complete Program.`
     };
   }
+
+  private getPaymentReminderTemplate(name: string, amount: number, invoiceNumber: string, paymentUrl: string): EmailTemplate {
+    return {
+      subject: `Payment Reminder - Invoice ${invoiceNumber}`,
+      html: `
+        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
+          <h2 style="color: #A5CBA4;">Payment Reminder</h2>
+          <p>Dear ${name},</p>
+          <p>This is a friendly reminder that payment for your invoice is still pending.</p>
+          
+          <div style="background-color: #f8f9fa; padding: 20px; border-radius: 8px; margin: 20px 0;">
+            <h3 style="margin: 0 0 10px 0; color: #333;">Invoice Details</h3>
+            <p style="margin: 5px 0;"><strong>Invoice Number:</strong> ${invoiceNumber}</p>
+            <p style="margin: 5px 0;"><strong>Amount Due:</strong> €${amount.toFixed(2)}</p>
+          </div>
+
+          <p>You can complete your payment securely using the link below:</p>
+          <div style="text-align: center; margin: 30px 0;">
+            <a href="${paymentUrl}" style="background-color: #A5CBA4; color: white; padding: 12px 30px; text-decoration: none; border-radius: 5px; display: inline-block;">Pay Invoice</a>
+          </div>
+
+          <p>If you have any questions about this invoice or need assistance with payment, please don't hesitate to contact us.</p>
+          
+          <p>Best regards,<br/>
+          Vee Nutrition Team</p>
+        </div>
+      `,
+      text: `Payment Reminder - Invoice ${invoiceNumber}
+
+Dear ${name},
+
+This is a friendly reminder that payment for invoice ${invoiceNumber} (€${amount.toFixed(2)}) is still pending.
+
+You can pay online at: ${paymentUrl}
+
+If you have any questions, please contact us.
+
+Best regards,
+Vee Nutrition Team`
+    };
+  }
 }
 
 export const mailerLiteService = new MailerLiteService();

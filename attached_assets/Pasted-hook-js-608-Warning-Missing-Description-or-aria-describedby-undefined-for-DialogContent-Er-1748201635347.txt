@@ -1,0 +1,132 @@
+hook.js:608 Warning: Missing `Description` or `aria-describedby={undefined}` for {DialogContent}. Error Component Stack
+    at DescriptionWarning (/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-FQWEBTNQ.js?v=1a8e8de5:331:29)
+    at /@fs/home/runner/workspace/node_modules/.vite/deps/chunk-FQWEBTNQ.js?v=1a8e8de5:235:13
+    at /@fs/home/runner/workspace/node_modules/.vite/deps/chunk-FQWEBTNQ.js?v=1a8e8de5:158:58
+    at Presence (/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-WIIJQEXM.js?v=1a8e8de5:24:11)
+    at /@fs/home/runner/workspace/node_modules/.vite/deps/chunk-FQWEBTNQ.js?v=1a8e8de5:149:64
+    at /@fs/home/runner/workspace/node_modules/.vite/deps/chunk-2K77HOHX.js?v=1a8e8de5:79:13
+    at /@fs/home/runner/workspace/node_modules/.vite/deps/chunk-2K77HOHX.js?v=1a8e8de5:56:13
+    at /@fs/home/runner/workspace/node_modules/.vite/deps/chunk-AXMZZQ2X.js?v=1a8e8de5:42:13
+    at /@fs/home/runner/workspace/node_modules/.vite/deps/chunk-S2ZUYA2N.js?v=1a8e8de5:260:22
+    at Presence (/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-WIIJQEXM.js?v=1a8e8de5:24:11)
+    at Provider (/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-5AJU3CG7.js?v=1a8e8de5:38:15)
+    at DialogPortal (/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-FQWEBTNQ.js?v=1a8e8de5:111:11)
+    at _c3 (/src/components/ui/dialog.tsx:52:12)
+    at Provider (/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-5AJU3CG7.js?v=1a8e8de5:38:15)
+    at Dialog (/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-FQWEBTNQ.js?v=1a8e8de5:52:5)
+    at div (<anonymous>)
+    at td (<anonymous>)
+    at _c13 (/src/components/ui/table.tsx:152:13)
+    at tr (<anonymous>)
+    at _c9 (/src/components/ui/table.tsx:102:12)
+    at tbody (<anonymous>)
+    at _c5 (/src/components/ui/table.tsx:55:12)
+    at table (<anonymous>)
+    at div (<anonymous>)
+    at _c (/src/components/ui/table.tsx:20:11)
+    at div (<anonymous>)
+    at div (<anonymous>)
+    at _c9 (/src/components/ui/card.tsx:114:12)
+    at div (<anonymous>)
+    at _c (/src/components/ui/card.tsx:20:11)
+    at div (<anonymous>)
+    at /@fs/home/runner/workspace/node_modules/.vite/deps/chunk-AXMZZQ2X.js?v=1a8e8de5:42:13
+    at Presence (/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-WIIJQEXM.js?v=1a8e8de5:24:11)
+    at /@fs/home/runner/workspace/node_modules/.vite/deps/@radix-ui_react-tabs.js?v=1a8e8de5:175:13
+    at _c5 (/src/components/ui/tabs.tsx:72:12)
+    at div (<anonymous>)
+    at /@fs/home/runner/workspace/node_modules/.vite/deps/chunk-AXMZZQ2X.js?v=1a8e8de5:42:13
+    at Provider (/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-5AJU3CG7.js?v=1a8e8de5:38:15)
+    at /@fs/home/runner/workspace/node_modules/.vite/deps/@radix-ui_react-tabs.js?v=1a8e8de5:53:7
+    at div (<anonymous>)
+    at AdminInvoices (/src/pages/admin/AdminInvoices.tsx?t=1748201379298:37:57)
+    at main (<anonymous>)
+    at div (<anonymous>)
+    at Layout (App.tsx:60:19)
+    at RouteGuard (/src/components/common/RouteGuard.tsx:21:30)
+    at Route (/@fs/home/runner/workspace/node_modules/.vite/deps/wouter.js?v=1a8e8de5:323:16)
+    at Switch (/@fs/home/runner/workspace/node_modules/.vite/deps/wouter.js?v=1a8e8de5:379:17)
+    at Router (<anonymous>)
+    at Provider (/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-5AJU3CG7.js?v=1a8e8de5:38:15)
+    at TooltipProvider (/@fs/home/runner/workspace/node_modules/.vite/deps/@radix-ui_react-tooltip.js?v=1a8e8de5:63:5)
+    at AuthProvider (/src/contexts/AuthContext.tsx:40:32)
+    at LanguageProvider (/src/contexts/LanguageContext.tsx:32:36)
+    at ThemeProvider (/src/contexts/ThemeContext.tsx:29:33)
+    at QueryClientProvider (/@fs/home/runner/workspace/node_modules/.vite/deps/@tanstack_react-query.js?v=1a8e8de5:2805:3)
+    at App (<anonymous>)
+overrideMethod @ hook.js:608
+/api/invoices/reissue:1 
+            
+            
+           Failed to load resource: the server responded with a status of 400 (Bad Request)
+/api/invoices/reissue:1 
+            
+            
+           Failed to load resource: the server responded with a status of 400 (Bad Request)
+hook.js:608 Warning: Missing `Description` or `aria-describedby={undefined}` for {DialogContent}. Error Component Stack
+    at DescriptionWarning (/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-FQWEBTNQ.js?v=1a8e8de5:331:29)
+    at /@fs/home/runner/workspace/node_modules/.vite/deps/chunk-FQWEBTNQ.js?v=1a8e8de5:235:13
+    at /@fs/home/runner/workspace/node_modules/.vite/deps/chunk-FQWEBTNQ.js?v=1a8e8de5:158:58
+    at Presence (/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-WIIJQEXM.js?v=1a8e8de5:24:11)
+    at /@fs/home/runner/workspace/node_modules/.vite/deps/chunk-FQWEBTNQ.js?v=1a8e8de5:149:64
+    at /@fs/home/runner/workspace/node_modules/.vite/deps/chunk-2K77HOHX.js?v=1a8e8de5:79:13
+    at /@fs/home/runner/workspace/node_modules/.vite/deps/chunk-2K77HOHX.js?v=1a8e8de5:56:13
+    at /@fs/home/runner/workspace/node_modules/.vite/deps/chunk-AXMZZQ2X.js?v=1a8e8de5:42:13
+    at /@fs/home/runner/workspace/node_modules/.vite/deps/chunk-S2ZUYA2N.js?v=1a8e8de5:260:22
+    at Presence (/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-WIIJQEXM.js?v=1a8e8de5:24:11)
+    at Provider (/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-5AJU3CG7.js?v=1a8e8de5:38:15)
+    at DialogPortal (/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-FQWEBTNQ.js?v=1a8e8de5:111:11)
+    at _c3 (/src/components/ui/dialog.tsx:52:12)
+    at Provider (/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-5AJU3CG7.js?v=1a8e8de5:38:15)
+    at Dialog (/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-FQWEBTNQ.js?v=1a8e8de5:52:5)
+    at div (<anonymous>)
+    at td (<anonymous>)
+    at _c13 (/src/components/ui/table.tsx:152:13)
+    at tr (<anonymous>)
+    at _c9 (/src/components/ui/table.tsx:102:12)
+    at tbody (<anonymous>)
+    at _c5 (/src/components/ui/table.tsx:55:12)
+    at table (<anonymous>)
+    at div (<anonymous>)
+    at _c (/src/components/ui/table.tsx:20:11)
+    at div (<anonymous>)
+    at div (<anonymous>)
+    at _c9 (/src/components/ui/card.tsx:114:12)
+    at div (<anonymous>)
+    at _c (/src/components/ui/card.tsx:20:11)
+    at div (<anonymous>)
+    at /@fs/home/runner/workspace/node_modules/.vite/deps/chunk-AXMZZQ2X.js?v=1a8e8de5:42:13
+    at Presence (/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-WIIJQEXM.js?v=1a8e8de5:24:11)
+    at /@fs/home/runner/workspace/node_modules/.vite/deps/@radix-ui_react-tabs.js?v=1a8e8de5:175:13
+    at _c5 (/src/components/ui/tabs.tsx:72:12)
+    at div (<anonymous>)
+    at /@fs/home/runner/workspace/node_modules/.vite/deps/chunk-AXMZZQ2X.js?v=1a8e8de5:42:13
+    at Provider (/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-5AJU3CG7.js?v=1a8e8de5:38:15)
+    at /@fs/home/runner/workspace/node_modules/.vite/deps/@radix-ui_react-tabs.js?v=1a8e8de5:53:7
+    at div (<anonymous>)
+    at AdminInvoices (/src/pages/admin/AdminInvoices.tsx?t=1748201379298:37:57)
+    at main (<anonymous>)
+    at div (<anonymous>)
+    at Layout (App.tsx:60:19)
+    at RouteGuard (/src/components/common/RouteGuard.tsx:21:30)
+    at Route (/@fs/home/runner/workspace/node_modules/.vite/deps/wouter.js?v=1a8e8de5:323:16)
+    at Switch (/@fs/home/runner/workspace/node_modules/.vite/deps/wouter.js?v=1a8e8de5:379:17)
+    at Router (<anonymous>)
+    at Provider (/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-5AJU3CG7.js?v=1a8e8de5:38:15)
+    at TooltipProvider (/@fs/home/runner/workspace/node_modules/.vite/deps/@radix-ui_react-tooltip.js?v=1a8e8de5:63:5)
+    at AuthProvider (/src/contexts/AuthContext.tsx:40:32)
+    at LanguageProvider (/src/contexts/LanguageContext.tsx:32:36)
+    at ThemeProvider (/src/contexts/ThemeContext.tsx:29:33)
+    at QueryClientProvider (/@fs/home/runner/workspace/node_modules/.vite/deps/@tanstack_react-query.js?v=1a8e8de5:2805:3)
+    at App (<anonymous>)
+overrideMethod @ hook.js:608
+/api/invoices/reissue:1 
+            
+            
+           Failed to load resource: the server responded with a status of 400 (Bad Request)
+
+                
+          
+          
+          
+         Chrome is moving towards a new experience that allows users to choose to browse without third-party cookies.
