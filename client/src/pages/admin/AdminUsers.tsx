@@ -139,10 +139,20 @@ export default function AdminUsers() {
               Back to Admin Dashboard
             </Link>
           </Button>
-          <h1 className="text-3xl font-bold mb-2">User Management</h1>
-          <p className="text-muted-foreground">
-            Manage client accounts and user permissions
-          </p>
+          <div className="flex justify-between items-start">
+            <div>
+              <h1 className="text-3xl font-bold mb-2">User Management</h1>
+              <p className="text-muted-foreground">
+                Manage client accounts and user permissions
+              </p>
+            </div>
+            <Button variant="outline" asChild className="bg-yellow-50 border-yellow-200 text-yellow-800 hover:bg-yellow-100">
+              <Link href="/admin/cleanup">
+                <Trash2 className="mr-2 h-4 w-4" />
+                Clean Up Duplicates
+              </Link>
+            </Button>
+          </div>
         </div>
 
         {/* Filters */}
