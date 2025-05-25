@@ -180,9 +180,9 @@ function AdminUserProfile() {
     try {
       let healthData = null;
       
-      // Try to fetch from consentForms collection first
+      // Try to fetch from consentRecords collection first
       try {
-        const consentFormsRef = collection(db, 'consentForms');
+        const consentFormsRef = collection(db, 'consentRecords');
         const consentSnapshot = await getDocs(consentFormsRef);
         console.log('Debug: Total consent forms in collection:', consentSnapshot.size);
         
@@ -196,10 +196,10 @@ function AdminUserProfile() {
             match: data.userId === userId
           });
           
-          if (data.userId === userId) {
+          if (data.userId === userId || data.userEmail === user.email) {
             healthData = data;
-            console.log(`Found consent form for userId ${userId}:`, doc.id);
-            console.log('Consent form data keys:', Object.keys(data));
+            console.log(`Found consent record for user ${user.email}:`, doc.id);
+            console.log('Consent record data keys:', Object.keys(data));
           }
         });
       } catch (error) {
