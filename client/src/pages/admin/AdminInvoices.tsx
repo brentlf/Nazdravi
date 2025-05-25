@@ -32,11 +32,14 @@ export default function AdminInvoices() {
   const { user } = useAuth();
   const queryClient = useQueryClient();
 
-  // Fetch invoices
-  const { data: invoices, loading: loadingInvoices } = useFirestoreCollection<Invoice>("invoices", [
+  // Fetch invoices (only active ones)
+  const { data: allInvoices, loading: loadingInvoices } = useFirestoreCollection<Invoice>("invoices", [
     orderBy("createdAt", "desc"),
     limit(100)
   ]);
+
+  // Filter to show only active invoices (hide credited/superseded ones)
+  const invoices = allInvoices?.filter(invoice => invoice.isActive !== false) || [];
 
   // Fetch appointments that can be invoiced
   const { data: allAppointments } = useFirestoreCollection<Appointment>("appointments", [
@@ -59,14 +62,16 @@ export default function AdminInvoices() {
   // Detect invoice type based on description and amount patterns
   const getInvoiceTypeIcon = (invoice: Invoice) => {
     const desc = invoice.description?.toLowerCase() || '';
+    const isReissued = invoice.isReissued === true;
     const isNoShow = desc.includes('no-show') || desc.includes('penalty');
     const isLateReschedule = desc.includes('late') && desc.includes('reschedule');
-    const isCustom = desc.includes('reissued') || desc.includes('custom');
+    const isCustom = desc.includes('custom') && !isReissued;
     
-    if (isNoShow) return <Ban className="w-4 h-4 text-red-500" />;
-    if (isLateReschedule) return <Clock className="w-4 h-4 text-orange-500" />;
-    if (isCustom) return <RefreshCw className="w-4 h-4 text-purple-500" />;
-    return <CheckCircle className="w-4 h-4 text-green-500" />;
+    if (isReissued) return <RefreshCw className="w-4 h-4 text-blue-500" title="Reissued Invoice" />;
+    if (isNoShow) return <Ban className="w-4 h-4 text-red-500" title="No-Show Penalty" />;
+    if (isLateReschedule) return <Clock className="w-4 h-4 text-orange-500" title="Late Reschedule Fee" />;
+    if (isCustom) return <Edit className="w-4 h-4 text-purple-500" title="Custom Amount" />;
+    return <CheckCircle className="w-4 h-4 text-green-500" title="Standard Session Rate" />;
   };
 
   const getStatusBadge = (status: string) => {
@@ -716,8 +721,27 @@ export default function AdminInvoices() {
                                     <div className="space-y-4">
                                       <div className="p-3 bg-gray-50 rounded-lg">
                                         <p className="text-sm"><strong>Client:</strong> {reissueInvoice.clientName}</p>
-                                        <p className="text-sm"><strong>Original Amount:</strong> €{reissueInvoice.amount.toFixed(2)}</p>
+                                        <p className="text-sm"><strong>Invoice #:</strong> {reissueInvoice.invoiceNumber}</p>
+                                        <p className="text-sm"><strong>Current Amount:</strong> €{reissueInvoice.amount.toFixed(2)}</p>
                                         <p className="text-sm"><strong>Status:</strong> {reissueInvoice.status}</p>
+                                        {reissueInvoice.isReissued && (
+                                          <div className="mt-2 p-2 bg-blue-50 border border-blue-200 rounded">
+                                            <p className="text-xs text-blue-800">
+                                              <strong>This is a reissued invoice</strong><br/>
+                                              Credit Note: {reissueInvoice.creditNoteNumber}<br/>
+                                              Original Amount: €{reissueInvoice.originalAmount?.toFixed(2)}
+                                            </p>
+                                          </div>
+                                        )}
+                                      </div>
+                                      
+                                      <div className="p-3 bg-orange-50 border border-orange-200 rounded-lg">
+                                        <p className="text-sm text-orange-800">
+                                          <strong>Reissue Process:</strong><br/>
+                                          • Current invoice will be credited<br/>
+                                          • New invoice will be created with updated amount<br/>
+                                          • Credit note will reference the original invoice
+                                        </p>
                                       </div>
                                       
                                       <div>

@@ -362,23 +362,24 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Reissue invoice with updated amount
   app.post("/api/invoices/reissue", async (req, res) => {
     try {
-      const { invoiceId, newAmount, reason } = req.body;
+      const { originalInvoiceId, newAmount, reason } = req.body;
 
-      if (!invoiceId || !newAmount || newAmount <= 0) {
+      if (!originalInvoiceId || !newAmount || newAmount <= 0) {
         return res.status(400).json({ error: "Missing or invalid parameters" });
       }
 
       // Get original invoice from Firebase
-      const originalInvoiceDoc = await db.collection("invoices").doc(invoiceId).get();
+      const originalInvoiceDoc = await db.collection("invoices").doc(originalInvoiceId).get();
       if (!originalInvoiceDoc.exists) {
         return res.status(404).json({ error: "Original invoice not found" });
       }
 
       const originalInvoice = originalInvoiceDoc.data();
       
-      // Generate new invoice number
+      // Generate credit note and new invoice numbers
       const timestamp = Date.now();
-      const invoiceNumber = `INV-${timestamp}`;
+      const creditNoteNumber = `CN-${timestamp}`;
+      const newInvoiceNumber = `INV-${timestamp}`;
 
       // Create new Stripe payment intent with updated amount
       const currency = "eur";
@@ -389,42 +390,54 @@ export async function registerRoutes(app: Express): Promise<Server> {
         currency: currency,
         payment_method_types: paymentMethodTypes,
         metadata: {
-          invoiceNumber,
-          originalInvoiceId: invoiceId,
+          invoiceNumber: newInvoiceNumber,
+          originalInvoiceId: originalInvoiceId,
+          creditNoteNumber: creditNoteNumber,
           reissueReason: reason,
           userId: originalInvoice.userId,
           clientEmail: originalInvoice.clientEmail
         }
       });
 
-      // Create new invoice data
+      // Update original invoice with credit note reference
+      await db.collection("invoices").doc(originalInvoiceId).update({
+        status: "credited",
+        creditNoteNumber: creditNoteNumber,
+        creditedAt: new Date(),
+        creditReason: reason,
+        isActive: false // Hide from main invoice list
+      });
+
+      // Create new invoice with reissue information
       const newInvoiceData = {
         ...originalInvoice,
-        invoiceNumber,
+        invoiceNumber: newInvoiceNumber,
         amount: newAmount,
         status: "pending",
         createdAt: new Date(),
         dueDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000), // 7 days from now
         stripePaymentIntentId: paymentIntent.id,
-        paymentUrl: `${req.protocol}://${req.get('host')}/pay-invoice/${invoiceNumber}`,
-        originalInvoiceId: invoiceId,
+        paymentUrl: `${req.protocol}://${req.get('host')}/pay-invoice/${newInvoiceNumber}`,
+        originalInvoiceId: originalInvoiceId,
+        creditNoteNumber: creditNoteNumber,
         reissueReason: reason,
-        description: `${originalInvoice.description} (Reissued - ${reason})`
+        originalAmount: originalInvoice.amount,
+        isReissued: true,
+        isActive: true,
+        description: `${originalInvoice.description} (Reissued: ${reason})`
       };
 
       // Save new invoice to Firebase
       const docRef = await db.collection("invoices").add(newInvoiceData);
-      
-      // Mark original invoice as superseded
-      await db.collection("invoices").doc(invoiceId).update({
-        status: "superseded",
-        supersededBy: docRef.id,
-        supersededAt: new Date()
-      });
 
       res.json({
         success: true,
         invoice: { ...newInvoiceData, id: docRef.id },
+        creditNote: {
+          number: creditNoteNumber,
+          originalInvoiceNumber: originalInvoice.invoiceNumber,
+          amount: originalInvoice.amount
+        },
         clientSecret: paymentIntent.client_secret,
         paymentUrl: newInvoiceData.paymentUrl
       });
