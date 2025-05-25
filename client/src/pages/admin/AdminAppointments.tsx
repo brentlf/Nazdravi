@@ -427,7 +427,16 @@ export default function AdminAppointments() {
                       </TableCell>
                       <TableCell>
                         <span className="text-sm text-muted-foreground">
-                          {new Date(appointment.createdAt).toLocaleDateString()}
+                          {(() => {
+                            try {
+                              const bookedDate = appointment.createdAt && typeof appointment.createdAt === 'object' && 'toDate' in appointment.createdAt ? 
+                                (appointment.createdAt as any).toDate() : 
+                                new Date(appointment.createdAt);
+                              return bookedDate.toLocaleDateString();
+                            } catch {
+                              return "Invalid Date";
+                            }
+                          })()}
                         </span>
                       </TableCell>
                       <TableCell className="text-right">
