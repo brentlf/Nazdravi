@@ -304,10 +304,15 @@ export default function DashboardProfile() {
   };
 
   return (
-    <div className="space-y-6">
-      <div>
-        <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Profile Settings</h1>
-        <p className="text-gray-600 dark:text-gray-300 mt-2">
+    <div className="max-w-4xl mx-auto space-y-6">
+      <div className="bg-gradient-to-r from-primary/10 to-primary/5 border border-primary/20 rounded-lg p-6">
+        <h1 className="text-3xl font-bold text-gray-900 dark:text-white flex items-center gap-3">
+          <div className="w-10 h-10 bg-primary/20 rounded-full flex items-center justify-center">
+            <User className="w-5 h-5 text-primary" />
+          </div>
+          Profile Settings
+        </h1>
+        <p className="text-gray-600 dark:text-gray-300 mt-2 ml-13">
           Manage your account information, health details, and preferences
         </p>
       </div>
@@ -334,10 +339,12 @@ export default function DashboardProfile() {
 
         {/* Profile Tab */}
         <TabsContent value="profile">
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <User className="w-5 h-5" />
+          <Card className="border-blue-200 dark:border-blue-800">
+            <CardHeader className="bg-blue-50 dark:bg-blue-900/20">
+              <CardTitle className="flex items-center gap-2 text-blue-900 dark:text-blue-100">
+                <div className="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center">
+                  <User className="w-4 h-4 text-white" />
+                </div>
                 Personal Information
               </CardTitle>
             </CardHeader>
@@ -392,13 +399,15 @@ export default function DashboardProfile() {
 
         {/* Health Info Tab */}
         <TabsContent value="health">
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Heart className="w-5 h-5" />
+          <Card className="border-red-200 dark:border-red-800">
+            <CardHeader className="bg-red-50 dark:bg-red-900/20">
+              <CardTitle className="flex items-center gap-2 text-red-900 dark:text-red-100">
+                <div className="w-8 h-8 bg-red-500 rounded-full flex items-center justify-center">
+                  <Heart className="w-4 h-4 text-white" />
+                </div>
                 Health Information
               </CardTitle>
-              <p className="text-sm text-gray-600 dark:text-gray-300">
+              <p className="text-sm text-red-700 dark:text-red-300">
                 Changes to chronic conditions and medications will notify your dietitian
               </p>
             </CardHeader>
