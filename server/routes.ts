@@ -243,6 +243,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.post("/api/emails/admin/new-appointment", async (req, res) => {
     console.log('🔍 DEBUG: New appointment admin email route called');
     console.log('🔍 DEBUG: Request body:', req.body);
+    console.log('🔍 DEBUG: mailerLiteService exists:', !!mailerLiteService);
+    console.log('🔍 DEBUG: mailerLiteService type:', typeof mailerLiteService);
     
     try {
       const { clientName, clientEmail, appointmentType, date, time } = req.body;
