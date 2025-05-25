@@ -74,57 +74,160 @@ function AdminUserProfile() {
   };
 
   const fetchUserAppointments = async () => {
-    if (!userId) return;
+    if (!userId || !user) return;
     
     try {
       const appointmentsRef = collection(db, 'appointments');
-      const q = query(
-        appointmentsRef,
-        where('userId', '==', userId),
-        orderBy('date', 'desc')
+      
+      // Try both userId and email queries
+      const queries = [
+        query(appointmentsRef, where('userId', '==', userId)),
+        query(appointmentsRef, where('email', '==', user.email)),
+        query(appointmentsRef, where('clientEmail', '==', user.email))
+      ];
+      
+      let allAppointments = [];
+      
+      for (const q of queries) {
+        try {
+          const querySnapshot = await getDocs(q);
+          const appointmentData = querySnapshot.docs.map(doc => ({
+            id: doc.id,
+            ...doc.data()
+          }));
+          allAppointments.push(...appointmentData);
+        } catch (error) {
+          console.log('Query failed, trying next...', error.message);
+        }
+      }
+      
+      // Remove duplicates based on document ID
+      const uniqueAppointments = allAppointments.filter((appointment, index, self) => 
+        index === self.findIndex(a => a.id === appointment.id)
       );
-      const querySnapshot = await getDocs(q);
-      const appointmentData = querySnapshot.docs.map(doc => ({
-        id: doc.id,
-        ...doc.data()
-      }));
-      setAppointments(appointmentData);
+      
+      // Sort by date descending
+      uniqueAppointments.sort((a, b) => {
+        const dateA = new Date(a.date || 0);
+        const dateB = new Date(b.date || 0);
+        return dateB.getTime() - dateA.getTime();
+      });
+      
+      setAppointments(uniqueAppointments);
     } catch (error) {
       console.error('Error fetching appointments:', error);
     }
   };
 
   const fetchUserInvoices = async () => {
-    if (!userId) return;
+    if (!userId || !user) return;
     
     try {
       const invoicesRef = collection(db, 'invoices');
-      const q = query(
-        invoicesRef,
-        where('userId', '==', userId),
-        orderBy('createdAt', 'desc')
+      
+      // Try multiple field combinations for invoices
+      const queries = [
+        query(invoicesRef, where('userId', '==', userId)),
+        query(invoicesRef, where('clientEmail', '==', user.email)),
+        query(invoicesRef, where('email', '==', user.email))
+      ];
+      
+      let allInvoices = [];
+      
+      for (const q of queries) {
+        try {
+          const querySnapshot = await getDocs(q);
+          const invoiceData = querySnapshot.docs.map(doc => ({
+            id: doc.id,
+            ...doc.data()
+          }));
+          allInvoices.push(...invoiceData);
+        } catch (error) {
+          console.log('Invoice query failed, trying next...', error.message);
+        }
+      }
+      
+      // Remove duplicates based on document ID
+      const uniqueInvoices = allInvoices.filter((invoice, index, self) => 
+        index === self.findIndex(i => i.id === invoice.id)
       );
-      const querySnapshot = await getDocs(q);
-      const invoiceData = querySnapshot.docs.map(doc => ({
-        id: doc.id,
-        ...doc.data()
-      }));
-      setInvoices(invoiceData);
+      
+      // Sort by creation date descending
+      uniqueInvoices.sort((a, b) => {
+        const dateA = a.createdAt?.toDate ? a.createdAt.toDate() : new Date(a.createdAt || 0);
+        const dateB = b.createdAt?.toDate ? b.createdAt.toDate() : new Date(b.createdAt || 0);
+        return dateB.getTime() - dateA.getTime();
+      });
+      
+      setInvoices(uniqueInvoices);
     } catch (error) {
       console.error('Error fetching invoices:', error);
     }
   };
 
   const fetchPreEvaluationForm = async () => {
-    if (!userId) return;
+    if (!userId || !user) return;
     
     try {
-      const formDoc = await getDoc(doc(db, 'preEvaluationForms', userId));
-      if (formDoc.exists()) {
-        setPreEvaluationForm(formDoc.data());
+      // Try to fetch from consentForms collection first
+      const consentFormsRef = collection(db, 'consentForms');
+      const consentQueries = [
+        query(consentFormsRef, where('userId', '==', userId)),
+        query(consentFormsRef, where('email', '==', user.email))
+      ];
+      
+      let healthData = null;
+      
+      for (const q of consentQueries) {
+        try {
+          const querySnapshot = await getDocs(q);
+          if (!querySnapshot.empty) {
+            healthData = querySnapshot.docs[0].data();
+            break;
+          }
+        } catch (error) {
+          console.log('Consent form query failed, trying next...', (error as any).message);
+        }
+      }
+      
+      // If no consent form found, try preEvaluationForms
+      if (!healthData) {
+        const preEvalQueries = [
+          query(collection(db, 'preEvaluationForms'), where('userId', '==', userId)),
+          query(collection(db, 'preEvaluationForms'), where('email', '==', user.email))
+        ];
+        
+        for (const q of preEvalQueries) {
+          try {
+            const querySnapshot = await getDocs(q);
+            if (!querySnapshot.empty) {
+              healthData = querySnapshot.docs[0].data();
+              break;
+            }
+          } catch (error) {
+            console.log('Pre-evaluation query failed, trying next...', (error as any).message);
+          }
+        }
+      }
+      
+      if (healthData) {
+        setPreEvaluationForm(healthData);
+        
+        // Update user object with health information from forms
+        setUser(prev => prev ? {
+          ...prev,
+          medicalConditions: healthData.medicalConditions || prev.medicalConditions || [],
+          medications: healthData.medications || prev.medications || [],
+          allergies: healthData.allergies || prev.allergies || [],
+          phone: healthData.phone || prev.phone,
+          address: healthData.address || prev.address,
+          emergencyContact: healthData.emergencyContact || prev.emergencyContact,
+          dateOfBirth: healthData.dateOfBirth || prev.dateOfBirth,
+          gpContact: healthData.gpContact || prev.gpContact
+        } : null);
       }
     } catch (error) {
-      console.error('Error fetching pre-evaluation form:', error);
+      console.error('Error fetching health information:', error);
     }
   };
 
