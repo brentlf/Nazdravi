@@ -60,7 +60,7 @@ class ResendEmailService {
           console.log('Resend response:', res.statusCode, responseData);
           
           if (res.statusCode === 200 || res.statusCode === 201) {
-            console.log(`Email sent successfully to: ${to}`);
+            console.log(`Email sent successfully to: ${params.to}`);
             resolve(true);
           } else {
             console.error('Resend API error:', res.statusCode, responseData);
@@ -740,13 +740,13 @@ export const processMailQueue = functions.firestore
           };
       }
       
-      const success = await emailService.sendEmail(
-        mailData.to,
-        mailData.toName || 'Client',
-        template.subject,
-        template.html,
-        template.text
-      );
+      const success = await emailService.sendEmail({
+        to: mailData.to,
+        toName: mailData.toName || 'Client',
+        subject: template.subject,
+        html: template.html,
+        text: template.text
+      });
       
       if (success) {
         await snap.ref.update({
