@@ -10,7 +10,8 @@ import {
   Target,
   Clock,
   Users,
-  Receipt
+  Receipt,
+  User
 } from "lucide-react";
 import { Link } from "wouter";
 import { useAuth } from "@/contexts/AuthContext";
