@@ -1,0 +1,15 @@
+
+                
+          
+          
+          
+         Chrome is moving towards a new experience that allows users to choose to browse without third-party cookies.
+AdminUserProfile.tsx:54 User loaded, now fetching related data for: craziesreviews@gmail.com
+AdminUserProfile.tsx:101 Appointment 1 structure: {id: 'KxbDmD12bRG6lPYOQj7P', fields: Array(14), userId: 'GHs80OQAuefSw83xsRw505Qpk813', email: 'craziesabroad@gmail.com', clientEmail: undefined, …}clientEmail: undefinedemail: "craziesabroad@gmail.com"fields: (14) ['teamsJoinUrl', 'id', 'teamsMeetingId', 'goals', 'phone', 'updatedAt', 'userId', 'status', 'createdAt', 'date', 'type', 'email', 'name', 'timeslot']id: "KxbDmD12bRG6lPYOQj7P"userEmail: undefineduserId: "GHs80OQAuefSw83xsRw505Qpk813"[[Prototype]]: Object
+AdminUserProfile.tsx:101 Appointment 2 structure: {id: 'fBXl4msiO2gTnhQnQMiX', fields: Array(15), userId: 'GHs80OQAuefSw83xsRw505Qpk813', email: 'craziesabroad@gmail.com', clientEmail: undefined, …}clientEmail: undefinedemail: "craziesabroad@gmail.com"fields: (15) ['name', 'id', 'date', 'updatedAt', 'timeslot', 'status', 'userId', 'teamsJoinUrl', 'phone', 'email', 'goals', 'requestId', 'createdAt', 'type', 'teamsMeetingId']id: "fBXl4msiO2gTnhQnQMiX"userEmail: undefineduserId: "GHs80OQAuefSw83xsRw505Qpk813"[[Prototype]]: Object
+AdminUserProfile.tsx:101 Appointment 3 structure: {id: 'ywqVDoNJeK2R4v5H65yW', fields: Array(12), userId: 's0cHDlZ7KfQUyBGhgGWUW30gK6v2', email: 'ytp004.lf@gmail.com', clientEmail: undefined, …}clientEmail: undefinedemail: "ytp004.lf@gmail.com"fields: (12) ['goals', 'phone', 'name', 'type', 'userId', 'timeslot', 'email', 'date', 'updatedAt', 'createdAt', 'requestId', 'status']id: "ywqVDoNJeK2R4v5H65yW"userEmail: undefineduserId: "s0cHDlZ7KfQUyBGhgGWUW30gK6v2"[[Prototype]]: Object
+AdminUserProfile.tsx:127 Total appointments found for user craziesreviews@gmail.com: 0
+AdminUserProfile.tsx:150 Debug: Total invoices in collection: 3
+AdminUserProfile.tsx:194 Debug: Total consent forms in collection: 0
+AdminUserProfile.tsx:211 Debug: Total pre-evaluation forms in collection: 0
+AdminUserProfile.tsx:224 Debug: Found health data: No

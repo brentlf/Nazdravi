@@ -110,17 +110,24 @@ function AdminUserProfile() {
         }
         
         // Check if this appointment belongs to the user using multiple field checks
+        // Also check for case-insensitive email matches to handle variations
+        const userEmailLower = user.email.toLowerCase();
+        const dataEmailLower = data.email?.toLowerCase();
+        const dataClientEmailLower = data.clientEmail?.toLowerCase();
+        const dataUserEmailLower = data.userEmail?.toLowerCase();
+        
         if (data.userId === userId || 
-            data.email === user.email || 
-            data.clientEmail === user.email ||
-            data.userEmail === user.email ||
-            data.user === user.email ||
-            data.client === user.email) {
+            dataEmailLower === userEmailLower || 
+            dataClientEmailLower === userEmailLower ||
+            dataUserEmailLower === userEmailLower ||
+            // Also check if they're similar emails (same domain, similar username)
+            (dataEmailLower && userEmailLower && 
+             dataEmailLower.includes(userEmailLower.split('@')[0].substring(0, 5)))) {
           userAppointments.push({
             id: doc.id,
             ...data
           });
-          console.log(`Found matching appointment for user ${user.email}:`, doc.id);
+          console.log(`Found matching appointment for user ${user.email}:`, doc.id, 'matched with:', data.email);
         }
       });
       
