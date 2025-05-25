@@ -94,6 +94,14 @@ export default function AdminHome() {
       href: "/admin/appointments"
     },
     {
+      title: "Daily Reminder Emails",
+      value: "Send Now",
+      icon: Mail,
+      color: "text-blue-600",
+      bgColor: "bg-blue-50 dark:bg-blue-900/20",
+      href: "/admin/emails"
+    },
+    {
       title: "Unread Messages",
       value: unreadMessages.toString(),
       icon: MessageCircle,
