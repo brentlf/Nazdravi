@@ -5,7 +5,6 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { useFirestoreCollection } from "@/hooks/useFirestore";
@@ -17,26 +16,23 @@ import { Link } from "wouter";
 import type { Invoice, Appointment } from "@shared/firebase-schema";
 
 export default function AdminInvoices() {
-  const [isCreatingInvoice, setIsCreatingInvoice] = useState(false);
   const [selectedAppointment, setSelectedAppointment] = useState<Appointment | null>(null);
+  const [isCreatingInvoice, setIsCreatingInvoice] = useState(false);
   const [includeNoShowPenalty, setIncludeNoShowPenalty] = useState(false);
   const [includeLateRescheduleFee, setIncludeLateRescheduleFee] = useState(false);
-  const [reissueInvoice, setReissueInvoice] = useState<Invoice | null>(null);
-  const [newAmount, setNewAmount] = useState("");
-  const [isReissuing, setIsReissuing] = useState(false);
   const { toast } = useToast();
   const { user } = useAuth();
 
   // Fetch invoices
   const { data: invoices, loading: loadingInvoices } = useFirestoreCollection<Invoice>("invoices", [
     orderBy("createdAt", "desc"),
-    limit(50)
+    limit(100) // Increased limit for hundreds of invoices
   ]);
 
-  // Fetch appointments that can be invoiced (completed or no-show)
+  // Fetch appointments that can be invoiced
   const { data: allAppointments } = useFirestoreCollection<Appointment>("appointments", [
     orderBy("date", "desc"),
-    limit(20)
+    limit(50)
   ]);
 
   // Check if an appointment already has an invoice
@@ -52,10 +48,10 @@ export default function AdminInvoices() {
     const isLateReschedule = desc.includes('late') && desc.includes('reschedule');
     const isCustom = desc.includes('reissued') || desc.includes('custom');
     
-    if (isNoShow) return <Ban className="w-4 h-4 text-red-500" title="No-Show Penalty" />;
-    if (isLateReschedule) return <Clock className="w-4 h-4 text-orange-500" title="Late Reschedule Fee" />;
-    if (isCustom) return <RefreshCw className="w-4 h-4 text-purple-500" title="Custom/Reissued" />;
-    return <CheckCircle className="w-4 h-4 text-green-500" title="Standard Session" />;
+    if (isNoShow) return <Ban className="w-4 h-4 text-red-500" />;
+    if (isLateReschedule) return <Clock className="w-4 h-4 text-orange-500" />;
+    if (isCustom) return <RefreshCw className="w-4 h-4 text-purple-500" />;
+    return <CheckCircle className="w-4 h-4 text-green-500" />;
   };
 
   const getStatusBadge = (status: string) => {
@@ -71,118 +67,73 @@ export default function AdminInvoices() {
     }
   };
 
-  // Filter appointments that could potentially need invoicing and haven't been invoiced yet
-  // Include: completed, no-show, cancelled (for potential fees), and even confirmed (for advance billing)
-  const invoiceableAppointments = allAppointments?.filter(apt => {
-    // Exclude only pending appointments that haven't happened yet
-    const excludeStatuses = ['pending'];
-    return !excludeStatuses.includes(apt.status) && !hasExistingInvoice(apt.id);
-  }) || [];
+  // Filter appointments that could potentially need invoicing
+  const invoiceableAppointments = allAppointments?.filter(apt => 
+    apt.status === 'done' || apt.status === 'no-show' || apt.status === 'cancelled' || apt.status === 'confirmed'
+  ) || [];
 
-  // Intelligent penalty detection based on appointment data and business policy
+  // Detect applicable penalties for an appointment
   const detectApplicablePenalties = (appointment: Appointment) => {
-    let shouldIncludeNoShow = false;
-    let shouldIncludeLateReschedule = false;
-
-    // Check for no-show penalty (if appointment is marked as no-show)
-    if (appointment.status === 'no-show') {
-      shouldIncludeNoShow = true;
-    }
-
-    // Check for late reschedule fee based on appointment status or comments
-    if (appointment.status === 'reschedule_requested' || 
-        appointment.status === 'cancelled_reschedule' ||
-        appointment.comments?.toLowerCase().includes('late reschedule') ||
-        appointment.comments?.toLowerCase().includes('short notice')) {
-      shouldIncludeLateReschedule = true;
-    }
-
+    const shouldIncludeNoShow = appointment.status === 'no-show';
+    const shouldIncludeLateReschedule = appointment.status === 'cancelled'; // Simplified logic
     return { shouldIncludeNoShow, shouldIncludeLateReschedule };
   };
 
-  // Calculate invoice totals including penalties
+  // Calculate invoice total
   const calculateInvoiceTotal = () => {
     if (!selectedAppointment) return 0;
     
-    const sessionCost = selectedAppointment.type === "Initial" ? 95 : 75;
     let total = 0;
     
-    // For no-show appointments: charge 0% session cost + 50% penalty = 50% total
-    if (selectedAppointment.status === 'no-show' || includeNoShowPenalty) {
-      total = sessionCost * 0.5; // Only 50% penalty, no session cost
-    } else {
-      total = sessionCost; // Normal session cost for completed appointments
+    // Session cost (€0 for no-show, full price for others)
+    if (selectedAppointment.status !== 'no-show') {
+      total += selectedAppointment.type === "Initial" ? 95 : 75;
+    }
+    
+    // Add penalties
+    if (includeNoShowPenalty) {
+      total += selectedAppointment.type === "Initial" ? 47.50 : 37.50; // 50% penalty
     }
     
     if (includeLateRescheduleFee) {
-      // Late reschedule fee is €5
-      total += 5;
+      total += 5; // €5 late reschedule fee
     }
     
     return total;
   };
 
+  // Handle invoice creation
   const handleCreateInvoice = async (appointmentData: Appointment) => {
+    if (!appointmentData || !user) return;
+    
+    setIsCreatingInvoice(true);
+    
     try {
-      const sessionCost = appointmentData.type === "Initial" ? 95 : 75;
-      let totalAmount = 0;
-      let description = "";
-      
-      // For no-show appointments: charge 0% session cost + 50% penalty = 50% total
-      if (appointmentData.status === 'no-show' || includeNoShowPenalty) {
-        const penaltyAmount = sessionCost * 0.5;
-        totalAmount = penaltyAmount; // Only penalty, no session cost
-        description = `No-Show Penalty - ${appointmentData.type} (€${penaltyAmount.toFixed(2)})`;
-      } else {
-        totalAmount = sessionCost; // Normal session cost for completed appointments
-        description = `Nutrition Consultation - ${appointmentData.type}`;
-      }
-      
-      if (includeLateRescheduleFee) {
-        totalAmount += 5;
-        description += ` + Late Reschedule Fee (€5.00)`;
-      }
-
-      const invoiceData = {
-        appointmentId: appointmentData.id,
-        userId: appointmentData.userId,
-        clientName: appointmentData.name,
-        clientEmail: appointmentData.email,
-        amount: totalAmount,
-        description: description,
-        sessionDate: appointmentData.date,
-        sessionType: appointmentData.type,
-        includeNoShowPenalty,
-        includeLateRescheduleFee,
-      };
-
-      const response = await fetch('/api/invoices/create', {
+      const response = await fetch('/api/invoices', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(invoiceData),
+        body: JSON.stringify({
+          appointmentId: appointmentData.id,
+          userId: appointmentData.userId,
+          clientName: appointmentData.name,
+          clientEmail: appointmentData.email,
+          sessionType: appointmentData.type,
+          sessionDate: appointmentData.date,
+          sessionTime: appointmentData.timeslot,
+          amount: calculateInvoiceTotal(),
+          includeNoShowPenalty,
+          includeLateRescheduleFee,
+          appointmentStatus: appointmentData.status
+        }),
       });
 
       if (response.ok) {
-        const result = await response.json();
         toast({
-          title: "Invoice Created Successfully",
-          description: `Invoice ${result.invoice.invoiceNumber} has been created and payment link generated.`,
+          title: "Invoice Created",
+          description: `Invoice for €${calculateInvoiceTotal().toFixed(2)} has been created successfully.`,
         });
-        // Reset all states
-        setIsCreatingInvoice(false);
-        setSelectedAppointment(null);
-        setIncludeNoShowPenalty(false);
-        setIncludeLateRescheduleFee(false);
-      } else if (response.status === 409) {
-        const errorData = await response.json();
-        toast({
-          title: "Invoice Already Exists",
-          description: "An invoice has already been created for this appointment.",
-          variant: "destructive",
-        });
-        // Reset all states
         setIsCreatingInvoice(false);
         setSelectedAppointment(null);
         setIncludeNoShowPenalty(false);
@@ -191,61 +142,14 @@ export default function AdminInvoices() {
         throw new Error('Failed to create invoice');
       }
     } catch (error) {
-      console.error('Error creating invoice:', error);
       toast({
         title: "Failed to Create Invoice",
         description: "Please try again later.",
         variant: "destructive",
       });
-      // Reset all states on error
       setIsCreatingInvoice(false);
-      setSelectedAppointment(null);
-      setIncludeNoShowPenalty(false);
-      setIncludeLateRescheduleFee(false);
     }
   };
-
-  const handleReissueInvoice = async () => {
-    if (!reissueInvoice || !newAmount) return;
-    
-    setIsReissuing(true);
-    try {
-      const response = await fetch("/api/invoices/reissue", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          invoiceId: reissueInvoice.id,
-          newAmount: parseFloat(newAmount),
-          reason: "Admin updated amount"
-        }),
-      });
-
-      if (response.ok) {
-        const result = await response.json();
-        toast({
-          title: "Invoice Reissued Successfully",
-          description: `New invoice ${result.invoice.invoiceNumber} created with updated amount €${newAmount}`,
-        });
-        setReissueInvoice(null);
-        setNewAmount("");
-        setIsReissuing(false);
-      } else {
-        throw new Error('Failed to reissue invoice');
-      }
-    } catch (error) {
-      console.error('Error reissuing invoice:', error);
-      toast({
-        title: "Failed to Reissue Invoice",
-        description: "Please try again later.",
-        variant: "destructive",
-      });
-      setIsReissuing(false);
-    }
-  };
-
-
 
   if (loadingInvoices) {
     return (
@@ -270,13 +174,9 @@ export default function AdminInvoices() {
         </Link>
       </div>
 
-      {/* Header */}
-      <div className="flex justify-between items-center mb-8">
-        <div>
-          <h1 className="text-3xl font-bold">Invoice Management</h1>
-          <p className="text-muted-foreground">Create and manage client invoices</p>
-        </div>
-        
+      {/* Header with Create Invoice */}
+      <div className="flex justify-between items-center mb-6">
+        <h1 className="text-3xl font-bold">Invoice Management</h1>
         <Dialog open={isCreatingInvoice} onOpenChange={setIsCreatingInvoice}>
           <DialogTrigger asChild>
             <Button>
@@ -311,7 +211,6 @@ export default function AdminInvoices() {
                         onClick={() => {
                           if (!alreadyInvoiced) {
                             setSelectedAppointment(appointment);
-                            // Automatically detect and set applicable penalties
                             const { shouldIncludeNoShow, shouldIncludeLateReschedule } = detectApplicablePenalties(appointment);
                             setIncludeNoShowPenalty(shouldIncludeNoShow);
                             setIncludeLateRescheduleFee(shouldIncludeLateReschedule);
@@ -386,176 +285,117 @@ export default function AdminInvoices() {
                       <p className="font-medium">{selectedAppointment.name}</p>
                     </div>
                     <div>
-                      <span className="text-muted-foreground">Email:</span>
-                      <p className="font-medium">{selectedAppointment.email}</p>
-                    </div>
-                    <div>
                       <span className="text-muted-foreground">Session Type:</span>
                       <p className="font-medium">{selectedAppointment.type}</p>
                     </div>
                     <div>
-                      <span className="text-muted-foreground">Session Date:</span>
+                      <span className="text-muted-foreground">Date:</span>
                       <p className="font-medium">{new Date(selectedAppointment.date).toLocaleDateString()}</p>
                     </div>
-                  </div>
-
-                  {/* Invoice Breakdown */}
-                  <div className="border-t pt-4">
-                    <h4 className="font-medium mb-3">Invoice Breakdown</h4>
-                    <div className="space-y-2">
-                      {/* Base Session Cost */}
-                      <div className="flex justify-between items-center">
-                        <span>{selectedAppointment.type} Session</span>
-                        <Badge variant="outline">
-                          €{(selectedAppointment.status === 'no-show' || includeNoShowPenalty) 
-                            ? "0.00" 
-                            : (selectedAppointment.type === "Initial" ? "95.00" : "75.00")
-                          }
-                        </Badge>
-                      </div>
-
-                      {/* No-Show Penalty Control */}
-                      <div className="flex items-center justify-between p-3 border rounded-lg bg-white">
-                        <div className="flex items-center space-x-3">
-                          <Checkbox 
-                            id="no-show-penalty" 
-                            checked={includeNoShowPenalty}
-                            onCheckedChange={(checked) => setIncludeNoShowPenalty(checked === true)}
-                          />
-                          <div className="grid gap-1.5 leading-none">
-                            <label 
-                              htmlFor="no-show-penalty" 
-                              className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                            >
-                              No-Show Penalty (50%)
-                            </label>
-                            <p className="text-xs text-muted-foreground">
-                              Auto-detected from appointment status
-                            </p>
-                          </div>
-                        </div>
-                        {includeNoShowPenalty && (
-                          <Badge variant="destructive">
-                            €{selectedAppointment.type === "Initial" ? "47.50" : "37.50"}
-                          </Badge>
-                        )}
-                      </div>
-
-                      {/* Late Reschedule Fee Control */}
-                      <div className="flex items-center justify-between p-3 border rounded-lg bg-white">
-                        <div className="flex items-center space-x-3">
-                          <Checkbox 
-                            id="late-reschedule-fee" 
-                            checked={includeLateRescheduleFee}
-                            onCheckedChange={(checked) => setIncludeLateRescheduleFee(checked === true)}
-                          />
-                          <div className="grid gap-1.5 leading-none">
-                            <label 
-                              htmlFor="late-reschedule-fee" 
-                              className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                            >
-                              Late Reschedule Fee
-                            </label>
-                            <p className="text-xs text-muted-foreground">
-                              Within 4 working hours policy
-                            </p>
-                          </div>
-                        </div>
-                        {includeLateRescheduleFee && (
-                          <Badge variant="destructive">€5.00</Badge>
-                        )}
-                      </div>
-
-                      {/* Total Amount */}
-                      <div className="flex justify-between items-center pt-3 border-t font-semibold">
-                        <span>Total Amount</span>
-                        <Badge variant="default" className="text-base px-3 py-1">
-                          €{calculateInvoiceTotal().toFixed(2)}
-                        </Badge>
-                      </div>
-
-                      {/* Smart Detection Notice */}
-                      {(includeNoShowPenalty || includeLateRescheduleFee) && (
-                        <div className="flex items-start gap-2 p-3 bg-orange-50 border border-orange-200 rounded-lg">
-                          <AlertTriangle className="w-4 h-4 text-orange-600 mt-0.5 flex-shrink-0" />
-                          <div className="text-sm text-orange-800">
-                            <p className="font-medium">Penalties Auto-Detected</p>
-                            <p className="text-xs mt-1">
-                              Based on appointment data and policy rules. You can adjust before creating the invoice.
-                            </p>
-                          </div>
-                        </div>
-                      )}
+                    <div>
+                      <span className="text-muted-foreground">Status:</span>
+                      <p className="font-medium">{selectedAppointment.status}</p>
                     </div>
                   </div>
-                  
-                  <Button 
-                    onClick={() => handleCreateInvoice(selectedAppointment)}
-                    disabled={isCreatingInvoice}
-                    className="w-full"
-                  >
-                    {isCreatingInvoice ? "Creating Invoice..." : `Create Invoice - €${calculateInvoiceTotal().toFixed(2)}`}
-                  </Button>
+
+                  {/* Session Cost */}
+                  <div className="flex justify-between items-center py-2 border-b">
+                    <span>Session Cost</span>
+                    <Badge variant="outline">
+                      {selectedAppointment.status === 'no-show' 
+                        ? "€0.00 (No-Show)" 
+                        : `€${selectedAppointment.type === "Initial" ? "95.00" : "75.00"}`}
+                    </Badge>
+                  </div>
+
+                  {/* No-Show Penalty Control */}
+                  <div className="flex justify-between items-center">
+                    <div className="flex items-center space-x-2">
+                      <Checkbox
+                        id="no-show-penalty"
+                        checked={includeNoShowPenalty}
+                        onCheckedChange={(checked) => setIncludeNoShowPenalty(checked === true)}
+                      />
+                      <div className="grid gap-1.5 leading-none">
+                        <label 
+                          htmlFor="no-show-penalty" 
+                          className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                        >
+                          No-Show Penalty (50%)
+                        </label>
+                        <p className="text-xs text-muted-foreground">
+                          Applied when client doesn't attend
+                        </p>
+                      </div>
+                    </div>
+                    {includeNoShowPenalty && (
+                      <Badge variant="destructive">
+                        €{selectedAppointment.type === "Initial" ? "47.50" : "37.50"}
+                      </Badge>
+                    )}
+                  </div>
+
+                  {/* Late Reschedule Fee Control */}
+                  <div className="flex justify-between items-center">
+                    <div className="flex items-center space-x-2">
+                      <Checkbox
+                        id="late-reschedule-fee"
+                        checked={includeLateRescheduleFee}
+                        onCheckedChange={(checked) => setIncludeLateRescheduleFee(checked === true)}
+                      />
+                      <div className="grid gap-1.5 leading-none">
+                        <label 
+                          htmlFor="late-reschedule-fee" 
+                          className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                        >
+                          Late Reschedule Fee
+                        </label>
+                        <p className="text-xs text-muted-foreground">
+                          Within 4 working hours policy
+                        </p>
+                      </div>
+                    </div>
+                    {includeLateRescheduleFee && (
+                      <Badge variant="destructive">€5.00</Badge>
+                    )}
+                  </div>
+
+                  {/* Total Amount */}
+                  <div className="flex justify-between items-center pt-3 border-t font-semibold">
+                    <span>Total Amount</span>
+                    <Badge variant="default" className="text-base px-3 py-1">
+                      €{calculateInvoiceTotal().toFixed(2)}
+                    </Badge>
+                  </div>
+
+                  {/* Smart Detection Notice */}
+                  {(includeNoShowPenalty || includeLateRescheduleFee) && (
+                    <div className="flex items-start gap-2 p-3 bg-orange-50 border border-orange-200 rounded-lg">
+                      <AlertTriangle className="w-4 h-4 text-orange-600 mt-0.5 flex-shrink-0" />
+                      <div className="text-sm text-orange-800">
+                        <p className="font-medium">Penalties Auto-Detected</p>
+                        <p className="text-xs mt-1">
+                          Based on appointment data and policy rules. You can adjust before creating the invoice.
+                        </p>
+                      </div>
+                    </div>
+                  )}
                 </div>
+              )}
+              
+              {selectedAppointment && (
+                <Button 
+                  onClick={() => handleCreateInvoice(selectedAppointment)}
+                  disabled={isCreatingInvoice}
+                  className="w-full"
+                >
+                  {isCreatingInvoice ? "Creating Invoice..." : `Create Invoice - €${calculateInvoiceTotal().toFixed(2)}`}
+                </Button>
               )}
             </div>
           </DialogContent>
         </Dialog>
       </div>
-
-      {/* Penalty Policy Overview */}
-      <Card className="mb-8 border-orange-200 bg-orange-50 dark:bg-orange-950/30">
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2 text-orange-800 dark:text-orange-200">
-            <Receipt className="w-5 h-5" />
-            Penalty & Fee Structure
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="grid md:grid-cols-3 gap-6">
-            <div className="space-y-2">
-              <h4 className="font-semibold text-orange-900 dark:text-orange-100">Session Rates</h4>
-              <div className="space-y-1 text-sm">
-                <div className="flex justify-between">
-                  <span>Initial Consultation:</span>
-                  <Badge variant="outline" className="bg-white">€95</Badge>
-                </div>
-                <div className="flex justify-between">
-                  <span>Follow-up Session:</span>
-                  <Badge variant="outline" className="bg-white">€75</Badge>
-                </div>
-              </div>
-            </div>
-            
-            <div className="space-y-2">
-              <h4 className="font-semibold text-orange-900 dark:text-orange-100">No-Show Penalties</h4>
-              <div className="space-y-1 text-sm">
-                <div className="flex justify-between">
-                  <span>Initial (50% penalty):</span>
-                  <Badge variant="destructive" className="bg-red-100 text-red-800">€47.50</Badge>
-                </div>
-                <div className="flex justify-between">
-                  <span>Follow-up (50% penalty):</span>
-                  <Badge variant="destructive" className="bg-red-100 text-red-800">€37.50</Badge>
-                </div>
-              </div>
-            </div>
-            
-            <div className="space-y-2">
-              <h4 className="font-semibold text-orange-900 dark:text-orange-100">Late Reschedule Fee</h4>
-              <div className="space-y-1 text-sm">
-                <div className="flex justify-between">
-                  <span>Within 4 working hours:</span>
-                  <Badge variant="destructive" className="bg-red-100 text-red-800">€5</Badge>
-                </div>
-                <p className="text-xs text-orange-700 dark:text-orange-300 mt-2">
-                  Auto-generated from Admin → Appointments → "Mark No-Show"
-                </p>
-              </div>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
 
       {/* Invoice Statistics */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
@@ -624,7 +464,7 @@ export default function AdminInvoices() {
       <Card>
         <CardHeader className="pb-3">
           <CardTitle className="text-lg">All Invoices ({invoices?.length || 0})</CardTitle>
-          <p className="text-sm text-muted-foreground">Compact view showing all essential information</p>
+          <p className="text-sm text-muted-foreground">Ultra-compact view optimized for managing hundreds of invoices efficiently</p>
         </CardHeader>
         <CardContent className="p-0">
           {invoices && invoices.length > 0 ? (
@@ -706,91 +546,6 @@ export default function AdminInvoices() {
           )}
         </CardContent>
       </Card>
-    </div>
-  );
-}
-                        </Button>
-                      )}
-                      <Button 
-                        variant="outline" 
-                        size="sm"
-                        onClick={() => {
-                          setReissueInvoice(invoice);
-                          setNewAmount(invoice.amount.toString());
-                        }}
-                      >
-                        <RefreshCw className="w-4 h-4 mr-1" />
-                        Reissue
-                      </Button>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          ) : (
-            <div className="text-center py-8">
-              <Receipt className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
-              <p className="text-muted-foreground">No invoices created yet</p>
-              <p className="text-sm text-muted-foreground">Create your first invoice from a completed session</p>
-            </div>
-          )}
-        </CardContent>
-      </Card>
-
-      {/* Reissue Invoice Dialog */}
-      <Dialog open={!!reissueInvoice} onOpenChange={() => setReissueInvoice(null)}>
-        <DialogContent className="max-w-md">
-          <DialogHeader>
-            <DialogTitle>Reissue Invoice</DialogTitle>
-          </DialogHeader>
-          <div className="space-y-4">
-            <p className="text-sm text-muted-foreground">
-              Create a new invoice with an updated amount for{" "}
-              <span className="font-medium">{reissueInvoice?.clientName}</span>
-            </p>
-            
-            <div className="space-y-2">
-              <Label htmlFor="originalAmount">Original Amount</Label>
-              <Input
-                id="originalAmount"
-                value={`€${reissueInvoice?.amount || 0}`}
-                disabled
-                className="bg-muted"
-              />
-            </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="newAmount">New Amount (€)</Label>
-              <Input
-                id="newAmount"
-                type="number"
-                step="0.01"
-                min="0"
-                value={newAmount}
-                onChange={(e) => setNewAmount(e.target.value)}
-                placeholder="Enter new amount"
-              />
-            </div>
-
-            <div className="flex gap-2 pt-4">
-              <Button
-                variant="outline"
-                onClick={() => setReissueInvoice(null)}
-                className="flex-1"
-              >
-                Cancel
-              </Button>
-              <Button
-                onClick={handleReissueInvoice}
-                disabled={isReissuing || !newAmount || parseFloat(newAmount) <= 0}
-                className="flex-1"
-              >
-                {isReissuing ? "Creating..." : "Reissue Invoice"}
-              </Button>
-            </div>
-          </div>
-        </DialogContent>
-      </Dialog>
     </div>
   );
 }
