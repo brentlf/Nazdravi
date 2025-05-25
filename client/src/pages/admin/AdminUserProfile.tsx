@@ -109,25 +109,13 @@ function AdminUserProfile() {
           debugCount++;
         }
         
-        // Check if this appointment belongs to the user using multiple field checks
-        // Also check for case-insensitive email matches to handle variations
-        const userEmailLower = user.email.toLowerCase();
-        const dataEmailLower = data.email?.toLowerCase();
-        const dataClientEmailLower = data.clientEmail?.toLowerCase();
-        const dataUserEmailLower = data.userEmail?.toLowerCase();
-        
-        if (data.userId === userId || 
-            dataEmailLower === userEmailLower || 
-            dataClientEmailLower === userEmailLower ||
-            dataUserEmailLower === userEmailLower ||
-            // Also check if they're similar emails (same domain, similar username)
-            (dataEmailLower && userEmailLower && 
-             dataEmailLower.includes(userEmailLower.split('@')[0].substring(0, 5)))) {
+        // Primary match: Use userId for reliable connection
+        if (data.userId === userId) {
           userAppointments.push({
             id: doc.id,
             ...data
           });
-          console.log(`Found matching appointment for user ${user.email}:`, doc.id, 'matched with:', data.email);
+          console.log(`Found appointment for userId ${userId}:`, doc.id);
         }
       });
       
@@ -161,15 +149,13 @@ function AdminUserProfile() {
       allInvoicesSnapshot.forEach(doc => {
         const data = doc.data();
         
-        // Check if this invoice belongs to the user using multiple field checks
-        if (data.userId === userId || 
-            data.clientEmail === user.email || 
-            data.email === user.email ||
-            data.userEmail === user.email) {
+        // Primary match: Use userId for reliable connection
+        if (data.userId === userId) {
           userInvoices.push({
             id: doc.id,
             ...data
           });
+          console.log(`Found invoice for userId ${userId}:`, doc.id);
         }
       });
       
@@ -202,8 +188,9 @@ function AdminUserProfile() {
         
         consentSnapshot.forEach(doc => {
           const data = doc.data();
-          if (data.userId === userId || data.email === user.email) {
+          if (data.userId === userId) {
             healthData = data;
+            console.log(`Found consent form for userId ${userId}:`, doc.id);
           }
         });
       } catch (error) {
@@ -219,8 +206,9 @@ function AdminUserProfile() {
           
           preEvalSnapshot.forEach(doc => {
             const data = doc.data();
-            if (data.userId === userId || data.email === user.email) {
+            if (data.userId === userId) {
               healthData = data;
+              console.log(`Found pre-evaluation form for userId ${userId}:`, doc.id);
             }
           });
         } catch (error) {
