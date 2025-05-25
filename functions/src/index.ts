@@ -155,8 +155,8 @@ class ResendEmailService {
               <h3 style="color: #856404; margin-top: 0; font-size: 16px;">📋 Cancellation & Reschedule Policy</h3>
               <ul style="color: #856404; margin: 10px 0; padding-left: 20px; line-height: 1.6;">
                 <li><strong>Free Cancellation:</strong> Cancel or reschedule up to 4 working hours before your appointment</li>
-                <li><strong>Late Reschedule Fee:</strong> €15 penalty applies for changes within 4 working hours</li>
-                <li><strong>No-Show Fee:</strong> €25 penalty applies if you miss your appointment</li>
+                <li><strong>Late Reschedule Fee:</strong> €5 penalty applies for changes within 4 working hours</li>
+                <li><strong>No-Show Penalty:</strong> 50% of original appointment cost applies if you miss your appointment</li>
                 <li><strong>Working Hours:</strong> Monday-Friday 9am-10pm, Saturday 9am-12pm (Sunday excluded)</li>
               </ul>
               <p style="color: #856404; margin: 10px 0; font-size: 14px; font-style: italic;">
