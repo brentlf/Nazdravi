@@ -72,11 +72,13 @@ export default function AdminInvoices() {
     if (!selectedAppointment) return 0;
     
     const sessionCost = selectedAppointment.type === "Initial" ? 95 : 75;
-    let total = sessionCost;
+    let total = 0;
     
-    if (includeNoShowPenalty) {
-      // No-show penalty is 50% of session cost
-      total += sessionCost * 0.5;
+    // For no-show appointments: charge 0% session cost + 50% penalty = 50% total
+    if (selectedAppointment.status === 'no-show' || includeNoShowPenalty) {
+      total = sessionCost * 0.5; // Only 50% penalty, no session cost
+    } else {
+      total = sessionCost; // Normal session cost for completed appointments
     }
     
     if (includeLateRescheduleFee) {
@@ -90,14 +92,17 @@ export default function AdminInvoices() {
   const handleCreateInvoice = async (appointmentData: Appointment) => {
     try {
       const sessionCost = appointmentData.type === "Initial" ? 95 : 75;
-      let totalAmount = sessionCost;
-      let description = `Nutrition Consultation - ${appointmentData.type}`;
+      let totalAmount = 0;
+      let description = "";
       
-      // Add penalty amounts if selected
-      if (includeNoShowPenalty) {
+      // For no-show appointments: charge 0% session cost + 50% penalty = 50% total
+      if (appointmentData.status === 'no-show' || includeNoShowPenalty) {
         const penaltyAmount = sessionCost * 0.5;
-        totalAmount += penaltyAmount;
-        description += ` + No-Show Penalty (€${penaltyAmount.toFixed(2)})`;
+        totalAmount = penaltyAmount; // Only penalty, no session cost
+        description = `No-Show Penalty - ${appointmentData.type} (€${penaltyAmount.toFixed(2)})`;
+      } else {
+        totalAmount = sessionCost; // Normal session cost for completed appointments
+        description = `Nutrition Consultation - ${appointmentData.type}`;
       }
       
       if (includeLateRescheduleFee) {
@@ -317,7 +322,12 @@ export default function AdminInvoices() {
                       {/* Base Session Cost */}
                       <div className="flex justify-between items-center">
                         <span>{selectedAppointment.type} Session</span>
-                        <Badge variant="outline">€{selectedAppointment.type === "Initial" ? "95" : "75"}</Badge>
+                        <Badge variant="outline">
+                          €{(selectedAppointment.status === 'no-show' || includeNoShowPenalty) 
+                            ? "0.00" 
+                            : (selectedAppointment.type === "Initial" ? "95.00" : "75.00")
+                          }
+                        </Badge>
                       </div>
 
                       {/* No-Show Penalty Control */}
