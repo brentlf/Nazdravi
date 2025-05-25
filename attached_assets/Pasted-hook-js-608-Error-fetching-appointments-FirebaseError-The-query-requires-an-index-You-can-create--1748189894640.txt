@@ -1,0 +1,39 @@
+hook.js:608 Error fetching appointments: FirebaseError: The query requires an index. You can create it here: https://console.firebase.google.com/v1/r/project/veenutrition-79fba/firestore/indexes?create_composite=Cldwcm9qZWN0cy92ZWVudXRyaXRpb24tNzlmYmEvZGF0YWJhc2VzLyhkZWZhdWx0KS9jb2xsZWN0aW9uR3JvdXBzL2FwcG9pbnRtZW50cy9pbmRleGVzL18QARoKCgZ1c2VySWQQARoICgRkYXRlEAIaDAoIX19uYW1lX18QAg
+overrideMethod @ hook.js:608
+hook.js:608 Error fetching invoices: FirebaseError: The query requires an index. You can create it here: https://console.firebase.google.com/v1/r/project/veenutrition-79fba/firestore/indexes?create_composite=ClNwcm9qZWN0cy92ZWVudXRyaXRpb24tNzlmYmEvZGF0YWJhc2VzLyhkZWZhdWx0KS9jb2xsZWN0aW9uR3JvdXBzL2ludm9pY2VzL2luZGV4ZXMvXxABGgoKBnVzZXJJZBABGg0KCWNyZWF0ZWRBdBACGgwKCF9fbmFtZV9fEAI
+overrideMethod @ hook.js:608
+hook.js:608 Error fetching invoices: FirebaseError: The query requires an index. You can create it here: https://console.firebase.google.com/v1/r/project/veenutrition-79fba/firestore/indexes?create_composite=ClNwcm9qZWN0cy92ZWVudXRyaXRpb24tNzlmYmEvZGF0YWJhc2VzLyhkZWZhdWx0KS9jb2xsZWN0aW9uR3JvdXBzL2ludm9pY2VzL2luZGV4ZXMvXxABGgoKBnVzZXJJZBABGg0KCWNyZWF0ZWRBdBACGgwKCF9fbmFtZV9fEAI
+overrideMethod @ hook.js:608
+ Dashboard Appointments Debug: ObjectappointmentsByEmail: 0appointmentsByUser: 0appointmentsByUserId: 0totalAppointments: 0userEmail: "brentlf@gmail.com"userId: "k8auIVCVCuVLQNttjmH2cynH8W92"[[Prototype]]: Object
+ Dashboard Appointments Debug: ObjectappointmentsByEmail: 0appointmentsByUser: 0appointmentsByUserId: 0totalAppointments: 0userEmail: "craziesreviews@gmail.com"userId: "ETyOD7S76BYI2ceQqMRysV5ozJi2"[[Prototype]]: Object
+ Dashboard Appointments Debug: ObjectappointmentsByEmail: 0appointmentsByUser: 0appointmentsByUserId: 0totalAppointments: 0userEmail: "craziesreviews@gmail.com"userId: "ETyOD7S76BYI2ceQqMRysV5ozJi2"[[Prototype]]: Object
+ Dashboard Appointments Debug: ObjectappointmentsByEmail: 0appointmentsByUser: 0appointmentsByUserId: 0totalAppointments: 0userEmail: "craziesreviews@gmail.com"userId: "ETyOD7S76BYI2ceQqMRysV5ozJi2"[[Prototype]]: Object
+hook.js:608 Error loading user data: FirebaseError: The query requires an index. You can create it here: https://console.firebase.google.com/v1/r/project/veenutrition-79fba/firestore/indexes?create_composite=Clxwcm9qZWN0cy92ZWVudXRyaXRpb24tNzlmYmEvZGF0YWJhc2VzLyhkZWZhdWx0KS9jb2xsZWN0aW9uR3JvdXBzL2hlYWx0aEFzc2Vzc21lbnRzL2luZGV4ZXMvXxABGgoKBnVzZXJJZBABGg0KCWNyZWF0ZWRBdBACGgwKCF9fbmFtZV9fEAI
+overrideMethod @ hook.js:608
+AdminUserProfile.tsx?t=1748189786312:102 Debugging: Fetching invoices for user: Objectemail: "craziesreviews@gmail.com"userId: "ETyOD7S76BYI2ceQqMRysV5ozJi2"[[Prototype]]: Object
+AdminUserProfile.tsx?t=1748189786312:73 Debug: Total appointments in collection: 4
+AdminUserProfile.tsx?t=1748189786312:84 Debug: Found appointments for user: 0
+AdminUserProfile.tsx?t=1748189786312:104 Debug: Total invoices in collection: 3
+AdminUserProfile.tsx?t=1748189786312:107 Debug: Sample invoice structure: Array(15)
+AdminUserProfile.tsx?t=1748189786312:108 Debug: Sample invoice data: Objectamount: 75appointmentId: "fBXl4msiO2gTnhQnQMiX"clientEmail: "craziesabroad@gmail.com"clientName: "Test User"createdAt: _Timestampnanoseconds: 932000000seconds: 1748180605[[Prototype]]: Objectcurrency: "EUR"description: "Nutrition Consultation - Follow-up"dueDate: _Timestampnanoseconds: 932000000seconds: 1748785405[[Prototype]]: ObjectinvoiceNumber: "INV-1748180605687"paymentUrl: "http://e394ccd4-b3dd-43ba-8feb-deda267050d2-00-3v6n3vit95c2j.spock.replit.dev/pay-invoice/INV-1748180605687"sessionDate: "2025-05-27"sessionType: "Follow-up"status: "pending"stripePaymentIntentId: "pi_3RSepl4PKoyQdwgJ0zUPCmVg"userId: "GHs80OQAuefSw83xsRw505Qpk813"[[Prototype]]: Object
+AdminUserProfile.tsx?t=1748189786312:119 Debug: Invoice query result size: 0
+AdminUserProfile.tsx?t=1748189786312:119 Debug: Invoice query result size: 0
+AdminUserProfile.tsx?t=1748189786312:119 Debug: Invoice query result size: 0
+AdminUserProfile.tsx?t=1748189786312:129 Debug: Found invoices: 0
+AdminUserProfile.tsx:84 Debug: Total appointments in collection: 4
+AdminUserProfile.tsx:103 Debug: Found appointments for user: 0
+AdminUserProfile.tsx:129 Debug: Total invoices in collection: 3
+AdminUserProfile.tsx:148 Debug: Found invoices for user: 0
+ Debug: Total appointments in collection: 4
+ Debug: Found appointments for user: 0
+ Debug: Total invoices in collection: 3
+ Debug: Found invoices for user: 0
+ Debug: Total consent forms in collection: 0
+ Debug: Total pre-evaluation forms in collection: 0
+ Debug: Found health data: No
+
+                
+          
+          
+          
+         Chrome is moving towards a new experience that allows users to choose to browse without third-party cookies.

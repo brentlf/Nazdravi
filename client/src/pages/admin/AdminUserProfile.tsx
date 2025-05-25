@@ -88,11 +88,19 @@ function AdminUserProfile() {
       allDocsSnapshot.forEach(doc => {
         const data = doc.data();
         
+        // Debug each appointment to see the structure
+        if (userAppointments.length === 0) {
+          console.log('Debug: Sample appointment structure:', Object.keys(data));
+          console.log('Debug: Sample appointment data:', data);
+        }
+        
         // Check if this appointment belongs to the user using multiple field checks
         if (data.userId === userId || 
             data.email === user.email || 
             data.clientEmail === user.email ||
-            data.userEmail === user.email) {
+            data.userEmail === user.email ||
+            data.user === user.email ||
+            data.client === user.email) {
           userAppointments.push({
             id: doc.id,
             ...data
