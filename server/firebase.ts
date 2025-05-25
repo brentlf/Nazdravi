@@ -15,6 +15,7 @@ const app = initializeApp({
 });
 
 const db = getFirestore(app);
+db.settings({ ignoreUndefinedProperties: true });
 console.log('✅ Firebase Admin initialized successfully');
 console.log('🗃️ Firestore instance created');
 
