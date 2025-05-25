@@ -368,6 +368,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Simple test route first
+  app.post("/api/test-reissue", (req, res) => {
+    console.log("TEST ROUTE HIT!");
+    res.json({ success: true, message: "Test route working" });
+  });
+
   // Reissue invoice with updated amount
   app.post("/api/invoices/reissue", (req, res) => {
     console.log("=== REISSUE ROUTE HIT ===");

@@ -11,8 +11,16 @@ interface EmailTemplate {
   text?: string;
 }
 
+interface SendEmailParams {
+  to: string;
+  toName?: string;
+  subject: string;
+  html: string;
+  text?: string;
+}
+
 class ResendEmailService {
-  async sendEmail(to: string, toName: string, subject: string, html: string, text?: string): Promise<boolean> {
+  async sendEmail(params: SendEmailParams): Promise<boolean> {
     const RESEND_API_KEY = functions.config().resend.apikey;
     
     if (!RESEND_API_KEY) {
@@ -23,10 +31,10 @@ class ResendEmailService {
     return new Promise((resolve) => {
       const postData = JSON.stringify({
         from: 'Vee Nutrition <info@veenutrition.com>',
-        to: [`${toName} <${to}>`],
-        subject: subject,
-        html: html,
-        text: text || ''
+        to: [`${params.toName || ''} <${params.to}>`],
+        subject: params.subject,
+        html: params.html,
+        text: params.text || ''
       });
 
       const options = {
