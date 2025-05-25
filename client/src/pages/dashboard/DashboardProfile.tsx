@@ -845,23 +845,7 @@ export default function DashboardProfile() {
                   </div>
                 )}
 
-                <div className="space-y-3">
-                  <Label>Notification Preferences</Label>
-                  <div className="space-y-2">
-                    <div className="flex items-center space-x-2">
-                      <input
-                        type="checkbox"
-                        id="emailNotifications"
-                        checked={preferencesForm.watch("emailNotifications")}
-                        onChange={(e) => preferencesForm.setValue("emailNotifications", e.target.checked)}
-                        className="rounded border-gray-300"
-                      />
-                      <Label htmlFor="emailNotifications" className="text-sm">
-                        Email notifications for appointments and updates
-                      </Label>
-                    </div>
-                  </div>
-                </div>
+
 
                 <Button type="submit" disabled={isLoading}>
                   {isLoading ? "Updating..." : "Update Preferences"}

@@ -1,6 +1,5 @@
 import { DashboardOverview } from "@/components/dashboard/DashboardOverview";
 import { PreEvaluationBanner } from "@/components/dashboard/PreEvaluationBanner";
-import { EmailAutomationSection } from "@/components/dashboard/EmailAutomationSection";
 
 export default function DashboardHome() {
   return (
@@ -8,9 +7,6 @@ export default function DashboardHome() {
       <div className="container mx-auto px-4">
         <PreEvaluationBanner />
         <DashboardOverview />
-        <div className="mt-8">
-          <EmailAutomationSection />
-        </div>
       </div>
     </div>
   );

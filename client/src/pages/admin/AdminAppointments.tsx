@@ -49,6 +49,58 @@ export default function AdminAppointments() {
   // Fetch appointments
   const { data: appointments, loading } = useFirestoreCollection<Appointment>("appointments");
 
+  // Calculate status overview for action items
+  const getStatusOverview = () => {
+    if (!appointments) return null;
+    
+    const overview = {
+      pendingInvoices: 0,
+      missingConsentForms: 0,
+      pendingPreEvaluation: 0,
+      lateChanges: 0,
+      noShows: 0,
+      totalAppointments: appointments.length
+    };
+
+    appointments.forEach(appointment => {
+      // Count pending invoices (completed appointments without invoices)
+      if (appointment.status === 'completed' && !appointment.invoiceGenerated) {
+        overview.pendingInvoices++;
+      }
+
+      // Count missing consent forms
+      if (!appointment.consentFormSubmitted) {
+        overview.missingConsentForms++;
+      }
+
+      // Count pending pre-evaluation forms
+      if (!appointment.preEvaluationCompleted && appointment.status !== 'cancelled') {
+        overview.pendingPreEvaluation++;
+      }
+
+      // Count late changes (appointments rescheduled within 4 hours)
+      if (appointment.rescheduleHistory && appointment.rescheduleHistory.length > 0) {
+        const lastReschedule = appointment.rescheduleHistory[appointment.rescheduleHistory.length - 1];
+        const appointmentTime = new Date(`${appointment.date}T${appointment.timeslot}`);
+        const rescheduleTime = new Date(lastReschedule.timestamp);
+        const hoursDifference = (appointmentTime.getTime() - rescheduleTime.getTime()) / (1000 * 60 * 60);
+        
+        if (hoursDifference <= 4) {
+          overview.lateChanges++;
+        }
+      }
+
+      // Count no-shows
+      if (appointment.status === 'no-show') {
+        overview.noShows++;
+      }
+    });
+
+    return overview;
+  };
+
+  const statusOverview = getStatusOverview();
+
   const { update: updateAppointment, loading: actionLoading } = useFirestoreActions("appointments");
 
   // Filter appointments
@@ -325,6 +377,71 @@ export default function AdminAppointments() {
             Review and manage client appointment requests
           </p>
         </div>
+
+        {/* Status Overview Dashboard */}
+        {statusOverview && (
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 mb-8">
+            <Card className="p-4">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm font-medium text-muted-foreground">Pending Invoices</p>
+                  <p className="text-2xl font-bold text-orange-600">{statusOverview.pendingInvoices}</p>
+                </div>
+                <AlertCircle className="h-8 w-8 text-orange-500" />
+              </div>
+            </Card>
+
+            <Card className="p-4">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm font-medium text-muted-foreground">Missing Consent</p>
+                  <p className="text-2xl font-bold text-red-600">{statusOverview.missingConsentForms}</p>
+                </div>
+                <XCircle className="h-8 w-8 text-red-500" />
+              </div>
+            </Card>
+
+            <Card className="p-4">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm font-medium text-muted-foreground">Pre-Evaluation</p>
+                  <p className="text-2xl font-bold text-yellow-600">{statusOverview.pendingPreEvaluation}</p>
+                </div>
+                <Clock className="h-8 w-8 text-yellow-500" />
+              </div>
+            </Card>
+
+            <Card className="p-4">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm font-medium text-muted-foreground">Late Changes</p>
+                  <p className="text-2xl font-bold text-purple-600">{statusOverview.lateChanges}</p>
+                </div>
+                <RotateCcw className="h-8 w-8 text-purple-500" />
+              </div>
+            </Card>
+
+            <Card className="p-4">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm font-medium text-muted-foreground">No Shows</p>
+                  <p className="text-2xl font-bold text-red-600">{statusOverview.noShows}</p>
+                </div>
+                <CalendarX className="h-8 w-8 text-red-500" />
+              </div>
+            </Card>
+
+            <Card className="p-4">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm font-medium text-muted-foreground">Total Appointments</p>
+                  <p className="text-2xl font-bold text-green-600">{statusOverview.totalAppointments}</p>
+                </div>
+                <Calendar className="h-8 w-8 text-green-500" />
+              </div>
+            </Card>
+          </div>
+        )}
 
         {/* Filters */}
         <Card className="mb-8">
