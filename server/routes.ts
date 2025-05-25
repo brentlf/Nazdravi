@@ -361,7 +361,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Working reissue invoice route
+  // Reissue invoice with updated amount
   app.post("/api/invoices/reissue", async (req, res) => {
     console.log("=== REISSUE ROUTE HIT ===");
     console.log("Request body:", req.body);
@@ -369,19 +369,81 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const { originalInvoiceId, newAmount, reason } = req.body;
       
-      if (!originalInvoiceId || !newAmount) {
-        return res.status(400).json({ error: "Missing required parameters" });
+      if (!originalInvoiceId) {
+        console.log("Missing originalInvoiceId");
+        return res.status(400).json({ error: "Missing invoice ID" });
+      }
+      
+      if (!newAmount || typeof newAmount !== 'number') {
+        console.log("Invalid newAmount:", newAmount, typeof newAmount);
+        return res.status(400).json({ error: "Invalid amount" });
       }
 
       console.log("Processing reissue for invoice:", originalInvoiceId, "New amount:", newAmount);
+
+      // Get original invoice from Firebase
+      const originalInvoiceDoc = await db.collection("invoices").doc(originalInvoiceId).get();
+      if (!originalInvoiceDoc.exists) {
+        return res.status(404).json({ error: "Invoice not found" });
+      }
+
+      const originalInvoice = originalInvoiceDoc.data();
       
-      // For now, return success to test the route
-      res.json({ 
-        success: true, 
-        message: "Reissue functionality working",
-        originalInvoiceId,
-        newAmount,
-        reason 
+      // Generate unique identifiers
+      const timestamp = Date.now();
+      const creditNoteNumber = `CN-${timestamp}`;
+      const newInvoiceNumber = `INV-${timestamp}`;
+
+      // Create new Stripe payment intent
+      const paymentIntent = await stripe.paymentIntents.create({
+        amount: Math.round(newAmount * 100),
+        currency: "eur",
+        payment_method_types: ['card', 'ideal'],
+        metadata: {
+          invoiceNumber: newInvoiceNumber,
+          originalInvoiceId: originalInvoiceId,
+          creditNoteNumber: creditNoteNumber,
+          reissueReason: reason || 'Amount adjustment'
+        }
+      });
+
+      // Update original invoice status
+      await db.collection("invoices").doc(originalInvoiceId).update({
+        status: "credited",
+        creditNoteNumber: creditNoteNumber,
+        creditedAt: new Date(),
+        creditReason: reason || 'Amount adjustment',
+        isActive: false
+      });
+
+      // Create new invoice
+      const newInvoiceData = {
+        ...originalInvoice,
+        invoiceNumber: newInvoiceNumber,
+        amount: newAmount,
+        status: "pending",
+        createdAt: new Date(),
+        dueDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
+        stripePaymentIntentId: paymentIntent.id,
+        originalInvoiceId: originalInvoiceId,
+        creditNoteNumber: creditNoteNumber,
+        reissueReason: reason || 'Amount adjustment',
+        originalAmount: originalInvoice.amount,
+        isReissued: true,
+        isActive: true
+      };
+
+      const docRef = await db.collection("invoices").add(newInvoiceData);
+
+      res.json({
+        success: true,
+        invoice: { ...newInvoiceData, id: docRef.id },
+        creditNote: {
+          number: creditNoteNumber,
+          originalInvoiceNumber: originalInvoice.invoiceNumber,
+          amount: originalInvoice.amount
+        },
+        clientSecret: paymentIntent.client_secret
       });
       
     } catch (error) {
@@ -389,21 +451,6 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.status(500).json({ error: "Failed to process reissue" });
     }
   });
-  
-  async function processReissue(req: any, res: any, originalInvoiceId: string, newAmount: number, reason: string) {
-    try {
-
-      console.log("Raw request body:", req.body);
-      console.log("Extracted params:", { originalInvoiceId, newAmount, reason, types: { 
-        originalInvoiceId: typeof originalInvoiceId, 
-        newAmount: typeof newAmount, 
-        reason: typeof reason 
-      }});
-
-      if (!originalInvoiceId) {
-        console.log("Missing originalInvoiceId:", originalInvoiceId);
-        return res.status(400).json({ error: "Missing invoice ID" });
-      }
       
       if (newAmount === undefined || newAmount === null) {
         console.log("Missing newAmount:", { newAmount, type: typeof newAmount });

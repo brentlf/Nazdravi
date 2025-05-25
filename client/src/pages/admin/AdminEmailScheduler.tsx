@@ -155,6 +155,134 @@ export default function AdminEmailScheduler() {
     }
   };
 
+  const handleTestInvoiceEmail = async () => {
+    setSending(true);
+    try {
+      await emailService.sendInvoiceGenerated(
+        "info@veenutrition.com",
+        "Vee Nutrition Team",
+        95.00,
+        "INV-TEST123"
+      );
+      
+      toast({
+        title: "Test invoice email sent!",
+        description: "Check info@veenutrition.com inbox to verify the invoice format.",
+      });
+    } catch (error) {
+      toast({
+        title: "Test email failed",
+        description: "Please check your email configuration.",
+        variant: "destructive",
+      });
+    } finally {
+      setSending(false);
+    }
+  };
+
+  const handleTestPaymentReminderEmail = async () => {
+    setSending(true);
+    try {
+      await emailService.sendPaymentReminder(
+        "info@veenutrition.com",
+        "Vee Nutrition Team",
+        95.00,
+        "INV-TEST123",
+        "https://payment.veenutrition.com/test"
+      );
+      
+      toast({
+        title: "Test payment reminder sent!",
+        description: "Check info@veenutrition.com inbox to verify the payment reminder format.",
+      });
+    } catch (error) {
+      toast({
+        title: "Test email failed",
+        description: "Please check your email configuration.",
+        variant: "destructive",
+      });
+    } finally {
+      setSending(false);
+    }
+  };
+
+  const handleTestLateRescheduleEmail = async () => {
+    setSending(true);
+    try {
+      await emailService.sendLateRescheduleNotice(
+        "info@veenutrition.com",
+        "Vee Nutrition Team",
+        tomorrow.toLocaleDateString(),
+        "10:00"
+      );
+      
+      toast({
+        title: "Test late reschedule notice sent!",
+        description: "Check info@veenutrition.com inbox to verify the late reschedule format.",
+      });
+    } catch (error) {
+      toast({
+        title: "Test email failed",
+        description: "Please check your email configuration.",
+        variant: "destructive",
+      });
+    } finally {
+      setSending(false);
+    }
+  };
+
+  const handleTestNoShowEmail = async () => {
+    setSending(true);
+    try {
+      await emailService.sendNoShowNotice(
+        "info@veenutrition.com",
+        "Vee Nutrition Team",
+        tomorrow.toLocaleDateString(),
+        "10:00",
+        47.50
+      );
+      
+      toast({
+        title: "Test no-show notice sent!",
+        description: "Check info@veenutrition.com inbox to verify the no-show format.",
+      });
+    } catch (error) {
+      toast({
+        title: "Test email failed",
+        description: "Please check your email configuration.",
+        variant: "destructive",
+      });
+    } finally {
+      setSending(false);
+    }
+  };
+
+  const handleTestCancellationEmail = async () => {
+    setSending(true);
+    try {
+      await emailService.sendAppointmentCancelled(
+        "info@veenutrition.com",
+        "Vee Nutrition Team",
+        tomorrow.toLocaleDateString(),
+        "10:00",
+        "Schedule conflict - please reschedule"
+      );
+      
+      toast({
+        title: "Test cancellation email sent!",
+        description: "Check info@veenutrition.com inbox to verify the cancellation format.",
+      });
+    } catch (error) {
+      toast({
+        title: "Test email failed",
+        description: "Please check your email configuration.",
+        variant: "destructive",
+      });
+    } finally {
+      setSending(false);
+    }
+  };
+
   return (
     <div className="min-h-screen py-20 bg-gray-50 dark:bg-gray-900">
       <div className="container mx-auto px-4 max-w-4xl">
@@ -337,7 +465,25 @@ export default function AdminEmailScheduler() {
                   </div>
                   <div className="flex items-center gap-2">
                     <Badge className="bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300">Auto</Badge>
-                    <Button variant="outline" size="sm" disabled={sending}>
+                    <Button variant="outline" size="sm" onClick={handleTestInvoiceEmail} disabled={sending}>
+                      Test
+                    </Button>
+                  </div>
+                </div>
+
+                <div className="flex items-center justify-between p-4 border rounded-lg">
+                  <div className="flex items-center gap-3">
+                    <CreditCard className="w-5 h-5 text-blue-600" />
+                    <div>
+                      <h4 className="font-medium">Payment Reminder</h4>
+                      <p className="text-sm text-muted-foreground">
+                        Manual reminder sent for unpaid invoices with payment link
+                      </p>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <Badge className="bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300">Manual</Badge>
+                    <Button variant="outline" size="sm" onClick={handleTestPaymentReminderEmail} disabled={sending}>
                       Test
                     </Button>
                   </div>
