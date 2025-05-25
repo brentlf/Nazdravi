@@ -208,19 +208,22 @@ function AdminUserProfile() {
   }
 
   return (
-    <div className="space-y-6">
-      <div className="flex items-center gap-4">
-        <Link href="/admin/users">
-          <Button variant="outline" size="sm">
-            <ArrowLeft className="h-4 w-4 mr-2" />
-            Back to Users
+    <div className="min-h-screen py-20 bg-gray-50 dark:bg-gray-900">
+      <div className="container mx-auto px-4">
+        <div className="mb-8">
+          <Button variant="ghost" size="sm" className="mb-4" asChild>
+            <Link href="/admin/users">
+              <ArrowLeft className="mr-2 h-4 w-4" />
+              Back to Users
+            </Link>
           </Button>
-        </Link>
-        <div>
-          <h1 className="text-2xl font-bold">{user.name}</h1>
-          <p className="text-muted-foreground">{user.email}</p>
+          <div className="flex items-center gap-4">
+            <div>
+              <h1 className="text-3xl font-bold mb-2">{user.name}</h1>
+              <p className="text-muted-foreground">{user.email}</p>
+            </div>
+          </div>
         </div>
-      </div>
 
       <Tabs defaultValue="overview" className="space-y-6">
         <TabsList>
@@ -456,6 +459,7 @@ function AdminUserProfile() {
           </Card>
         </TabsContent>
       </Tabs>
+      </div>
     </div>
   );
 }
