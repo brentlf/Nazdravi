@@ -698,7 +698,7 @@ export default function AdminEmailScheduler() {
                   </div>
                   <div className="flex items-center gap-2">
                     <Badge className="bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300">Auto</Badge>
-                    <Button variant="outline" size="sm" disabled={sending}>
+                    <Button variant="outline" size="sm" onClick={handleTestAdminNewAppointment} disabled={sending}>
                       Test
                     </Button>
                   </div>
@@ -716,7 +716,7 @@ export default function AdminEmailScheduler() {
                   </div>
                   <div className="flex items-center gap-2">
                     <Badge className="bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300">Auto</Badge>
-                    <Button variant="outline" size="sm" disabled={sending}>
+                    <Button variant="outline" size="sm" onClick={handleTestAdminNewAppointment} disabled={sending}>
                       Test
                     </Button>
                   </div>
@@ -734,7 +734,7 @@ export default function AdminEmailScheduler() {
                   </div>
                   <div className="flex items-center gap-2">
                     <Badge className="bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300">Auto</Badge>
-                    <Button variant="outline" size="sm" disabled={sending}>
+                    <Button variant="outline" size="sm" onClick={handleTestAdminHealthUpdate} disabled={sending}>
                       Test
                     </Button>
                   </div>
@@ -753,7 +753,7 @@ export default function AdminEmailScheduler() {
                   </div>
                   <div className="flex items-center gap-2">
                     <Badge className="bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300">Auto</Badge>
-                    <Button variant="outline" size="sm" disabled={sending}>
+                    <Button variant="outline" size="sm" onClick={handleTestAdminPaymentReceived} disabled={sending}>
                       Test
                     </Button>
                   </div>
