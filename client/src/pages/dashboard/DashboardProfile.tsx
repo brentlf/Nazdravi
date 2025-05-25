@@ -13,7 +13,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { doc, getDoc, setDoc, addDoc, collection, query, where, orderBy, limit, getDocs } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { User, Lock, Heart, Globe, Mail, Phone } from "lucide-react";
+import { User, Lock, Heart, Globe, Mail, Phone, Crown } from "lucide-react";
 import { emailService } from "@/lib/emailService";
 
 // Profile update schema
@@ -64,6 +64,7 @@ export default function DashboardProfile() {
 
   const [healthAssessment, setHealthAssessment] = useState<any>(null);
   const [consentRecord, setConsentRecord] = useState<any>(null);
+  const [currentUserData, setCurrentUserData] = useState<any>(null);
 
   // Load user data
   useEffect(() => {
@@ -140,8 +141,25 @@ export default function DashboardProfile() {
   // Update form when user data loads
   useEffect(() => {
     if (user) {
-      preferencesForm.setValue("servicePlan", user.servicePlan || "pay-as-you-go");
-      preferencesForm.setValue("emailNotifications", user.emailNotifications ?? true);
+      // Fetch fresh user data from Firebase to get the current service plan
+      const fetchUserData = async () => {
+        try {
+          const userDoc = await getDoc(doc(db, "users", user.uid));
+          if (userDoc.exists()) {
+            const userData = userDoc.data();
+            setCurrentUserData(userData);
+            preferencesForm.setValue("servicePlan", userData.servicePlan || "pay-as-you-go");
+            preferencesForm.setValue("emailNotifications", userData.emailNotifications ?? true);
+          }
+        } catch (error) {
+          console.error("Error fetching user data:", error);
+          // Fallback to user context data
+          preferencesForm.setValue("servicePlan", user.servicePlan || "pay-as-you-go");
+          preferencesForm.setValue("emailNotifications", user.emailNotifications ?? true);
+        }
+      };
+      
+      fetchUserData();
     }
   }, [user, preferencesForm]);
 
@@ -608,7 +626,7 @@ export default function DashboardProfile() {
                 </div>
 
                 {/* Program Status Display */}
-                {user?.servicePlan === "complete-program" && (
+                {currentUserData?.servicePlan === "complete-program" && (
                   <div className="p-4 bg-purple-50 dark:bg-purple-900/20 border border-purple-200 dark:border-purple-800 rounded-lg">
                     <h4 className="font-medium text-purple-900 dark:text-purple-100 mb-3 flex items-center gap-2">
                       <Crown className="w-4 h-4" />
