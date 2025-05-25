@@ -341,7 +341,7 @@ export const onRescheduleRequest = functions.firestore
       
       // Send to admin email
       await admin.firestore().collection('mail').add({
-        to: 'info@veenutrition.com',
+        to: 'admin@veenutrition.com',
         toName: 'Vee Nutrition Admin',
         subject: template.subject,
         html: template.html,
