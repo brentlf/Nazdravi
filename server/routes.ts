@@ -253,39 +253,32 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   // Admin notification email routes
   app.post("/api/emails/admin/new-appointment", async (req, res) => {
-    console.log('🚨 URGENT DEBUG: Admin email route HIT!');
-    console.log('🚨 URGENT DEBUG: Request body:', req.body);
-    
     try {
-      const { clientName, clientEmail, appointmentType, date, time } = req.body;
+      const { name, email, type, date, timeslot } = req.body;
       
-      if (!clientName || !clientEmail) {
-        console.log('❌ DEBUG: Missing required fields');
-        return res.status(400).json({ success: false, error: "Missing required fields: clientName and clientEmail" });
+      if (!name || !email) {
+        return res.status(400).json({ success: false, error: "Missing required fields: name and email" });
       }
       
-      console.log('🔍 DEBUG: Calling sendAdminNewAppointment...');
-      
-      // Send admin email directly using mailerLiteService
-      const success = await mailerLiteService.sendAdminNewAppointment({
-        clientName,
-        clientEmail,
-        appointmentType: appointmentType || 'Consultation',
-        date: date || '',
-        time: time || ''
+      // Queue email in Firebase with correct format
+      const docRef = await db.collection("mail").add({
+        to: 'admin@veenutrition.com',
+        toName: 'Admin Team',
+        type: "admin-new-appointment",
+        status: "pending",
+        data: { 
+          name: name || '',
+          email: email || '',
+          appointmentType: type || 'Consultation',
+          date: date || '',
+          time: timeslot || ''
+        },
+        createdAt: new Date()
       });
 
-      console.log('🔍 DEBUG: sendAdminNewAppointment result:', success);
-
-      if (success) {
-        console.log('✅ DEBUG: Admin new appointment notification sent successfully');
-        res.json({ success: true, message: "Admin new appointment notification sent successfully" });
-      } else {
-        console.log('❌ DEBUG: Failed to send admin notification email');
-        res.status(500).json({ success: false, error: "Failed to send admin notification email" });
-      }
+      res.json({ success: true, message: "Admin new appointment notification queued", docId: docRef.id });
     } catch (error: any) {
-      console.error("❌ DEBUG: Error sending admin new appointment notification:", error);
+      console.error("Error queuing admin new appointment notification:", error);
       res.status(500).json({ success: false, error: error.message });
     }
   });
@@ -298,16 +291,23 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(400).json({ success: false, error: "Missing required fields: clientName and clientEmail" });
       }
       
-      // Send admin email directly using mailerLiteService
-      const success = await mailerLiteService.sendAdminMedicalUpdate(clientName, clientEmail);
+      // Queue email in Firebase with correct format
+      const docRef = await db.collection("mail").add({
+        to: 'admin@veenutrition.com',
+        toName: 'Admin Team',
+        type: "admin-health-update",
+        status: "pending",
+        data: { 
+          clientName: clientName || '',
+          clientEmail: clientEmail || '',
+          updateType: updateType || 'Health Info Update'
+        },
+        createdAt: new Date()
+      });
 
-      if (success) {
-        res.json({ success: true, message: "Admin health update notification sent successfully" });
-      } else {
-        res.status(500).json({ success: false, error: "Failed to send admin notification email" });
-      }
+      res.json({ success: true, message: "Admin health update notification queued", docId: docRef.id });
     } catch (error: any) {
-      console.error("Error sending admin health update notification:", error);
+      console.error("Error queuing admin health update notification:", error);
       res.status(500).json({ success: false, error: error.message });
     }
   });
@@ -320,16 +320,24 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(400).json({ success: false, error: "Missing required field: clientName" });
       }
       
-      // Send admin email directly using mailerLiteService
-      const success = await mailerLiteService.sendAdminInvoicePaid(clientName, amount || 0, invoiceId || '');
+      // Queue email in Firebase with correct format
+      const docRef = await db.collection("mail").add({
+        to: 'admin@veenutrition.com',
+        toName: 'Admin Team',
+        type: "admin-payment-received",
+        status: "pending",
+        data: { 
+          clientName: clientName || '',
+          amount: amount || 0,
+          invoiceId: invoiceId || '',
+          paymentMethod: paymentMethod || 'Unknown'
+        },
+        createdAt: new Date()
+      });
 
-      if (success) {
-        res.json({ success: true, message: "Admin payment received notification sent successfully" });
-      } else {
-        res.status(500).json({ success: false, error: "Failed to send admin notification email" });
-      }
+      res.json({ success: true, message: "Admin payment received notification queued", docId: docRef.id });
     } catch (error: any) {
-      console.error("Error sending admin payment received notification:", error);
+      console.error("Error queuing admin payment received notification:", error);
       res.status(500).json({ success: false, error: error.message });
     }
   });
@@ -342,16 +350,23 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(400).json({ success: false, error: "Missing required fields: clientName and planType" });
       }
       
-      // Send admin email directly using mailerLiteService
-      const success = await mailerLiteService.sendAdminPlanUpgrade(clientName, planType);
+      // Queue email in Firebase with correct format
+      const docRef = await db.collection("mail").add({
+        to: 'admin@veenutrition.com',
+        toName: 'Admin Team',
+        type: "admin-plan-upgrade",
+        status: "pending",
+        data: { 
+          clientName: clientName || '',
+          planType: planType || '',
+          previousPlan: previousPlan || 'Unknown'
+        },
+        createdAt: new Date()
+      });
 
-      if (success) {
-        res.json({ success: true, message: "Admin plan upgrade notification sent successfully" });
-      } else {
-        res.status(500).json({ success: false, error: "Failed to send admin notification email" });
-      }
+      res.json({ success: true, message: "Admin plan upgrade notification queued", docId: docRef.id });
     } catch (error: any) {
-      console.error("Error sending admin plan upgrade notification:", error);
+      console.error("Error queuing admin plan upgrade notification:", error);
       res.status(500).json({ success: false, error: error.message });
     }
   });
@@ -364,22 +379,24 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(400).json({ success: false, error: "Missing required fields: clientName and clientEmail" });
       }
       
-      // For now, send a simple admin notification (can be enhanced later)
-      const success = await mailerLiteService.sendEmail({
-        to: "info@veenutrition.com",
-        toName: "Admin Team",
-        subject: `Client Message - ${clientName} (${urgency || 'Medium'} Priority)`,
-        html: `<p>Client ${clientName} (${clientEmail}) sent a ${messageType || 'general'} message with ${urgency || 'medium'} priority.</p>`,
-        text: `Client ${clientName} (${clientEmail}) sent a ${messageType || 'general'} message with ${urgency || 'medium'} priority.`
+      // Queue email in Firebase with correct format
+      const docRef = await db.collection("mail").add({
+        to: 'admin@veenutrition.com',
+        toName: 'Admin Team',
+        type: "admin-client-message",
+        status: "pending",
+        data: { 
+          clientName: clientName || '',
+          clientEmail: clientEmail || '',
+          messageType: messageType || 'General',
+          urgency: urgency || 'Medium'
+        },
+        createdAt: new Date()
       });
 
-      if (success) {
-        res.json({ success: true, message: "Admin client message notification sent successfully" });
-      } else {
-        res.status(500).json({ success: false, error: "Failed to send admin notification email" });
-      }
+      res.json({ success: true, message: "Admin client message notification queued", docId: docRef.id });
     } catch (error: any) {
-      console.error("Error sending admin client message notification:", error);
+      console.error("Error queuing admin client message notification:", error);
       res.status(500).json({ success: false, error: error.message });
     }
   });
@@ -392,23 +409,25 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(400).json({ success: false, error: "Missing required field: clientName" });
       }
       
-      // Send admin email directly using mailerLiteService
-      const success = await mailerLiteService.sendRescheduleRequest(
-        "info@veenutrition.com", // Admin email for testing
-        clientName,
-        clientEmail || '',
-        originalDate || '',
-        originalTime || '',
-        reason
-      );
+      // Queue email in Firebase with correct format
+      const docRef = await db.collection("mail").add({
+        to: 'admin@veenutrition.com',
+        toName: 'Admin Team',
+        type: "admin-reschedule-request",
+        status: "pending",
+        data: { 
+          clientName: clientName || '',
+          clientEmail: clientEmail || '',
+          originalDate: originalDate || '',
+          originalTime: originalTime || '',
+          reason: reason || 'No reason provided'
+        },
+        createdAt: new Date()
+      });
 
-      if (success) {
-        res.json({ success: true, message: "Admin reschedule request notification sent successfully" });
-      } else {
-        res.status(500).json({ success: false, error: "Failed to send admin notification email" });
-      }
+      res.json({ success: true, message: "Admin reschedule request notification queued", docId: docRef.id });
     } catch (error: any) {
-      console.error("Error sending admin reschedule request notification:", error);
+      console.error("Error queuing admin reschedule request notification:", error);
       res.status(500).json({ success: false, error: error.message });
     }
   });
