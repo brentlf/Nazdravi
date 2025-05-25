@@ -384,6 +384,36 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  app.post("/api/emails/admin/reschedule-request", async (req, res) => {
+    try {
+      const { clientName, clientEmail, originalDate, originalTime, reason } = req.body;
+      
+      if (!clientName) {
+        return res.status(400).json({ success: false, error: "Missing required field: clientName" });
+      }
+      
+      const docRef = await db.collection("mail").add({
+        to: "info@veenutrition.com", // Test emails go to info@ for verification
+        toName: "Admin Team",
+        type: "admin-reschedule-request",
+        status: "pending",
+        data: {
+          clientName,
+          clientEmail: clientEmail || '',
+          originalDate: originalDate || '',
+          originalTime: originalTime || '',
+          reason: reason || 'No reason provided'
+        },
+        createdAt: new Date()
+      });
+
+      res.json({ success: true, message: "Admin reschedule request notification queued", docId: docRef.id });
+    } catch (error: any) {
+      console.error("Error queuing admin reschedule request notification:", error);
+      res.status(500).json({ success: false, error: error.message });
+    }
+  });
+
   const httpServer = createServer(app);
   return httpServer;
 }

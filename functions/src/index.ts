@@ -979,6 +979,15 @@ export const processMailQueue = functions.firestore
             mailData.data.urgency
           );
           break;
+        case 'admin-reschedule-request':
+          template = emailService.getRescheduleRequestTemplate(
+            mailData.data.clientName,
+            mailData.data.clientEmail,
+            mailData.data.originalDate,
+            mailData.data.originalTime,
+            mailData.data.reason
+          );
+          break;
         default:
           // Use existing data if template type not found
           template = {
