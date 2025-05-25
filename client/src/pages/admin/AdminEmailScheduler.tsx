@@ -134,10 +134,10 @@ export default function AdminEmailScheduler() {
       await emailService.sendRescheduleRequest(
         "info@veenutrition.com",
         "Vee Nutrition Team",
-        "info@veenutrition.com",
         tomorrow.toLocaleDateString(),
         "10:00",
-        "Schedule conflict"
+        "28/05/2025",
+        "11:00"
       );
       
       toast({

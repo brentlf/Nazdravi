@@ -43,21 +43,21 @@ class EmailService implements EmailNotificationService {
   }
 
   async sendRescheduleRequest(
-    adminEmail: string,
-    clientName: string,
-    clientEmail: string,
+    email: string,
+    name: string,
     originalDate: string,
     originalTime: string,
-    reason?: string
+    newDate: string,
+    newTime: string
   ): Promise<void> {
     try {
       await apiRequest('POST', '/api/emails/reschedule-request', {
-        adminEmail,
-        clientName,
-        clientEmail,
+        email,
+        name,
         originalDate,
         originalTime,
-        reason,
+        newDate,
+        newTime,
       });
       console.log('Reschedule request email sent successfully');
     } catch (error) {

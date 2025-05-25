@@ -64,6 +64,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const { email, name, originalDate, originalTime, newDate, newTime } = req.body;
       
+      // Validate required fields
+      if (!email || !name) {
+        return res.status(400).json({ success: false, error: "Missing required fields: email and name" });
+      }
+      
       // Queue reschedule confirmation email to client
       const docRef = await db.collection("mail").add({
         to: email, // Send to client
@@ -72,10 +77,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
         status: "pending",
         data: { 
           name, 
-          originalDate, 
-          originalTime, 
-          newDate, 
-          newTime 
+          originalDate: originalDate || '', 
+          originalTime: originalTime || '', 
+          newDate: newDate || '', 
+          newTime: newTime || '' 
         },
         createdAt: new Date()
       });
@@ -177,17 +182,26 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const { email, name, amount, invoiceId } = req.body;
       
+      // Validate required fields
+      if (!email || !name) {
+        return res.status(400).json({ success: false, error: "Missing required fields: email and name" });
+      }
+      
       // Queue email in Firebase with correct format
-      await db.collection("mail").add({
+      const docRef = await db.collection("mail").add({
         to: email,
         toName: name,
         type: "invoice-generated",
         status: "pending",
-        data: { name, amount, invoiceId },
+        data: { 
+          name, 
+          amount: amount || 0, 
+          invoiceId: invoiceId || '' 
+        },
         createdAt: new Date()
       });
 
-      res.json({ success: true, message: "Invoice generated email queued" });
+      res.json({ success: true, message: "Invoice generated email queued", docId: docRef.id });
     } catch (error: any) {
       console.error("Error queuing invoice generated email:", error);
       res.status(500).json({ success: false, error: error.message });
@@ -198,7 +212,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const { email, name, amount, invoiceNumber, paymentUrl } = req.body;
       
-      console.log("Attempting to write payment reminder to Firebase:", { email, name, amount, invoiceNumber, paymentUrl });
+      // Validate required fields
+      if (!email || !name) {
+        return res.status(400).json({ success: false, error: "Missing required fields: email and name" });
+      }
       
       // Queue email in Firebase with correct format for processMailQueue function
       const docRef = await db.collection("mail").add({
@@ -206,13 +223,14 @@ export async function registerRoutes(app: Express): Promise<Server> {
         toName: name,
         type: "payment-reminder",
         status: "pending",
-        amount: amount,
-        invoiceNumber: invoiceNumber,
-        paymentUrl: paymentUrl,
+        data: {
+          name,
+          amount: amount || 0,
+          invoiceNumber: invoiceNumber || '',
+          paymentUrl: paymentUrl || ''
+        },
         createdAt: new Date()
       });
-      
-      console.log("Successfully wrote payment reminder to Firebase with doc ID:", docRef.id);
 
       res.json({ success: true, message: "Payment reminder email queued", docId: docRef.id });
     } catch (error: any) {
