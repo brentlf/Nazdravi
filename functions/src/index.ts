@@ -747,7 +747,7 @@ const emailService = new ResendEmailService();
 // 1. New User Account Created
 export const onUserCreated = functions.firestore
   .document('users/{userId}')
-  .onCreate(async (snap, context) => {
+  .onCreate(async (snap: any, context: any) => {
     const userData = snap.data();
     const name = userData.name || userData.displayName || userData.email;
     
@@ -771,7 +771,7 @@ export const onUserCreated = functions.firestore
 // 2. Appointment Confirmed
 export const onAppointmentConfirmed = functions.firestore
   .document('appointments/{appointmentId}')
-  .onUpdate(async (change, context) => {
+  .onUpdate(async (change: any, context: any) => {
     const before = change.before.data();
     const after = change.after.data();
     
@@ -803,7 +803,7 @@ export const onAppointmentConfirmed = functions.firestore
 // 3. New Appointment Created - Admin Notification
 export const onAppointmentCreated = functions.firestore
   .document('appointments/{appointmentId}')
-  .onCreate(async (snap, context) => {
+  .onCreate(async (snap: any, context: any) => {
     const appointmentData = snap.data();
     
     console.log('New appointment created:', appointmentData.clientEmail);
@@ -828,7 +828,7 @@ export const onAppointmentCreated = functions.firestore
 // 4. Reschedule Request
 export const onRescheduleRequest = functions.firestore
   .document('appointments/{appointmentId}')
-  .onUpdate(async (change, context) => {
+  .onUpdate(async (change: any, context: any) => {
     const before = change.before.data();
     const after = change.after.data();
     
@@ -861,7 +861,7 @@ export const onRescheduleRequest = functions.firestore
 // 4. Process Mail Queue - Updated for admin email support
 export const processMailQueue = functions.firestore
   .document('mail/{mailId}')
-  .onCreate(async (snap, context) => {
+  .onCreate(async (snap: any, context: any) => {
     const mailData = snap.data();
     
     if (mailData.status !== 'pending') {
