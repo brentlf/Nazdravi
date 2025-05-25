@@ -23,6 +23,12 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+import {
   Table,
   TableBody,
   TableCell,
@@ -110,21 +116,42 @@ export default function AdminAppointments() {
     // Invoice needed (completed appointments without invoices)
     if (appointment.status === 'done' && !appointment.invoiceGenerated) {
       icons.push(
-        <Euro key="invoice" className="w-4 h-4 text-orange-500" title="Invoice needed" />
+        <Tooltip key="invoice">
+          <TooltipTrigger>
+            <Euro className="w-4 h-4 text-orange-500" />
+          </TooltipTrigger>
+          <TooltipContent>
+            <p>Invoice needed</p>
+          </TooltipContent>
+        </Tooltip>
       );
     }
 
     // Missing consent form
     if (!appointment.consentFormSubmitted) {
       icons.push(
-        <FileText key="consent" className="w-4 h-4 text-red-500" title="Consent form missing" />
+        <Tooltip key="consent">
+          <TooltipTrigger>
+            <FileText className="w-4 h-4 text-red-500" />
+          </TooltipTrigger>
+          <TooltipContent>
+            <p>Consent form missing</p>
+          </TooltipContent>
+        </Tooltip>
       );
     }
 
     // Pre-evaluation pending
     if (!appointment.preEvaluationCompleted && appointment.status !== 'cancelled') {
       icons.push(
-        <ClipboardList key="pre-eval" className="w-4 h-4 text-yellow-500" title="Pre-evaluation pending" />
+        <Tooltip key="pre-eval">
+          <TooltipTrigger>
+            <ClipboardList className="w-4 h-4 text-yellow-500" />
+          </TooltipTrigger>
+          <TooltipContent>
+            <p>Pre-evaluation pending</p>
+          </TooltipContent>
+        </Tooltip>
       );
     }
 
@@ -137,7 +164,14 @@ export default function AdminAppointments() {
       
       if (hoursDifference <= 4) {
         icons.push(
-          <RotateCcw key="late-change" className="w-4 h-4 text-purple-500" title="Late reschedule" />
+          <Tooltip key="late-change">
+            <TooltipTrigger>
+              <RotateCcw className="w-4 h-4 text-purple-500" />
+            </TooltipTrigger>
+            <TooltipContent>
+              <p>Late reschedule</p>
+            </TooltipContent>
+          </Tooltip>
         );
       }
     }
@@ -145,7 +179,14 @@ export default function AdminAppointments() {
     // No-show
     if (appointment.status === 'no-show') {
       icons.push(
-        <CalendarX key="no-show" className="w-4 h-4 text-red-500" title="No-show" />
+        <Tooltip key="no-show">
+          <TooltipTrigger>
+            <CalendarX className="w-4 h-4 text-red-500" />
+          </TooltipTrigger>
+          <TooltipContent>
+            <p>No-show</p>
+          </TooltipContent>
+        </Tooltip>
       );
     }
 
@@ -162,7 +203,14 @@ export default function AdminAppointments() {
     // Confirmation email (sent when appointment is confirmed)
     if (appointment.status === 'confirmed' || appointment.status === 'done') {
       icons.push(
-        <CheckCircle key="confirm" className="w-4 h-4 text-green-500" title="Confirmation sent" />
+        <Tooltip key="confirm">
+          <TooltipTrigger>
+            <CheckCircle className="w-4 h-4 text-green-500" />
+          </TooltipTrigger>
+          <TooltipContent>
+            <p>Confirmation sent</p>
+          </TooltipContent>
+        </Tooltip>
       );
     }
 
@@ -174,7 +222,14 @@ export default function AdminAppointments() {
       
       if (hoursDiff <= 24) {
         icons.push(
-          <Clock key="reminder" className="w-4 h-4 text-blue-500" title="Reminder sent" />
+          <Tooltip key="reminder">
+            <TooltipTrigger>
+              <Clock className="w-4 h-4 text-blue-500" />
+            </TooltipTrigger>
+            <TooltipContent>
+              <p>Reminder sent</p>
+            </TooltipContent>
+          </Tooltip>
         );
       }
     }
@@ -182,21 +237,42 @@ export default function AdminAppointments() {
     // Invoice email (sent after completion)
     if (appointment.status === 'done' && appointment.invoiceGenerated) {
       icons.push(
-        <Euro key="invoice-email" className="w-4 h-4 text-orange-500" title="Invoice sent" />
+        <Tooltip key="invoice-email">
+          <TooltipTrigger>
+            <Euro className="w-4 h-4 text-orange-500" />
+          </TooltipTrigger>
+          <TooltipContent>
+            <p>Invoice sent</p>
+          </TooltipContent>
+        </Tooltip>
       );
     }
 
     // Reschedule notification
     if (appointment.rescheduleHistory && appointment.rescheduleHistory.length > 0) {
       icons.push(
-        <RotateCcw key="reschedule-email" className="w-4 h-4 text-purple-500" title="Reschedule notice sent" />
+        <Tooltip key="reschedule-email">
+          <TooltipTrigger>
+            <RotateCcw className="w-4 h-4 text-purple-500" />
+          </TooltipTrigger>
+          <TooltipContent>
+            <p>Reschedule notice sent</p>
+          </TooltipContent>
+        </Tooltip>
       );
     }
 
     // Cancellation email
     if (appointment.status === 'cancelled') {
       icons.push(
-        <XCircle key="cancel-email" className="w-4 h-4 text-red-500" title="Cancellation sent" />
+        <Tooltip key="cancel-email">
+          <TooltipTrigger>
+            <XCircle className="w-4 h-4 text-red-500" />
+          </TooltipTrigger>
+          <TooltipContent>
+            <p>Cancellation sent</p>
+          </TooltipContent>
+        </Tooltip>
       );
     }
 
@@ -645,22 +721,26 @@ export default function AdminAppointments() {
                         </div>
                       </TableCell>
                       <TableCell>
-                        <div className="flex items-center space-x-1">
-                          {getActionItemIcons(appointment).length > 0 ? (
-                            getActionItemIcons(appointment)
-                          ) : (
-                            <span className="text-xs text-muted-foreground">-</span>
-                          )}
-                        </div>
+                        <TooltipProvider>
+                          <div className="flex items-center space-x-1">
+                            {getActionItemIcons(appointment).length > 0 ? (
+                              getActionItemIcons(appointment)
+                            ) : (
+                              <span className="text-xs text-muted-foreground">-</span>
+                            )}
+                          </div>
+                        </TooltipProvider>
                       </TableCell>
                       <TableCell>
-                        <div className="flex items-center space-x-1">
-                          {getEmailHistoryIcons(appointment).length > 0 ? (
-                            getEmailHistoryIcons(appointment)
-                          ) : (
-                            <span className="text-xs text-muted-foreground">-</span>
-                          )}
-                        </div>
+                        <TooltipProvider>
+                          <div className="flex items-center space-x-1">
+                            {getEmailHistoryIcons(appointment).length > 0 ? (
+                              getEmailHistoryIcons(appointment)
+                            ) : (
+                              <span className="text-xs text-muted-foreground">-</span>
+                            )}
+                          </div>
+                        </TooltipProvider>
                       </TableCell>
                       <TableCell>
                         <span className="text-sm text-muted-foreground">
