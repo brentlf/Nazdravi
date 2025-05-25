@@ -462,6 +462,77 @@ export default function AdminAppointments() {
     setIsEditingAppointment(true);
   };
 
+  const handleNoShow = async (appointment: Appointment) => {
+    setActionLoading(true);
+    try {
+      // Calculate 50% penalty of original appointment cost
+      const basePrice = appointment.type === "Initial" ? 75 : 50; // EUR pricing
+      const penaltyAmount = Math.round(basePrice * 0.5);
+
+      // Update appointment status to cancelled (since no-show means missed)
+      await updateAppointment(appointment.id!, { 
+        status: "cancelled",
+        noShowPenalty: penaltyAmount,
+        noShowDate: new Date().toISOString()
+      });
+
+      // Create penalty invoice
+      const invoiceData = {
+        userId: appointment.email, // Using email as identifier
+        clientName: appointment.name,
+        clientEmail: appointment.email,
+        servicePlan: "pay-as-you-go", // No-show penalties are always pay-as-you-go
+        items: [{
+          description: `No-Show Penalty - ${appointment.type} Consultation`,
+          amount: penaltyAmount,
+          type: "penalty" as const,
+          details: `Missed appointment on ${appointment.date} at ${appointment.timeslot}`
+        }],
+        totalAmount: penaltyAmount,
+        currency: "EUR",
+        dueDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000), // 7 days from now
+        appointmentId: appointment.id!,
+        invoiceType: "penalty" as const
+      };
+
+      // Send invoice creation request
+      await fetch("/api/invoices", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(invoiceData)
+      });
+
+      // Send no-show penalty email to client
+      await fetch("/api/emails/no-show-notice", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          email: appointment.email,
+          name: appointment.name,
+          date: new Date(appointment.date).toLocaleDateString(),
+          time: appointment.timeslot,
+          penaltyAmount: penaltyAmount
+        })
+      });
+
+      toast({
+        title: "No-show processed",
+        description: `${appointment.name} has been marked as no-show. Penalty invoice (€${penaltyAmount}) created and notification sent.`,
+      });
+
+      setSelectedAppointment(null);
+    } catch (error) {
+      console.error("No-show processing error:", error);
+      toast({
+        title: "Failed to process no-show",
+        description: "Please try again or check the system logs.",
+        variant: "destructive",
+      });
+    } finally {
+      setActionLoading(false);
+    }
+  };
+
   const getStatusIcon = (status: string) => {
     switch (status) {
       case "pending":
@@ -889,6 +960,15 @@ export default function AdminAppointments() {
                                   >
                                     <RotateCcw className="w-4 h-4 mr-2" />
                                     {actionLoading ? "Processing..." : "Cancel & Reschedule"}
+                                  </Button>
+                                  <Button
+                                    variant="outline"
+                                    onClick={() => handleNoShow(selectedAppointment)}
+                                    disabled={actionLoading}
+                                    className="bg-red-800 hover:bg-red-900 text-white"
+                                  >
+                                    <XCircle className="w-4 h-4 mr-2" />
+                                    {actionLoading ? "Processing..." : "Mark No-Show"}
                                   </Button>
                                   <Button
                                     onClick={() => handleStatusChange(selectedAppointment.id!, "done")}

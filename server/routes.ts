@@ -377,6 +377,75 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // No-show penalty notification email
+  app.post("/api/emails/no-show-notice", async (req, res) => {
+    try {
+      const { email, name, date, time, penaltyAmount } = req.body;
+
+      if (!email || !name || !date || !time || !penaltyAmount) {
+        return res.status(400).json({ error: "Missing required fields" });
+      }
+
+      console.log("Attempting to write to Firebase mail collection...");
+      
+      const mailData = {
+        to: email,
+        message: {
+          subject: 'Missed Appointment - No-Show Fee Applied - Vee Nutrition',
+          html: `
+            <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; background-color: #f8faf8;">
+              <div style="background-color: white; padding: 30px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
+                <div style="text-align: center; margin-bottom: 30px;">
+                  <h1 style="color: #A5CBA4; margin: 0;">🌿 Vee Nutrition</h1>
+                </div>
+                
+                <h2 style="color: #333; margin-bottom: 20px;">❌ Missed Appointment Notice</h2>
+                
+                <p style="color: #666; line-height: 1.6; margin-bottom: 20px;">
+                  Hi ${name}, we missed you at your appointment on ${date} at ${time}.
+                </p>
+                
+                <div style="background-color: #f8d7da; padding: 20px; border-radius: 8px; margin: 20px 0; border-left: 4px solid #dc3545;">
+                  <h3 style="color: #721c24; margin-top: 0;">No-Show Penalty</h3>
+                  <p style="margin: 5px 0; color: #721c24;"><strong>Fee Applied:</strong> €${penaltyAmount}</p>
+                  <p style="margin: 5px 0; color: #721c24;"><strong>Rate:</strong> 50% of original appointment cost</p>
+                </div>
+                
+                <p style="color: #666; line-height: 1.6; margin: 20px 0;">
+                  We understand that unexpected situations arise. To avoid future no-show fees, please cancel or reschedule at least 4 working hours in advance.
+                </p>
+                
+                <div style="text-align: center; margin: 30px 0;">
+                  <a href="https://your-domain.replit.app/book" style="background-color: #A5CBA4; color: white; padding: 12px 25px; text-decoration: none; border-radius: 5px; font-weight: bold;">
+                    Book New Appointment
+                  </a>
+                </div>
+                
+                <div style="border-top: 1px solid #eee; padding-top: 20px; margin-top: 30px; text-align: center; color: #999; font-size: 14px;">
+                  <p>Vee Nutrition | We're Here When You're Ready</p>
+                  <p>Let's get back on track with your nutrition journey</p>
+                </div>
+              </div>
+            </div>
+          `,
+          text: `Missed appointment notice: A €${penaltyAmount} no-show fee (50% of appointment cost) has been applied for your missed ${date} ${time} appointment.`
+        }
+      };
+
+      const docRef = await db.collection("mail").add(mailData);
+      console.log("✓ Email successfully queued in Firebase with ID:", docRef.id);
+      console.log("Firebase Functions should now process email to", email);
+
+      res.json({ 
+        message: "No-show notice email queued successfully",
+        emailId: docRef.id 
+      });
+    } catch (error) {
+      console.error("No-show notice email error:", error);
+      res.status(500).json({ error: "Failed to send no-show notice email" });
+    }
+  });
+
   const httpServer = createServer(app);
 
   return httpServer;
