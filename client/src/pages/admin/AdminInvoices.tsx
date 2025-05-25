@@ -29,12 +29,16 @@ export default function AdminInvoices() {
     limit(50)
   ]);
 
-  // Fetch completed appointments (sessions that can be invoiced)
-  const { data: completedAppointments } = useFirestoreCollection<Appointment>("appointments", [
-    where("status", "==", "done"),
+  // Fetch appointments that can be invoiced (completed or no-show)
+  const { data: allAppointments } = useFirestoreCollection<Appointment>("appointments", [
     orderBy("date", "desc"),
     limit(20)
   ]);
+
+  // Filter appointments that can be invoiced (completed or no-show)
+  const completedAppointments = allAppointments?.filter(apt => 
+    apt.status === "done" || apt.status === "no-show"
+  ) || [];
 
   // Check if an appointment already has an invoice
   const hasExistingInvoice = (appointmentId: string | undefined) => {
@@ -48,17 +52,16 @@ export default function AdminInvoices() {
     let shouldIncludeLateReschedule = false;
 
     // Check for no-show penalty (if appointment is marked as no-show)
-    if (appointment.status === 'no-show' || appointment.notes?.toLowerCase().includes('no-show')) {
+    if (appointment.status === 'no-show') {
       shouldIncludeNoShow = true;
     }
 
-    // Check for late reschedule fee (if reschedule history indicates late reschedule)
-    if (appointment.rescheduleHistory && appointment.rescheduleHistory.length > 0) {
-      const lastReschedule = appointment.rescheduleHistory[appointment.rescheduleHistory.length - 1];
-      if (lastReschedule.reason?.toLowerCase().includes('late') || 
-          lastReschedule.reason?.toLowerCase().includes('short notice')) {
-        shouldIncludeLateReschedule = true;
-      }
+    // Check for late reschedule fee based on appointment status or comments
+    if (appointment.status === 'reschedule_requested' || 
+        appointment.status === 'cancelled_reschedule' ||
+        appointment.comments?.toLowerCase().includes('late reschedule') ||
+        appointment.comments?.toLowerCase().includes('short notice')) {
+      shouldIncludeLateReschedule = true;
     }
 
     return { shouldIncludeNoShow, shouldIncludeLateReschedule };
@@ -129,8 +132,11 @@ export default function AdminInvoices() {
           title: "Invoice Created Successfully",
           description: `Invoice ${result.invoice.invoiceNumber} has been created and payment link generated.`,
         });
+        // Reset all states
         setIsCreatingInvoice(false);
         setSelectedAppointment(null);
+        setIncludeNoShowPenalty(false);
+        setIncludeLateRescheduleFee(false);
       } else if (response.status === 409) {
         const errorData = await response.json();
         toast({
@@ -138,8 +144,11 @@ export default function AdminInvoices() {
           description: "An invoice has already been created for this appointment.",
           variant: "destructive",
         });
+        // Reset all states
         setIsCreatingInvoice(false);
         setSelectedAppointment(null);
+        setIncludeNoShowPenalty(false);
+        setIncludeLateRescheduleFee(false);
       } else {
         throw new Error('Failed to create invoice');
       }
@@ -247,6 +256,17 @@ export default function AdminInvoices() {
                             <p className="text-sm text-muted-foreground">
                               {new Date(appointment.date).toLocaleDateString()} - {appointment.type}
                             </p>
+                            <div className="flex items-center gap-2 mt-1">
+                              <Badge 
+                                variant={appointment.status === 'no-show' ? 'destructive' : 'secondary'}
+                                className="text-xs"
+                              >
+                                {appointment.status === 'no-show' ? 'No-Show' : 'Completed'}
+                              </Badge>
+                              {appointment.status === 'no-show' && (
+                                <span className="text-xs text-red-600">Penalty Applied</span>
+                              )}
+                            </div>
                           </div>
                           <Badge variant="outline">
                             {appointment.type === "Initial" ? "€95" : "€75"}
