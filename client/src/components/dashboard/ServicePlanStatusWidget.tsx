@@ -37,7 +37,10 @@ export default function ServicePlanStatusWidget({ user }: ServicePlanStatusWidge
       };
     }
     
-    const programEndDate = new Date(currentUser.programEndDate);
+    // Handle Firebase Timestamp objects properly
+    const programEndDate = currentUser.programEndDate && typeof currentUser.programEndDate === 'object' && 'toDate' in currentUser.programEndDate ? 
+      (currentUser.programEndDate as any).toDate() : 
+      new Date(currentUser.programEndDate as string);
     
     // Check if the date is valid
     if (isNaN(programEndDate.getTime())) {

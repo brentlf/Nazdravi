@@ -266,10 +266,10 @@ export function DashboardOverview() {
       </div>
 
       {/* Recent Activity & Quick Actions */}
-      <div className="grid lg:grid-cols-3 gap-8">
+      <div className="grid lg:grid-cols-3 gap-8 lg:items-start">
         {/* Recent Messages */}
         <div className="lg:col-span-2">
-          <Card>
+          <Card className="h-full">
             <CardHeader className="flex flex-row items-center justify-between">
               <CardTitle className="flex items-center gap-2">
                 <MessageCircle className="w-5 h-5" />
@@ -314,7 +314,7 @@ export function DashboardOverview() {
 
         {/* Quick Actions */}
         <div>
-          <Card>
+          <Card className="h-full">
             <CardHeader>
               <CardTitle>Quick Actions</CardTitle>
             </CardHeader>
