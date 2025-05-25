@@ -195,6 +195,8 @@ export default function AdminInvoices() {
     setIsReissuing(true);
     
     try {
+      console.log('Reissue invoice data:', { invoiceId: invoice.id, newAmount, originalAmount: invoice.amount });
+      
       const response = await fetch('/api/invoices/reissue', {
         method: 'POST',
         headers: {
