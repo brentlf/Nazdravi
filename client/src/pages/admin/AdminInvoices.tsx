@@ -300,7 +300,7 @@ export default function AdminInvoices() {
                           <Checkbox 
                             id="no-show-penalty" 
                             checked={includeNoShowPenalty}
-                            onCheckedChange={setIncludeNoShowPenalty}
+                            onCheckedChange={(checked) => setIncludeNoShowPenalty(checked === true)}
                           />
                           <div className="grid gap-1.5 leading-none">
                             <label 
@@ -327,7 +327,7 @@ export default function AdminInvoices() {
                           <Checkbox 
                             id="late-reschedule-fee" 
                             checked={includeLateRescheduleFee}
-                            onCheckedChange={setIncludeLateRescheduleFee}
+                            onCheckedChange={(checked) => setIncludeLateRescheduleFee(checked === true)}
                           />
                           <div className="grid gap-1.5 leading-none">
                             <label 
