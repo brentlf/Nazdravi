@@ -1,0 +1,89 @@
+POST https://e394ccd4-b3dd-43ba-8feb-deda267050d2-00-3v6n3vit95c2j.spock.replit.dev/api/emails/appointment-confirmation 500 (Internal Server Error)
+apiRequest @ queryClient.ts:15
+sendAppointmentConfirmation @ emailService.ts:37
+handleTestConfirmationEmail @ AdminEmailScheduler.tsx:82
+callCallback2 @ chunk-RPCDYKBN.js?v=1a8e8de5:3674
+invokeGuardedCallbackDev @ chunk-RPCDYKBN.js?v=1a8e8de5:3699
+invokeGuardedCallback @ chunk-RPCDYKBN.js?v=1a8e8de5:3733
+invokeGuardedCallbackAndCatchFirstError @ chunk-RPCDYKBN.js?v=1a8e8de5:3736
+executeDispatch @ chunk-RPCDYKBN.js?v=1a8e8de5:7014
+processDispatchQueueItemsInOrder @ chunk-RPCDYKBN.js?v=1a8e8de5:7034
+processDispatchQueue @ chunk-RPCDYKBN.js?v=1a8e8de5:7043
+dispatchEventsForPlugins @ chunk-RPCDYKBN.js?v=1a8e8de5:7051
+(anonymous) @ chunk-RPCDYKBN.js?v=1a8e8de5:7174
+batchedUpdates$1 @ chunk-RPCDYKBN.js?v=1a8e8de5:18913
+batchedUpdates @ chunk-RPCDYKBN.js?v=1a8e8de5:3579
+dispatchEventForPluginEventSystem @ chunk-RPCDYKBN.js?v=1a8e8de5:7173
+dispatchEventWithEnableCapturePhaseSelectiveHydrationWithoutDiscreteEventReplay @ chunk-RPCDYKBN.js?v=1a8e8de5:5478
+dispatchEvent @ chunk-RPCDYKBN.js?v=1a8e8de5:5472
+dispatchDiscreteEvent @ chunk-RPCDYKBN.js?v=1a8e8de5:5449Understand this error
+emailService.ts:40 Failed to send appointment confirmation email: Error: 500: {"success":false,"error":"Value for argument \"data\" is not a valid Firestore document. Cannot use \"undefined\" as a Firestore value (found in field \"data.meetingUrl\"). If you want to ignore undefined values, enable `ignoreUndefinedProperties`."}
+    at throwIfResNotOk (queryClient.ts:6:11)
+    at async apiRequest (queryClient.ts:22:3)
+    at async EmailService.sendAppointmentConfirmation (emailService.ts:37:7)
+    at async handleTestConfirmationEmail (AdminEmailScheduler.tsx:82:7)
+overrideMethod @ hook.js:608
+sendAppointmentConfirmation @ emailService.ts:40
+await in sendAppointmentConfirmation
+handleTestConfirmationEmail @ AdminEmailScheduler.tsx:82
+callCallback2 @ chunk-RPCDYKBN.js?v=1a8e8de5:3674
+invokeGuardedCallbackDev @ chunk-RPCDYKBN.js?v=1a8e8de5:3699
+invokeGuardedCallback @ chunk-RPCDYKBN.js?v=1a8e8de5:3733
+invokeGuardedCallbackAndCatchFirstError @ chunk-RPCDYKBN.js?v=1a8e8de5:3736
+executeDispatch @ chunk-RPCDYKBN.js?v=1a8e8de5:7014
+processDispatchQueueItemsInOrder @ chunk-RPCDYKBN.js?v=1a8e8de5:7034
+processDispatchQueue @ chunk-RPCDYKBN.js?v=1a8e8de5:7043
+dispatchEventsForPlugins @ chunk-RPCDYKBN.js?v=1a8e8de5:7051
+(anonymous) @ chunk-RPCDYKBN.js?v=1a8e8de5:7174
+batchedUpdates$1 @ chunk-RPCDYKBN.js?v=1a8e8de5:18913
+batchedUpdates @ chunk-RPCDYKBN.js?v=1a8e8de5:3579
+dispatchEventForPluginEventSystem @ chunk-RPCDYKBN.js?v=1a8e8de5:7173
+dispatchEventWithEnableCapturePhaseSelectiveHydrationWithoutDiscreteEventReplay @ chunk-RPCDYKBN.js?v=1a8e8de5:5478
+dispatchEvent @ chunk-RPCDYKBN.js?v=1a8e8de5:5472
+dispatchDiscreteEvent @ chunk-RPCDYKBN.js?v=1a8e8de5:5449Understand this error
+queryClient.ts:15 
+            
+            
+           POST https://e394ccd4-b3dd-43ba-8feb-deda267050d2-00-3v6n3vit95c2j.spock.replit.dev/api/emails/appointment-reminder 500 (Internal Server Error)
+apiRequest @ queryClient.ts:15
+sendAppointmentReminder @ emailService.ts:77
+handleTestReminderEmail @ AdminEmailScheduler.tsx:108
+callCallback2 @ chunk-RPCDYKBN.js?v=1a8e8de5:3674
+invokeGuardedCallbackDev @ chunk-RPCDYKBN.js?v=1a8e8de5:3699
+invokeGuardedCallback @ chunk-RPCDYKBN.js?v=1a8e8de5:3733
+invokeGuardedCallbackAndCatchFirstError @ chunk-RPCDYKBN.js?v=1a8e8de5:3736
+executeDispatch @ chunk-RPCDYKBN.js?v=1a8e8de5:7014
+processDispatchQueueItemsInOrder @ chunk-RPCDYKBN.js?v=1a8e8de5:7034
+processDispatchQueue @ chunk-RPCDYKBN.js?v=1a8e8de5:7043
+dispatchEventsForPlugins @ chunk-RPCDYKBN.js?v=1a8e8de5:7051
+(anonymous) @ chunk-RPCDYKBN.js?v=1a8e8de5:7174
+batchedUpdates$1 @ chunk-RPCDYKBN.js?v=1a8e8de5:18913
+batchedUpdates @ chunk-RPCDYKBN.js?v=1a8e8de5:3579
+dispatchEventForPluginEventSystem @ chunk-RPCDYKBN.js?v=1a8e8de5:7173
+dispatchEventWithEnableCapturePhaseSelectiveHydrationWithoutDiscreteEventReplay @ chunk-RPCDYKBN.js?v=1a8e8de5:5478
+dispatchEvent @ chunk-RPCDYKBN.js?v=1a8e8de5:5472
+dispatchDiscreteEvent @ chunk-RPCDYKBN.js?v=1a8e8de5:5449Understand this error
+emailService.ts:80 Failed to send appointment reminder email: Error: 500: {"success":false,"error":"Value for argument \"data\" is not a valid Firestore document. Cannot use \"undefined\" as a Firestore value (found in field \"data.meetingUrl\"). If you want to ignore undefined values, enable `ignoreUndefinedProperties`."}
+    at throwIfResNotOk (queryClient.ts:6:11)
+    at async apiRequest (queryClient.ts:22:3)
+    at async EmailService.sendAppointmentReminder (emailService.ts:77:7)
+    at async handleTestReminderEmail (AdminEmailScheduler.tsx:108:7)
+overrideMethod @ hook.js:608
+sendAppointmentReminder @ emailService.ts:80
+await in sendAppointmentReminder
+handleTestReminderEmail @ AdminEmailScheduler.tsx:108
+callCallback2 @ chunk-RPCDYKBN.js?v=1a8e8de5:3674
+invokeGuardedCallbackDev @ chunk-RPCDYKBN.js?v=1a8e8de5:3699
+invokeGuardedCallback @ chunk-RPCDYKBN.js?v=1a8e8de5:3733
+invokeGuardedCallbackAndCatchFirstError @ chunk-RPCDYKBN.js?v=1a8e8de5:3736
+executeDispatch @ chunk-RPCDYKBN.js?v=1a8e8de5:7014
+processDispatchQueueItemsInOrder @ chunk-RPCDYKBN.js?v=1a8e8de5:7034
+processDispatchQueue @ chunk-RPCDYKBN.js?v=1a8e8de5:7043
+dispatchEventsForPlugins @ chunk-RPCDYKBN.js?v=1a8e8de5:7051
+(anonymous) @ chunk-RPCDYKBN.js?v=1a8e8de5:7174
+batchedUpdates$1 @ chunk-RPCDYKBN.js?v=1a8e8de5:18913
+batchedUpdates @ chunk-RPCDYKBN.js?v=1a8e8de5:3579
+dispatchEventForPluginEventSystem @ chunk-RPCDYKBN.js?v=1a8e8de5:7173
+dispatchEventWithEnableCapturePhaseSelectiveHydrationWithoutDiscreteEventReplay @ chunk-RPCDYKBN.js?v=1a8e8de5:5478
+dispatchEvent @ chunk-RPCDYKBN.js?v=1a8e8de5:5472
+dispatchDiscreteEvent @ chunk-RPCDYKBN.js?v=1a8e8de5:5449Understand this error
