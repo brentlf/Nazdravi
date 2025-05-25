@@ -653,6 +653,61 @@ export default function AdminInvoices() {
           )}
         </CardContent>
       </Card>
+
+      {/* Reissue Invoice Dialog */}
+      <Dialog open={!!reissueInvoice} onOpenChange={() => setReissueInvoice(null)}>
+        <DialogContent className="max-w-md">
+          <DialogHeader>
+            <DialogTitle>Reissue Invoice</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4">
+            <p className="text-sm text-muted-foreground">
+              Create a new invoice with an updated amount for{" "}
+              <span className="font-medium">{reissueInvoice?.clientName}</span>
+            </p>
+            
+            <div className="space-y-2">
+              <Label htmlFor="originalAmount">Original Amount</Label>
+              <Input
+                id="originalAmount"
+                value={`€${reissueInvoice?.amount || 0}`}
+                disabled
+                className="bg-muted"
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="newAmount">New Amount (€)</Label>
+              <Input
+                id="newAmount"
+                type="number"
+                step="0.01"
+                min="0"
+                value={newAmount}
+                onChange={(e) => setNewAmount(e.target.value)}
+                placeholder="Enter new amount"
+              />
+            </div>
+
+            <div className="flex gap-2 pt-4">
+              <Button
+                variant="outline"
+                onClick={() => setReissueInvoice(null)}
+                className="flex-1"
+              >
+                Cancel
+              </Button>
+              <Button
+                onClick={handleReissueInvoice}
+                disabled={isReissuing || !newAmount || parseFloat(newAmount) <= 0}
+                className="flex-1"
+              >
+                {isReissuing ? "Creating..." : "Reissue Invoice"}
+              </Button>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
