@@ -31,7 +31,7 @@ interface UserProfile {
   createdAt: any;
 }
 
-export default function AdminUserProfile() {
+function AdminUserProfile() {
   const { userId } = useParams();
   const [user, setUser] = useState<UserProfile | null>(null);
   const [appointments, setAppointments] = useState<any[]>([]);
@@ -459,3 +459,5 @@ export default function AdminUserProfile() {
     </div>
   );
 }
+
+export default AdminUserProfile;
