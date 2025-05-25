@@ -2,11 +2,12 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Trash2, AlertTriangle } from "lucide-react";
+import { Trash2, AlertTriangle, ArrowLeft } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { db } from "@/lib/firebase";
 import { collection, getDocs, deleteDoc, doc } from "firebase/firestore";
 import { User } from "@/types";
+import { Link } from "wouter";
 
 export default function AdminCleanupUsers() {
   const [duplicates, setDuplicates] = useState<{ [email: string]: User[] }>({});
@@ -88,6 +89,14 @@ export default function AdminCleanupUsers() {
 
   return (
     <div className="container mx-auto px-4 py-8">
+      <div className="mb-8">
+        <Button variant="ghost" size="sm" className="mb-4" asChild>
+          <Link href="/admin/users">
+            <ArrowLeft className="mr-2 h-4 w-4" />
+            Back to Users
+          </Link>
+        </Button>
+      </div>
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
