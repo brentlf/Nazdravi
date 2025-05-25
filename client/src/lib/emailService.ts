@@ -225,14 +225,10 @@ class EmailService implements EmailNotificationService {
     updateType: string
   ): Promise<void> {
     try {
-      // Use the working appointment confirmation system with all fields defined
-      await apiRequest('POST', '/api/emails/appointment-confirmation', {
-        email: 'info@veenutrition.com',
-        name: 'Admin Team',
-        date: new Date().toLocaleDateString(),
-        time: new Date().toLocaleTimeString(),
-        meetingUrl: '', // Keep as empty string to avoid undefined
-        type: `Admin Alert: Health Info Update - ${updateType} from ${clientName} (${clientEmail})`
+      await apiRequest('POST', '/api/emails/admin/health-update', {
+        clientName,
+        clientEmail,
+        updateType,
       });
       console.log('Admin health update notification sent successfully');
     } catch (error) {
@@ -248,14 +244,11 @@ class EmailService implements EmailNotificationService {
     paymentMethod: string
   ): Promise<void> {
     try {
-      // Use the working appointment confirmation system with all fields defined
-      await apiRequest('POST', '/api/emails/appointment-confirmation', {
-        email: 'info@veenutrition.com',
-        name: 'Admin Team',
-        date: new Date().toLocaleDateString(),
-        time: new Date().toLocaleTimeString(),
-        meetingUrl: '', // Keep as empty string to avoid undefined
-        type: `Admin Alert: Payment Received - €${amount} from ${clientName} (Invoice: ${invoiceId}) via ${paymentMethod}`
+      await apiRequest('POST', '/api/emails/admin/payment-received', {
+        clientName,
+        amount,
+        invoiceId,
+        paymentMethod,
       });
       console.log('Admin payment received notification sent successfully');
     } catch (error) {
@@ -270,14 +263,10 @@ class EmailService implements EmailNotificationService {
     previousPlan: string
   ): Promise<void> {
     try {
-      // Use the working appointment confirmation system with all fields defined
-      await apiRequest('POST', '/api/emails/appointment-confirmation', {
-        email: 'info@veenutrition.com',
-        name: 'Admin Team',
-        date: new Date().toLocaleDateString(),
-        time: new Date().toLocaleTimeString(),
-        meetingUrl: '', // Keep as empty string to avoid undefined
-        type: `Admin Alert: Plan Upgrade - ${clientName} upgraded from ${previousPlan} to ${planType}`
+      await apiRequest('POST', '/api/emails/admin/plan-upgrade', {
+        clientName,
+        planType,
+        previousPlan,
       });
       console.log('Admin plan upgrade notification sent successfully');
     } catch (error) {
@@ -293,14 +282,11 @@ class EmailService implements EmailNotificationService {
     urgency: string
   ): Promise<void> {
     try {
-      // Use the working appointment confirmation system with all fields defined
-      await apiRequest('POST', '/api/emails/appointment-confirmation', {
-        email: 'info@veenutrition.com',
-        name: 'Admin Team',
-        date: new Date().toLocaleDateString(),
-        time: new Date().toLocaleTimeString(),
-        meetingUrl: '', // Keep as empty string to avoid undefined
-        type: `Admin Alert: New Client Message - ${messageType} from ${clientName} (${clientEmail}) - Priority: ${urgency}`
+      await apiRequest('POST', '/api/emails/admin/client-message', {
+        clientName,
+        clientEmail,
+        messageType,
+        urgency,
       });
       console.log('Admin client message notification sent successfully');
     } catch (error) {
@@ -310,14 +296,12 @@ class EmailService implements EmailNotificationService {
   }
 
   async sendAdminRescheduleRequest(clientName: string, clientEmail: string, originalDate: string, originalTime: string, reason?: string): Promise<void> {
-    // Use the working appointment confirmation system with all fields defined
-    await apiRequest('POST', '/api/emails/appointment-confirmation', {
-      email: 'info@veenutrition.com',
-      name: 'Admin Team',
-      date: new Date().toLocaleDateString(),
-      time: new Date().toLocaleTimeString(),
-      meetingUrl: '', // Keep as empty string to avoid undefined
-      type: `Admin Alert: Reschedule Request - ${clientName} (${clientEmail}) wants to reschedule from ${originalDate} ${originalTime}. Reason: ${reason || 'Not specified'}`
+    await apiRequest("POST", "/api/emails/admin/reschedule-request", {
+      clientName,
+      clientEmail,
+      originalDate,
+      originalTime,
+      reason
     });
   }
 }
