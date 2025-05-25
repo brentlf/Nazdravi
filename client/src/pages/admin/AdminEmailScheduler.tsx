@@ -1,9 +1,10 @@
 import { useState } from "react";
-import { Calendar, Clock, Mail, Send, Users, ArrowLeft } from "lucide-react";
+import { Calendar, Clock, Mail, Send, Users, ArrowLeft, UserCheck, Shield, AlertTriangle, CheckCircle, Receipt, MessageSquare, FileText, CreditCard } from "lucide-react";
 import { Link } from "wouter";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { Separator } from "@/components/ui/separator";
 import { useToast } from "@/hooks/use-toast";
 import { useFirestoreCollection } from "@/hooks/useFirestore";
 import { Appointment } from "@/types";
@@ -171,19 +172,312 @@ export default function AdminEmailScheduler() {
           </p>
         </div>
 
-        <div className="grid gap-6">
-          {/* Daily Reminders */}
+        <div className="grid gap-8">
+          {/* Client Email Automations */}
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
-                <Calendar className="w-5 h-5" />
-                Daily Appointment Reminders
+                <Users className="w-5 h-5" />
+                Client Email Automation Rules
               </CardTitle>
+              <p className="text-sm text-muted-foreground mt-2">
+                Automated emails sent to clients based on their actions and appointment status
+              </p>
+            </CardHeader>
+            <CardContent>
+              <div className="grid gap-4">
+                {/* Account & Welcome */}
+                <div className="flex items-center justify-between p-4 border rounded-lg">
+                  <div className="flex items-center gap-3">
+                    <UserCheck className="w-5 h-5 text-green-600" />
+                    <div>
+                      <h4 className="font-medium">Welcome Email</h4>
+                      <p className="text-sm text-muted-foreground">
+                        Sent immediately when new client account is created
+                      </p>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <Badge className="bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300">Auto</Badge>
+                    <Button variant="outline" size="sm" onClick={handleTestWelcomeEmail} disabled={sending}>
+                      Test
+                    </Button>
+                  </div>
+                </div>
+
+                {/* Appointment Flow */}
+                <div className="flex items-center justify-between p-4 border rounded-lg">
+                  <div className="flex items-center gap-3">
+                    <CheckCircle className="w-5 h-5 text-blue-600" />
+                    <div>
+                      <h4 className="font-medium">Appointment Confirmation</h4>
+                      <p className="text-sm text-muted-foreground">
+                        Sent when admin confirms pending appointment with Teams link
+                      </p>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <Badge className="bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300">Auto</Badge>
+                    <Button variant="outline" size="sm" onClick={handleTestConfirmationEmail} disabled={sending}>
+                      Test
+                    </Button>
+                  </div>
+                </div>
+
+                <div className="flex items-center justify-between p-4 border rounded-lg">
+                  <div className="flex items-center gap-3">
+                    <Clock className="w-5 h-5 text-orange-600" />
+                    <div>
+                      <h4 className="font-medium">Appointment Reminder</h4>
+                      <p className="text-sm text-muted-foreground">
+                        Sent 24 hours before confirmed appointment (manual trigger)
+                      </p>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <Badge className="bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300">Manual</Badge>
+                    <Button variant="outline" size="sm" onClick={handleTestReminderEmail} disabled={sending}>
+                      Test
+                    </Button>
+                  </div>
+                </div>
+
+                <div className="flex items-center justify-between p-4 border rounded-lg">
+                  <div className="flex items-center gap-3">
+                    <Calendar className="w-5 h-5 text-purple-600" />
+                    <div>
+                      <h4 className="font-medium">Reschedule Confirmation</h4>
+                      <p className="text-sm text-muted-foreground">
+                        Sent when client reschedule request is approved by admin
+                      </p>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <Badge className="bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300">Auto</Badge>
+                    <Button variant="outline" size="sm" onClick={handleTestRescheduleEmail} disabled={sending}>
+                      Test
+                    </Button>
+                  </div>
+                </div>
+
+                {/* Billing & Payments */}
+                <div className="flex items-center justify-between p-4 border rounded-lg">
+                  <div className="flex items-center gap-3">
+                    <Receipt className="w-5 h-5 text-green-600" />
+                    <div>
+                      <h4 className="font-medium">Invoice Generated</h4>
+                      <p className="text-sm text-muted-foreground">
+                        Sent after session completion with payment link and invoice details
+                      </p>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <Badge className="bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300">Auto</Badge>
+                    <Button variant="outline" size="sm" disabled={sending}>
+                      Test
+                    </Button>
+                  </div>
+                </div>
+
+                {/* Policy Notifications */}
+                <div className="flex items-center justify-between p-4 border rounded-lg">
+                  <div className="flex items-center gap-3">
+                    <AlertTriangle className="w-5 h-5 text-red-600" />
+                    <div>
+                      <h4 className="font-medium">Late Reschedule Notice</h4>
+                      <p className="text-sm text-muted-foreground">
+                        Sent when client reschedules within 24-hour policy window
+                      </p>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <Badge className="bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300">Auto</Badge>
+                    <Button variant="outline" size="sm" disabled={sending}>
+                      Test
+                    </Button>
+                  </div>
+                </div>
+
+                <div className="flex items-center justify-between p-4 border rounded-lg">
+                  <div className="flex items-center gap-3">
+                    <AlertTriangle className="w-5 h-5 text-red-600" />
+                    <div>
+                      <h4 className="font-medium">No-Show Penalty Notice</h4>
+                      <p className="text-sm text-muted-foreground">
+                        Sent when client marked as no-show with penalty invoice
+                      </p>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <Badge className="bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300">Auto</Badge>
+                    <Button variant="outline" size="sm" disabled={sending}>
+                      Test
+                    </Button>
+                  </div>
+                </div>
+
+                <div className="flex items-center justify-between p-4 border rounded-lg">
+                  <div className="flex items-center gap-3">
+                    <AlertTriangle className="w-5 h-5 text-orange-600" />
+                    <div>
+                      <h4 className="font-medium">Appointment Cancelled</h4>
+                      <p className="text-sm text-muted-foreground">
+                        Sent when admin cancels appointment with reason and rescheduling options
+                      </p>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <Badge className="bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300">Auto</Badge>
+                    <Button variant="outline" size="sm" disabled={sending}>
+                      Test
+                    </Button>
+                  </div>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Admin Email Notifications */}
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <Shield className="w-5 h-5" />
+                Admin Email Notifications
+              </CardTitle>
+              <p className="text-sm text-muted-foreground mt-2">
+                Automated notifications sent to you when clients take actions requiring attention
+              </p>
+            </CardHeader>
+            <CardContent>
+              <div className="grid gap-4">
+                {/* Client Actions */}
+                <div className="flex items-center justify-between p-4 border rounded-lg">
+                  <div className="flex items-center gap-3">
+                    <Calendar className="w-5 h-5 text-blue-600" />
+                    <div>
+                      <h4 className="font-medium">New Appointment Request</h4>
+                      <p className="text-sm text-muted-foreground">
+                        Notified when client books new appointment requiring confirmation
+                      </p>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <Badge className="bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300">Auto</Badge>
+                    <Button variant="outline" size="sm" disabled={sending}>
+                      Test
+                    </Button>
+                  </div>
+                </div>
+
+                <div className="flex items-center justify-between p-4 border rounded-lg">
+                  <div className="flex items-center gap-3">
+                    <Clock className="w-5 h-5 text-orange-600" />
+                    <div>
+                      <h4 className="font-medium">Reschedule Request</h4>
+                      <p className="text-sm text-muted-foreground">
+                        Notified when client requests to reschedule confirmed appointment
+                      </p>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <Badge className="bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300">Auto</Badge>
+                    <Button variant="outline" size="sm" disabled={sending}>
+                      Test
+                    </Button>
+                  </div>
+                </div>
+
+                <div className="flex items-center justify-between p-4 border rounded-lg">
+                  <div className="flex items-center gap-3">
+                    <FileText className="w-5 h-5 text-purple-600" />
+                    <div>
+                      <h4 className="font-medium">Health Information Update</h4>
+                      <p className="text-sm text-muted-foreground">
+                        Notified when client updates medical history or health assessment
+                      </p>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <Badge className="bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300">Auto</Badge>
+                    <Button variant="outline" size="sm" disabled={sending}>
+                      Test
+                    </Button>
+                  </div>
+                </div>
+
+                {/* Financial Notifications */}
+                <div className="flex items-center justify-between p-4 border rounded-lg">
+                  <div className="flex items-center gap-3">
+                    <CreditCard className="w-5 h-5 text-green-600" />
+                    <div>
+                      <h4 className="font-medium">Invoice Payment Received</h4>
+                      <p className="text-sm text-muted-foreground">
+                        Notified when client completes payment for session or subscription invoice
+                      </p>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <Badge className="bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300">Auto</Badge>
+                    <Button variant="outline" size="sm" disabled={sending}>
+                      Test
+                    </Button>
+                  </div>
+                </div>
+
+                <div className="flex items-center justify-between p-4 border rounded-lg">
+                  <div className="flex items-center gap-3">
+                    <Users className="w-5 h-5 text-blue-600" />
+                    <div>
+                      <h4 className="font-medium">Service Plan Upgrade</h4>
+                      <p className="text-sm text-muted-foreground">
+                        Notified when client upgrades from pay-as-you-go to complete program
+                      </p>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <Badge className="bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300">Auto</Badge>
+                    <Button variant="outline" size="sm" disabled={sending}>
+                      Test
+                    </Button>
+                  </div>
+                </div>
+
+                <div className="flex items-center justify-between p-4 border rounded-lg">
+                  <div className="flex items-center gap-3">
+                    <MessageSquare className="w-5 h-5 text-purple-600" />
+                    <div>
+                      <h4 className="font-medium">New Client Message</h4>
+                      <p className="text-sm text-muted-foreground">
+                        Notified when client sends message requiring response
+                      </p>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <Badge className="bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300">Auto</Badge>
+                    <Button variant="outline" size="sm" disabled={sending}>
+                      Test
+                    </Button>
+                  </div>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Daily Batch Operations */}
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <Send className="w-5 h-5" />
+                Daily Batch Operations
+              </CardTitle>
+              <p className="text-sm text-muted-foreground mt-2">
+                Manual triggers for batch email operations and daily maintenance
+              </p>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="flex items-center justify-between p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
                 <div>
-                  <h3 className="font-semibold">Tomorrow's Appointments</h3>
+                  <h3 className="font-semibold">Tomorrow's Appointment Reminders</h3>
                   <p className="text-sm text-muted-foreground">
                     {tomorrow.toLocaleDateString()} - {tomorrowAppointments.length} confirmed appointments
                   </p>
@@ -196,7 +490,7 @@ export default function AdminEmailScheduler() {
               {tomorrowAppointments.length > 0 && (
                 <div className="space-y-2">
                   <h4 className="font-medium">Reminder Recipients:</h4>
-                  <div className="grid gap-2">
+                  <div className="grid gap-2 max-h-40 overflow-y-auto">
                     {tomorrowAppointments.map((apt) => (
                       <div key={apt.id} className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-800 rounded">
                         <div>
@@ -205,7 +499,7 @@ export default function AdminEmailScheduler() {
                             {apt.type} at {apt.timeslot}
                           </p>
                         </div>
-                        <Badge>{apt.email}</Badge>
+                        <Badge variant="outline">{apt.email}</Badge>
                       </div>
                     ))}
                   </div>
@@ -219,7 +513,7 @@ export default function AdminEmailScheduler() {
                   className="flex-1"
                 >
                   <Send className="w-4 h-4 mr-2" />
-                  {sending ? "Sending..." : "Send Daily Reminders"}
+                  {sending ? "Sending..." : "Send All Daily Reminders"}
                 </Button>
                 <Button
                   variant="outline"
@@ -227,101 +521,8 @@ export default function AdminEmailScheduler() {
                   disabled={sending}
                 >
                   <Mail className="w-4 h-4 mr-2" />
-                  Test Email
+                  Test Reminder
                 </Button>
-              </div>
-            </CardContent>
-          </Card>
-
-          {/* Email Automation Status */}
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Mail className="w-5 h-5" />
-                Automated Email Events
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="grid gap-4">
-                <div className="flex items-center justify-between p-4 border rounded-lg">
-                  <div>
-                    <h4 className="font-medium">Welcome Emails</h4>
-                    <p className="text-sm text-muted-foreground">
-                      Sent automatically when new accounts are created
-                    </p>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <Badge className="bg-green-100 text-green-800">Active</Badge>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={handleTestWelcomeEmail}
-                      disabled={sending}
-                    >
-                      Test
-                    </Button>
-                  </div>
-                </div>
-
-                <div className="flex items-center justify-between p-4 border rounded-lg">
-                  <div>
-                    <h4 className="font-medium">Appointment Confirmations</h4>
-                    <p className="text-sm text-muted-foreground">
-                      Sent when admin confirms pending appointments
-                    </p>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <Badge className="bg-green-100 text-green-800">Active</Badge>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={handleTestConfirmationEmail}
-                      disabled={sending}
-                    >
-                      Test
-                    </Button>
-                  </div>
-                </div>
-
-                <div className="flex items-center justify-between p-4 border rounded-lg">
-                  <div>
-                    <h4 className="font-medium">Reschedule Notifications</h4>
-                    <p className="text-sm text-muted-foreground">
-                      Admin notified when clients request reschedules
-                    </p>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <Badge className="bg-green-100 text-green-800">Active</Badge>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={handleTestRescheduleEmail}
-                      disabled={sending}
-                    >
-                      Test
-                    </Button>
-                  </div>
-                </div>
-
-                <div className="flex items-center justify-between p-4 border rounded-lg">
-                  <div>
-                    <h4 className="font-medium">Daily Reminders</h4>
-                    <p className="text-sm text-muted-foreground">
-                      Manual trigger for day-before appointment reminders
-                    </p>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <Badge className="bg-blue-100 text-blue-800">Manual</Badge>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={handleTestReminderEmail}
-                      disabled={sending}
-                    >
-                      Test
-                    </Button>
-                  </div>
-                </div>
               </div>
             </CardContent>
           </Card>
