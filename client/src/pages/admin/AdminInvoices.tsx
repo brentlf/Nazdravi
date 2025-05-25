@@ -10,6 +10,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useFirestoreCollection } from "@/hooks/useFirestore";
 import { orderBy, limit } from "firebase/firestore";
+import { useQueryClient } from "@tanstack/react-query";
 import { Receipt, Plus, Eye, Send, DollarSign, ArrowLeft, AlertTriangle, RefreshCw, Clock, Ban, CheckCircle, FileText, Edit } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/contexts/AuthContext";
@@ -29,6 +30,7 @@ export default function AdminInvoices() {
   const [isReissuing, setIsReissuing] = useState(false);
   const { toast } = useToast();
   const { user } = useAuth();
+  const queryClient = useQueryClient();
 
   // Fetch invoices
   const { data: invoices, loading: loadingInvoices } = useFirestoreCollection<Invoice>("invoices", [
@@ -136,7 +138,7 @@ export default function AdminInvoices() {
     setIsCreatingInvoice(true);
     
     try {
-      const response = await fetch('/api/invoices', {
+      const response = await fetch('/api/invoices/create', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -161,6 +163,9 @@ export default function AdminInvoices() {
           title: "Invoice Created",
           description: `Invoice for €${calculateInvoiceTotal().toFixed(2)} has been created successfully.`,
         });
+        
+        // Note: Firebase should update automatically via real-time listeners
+        
         setIsCreatingInvoice(false);
         setSelectedAppointment(null);
         setIncludeSessionRate(false);
@@ -205,6 +210,10 @@ export default function AdminInvoices() {
           title: "Invoice Reissued",
           description: `New invoice for €${newAmount.toFixed(2)} has been created successfully.`,
         });
+        
+        // Invalidate and refetch data to show updated lists
+        queryClient.invalidateQueries({ queryKey: ['invoices'] });
+        
         setReissueInvoice(null);
         setReissueAmount("");
         setIsReissuing(false);
