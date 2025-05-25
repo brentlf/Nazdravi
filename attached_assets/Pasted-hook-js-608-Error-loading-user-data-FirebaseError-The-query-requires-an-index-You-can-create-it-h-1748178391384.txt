@@ -1,0 +1,17 @@
+hook.js:608 Error loading user data: FirebaseError: The query requires an index. You can create it here: https://console.firebase.google.com/v1/r/project/veenutrition-79fba/firestore/indexes?create_composite=Clxwcm9qZWN0cy92ZWVudXRyaXRpb24tNzlmYmEvZGF0YWJhc2VzLyhkZWZhdWx0KS9jb2xsZWN0aW9uR3JvdXBzL2hlYWx0aEFzc2Vzc21lbnRzL2luZGV4ZXMvXxABGgoKBnVzZXJJZBABGg0KCWNyZWF0ZWRBdBACGgwKCF9fbmFtZV9fEAI
+overrideMethod @ hook.js:608
+hook.js:608 Error loading user data: FirebaseError: The query requires an index. You can create it here: https://console.firebase.google.com/v1/r/project/veenutrition-79fba/firestore/indexes?create_composite=Clxwcm9qZWN0cy92ZWVudXRyaXRpb24tNzlmYmEvZGF0YWJhc2VzLyhkZWZhdWx0KS9jb2xsZWN0aW9uR3JvdXBzL2hlYWx0aEFzc2Vzc21lbnRzL2luZGV4ZXMvXxABGgoKBnVzZXJJZBABGg0KCWNyZWF0ZWRBdBACGgwKCF9fbmFtZV9fEAI
+overrideMethod @ hook.js:608
+hook.js:608 Error loading user data: FirebaseError: The query requires an index. You can create it here: https://console.firebase.google.com/v1/r/project/veenutrition-79fba/firestore/indexes?create_composite=Clxwcm9qZWN0cy92ZWVudXRyaXRpb24tNzlmYmEvZGF0YWJhc2VzLyhkZWZhdWx0KS9jb2xsZWN0aW9uR3JvdXBzL2hlYWx0aEFzc2Vzc21lbnRzL2luZGV4ZXMvXxABGgoKBnVzZXJJZBABGg0KCWNyZWF0ZWRBdBACGgwKCF9fbmFtZV9fEAI
+overrideMethod @ hook.js:608
+hook.js:608 Error loading user data: FirebaseError: The query requires an index. You can create it here: https://console.firebase.google.com/v1/r/project/veenutrition-79fba/firestore/indexes?create_composite=Clxwcm9qZWN0cy92ZWVudXRyaXRpb24tNzlmYmEvZGF0YWJhc2VzLyhkZWZhdWx0KS9jb2xsZWN0aW9uR3JvdXBzL2hlYWx0aEFzc2Vzc21lbnRzL2luZGV4ZXMvXxABGgoKBnVzZXJJZBABGg0KCWNyZWF0ZWRBdBACGgwKCF9fbmFtZV9fEAI
+overrideMethod @ hook.js:608
+
+                
+          
+          
+          
+         Chrome is moving towards a new experience that allows users to choose to browse without third-party cookies.
+ Firebase update completed, updateData: {preferredLanguage: 'english', servicePlan: 'complete-program', emailNotifications: true}emailNotifications: truepreferredLanguage: "english"servicePlan: "complete-program"[[Prototype]]: Objectconstructor: ƒ Object()hasOwnProperty: ƒ hasOwnProperty()isPrototypeOf: ƒ isPrototypeOf()propertyIsEnumerable: ƒ propertyIsEnumerable()toLocaleString: ƒ toLocaleString()toString: ƒ toString()valueOf: ƒ valueOf()__defineGetter__: ƒ __defineGetter__()__defineSetter__: ƒ __defineSetter__()__lookupGetter__: ƒ __lookupGetter__()__lookupSetter__: ƒ __lookupSetter__()__proto__: (...)get __proto__: ƒ __proto__()set __proto__: ƒ __proto__()
+ Local state updated: {role: 'client', createdAt: _Timestamp, programEndDate: _Timestamp, photoURL: null, uid: 'ETyOD7S76BYI2ceQqMRysV5ozJi2', …}createdAt: _Timestampnanoseconds: 560000000seconds: 1748166879[[Prototype]]: Objectemail: "craziesreviews@gmail.com"emailNotifications: truename: "Bradley Test"photoURL: nullpreferredLanguage: "english"programEndDate: _Timestampnanoseconds: 898000000seconds: 1756126173[[Prototype]]: ObjectprogramStartDate: _Timestampnanoseconds: 898000000seconds: 1748177373[[Prototype]]: Objectrole: "client"servicePlan: "complete-program"uid: "ETyOD7S76BYI2ceQqMRysV5ozJi2"[[Prototype]]: Object
+ Preferences update notification sent successfully

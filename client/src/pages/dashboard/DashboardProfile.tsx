@@ -10,7 +10,7 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/contexts/AuthContext";
-import { doc, getDoc, setDoc, addDoc, collection, query, where, orderBy, limit, getDocs } from "firebase/firestore";
+import { doc, getDoc, setDoc, addDoc, collection, query, where, orderBy, limit, getDocs, Timestamp } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { User, Lock, Heart, Globe, Mail, Phone, Crown, AlertTriangle } from "lucide-react";
@@ -306,9 +306,9 @@ export default function DashboardProfile() {
         const endDate = new Date();
         endDate.setMonth(endDate.getMonth() + 3); // 3 months from now
         
-        // Store as ISO strings for Firebase compatibility
-        updateData.programStartDate = now.toISOString();
-        updateData.programEndDate = endDate.toISOString();
+        // Store as Timestamps for Firebase compatibility
+        updateData.programStartDate = Timestamp.fromDate(now);
+        updateData.programEndDate = Timestamp.fromDate(endDate);
         
         console.log("Setting program dates:", {
           start: updateData.programStartDate,
@@ -675,10 +675,13 @@ export default function DashboardProfile() {
                         <div className="font-medium text-gray-900 dark:text-white">
                           {currentUserData.programStartDate 
                             ? (() => {
-                                const date = new Date(currentUserData.programStartDate);
-                                return isNaN(date.getTime()) ? "Invalid Date" : date.toLocaleDateString();
+                                // Handle Firebase Timestamp objects
+                                const date = currentUserData.programStartDate.toDate ? 
+                                  currentUserData.programStartDate.toDate() : 
+                                  new Date(currentUserData.programStartDate);
+                                return isNaN(date.getTime()) ? "Not Set" : date.toLocaleDateString();
                               })()
-                            : "Not set"
+                            : "Not Set"
                           }
                         </div>
                       </div>
@@ -687,7 +690,10 @@ export default function DashboardProfile() {
                         <div className="font-medium text-gray-900 dark:text-white">
                           {currentUserData.programEndDate 
                             ? (() => {
-                                const date = new Date(currentUserData.programEndDate);
+                                // Handle Firebase Timestamp objects
+                                const date = currentUserData.programEndDate.toDate ? 
+                                  currentUserData.programEndDate.toDate() : 
+                                  new Date(currentUserData.programEndDate);
                                 return isNaN(date.getTime()) ? "Invalid Date" : date.toLocaleDateString();
                               })()
                             : "Not set"
@@ -698,7 +704,10 @@ export default function DashboardProfile() {
                         <span className="text-gray-600 dark:text-gray-400">Status:</span>
                         <div className="font-medium">
                           {currentUserData.programEndDate ? (() => {
-                            const endDate = new Date(currentUserData.programEndDate);
+                            // Handle Firebase Timestamp objects
+                            const endDate = currentUserData.programEndDate.toDate ? 
+                              currentUserData.programEndDate.toDate() : 
+                              new Date(currentUserData.programEndDate);
                             if (isNaN(endDate.getTime())) {
                               return <span className="text-yellow-600">Invalid Date</span>;
                             }
