@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
@@ -9,7 +10,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { useFirestoreCollection } from "@/hooks/useFirestore";
 import { where, orderBy, limit } from "firebase/firestore";
-import { Receipt, Plus, Eye, Send, DollarSign, ArrowLeft, AlertTriangle, RefreshCw } from "lucide-react";
+import { Receipt, Plus, Eye, Send, DollarSign, ArrowLeft, AlertTriangle, RefreshCw, Clock, Ban, CheckCircle, Euro } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/contexts/AuthContext";
 import { Link } from "wouter";
@@ -42,6 +43,32 @@ export default function AdminInvoices() {
   const hasExistingInvoice = (appointmentId: string | undefined) => {
     if (!appointmentId) return false;
     return invoices?.some(invoice => invoice.appointmentId === appointmentId);
+  };
+
+  // Detect invoice type based on description and amount patterns
+  const getInvoiceTypeIcon = (invoice: Invoice) => {
+    const desc = invoice.description?.toLowerCase() || '';
+    const isNoShow = desc.includes('no-show') || desc.includes('penalty');
+    const isLateReschedule = desc.includes('late') && desc.includes('reschedule');
+    const isCustom = desc.includes('reissued') || desc.includes('custom');
+    
+    if (isNoShow) return <Ban className="w-4 h-4 text-red-500" title="No-Show Penalty" />;
+    if (isLateReschedule) return <Clock className="w-4 h-4 text-orange-500" title="Late Reschedule Fee" />;
+    if (isCustom) return <RefreshCw className="w-4 h-4 text-purple-500" title="Custom/Reissued" />;
+    return <CheckCircle className="w-4 h-4 text-green-500" title="Standard Session" />;
+  };
+
+  const getStatusBadge = (status: string) => {
+    switch (status) {
+      case "pending":
+        return <Badge variant="outline" className="text-orange-600 text-xs px-1 py-0">Pending</Badge>;
+      case "paid":
+        return <Badge variant="default" className="text-green-600 text-xs px-1 py-0">Paid</Badge>;
+      case "overdue":
+        return <Badge variant="destructive" className="text-xs px-1 py-0">Overdue</Badge>;
+      default:
+        return <Badge variant="secondary" className="text-xs px-1 py-0">{status}</Badge>;
+    }
   };
 
   // Filter appointments that could potentially need invoicing and haven't been invoiced yet
@@ -218,18 +245,7 @@ export default function AdminInvoices() {
     }
   };
 
-  const getStatusBadge = (status: string) => {
-    switch (status) {
-      case "pending":
-        return <Badge variant="outline" className="text-orange-600">Pending</Badge>;
-      case "paid":
-        return <Badge variant="default" className="bg-green-600">Paid</Badge>;
-      case "overdue":
-        return <Badge variant="destructive">Overdue</Badge>;
-      default:
-        return <Badge variant="secondary">{status}</Badge>;
-    }
-  };
+
 
   if (loadingInvoices) {
     return (
