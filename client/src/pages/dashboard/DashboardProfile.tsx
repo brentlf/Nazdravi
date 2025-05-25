@@ -291,19 +291,74 @@ export default function DashboardProfile() {
     await updatePreferences(data);
   };
 
+  const renewCompleteProgram = async () => {
+    try {
+      setIsLoading(true);
+      
+      const now = new Date();
+      const endDate = new Date();
+      endDate.setMonth(endDate.getMonth() + 3); // 3 months from now
+      
+      const updateData = {
+        servicePlan: "complete-program",
+        programStartDate: Timestamp.fromDate(now),
+        programEndDate: Timestamp.fromDate(endDate),
+      };
+
+      // Update Firebase document
+      await setDoc(doc(db, "users", user?.uid || ""), updateData, { merge: true });
+      
+      // Update local state
+      const newUserData = { ...currentUserData, ...updateData };
+      setCurrentUserData(newUserData);
+      
+      // Update form to reflect the renewal
+      preferencesForm.setValue("servicePlan", "complete-program");
+
+      toast({
+        title: "Complete Program Renewed!",
+        description: "Your 3-month Complete Program has been renewed successfully.",
+      });
+
+    } catch (error) {
+      console.error("Error renewing Complete Program:", error);
+      toast({
+        title: "Renewal Failed",
+        description: "Unable to renew your Complete Program. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   const updatePreferences = async (data: PreferencesFormData) => {
     setIsLoading(true);
     try {
+      // Check if Complete Program has expired and auto-revert to pay-as-you-go
+      let effectiveServicePlan = data.servicePlan;
+      if (data.servicePlan === "complete-program" && currentUserData?.programEndDate) {
+        const endDate = currentUserData.programEndDate.toDate ? 
+          currentUserData.programEndDate.toDate() : 
+          new Date(currentUserData.programEndDate);
+        
+        if (endDate <= new Date()) {
+          // Program has expired, auto-revert to pay-as-you-go unless user is explicitly renewing
+          effectiveServicePlan = "pay-as-you-go";
+          console.log("Complete Program has expired, reverting to pay-as-you-go");
+        }
+      }
+
       const updateData: any = {
         preferredLanguage: data.preferredLanguage,
-        servicePlan: data.servicePlan,
+        servicePlan: effectiveServicePlan,
         emailNotifications: data.emailNotifications,
       };
 
       // Only set new program dates if:
       // 1. Switching to complete program from pay-as-you-go, OR
       // 2. User had complete program but it's expired (past end date)
-      if (data.servicePlan === "complete-program") {
+      if (effectiveServicePlan === "complete-program") {
         const shouldSetNewDates = 
           // Case 1: Switching from pay-as-you-go to complete program
           currentUserData?.servicePlan !== "complete-program" ||
@@ -755,6 +810,38 @@ export default function DashboardProfile() {
                         </div>
                       </div>
                     </div>
+                    
+                    {/* Renewal Section for Expired Programs */}
+                    {currentUserData.programEndDate && (() => {
+                      const endDate = currentUserData.programEndDate.toDate ? 
+                        currentUserData.programEndDate.toDate() : 
+                        new Date(currentUserData.programEndDate);
+                      const isExpired = endDate <= new Date();
+                      
+                      if (isExpired) {
+                        return (
+                          <div className="mt-4 p-3 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg">
+                            <div className="flex items-center justify-between">
+                              <div>
+                                <h5 className="font-medium text-red-900 dark:text-red-100">Program Expired</h5>
+                                <p className="text-sm text-red-700 dark:text-red-300">
+                                  Your Complete Program has expired. You're now on Pay-As-You-Go billing.
+                                </p>
+                              </div>
+                              <Button
+                                onClick={renewCompleteProgram}
+                                disabled={isLoading}
+                                className="bg-purple-600 hover:bg-purple-700 text-white"
+                              >
+                                <Crown className="w-4 h-4 mr-2" />
+                                Renew Program
+                              </Button>
+                            </div>
+                          </div>
+                        );
+                      }
+                      return null;
+                    })()}
                   </div>
                 )}
 
