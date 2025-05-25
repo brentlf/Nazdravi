@@ -50,7 +50,6 @@ export default function AdminAppointments() {
   const [isEditingAppointment, setIsEditingAppointment] = useState(false);
   const [editDate, setEditDate] = useState("");
   const [editTimeslot, setEditTimeslot] = useState("");
-  const [actionLoading, setActionLoading] = useState(false);
   const { toast } = useToast();
 
   // Fetch appointments
@@ -464,7 +463,6 @@ export default function AdminAppointments() {
   };
 
   const handleNoShow = async (appointment: Appointment) => {
-    setActionLoading(true);
     try {
       // Calculate 50% penalty of original appointment cost
       const basePrice = appointment.type === "Initial" ? 75 : 50; // EUR pricing
@@ -529,8 +527,6 @@ export default function AdminAppointments() {
         description: "Please try again or check the system logs.",
         variant: "destructive",
       });
-    } finally {
-      setActionLoading(false);
     }
   };
 
