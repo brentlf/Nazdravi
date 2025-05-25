@@ -266,7 +266,7 @@ export function DashboardOverview() {
       </div>
 
       {/* Recent Activity & Quick Actions */}
-      <div className="grid lg:grid-cols-3 gap-8 lg:items-start">
+      <div className="grid lg:grid-cols-3 gap-8 lg:items-stretch">
         {/* Recent Messages */}
         <div className="lg:col-span-2">
           <Card className="h-full">
