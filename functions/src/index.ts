@@ -731,6 +731,61 @@ export const processMailQueue = functions.firestore
         case 'account-confirmation':
           template = emailService.getAccountConfirmationTemplate(mailData.toName);
           break;
+        case 'no-show':
+          template = emailService.getNoShowTemplate(
+            mailData.data.name,
+            mailData.data.date,
+            mailData.data.time,
+            mailData.data.penaltyAmount
+          );
+          break;
+        case 'appointment-confirmation':
+          template = emailService.getAppointmentConfirmationTemplate(
+            mailData.data.name,
+            mailData.data.date,
+            mailData.data.time,
+            mailData.data.meetingUrl || ''
+          );
+          break;
+        case 'appointment-reminder':
+          template = emailService.getAppointmentReminderTemplate(
+            mailData.data.name,
+            mailData.data.date,
+            mailData.data.time,
+            mailData.data.meetingUrl || ''
+          );
+          break;
+        case 'reschedule-request':
+          template = emailService.getRescheduleRequestTemplate(
+            mailData.data.name,
+            mailData.data.originalDate,
+            mailData.data.originalTime,
+            mailData.data.newDate,
+            mailData.data.newTime
+          );
+          break;
+        case 'appointment-cancelled':
+          template = emailService.getAppointmentCancelledTemplate(
+            mailData.data.name,
+            mailData.data.date,
+            mailData.data.time,
+            mailData.data.reason
+          );
+          break;
+        case 'late-reschedule':
+          template = emailService.getLateRescheduleTemplate(
+            mailData.data.name,
+            mailData.data.date,
+            mailData.data.time
+          );
+          break;
+        case 'invoice-generated':
+          template = emailService.getInvoiceGeneratedTemplate(
+            mailData.data.name,
+            mailData.data.amount,
+            mailData.data.invoiceId
+          );
+          break;
         default:
           // Use existing data if template type not found
           template = {
