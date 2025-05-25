@@ -858,7 +858,7 @@ export const onRescheduleRequest = functions.firestore
     }
   });
 
-// 4. Process Mail Queue
+// 4. Process Mail Queue - Updated for admin email support
 export const processMailQueue = functions.firestore
   .document('mail/{mailId}')
   .onCreate(async (snap, context) => {
@@ -868,7 +868,7 @@ export const processMailQueue = functions.firestore
       return;
     }
     
-    console.log('Processing email from queue:', mailData.to, 'Type:', mailData.type);
+    console.log('Processing email from queue:', mailData.to, 'Type:', mailData.type, 'Updated trigger');
     
     try {
       let template;
