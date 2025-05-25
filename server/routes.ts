@@ -121,7 +121,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const { email, name, date, time, penaltyAmount } = req.body;
       
-      console.log("Attempting to write to Firebase mail collection:", { email, name, date, time, penaltyAmount });
+      console.log("=== NO-SHOW EMAIL DEBUG ===");
+      console.log("Request body:", { email, name, date, time, penaltyAmount });
+      console.log("Firebase db connection status:", !!db);
+      console.log("Environment check - Project ID:", process.env.VITE_FIREBASE_PROJECT_ID);
+      console.log("Environment check - Service Account exists:", !!process.env.FIREBASE_SERVICE_ACCOUNT_KEY);
       
       // Queue email in Firebase with correct format for processMailQueue function
       const docRef = await db.collection("mail").add({
@@ -133,12 +137,15 @@ export async function registerRoutes(app: Express): Promise<Server> {
         createdAt: new Date()
       });
       
-      console.log("Successfully wrote to Firebase with doc ID:", docRef.id);
+      console.log("✅ SUCCESS: Written to Firebase with doc ID:", docRef.id);
+      console.log("Document path: mail/" + docRef.id);
 
       res.json({ success: true, message: "No-show notice email queued", docId: docRef.id });
     } catch (error: any) {
-      console.error("Error queuing no-show email:", error);
-      res.status(500).json({ success: false, error: error.message });
+      console.error("❌ FIREBASE ERROR:", error.message);
+      console.error("Error code:", error.code);
+      console.error("Full error stack:", error.stack);
+      res.status(500).json({ success: false, error: error.message, code: error.code });
     }
   });
 
