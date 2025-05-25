@@ -203,13 +203,17 @@ export class MailerLiteService {
 
   // Admin notification emails
   async sendAdminNewAppointment(appointmentData: any): Promise<boolean> {
+    console.log('🔍 DEBUG: sendAdminNewAppointment called with:', appointmentData);
     const template = this.getAdminNewAppointmentTemplate(appointmentData);
-    return this.sendEmail({
+    console.log('🔍 DEBUG: Template generated, calling sendEmail...');
+    const result = await this.sendEmail({
       to: 'admin@veenutrition.com',
       subject: template.subject,
       html: template.html,
       text: template.text
     });
+    console.log('🔍 DEBUG: sendEmail returned:', result);
+    return result;
   }
 
   async sendAdminInvoicePaid(clientName: string, amount: number, invoiceId: string): Promise<boolean> {
