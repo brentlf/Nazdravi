@@ -153,11 +153,17 @@ export default function AdminInvoices() {
         throw new Error('Failed to create invoice');
       }
     } catch (error) {
+      console.error('Error creating invoice:', error);
       toast({
         title: "Failed to Create Invoice",
         description: "Please try again later.",
         variant: "destructive",
       });
+      // Reset all states on error
+      setIsCreatingInvoice(false);
+      setSelectedAppointment(null);
+      setIncludeNoShowPenalty(false);
+      setIncludeLateRescheduleFee(false);
     }
   };
 
@@ -538,7 +544,12 @@ export default function AdminInvoices() {
                       </div>
                       <div className="text-sm text-muted-foreground">
                         <p>{invoice.description}</p>
-                        <p>{new Date(invoice.sessionDate).toLocaleDateString()}</p>
+                        <p>{new Date(invoice.sessionDate || invoice.createdAt).toLocaleDateString()}</p>
+                      </div>
+                      <div className="ml-4">
+                        <Badge variant="outline" className="text-xs">
+                          {invoice.invoiceType === 'penalty' ? 'Penalty Applied' : 'Session Completed'}
+                        </Badge>
                       </div>
                     </div>
                   </div>
