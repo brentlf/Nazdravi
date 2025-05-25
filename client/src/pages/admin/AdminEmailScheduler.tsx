@@ -173,6 +173,70 @@ export default function AdminEmailScheduler() {
         </div>
 
         <div className="grid gap-8">
+          {/* Daily Batch Operations */}
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <Send className="w-5 h-5" />
+                Daily Batch Operations
+              </CardTitle>
+              <p className="text-sm text-muted-foreground mt-2">
+                Manual triggers for batch email operations and daily maintenance
+              </p>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="flex items-center justify-between p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
+                <div>
+                  <h3 className="font-semibold">Tomorrow's Appointment Reminders</h3>
+                  <p className="text-sm text-muted-foreground">
+                    {tomorrow.toLocaleDateString()} - {tomorrowAppointments.length} confirmed appointments
+                  </p>
+                </div>
+                <Badge variant="secondary">
+                  {tomorrowAppointments.length} clients
+                </Badge>
+              </div>
+
+              {tomorrowAppointments.length > 0 && (
+                <div className="space-y-2">
+                  <h4 className="font-medium">Reminder Recipients:</h4>
+                  <div className="grid gap-2 max-h-40 overflow-y-auto">
+                    {tomorrowAppointments.map((apt) => (
+                      <div key={apt.id} className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-800 rounded">
+                        <div>
+                          <p className="font-medium">{apt.name}</p>
+                          <p className="text-sm text-muted-foreground">
+                            {apt.type} at {apt.timeslot}
+                          </p>
+                        </div>
+                        <Badge variant="outline">{apt.email}</Badge>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              <div className="flex gap-3">
+                <Button
+                  onClick={handleSendDailyReminders}
+                  disabled={sending || tomorrowAppointments.length === 0}
+                  className="flex-1"
+                >
+                  <Send className="w-4 h-4 mr-2" />
+                  {sending ? "Sending..." : "Send All Daily Reminders"}
+                </Button>
+                <Button
+                  variant="outline"
+                  onClick={handleTestReminderEmail}
+                  disabled={sending}
+                >
+                  <Mail className="w-4 h-4 mr-2" />
+                  Test Reminder
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+
           {/* Client Email Automations */}
           <Card>
             <CardHeader>
@@ -181,7 +245,7 @@ export default function AdminEmailScheduler() {
                 Client Email Automation Rules
               </CardTitle>
               <p className="text-sm text-muted-foreground mt-2">
-                Automated emails sent to clients based on their actions and appointment status
+                Automated emails sent to clients from <strong>info@veenutrition.com</strong> based on their actions and appointment status
               </p>
             </CardHeader>
             <CardContent>
@@ -286,7 +350,7 @@ export default function AdminEmailScheduler() {
                     <div>
                       <h4 className="font-medium">Late Reschedule Notice</h4>
                       <p className="text-sm text-muted-foreground">
-                        Sent when client reschedules within 24-hour policy window
+                        Sent when client reschedules within 4 working hours (excludes after 10pm weekdays, after 12pm Saturdays, all day Sunday)
                       </p>
                     </div>
                   </div>
@@ -304,7 +368,7 @@ export default function AdminEmailScheduler() {
                     <div>
                       <h4 className="font-medium">No-Show Penalty Notice</h4>
                       <p className="text-sm text-muted-foreground">
-                        Sent when client marked as no-show with penalty invoice
+                        Sent when appointment status is changed to "no-show" in Admin → Appointments (triggers penalty invoice)
                       </p>
                     </div>
                   </div>
@@ -345,7 +409,7 @@ export default function AdminEmailScheduler() {
                 Admin Email Notifications
               </CardTitle>
               <p className="text-sm text-muted-foreground mt-2">
-                Automated notifications sent to you when clients take actions requiring attention
+                Automated notifications sent to <strong>admin@veenutrition.com</strong> when clients take actions requiring attention
               </p>
             </CardHeader>
             <CardContent>

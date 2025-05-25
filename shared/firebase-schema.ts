@@ -30,7 +30,7 @@ export const appointmentSchema = z.object({
   timeslot: z.string(),
   type: z.enum(["Initial", "Follow-up"]),
   goals: z.string(),
-  status: z.enum(["pending", "confirmed", "done", "cancelled", "reschedule_requested", "cancelled_reschedule"]),
+  status: z.enum(["pending", "confirmed", "done", "cancelled", "reschedule_requested", "cancelled_reschedule", "no-show"]),
   name: z.string(),
   email: z.string().email(),
   phone: z.string().optional(),
