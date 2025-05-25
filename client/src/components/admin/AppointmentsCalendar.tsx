@@ -2,6 +2,7 @@ import { useState, useMemo } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { ChevronLeft, ChevronRight, Calendar, Video, Clock, CheckCircle, XCircle, AlertTriangle } from "lucide-react";
 import { Appointment } from "@/types";
 import { format, startOfMonth, endOfMonth, eachDayOfInterval, isSameMonth, isSameDay, addMonths, subMonths, isToday } from "date-fns";
@@ -167,9 +168,51 @@ export function AppointmentsCalendar({ appointments }: AppointmentsCalendarProps
                   
                   {/* Show +X more if there are additional appointments */}
                   {dayAppointments.length > 2 && (
-                    <div className="text-xs text-muted-foreground px-1">
-                      +{dayAppointments.length - 2} more
-                    </div>
+                    <Popover>
+                      <PopoverTrigger asChild>
+                        <div className="text-xs text-muted-foreground px-1 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 rounded">
+                          +{dayAppointments.length - 2} more
+                        </div>
+                      </PopoverTrigger>
+                      <PopoverContent className="w-80 p-3">
+                        <div className="space-y-2">
+                          <h4 className="font-medium text-sm">
+                            {format(day, 'MMMM d, yyyy')} - {dayAppointments.length} appointments
+                          </h4>
+                          <div className="space-y-2 max-h-60 overflow-y-auto">
+                            {dayAppointments.map(appointment => {
+                              const config = statusConfig[appointment.status as keyof typeof statusConfig];
+                              const StatusIcon = config?.icon || Clock;
+                              
+                              return (
+                                <div
+                                  key={appointment.id}
+                                  className={`
+                                    p-2 rounded border text-xs
+                                    ${config?.color || 'bg-gray-100 text-gray-800 border-gray-200'}
+                                    ${appointment.status === 'confirmed' && (appointment as any).teamsJoinUrl ? 'cursor-pointer hover:opacity-80' : ''}
+                                  `}
+                                  onClick={() => appointment.status === 'confirmed' && handleJoinTeams(appointment)}
+                                >
+                                  <div className="flex items-center justify-between">
+                                    <div className="flex items-center gap-2">
+                                      <StatusIcon className="w-3 h-3" />
+                                      <span className="font-medium">{appointment.name}</span>
+                                    </div>
+                                    {appointment.status === 'confirmed' && (appointment as any).teamsJoinUrl && (
+                                      <Video className="w-3 h-3" />
+                                    )}
+                                  </div>
+                                  <div className="mt-1 text-muted-foreground">
+                                    {appointment.timeslot} • {appointment.type || 'Consultation'}
+                                  </div>
+                                </div>
+                              );
+                            })}
+                          </div>
+                        </div>
+                      </PopoverContent>
+                    </Popover>
                   )}
                 </div>
               </div>
