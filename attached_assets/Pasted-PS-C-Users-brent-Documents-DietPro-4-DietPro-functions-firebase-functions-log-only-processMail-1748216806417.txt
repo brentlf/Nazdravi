@@ -1,0 +1,37 @@
+PS C:\Users\brent\Documents\DietPro (4)\DietPro\functions> firebase functions:log --only processMailQueue
+2025-05-25T23:43:35.135590111Z D processMailQueue: Function execution started
+2025-05-25T23:43:35.138796Z ? processMailQueue: Processing email from queue: admin@veenutrition.com Type: admin-plan-upgrade Updated trigger
+2025-05-25T23:43:35.139022Z ? processMailQueue: Resend API key not configured
+2025-05-25T23:43:35.247239Z ? processMailQueue: Email failed to admin@veenutrition.com
+2025-05-25T23:43:35.248312438Z D processMailQueue: Function execution took 112 ms, finished with status: 'ok'
+2025-05-25T23:43:35.761307071Z D processMailQueue: Function execution started
+2025-05-25T23:43:35.764422Z ? processMailQueue: Processing email from queue: admin@veenutrition.com Type: admin-client-message Updated trigger
+2025-05-25T23:43:35.764692Z ? processMailQueue: Resend API key not configured
+2025-05-25T23:43:35.819091Z ? processMailQueue: Email failed to admin@veenutrition.com
+2025-05-25T23:43:35.819943300Z D processMailQueue: Function execution took 58 ms, finished with status: 'ok'
+2025-05-25T23:45:15.656904670Z D processMailQueue: Function execution started
+2025-05-25T23:45:15.660526Z ? processMailQueue: Processing email from queue: admin@veenutrition.com Type: admin-new-appointment Updated trigger
+2025-05-25T23:45:15.660595Z ? processMailQueue: Resend API key not configured
+2025-05-25T23:45:15.739189Z ? processMailQueue: Email failed to admin@veenutrition.com
+2025-05-25T23:45:15.740293390Z D processMailQueue: Function execution took 83 ms, finished with status: 'ok'
+2025-05-25T23:45:16.904033742Z D processMailQueue: Function execution started
+2025-05-25T23:45:16.906949Z ? processMailQueue: Processing email from queue: admin@veenutrition.com Type: admin-reschedule-request Updated trigger
+2025-05-25T23:45:16.907020Z ? processMailQueue: Resend API key not configured
+2025-05-25T23:45:16.965990Z ? processMailQueue: Email failed to admin@veenutrition.com
+2025-05-25T23:45:16.966912023Z D processMailQueue: Function execution took 62 ms, finished with status: 'ok'
+2025-05-25T23:45:19.308090979Z D processMailQueue: Function execution started
+2025-05-25T23:45:19.311371Z ? processMailQueue: Processing email from queue: info@veenutrition.com Type: appointment-confirmation Updated trigger
+2025-05-25T23:45:19.311434Z ? processMailQueue: Resend API key not configured
+2025-05-25T23:45:19.363600Z ? processMailQueue: Email failed to info@veenutrition.com
+2025-05-25T23:45:19.364519494Z D processMailQueue: Function execution took 56 ms, finished with status: 'ok'
+2025-05-25T23:45:20.156679053Z D processMailQueue: Function execution started
+2025-05-25T23:45:20.159382Z ? processMailQueue: Processing email from queue: info@veenutrition.com Type: appointment-reminder Updated trigger
+2025-05-25T23:45:20.159454Z ? processMailQueue: Resend API key not configured
+2025-05-25T23:45:20.332201Z ? processMailQueue: Email failed to info@veenutrition.com
+2025-05-25T23:45:20.333542807Z D processMailQueue: Function execution took 176 ms, finished with status: 'ok'
+2025-05-25T23:45:20.949700249Z D processMailQueue: Function execution started
+2025-05-25T23:45:20.953126Z ? processMailQueue: Processing email from queue: info@veenutrition.com Type: reschedule-request Updated trigger
+2025-05-25T23:45:20.953216Z ? processMailQueue: Resend API key not configured
+2025-05-25T23:45:21.029207Z ? processMailQueue: Email failed to info@veenutrition.com
+2025-05-25T23:45:21.030128640Z D processMailQueue: Function execution took 80 ms, finished with status: 'ok'
+PS C:\Users\brent\Documents\DietPro (4)\DietPro\functions> 

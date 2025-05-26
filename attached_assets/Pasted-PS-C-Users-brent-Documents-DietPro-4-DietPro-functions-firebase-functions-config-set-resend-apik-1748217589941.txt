@@ -1,0 +1,47 @@
+PS C:\Users\brent\Documents\DietPro (4)\DietPro\functions> firebase functions:config:set resend.apikey="re_UC8kYpfb_8JoAk9qx1meTiuEbo5hNesuf" --project=veenutrition-79fba
++  Functions config updated.
+
+Please deploy your functions for the change to take effect by running firebase deploy --only functions
+
+PS C:\Users\brent\Documents\DietPro (4)\DietPro\functions> firebase deploy --only functions                             
+
+=== Deploying to 'veenutrition-79fba'...
+
+i  deploying functions
+Running command: npm --prefix "$RESOURCE_DIR" run build
+
+> build
+> tsc
+
++  functions: Finished running predeploy script.
+i  functions: preparing codebase default for deployment
+i  functions: ensuring required API cloudfunctions.googleapis.com is enabled...
+i  functions: ensuring required API cloudbuild.googleapis.com is enabled...
+i  artifactregistry: ensuring required API artifactregistry.googleapis.com is enabled...
++  functions: required API cloudfunctions.googleapis.com is enabled
++  functions: required API cloudbuild.googleapis.com is enabled
++  artifactregistry: required API artifactregistry.googleapis.com is enabled
+!  functions: Runtime Node.js 18 was deprecated on 2025-04-30 and will be decommissioned on 2025-10-30, after which you will not be able to deploy without upgrading. Consider upgrading now to avoid disruption. See https://cloud.google.com/functions/docs/runtime-support for full details on the lifecycle policy
+!  functions: package.json indicates an outdated version of firebase-functions. Please upgrade using npm install --save firebase-functions@latest in your functions directory.
+!  functions: Please note that there will be breaking changes when you upgrade.
+i  functions: Loading and analyzing source code for codebase default to determine what to deploy
+i  functions: You are using a version of firebase-functions SDK (4.9.0) that does not have support for the newest Firebase Extensions features. Please update firebase-functions SDK to >=5.1.0 to use them correctly
+Serving at port 8640
+
+i  functions: preparing functions directory for uploading...
+i  functions: packaged C:\Users\brent\Documents\DietPro (4)\DietPro\functions (63.5 KB) for uploading
+i  functions: ensuring required API cloudscheduler.googleapis.com is enabled...
++  functions: required API cloudscheduler.googleapis.com is enabled
++  functions: functions folder uploaded successfully
+i  functions: Skipping the deploy of unchanged functions.
++  functions[onUserCreated(us-central1)] Skipped (No changes detected)
++  functions[onAppointmentConfirmed(us-central1)] Skipped (No changes detected)
++  functions[onAppointmentCreated(us-central1)] Skipped (No changes detected)
++  functions[onRescheduleRequest(us-central1)] Skipped (No changes detected)
++  functions[processMailQueue(us-central1)] Skipped (No changes detected)
++  functions[sendDailyReminders(us-central1)] Skipped (No changes detected)
+
++  Deploy complete!
+
+Project Console: https://console.firebase.google.com/project/veenutrition-79fba/overview
+PS C:\Users\brent\Documents\DietPro (4)\DietPro\functions> 
