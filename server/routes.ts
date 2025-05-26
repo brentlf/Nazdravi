@@ -254,15 +254,18 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Admin notification email routes
   app.post("/api/emails/admin/new-appointment", async (req, res) => {
     try {
-      const { name, email, type, date, timeslot } = req.body;
+      const { name, email, type, date, timeslot, isTest } = req.body;
       
       if (!name || !email) {
         return res.status(400).json({ success: false, error: "Missing required fields: name and email" });
       }
       
+      // Use test email for test buttons, production email for real notifications
+      const adminEmail = isTest ? 'info@veenutrition.com' : 'admin@veenutrition.com';
+      
       // Queue email in Firebase with correct format
       const docRef = await db.collection("mail").add({
-        to: 'info@veenutrition.com',
+        to: adminEmail,
         toName: 'Admin Team',
         type: "admin-new-appointment",
         status: "pending",
@@ -285,15 +288,18 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   app.post("/api/emails/admin/health-update", async (req, res) => {
     try {
-      const { clientName, clientEmail, updateType } = req.body;
+      const { clientName, clientEmail, updateType, isTest } = req.body;
       
       if (!clientName || !clientEmail) {
         return res.status(400).json({ success: false, error: "Missing required fields: clientName and clientEmail" });
       }
       
+      // Use test email for test buttons, production email for real notifications
+      const adminEmail = isTest ? 'info@veenutrition.com' : 'admin@veenutrition.com';
+      
       // Queue email in Firebase with correct format
       const docRef = await db.collection("mail").add({
-        to: 'info@veenutrition.com',
+        to: adminEmail,
         toName: 'Admin Team',
         type: "admin-health-update",
         status: "pending",
@@ -314,15 +320,18 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   app.post("/api/emails/admin/payment-received", async (req, res) => {
     try {
-      const { clientName, amount, invoiceId, paymentMethod } = req.body;
+      const { clientName, amount, invoiceId, paymentMethod, isTest } = req.body;
       
       if (!clientName) {
         return res.status(400).json({ success: false, error: "Missing required field: clientName" });
       }
       
+      // Use test email for test buttons, production email for real notifications
+      const adminEmail = isTest ? 'info@veenutrition.com' : 'admin@veenutrition.com';
+      
       // Queue email in Firebase with correct format
       const docRef = await db.collection("mail").add({
-        to: 'info@veenutrition.com',
+        to: adminEmail,
         toName: 'Admin Team',
         type: "admin-payment-received",
         status: "pending",
