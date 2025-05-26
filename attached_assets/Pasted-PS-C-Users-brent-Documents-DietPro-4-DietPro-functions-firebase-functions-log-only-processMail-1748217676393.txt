@@ -1,0 +1,37 @@
+PS C:\Users\brent\Documents\DietPro (4)\DietPro\functions> firebase functions:log --only processMailQueue
+2025-05-25T23:43:35.139022Z ? processMailQueue: Resend API key not configured
+2025-05-25T23:43:35.247239Z ? processMailQueue: Email failed to admin@veenutrition.com
+2025-05-25T23:43:35.248312438Z D processMailQueue: Function execution took 112 ms, finished with status: 'ok'
+2025-05-25T23:43:35.761307071Z D processMailQueue: Function execution started
+2025-05-25T23:43:35.764422Z ? processMailQueue: Processing email from queue: admin@veenutrition.com Type: admin-client-message Updated trigger
+2025-05-25T23:43:35.764692Z ? processMailQueue: Resend API key not configured
+2025-05-25T23:43:35.819091Z ? processMailQueue: Email failed to admin@veenutrition.com
+2025-05-25T23:43:35.819943300Z D processMailQueue: Function execution took 58 ms, finished with status: 'ok'
+2025-05-25T23:45:15.656904670Z D processMailQueue: Function execution started
+2025-05-25T23:45:15.660526Z ? processMailQueue: Processing email from queue: admin@veenutrition.com Type: admin-new-appointment Updated trigger
+2025-05-25T23:45:15.660595Z ? processMailQueue: Resend API key not configured
+2025-05-25T23:45:15.739189Z ? processMailQueue: Email failed to admin@veenutrition.com
+2025-05-25T23:45:15.740293390Z D processMailQueue: Function execution took 83 ms, finished with status: 'ok'
+2025-05-25T23:45:16.904033742Z D processMailQueue: Function execution started
+2025-05-25T23:45:16.906949Z ? processMailQueue: Processing email from queue: admin@veenutrition.com Type: admin-reschedule-request Updated trigger
+2025-05-25T23:45:16.907020Z ? processMailQueue: Resend API key not configured
+2025-05-25T23:45:16.965990Z ? processMailQueue: Email failed to admin@veenutrition.com
+2025-05-25T23:45:16.966912023Z D processMailQueue: Function execution took 62 ms, finished with status: 'ok'
+2025-05-25T23:45:19.308090979Z D processMailQueue: Function execution started
+2025-05-25T23:45:19.311371Z ? processMailQueue: Processing email from queue: info@veenutrition.com Type: appointment-confirmation Updated trigger
+2025-05-25T23:45:19.311434Z ? processMailQueue: Resend API key not configured
+2025-05-25T23:45:19.363600Z ? processMailQueue: Email failed to info@veenutrition.com
+2025-05-25T23:45:19.364519494Z D processMailQueue: Function execution took 56 ms, finished with status: 'ok'
+2025-05-25T23:45:20.156679053Z D processMailQueue: Function execution started
+2025-05-25T23:45:20.159382Z ? processMailQueue: Processing email from queue: info@veenutrition.com Type: appointment-reminder Updated trigger
+2025-05-25T23:45:20.159454Z ? processMailQueue: Resend API key not configured
+2025-05-25T23:45:20.332201Z ? processMailQueue: Email failed to info@veenutrition.com
+2025-05-25T23:45:20.333542807Z D processMailQueue: Function execution took 176 ms, finished with status: 'ok'
+2025-05-25T23:45:20.949700249Z D processMailQueue: Function execution started
+2025-05-25T23:45:20.953126Z ? processMailQueue: Processing email from queue: info@veenutrition.com Type: reschedule-request Updated trigger
+2025-05-25T23:45:20.953216Z ? processMailQueue: Resend API key not configured
+2025-05-25T23:45:21.029207Z ? processMailQueue: Email failed to info@veenutrition.com
+2025-05-25T23:45:21.030128640Z D processMailQueue: Function execution took 80 ms, finished with status: 'ok'
+2025-05-25T23:54:40.777543Z N processMailQueue: {"@type":"type.googleapis.com/google.cloud.audit.AuditLog","authenticationInfo":{"principalEmail":"Brentlf@gmail.com","principalSubject":"user:Brentlf@gmail.com"},"requestMetadata":{"callerIp":"84.83.116.246","callerSuppliedUserAgent":"FirebaseCLI/14.4.0,gzip(gfe),gzip(gfe)","requestAttributes":{"time":"2025-05-25T23:54:41.141223Z","auth":{}},"destinationAttributes":{}},"serviceName":"cloudfunctions.googleapis.com","methodName":"google.cloud.functions.v1.CloudFunctionsService.UpdateFunction","authorizationInfo":[{"resource":"projects/veenutrition-79fba/locations/us-central1/functions/processMailQueue","permission":"cloudfunctions.functions.update","granted":true,"resourceAttributes":{},"permissionType":"ADMIN_WRITE"}],"resourceName":"projects/veenutrition-79fba/locations/us-central1/functions/processMailQueue","request":{"function":{"eventTrigger":{"resource":"projects/veenutrition-79fba/databases/(default)/documents/mail/{mailId}","eventType":"providers/cloud.firestore/eventTypes/document.create"},"sourceToken":"7fb2549d-67f1-4d59-9267-ed09b67fd98b","dockerRegistry":"ARTIFACT_REGISTRY","entryPoint":"processMailQueue","labels":{"firebase-functions-hash":"9e603045318c5f3618e31535b5f27d33ab15995a","deployment-tool":"cli-firebase"},"runtime":"nodejs18","name":"projects/veenutrition-79fba/locations/us-central1/functions/processMailQueue","sourceUploadUrl":"https://storage.googleapis.com/uploads-243108003689.us-central1.cloudfunctions.appspot.com/bf85ceec-c6b1-4e9f-bd42-ddacca8e9020.zip?GoogleAccessId=service-58051802559@gcf-admin-robot.iam.gserviceaccount.com&Expires=1748219022&Signature=OXKPAsu5cWSJcz9cZQlZSiJn6psjRzTtaggFrLQ4B4%2BhSFCpSvSJWr6%2FZtpU5BhOoDb0%2F6wa7xwbq%2F7OrngSRfNJypNK%2BR0ElCgyveCzRrAArupqRPg7jp8x46atW6lStWK4UA5e7OJv4K%2Bwb77S7nlgSltN9cu%2FPiBIgbyJMt6AU6mTnvJBs3x14JF0tzj0aXdPqiB6p4X6bJls%2Boso7ISUJH2xGhJrs8gPEm5cknZwPxEyXHAAQWFC%2BC%2Bm0%2FRmnPNgAPVwdNTvyD37ui3irYtjNUH6MULKBzu8FsZrCGk0Vh%2BMqOe9DnlWoCr0D8m0%2F9gUnv%2FRuvFesMMAzsvnyg%3D%3D"},"updateMask":"name,sourceUploadUrl,entryPoint,runtime,dockerRegistry,labels,eventTrigger.eventType,eventTrigger.resource,eventTrigger.failurePolicy,minInstances,maxInstances,ingressSettings,environmentVariables,serviceAccountEmail,availableMemoryMb,timeout,vpcConnector,vpcConnectorEgressSettings,sourceToken,buildEnvironmentVariables","@type":"type.googleapis.com/google.cloud.functions.v1.UpdateFunctionRequest"},"resourceLocation":{"currentLocations":["us-central1"]}}
+2025-05-25T23:54:58.452184Z N processMailQueue: {"@type":"type.googleapis.com/google.cloud.audit.AuditLog","status":{},"authenticationInfo":{},"serviceName":"cloudfunctions.googleapis.com","methodName":"google.cloud.functions.v1.CloudFunctionsService.UpdateFunction","resourceName":"projects/veenutrition-79fba/locations/us-central1/functions/processMailQueue"}
+PS C:\Users\brent\Documents\DietPro (4)\DietPro\functions> 

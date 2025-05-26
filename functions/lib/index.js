@@ -31,7 +31,7 @@ const https = __importStar(require("https"));
 admin.initializeApp();
 class ResendEmailService {
     async sendEmail(params) {
-        const RESEND_API_KEY = process.env.RESEND_API_KEY;
+        const RESEND_API_KEY = functions.config().resend?.apikey;
         if (!RESEND_API_KEY) {
             console.error('Resend API key not configured');
             return false;

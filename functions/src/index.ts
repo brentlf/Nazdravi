@@ -21,7 +21,7 @@ interface SendEmailParams {
 
 class ResendEmailService {
   async sendEmail(params: SendEmailParams): Promise<boolean> {
-    const RESEND_API_KEY = process.env.RESEND_API_KEY;
+    const RESEND_API_KEY = functions.config().resend?.apikey;
     
     if (!RESEND_API_KEY) {
       console.error('Resend API key not configured');
