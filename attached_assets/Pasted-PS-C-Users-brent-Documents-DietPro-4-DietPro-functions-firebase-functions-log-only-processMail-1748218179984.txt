@@ -1,0 +1,37 @@
+PS C:\Users\brent\Documents\DietPro (4)\DietPro\functions> firebase functions:log --only processMailQueue
+2025-05-26T00:07:53.801819Z ? processMailQueue: Processing email from queue: admin@veenutrition.com Type: admin-new-appointment Updated trigger
+2025-05-26T00:07:54.764356Z ? processMailQueue: Resend response: 200 {"id":"3c2118ea-8c42-4002-a279-8ea9ac10c6c8"}
+2025-05-26T00:07:54.764389Z ? processMailQueue: Email sent successfully to: admin@veenutrition.com
+2025-05-26T00:07:54.839793Z ? processMailQueue: Email sent successfully to admin@veenutrition.com
+2025-05-26T00:07:54.840802771Z D processMailQueue: Function execution took 1043 ms, finished with status: 'ok'
+2025-05-26T00:08:06.296812888Z D processMailQueue: Function execution started
+2025-05-26T00:08:06.301231Z ? processMailQueue: Processing email from queue: admin@veenutrition.com Type: admin-reschedule-request Updated trigger
+2025-05-26T00:08:07.334107Z ? processMailQueue: Resend response: 200 {"id":"87b067aa-28cc-40c7-a0a4-735f7d757fd4"}
+2025-05-26T00:08:07.334135Z ? processMailQueue: Email sent successfully to: admin@veenutrition.com
+2025-05-26T00:08:07.398563Z ? processMailQueue: Email sent successfully to admin@veenutrition.com
+2025-05-26T00:08:07.399906Z D processMailQueue: Function execution took 1103 ms, finished with status: 'ok'
+2025-05-26T00:08:20.173617031Z D processMailQueue: Function execution started
+2025-05-26T00:08:20.176955Z ? processMailQueue: Processing email from queue: admin@veenutrition.com Type: admin-health-update Updated trigger
+2025-05-26T00:08:21.154531Z ? processMailQueue: Resend response: 200 {"id":"b59d55b3-1089-49f5-a161-9a8af3070fcf"}
+2025-05-26T00:08:21.154554Z ? processMailQueue: Email sent successfully to: admin@veenutrition.com
+2025-05-26T00:08:21.220119Z ? processMailQueue: Email sent successfully to admin@veenutrition.com
+2025-05-26T00:08:21.221093502Z D processMailQueue: Function execution took 1047 ms, finished with status: 'ok'
+2025-05-26T00:08:29.169069626Z D processMailQueue: Function execution started
+2025-05-26T00:08:29.172396Z ? processMailQueue: Processing email from queue: admin@veenutrition.com Type: admin-payment-received Updated trigger
+2025-05-26T00:08:30.097642Z ? processMailQueue: Resend response: 200 {"id":"4a4c9b5f-a9f6-4cba-be9f-6e5e11983853"}
+2025-05-26T00:08:30.097659Z ? processMailQueue: Email sent successfully to: admin@veenutrition.com
+2025-05-26T00:08:30.189580Z ? processMailQueue: Email sent successfully to admin@veenutrition.com
+2025-05-26T00:08:30.190400248Z D processMailQueue: Function execution took 1021 ms, finished with status: 'ok'
+2025-05-26T00:08:34.146957900Z D processMailQueue: Function execution started
+2025-05-26T00:08:34.150427Z ? processMailQueue: Processing email from queue: admin@veenutrition.com Type: admin-plan-upgrade Updated trigger
+2025-05-26T00:08:35.087267Z ? processMailQueue: Resend response: 200 {"id":"73ea5b32-136c-4826-bbbc-4d80ccc9bdc4"}
+2025-05-26T00:08:35.087321Z ? processMailQueue: Email sent successfully to: admin@veenutrition.com
+2025-05-26T00:08:35.144800Z ? processMailQueue: Email sent successfully to admin@veenutrition.com
+2025-05-26T00:08:35.145640709Z D processMailQueue: Function execution took 998 ms, finished with status: 'ok'
+2025-05-26T00:08:39.839791501Z D processMailQueue: Function execution started
+2025-05-26T00:08:39.842998Z ? processMailQueue: Processing email from queue: admin@veenutrition.com Type: admin-client-message Updated trigger
+2025-05-26T00:08:40.663445Z ? processMailQueue: Resend response: 200 {"id":"40a7e780-4736-4d6a-b691-539aec5769c7"}
+2025-05-26T00:08:40.663465Z ? processMailQueue: Email sent successfully to: admin@veenutrition.com
+2025-05-26T00:08:40.731996Z ? processMailQueue: Email sent successfully to admin@veenutrition.com
+2025-05-26T00:08:40.733117478Z D processMailQueue: Function execution took 893 ms, finished with status: 'ok'
+PS C:\Users\brent\Documents\DietPro (4)\DietPro\functions> 

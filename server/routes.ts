@@ -262,7 +262,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       
       // Queue email in Firebase with correct format
       const docRef = await db.collection("mail").add({
-        to: 'admin@veenutrition.com',
+        to: 'info@veenutrition.com',
         toName: 'Admin Team',
         type: "admin-new-appointment",
         status: "pending",
@@ -293,7 +293,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       
       // Queue email in Firebase with correct format
       const docRef = await db.collection("mail").add({
-        to: 'admin@veenutrition.com',
+        to: 'info@veenutrition.com',
         toName: 'Admin Team',
         type: "admin-health-update",
         status: "pending",
@@ -322,7 +322,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       
       // Queue email in Firebase with correct format
       const docRef = await db.collection("mail").add({
-        to: 'admin@veenutrition.com',
+        to: 'info@veenutrition.com',
         toName: 'Admin Team',
         type: "admin-payment-received",
         status: "pending",
@@ -352,7 +352,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       
       // Queue email in Firebase with correct format
       const docRef = await db.collection("mail").add({
-        to: 'admin@veenutrition.com',
+        to: 'info@veenutrition.com',
         toName: 'Admin Team',
         type: "admin-plan-upgrade",
         status: "pending",
@@ -381,7 +381,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       
       // Queue email in Firebase with correct format
       const docRef = await db.collection("mail").add({
-        to: 'admin@veenutrition.com',
+        to: 'info@veenutrition.com',
         toName: 'Admin Team',
         type: "admin-client-message",
         status: "pending",
@@ -411,7 +411,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       
       // Queue email in Firebase with correct format
       const docRef = await db.collection("mail").add({
-        to: 'admin@veenutrition.com',
+        to: 'info@veenutrition.com',
         toName: 'Admin Team',
         type: "admin-reschedule-request",
         status: "pending",
