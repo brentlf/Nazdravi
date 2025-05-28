@@ -22,12 +22,14 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const { email, name } = req.body;
       
+      console.log("🚨 WELCOME EMAIL DEBUG - Request received:", { email, name });
+      
       if (!email || !name) {
         return res.status(400).json({ success: false, error: "Missing required fields: email and name" });
       }
       
       // Queue email in Firebase using exact same format as working appointment emails
-      const docRef = await db.collection("mail").add({
+      const docData = {
         to: email,
         toName: name,
         type: "account-confirmation",
@@ -36,7 +38,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
           name: name || ''
         },
         createdAt: new Date()
-      });
+      };
+      
+      console.log("🚨 WELCOME EMAIL DEBUG - About to write to Firebase:", docData);
+      
+      const docRef = await db.collection("mail").add(docData);
+      
+      console.log("🚨 WELCOME EMAIL DEBUG - Firebase doc created with ID:", docRef.id);
 
       // Add status checking for debugging
       setTimeout(async () => {
