@@ -603,6 +603,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   // Invoice lookup endpoint for payment page
   app.get("/api/invoices/:invoiceNumber", async (req, res) => {
+    console.log(`🔍 INVOICE LOOKUP: ${req.params.invoiceNumber}`);
+    
+    // Ensure we return JSON
+    res.setHeader('Content-Type', 'application/json');
+    
     try {
       const { invoiceNumber } = req.params;
       
@@ -613,44 +618,57 @@ export async function registerRoutes(app: Express): Promise<Server> {
         });
       }
 
-      // Fetch invoice from Firebase
-      const admin = (await import('firebase-admin')).default;
-      const db = admin.firestore();
-      
-      const invoicesRef = db.collection('invoices');
-      const query = invoicesRef.where('invoiceNumber', '==', invoiceNumber);
-      const snapshot = await query.get();
-      
-      if (snapshot.empty) {
-        return res.status(404).json({ 
+      console.log(`Looking up invoice: ${invoiceNumber}`);
+
+      // Try Firebase Admin connection
+      try {
+        const admin = (await import('firebase-admin')).default;
+        const db = admin.firestore();
+        
+        const invoicesRef = db.collection('invoices');
+        const query = invoicesRef.where('invoiceNumber', '==', invoiceNumber);
+        const snapshot = await query.get();
+        
+        if (snapshot.empty) {
+          console.log(`No invoice found: ${invoiceNumber}`);
+          return res.status(404).json({ 
+            success: false, 
+            error: "Invoice not found" 
+          });
+        }
+
+        const invoiceDoc = snapshot.docs[0];
+        const invoiceData = invoiceDoc.data();
+        
+        console.log(`Invoice found: ${invoiceData.invoiceNumber} - €${invoiceData.amount}`);
+
+        return res.json({ 
+          success: true, 
+          invoice: {
+            invoiceNumber: invoiceData.invoiceNumber,
+            clientName: invoiceData.clientName,
+            clientEmail: invoiceData.clientEmail,
+            amount: invoiceData.amount,
+            currency: invoiceData.currency || "EUR",
+            description: invoiceData.description,
+            sessionDate: invoiceData.sessionDate,
+            sessionType: invoiceData.sessionType || "Consultation",
+            status: invoiceData.status,
+            dueDate: invoiceData.dueDate,
+            stripePaymentIntentId: invoiceData.stripePaymentIntentId || ""
+          }
+        });
+      } catch (firebaseError) {
+        console.error("Firebase error:", firebaseError);
+        return res.status(500).json({ 
           success: false, 
-          error: "Invoice not found" 
+          error: "Database connection failed" 
         });
       }
 
-      const invoiceDoc = snapshot.docs[0];
-      const invoiceData = invoiceDoc.data();
-
-      res.json({ 
-        success: true, 
-        invoice: {
-          invoiceNumber: invoiceData.invoiceNumber,
-          clientName: invoiceData.clientName,
-          clientEmail: invoiceData.clientEmail,
-          amount: invoiceData.amount,
-          currency: invoiceData.currency || "EUR",
-          description: invoiceData.description,
-          sessionDate: invoiceData.sessionDate,
-          sessionType: invoiceData.sessionType || "Consultation",
-          status: invoiceData.status,
-          dueDate: invoiceData.dueDate,
-          stripePaymentIntentId: invoiceData.stripePaymentIntentId || ""
-        }
-      });
-
     } catch (error: any) {
       console.error("Error fetching invoice:", error);
-      res.status(500).json({ 
+      return res.status(500).json({ 
         success: false, 
         error: error.message || "Failed to fetch invoice" 
       });
