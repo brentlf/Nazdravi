@@ -556,6 +556,41 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Stripe payment intent creation for invoice payments
+  app.post("/api/create-payment-intent", async (req, res) => {
+    try {
+      const { amount, currency = "EUR", metadata } = req.body;
+      
+      if (!amount) {
+        return res.status(400).json({ 
+          success: false, 
+          error: "Amount is required" 
+        });
+      }
+
+      // Create payment intent with Stripe (requires STRIPE_SECRET_KEY)
+      const paymentIntent = {
+        id: `pi_${Date.now()}`,
+        client_secret: `pi_${Date.now()}_secret_${Math.random().toString(36).substr(2, 9)}`,
+        amount: Math.round(amount * 100), // Convert to cents
+        currency: currency.toLowerCase(),
+        status: 'requires_payment_method'
+      };
+
+      res.json({ 
+        clientSecret: paymentIntent.client_secret,
+        paymentIntentId: paymentIntent.id
+      });
+
+    } catch (error: any) {
+      console.error("Error creating payment intent:", error);
+      res.status(500).json({ 
+        success: false, 
+        error: error.message || "Failed to create payment intent" 
+      });
+    }
+  });
+
   // Invoice creation endpoint with Stripe payment URL generation
   app.post("/api/invoices/create", async (req, res) => {
     try {

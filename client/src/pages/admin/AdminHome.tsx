@@ -193,25 +193,26 @@ export default function AdminHome() {
 
               return (
                 <Card key={index} className="hover:shadow-lg transition-shadow duration-200">
-                  <CardContent className="p-4">
+                  <CardContent className="p-4 flex flex-col h-full">
                     <div className="flex items-center justify-between mb-3">
-                      <h3 className="font-semibold text-sm text-muted-foreground">{stat.title}</h3>
+                      <h3 className="font-medium text-sm text-muted-foreground">{stat.title}</h3>
                       <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${stat.bgColor}`}>
                         <Icon className={`w-4 h-4 ${stat.color}`} />
                       </div>
                     </div>
-                    <div className="text-center mb-3">
-                      <p className="text-xs text-muted-foreground mb-2">
-                        Send appointment reminders to all clients with confirmed appointments tomorrow
+                    <div className="flex-grow mb-3">
+                      <p className="text-2xl font-bold mb-1">{tomorrowAppointments.length}</p>
+                      <p className="text-xs text-muted-foreground">
+                        clients with appointments tomorrow
                       </p>
-                      <Badge variant="secondary" className="text-xs">
-                        {tomorrowAppointments.length} clients
+                      <Badge variant="secondary" className="text-xs mt-1">
+                        Ready to send
                       </Badge>
                     </div>
-                    <Button size="sm" asChild className="w-full">
+                    <Button size="sm" variant="outline" asChild className="w-full mt-auto">
                       <Link href={stat.href}>
                         <Mail className="w-3 h-3 mr-1" />
-                        Send Daily Reminders
+                        Send Reminders
                       </Link>
                     </Button>
                   </CardContent>
@@ -222,27 +223,27 @@ export default function AdminHome() {
             // Regular stat tiles
             return (
               <Card key={index} className="hover:shadow-lg transition-shadow duration-200">
-                <CardContent className="p-6">
-                  <div className="flex items-center justify-between mb-4">
-                    <h3 className="font-semibold text-sm text-muted-foreground">{stat.title}</h3>
-                    <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${stat.bgColor}`}>
-                      <Icon className={`w-5 h-5 ${stat.color}`} />
+                <CardContent className="p-4 flex flex-col h-full">
+                  <div className="flex items-center justify-between mb-3">
+                    <h3 className="font-medium text-sm text-muted-foreground">{stat.title}</h3>
+                    <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${stat.bgColor}`}>
+                      <Icon className={`w-4 h-4 ${stat.color}`} />
                     </div>
                   </div>
-                  <div className="space-y-2">
-                    <p className="text-3xl font-bold">{stat.value}</p>
+                  <div className="flex-grow mb-3">
+                    <p className="text-2xl font-bold mb-1">{stat.value}</p>
                     {stat.subtitle && (
-                      <p className="text-sm text-muted-foreground">{stat.subtitle}</p>
+                      <p className="text-xs text-muted-foreground">{stat.subtitle}</p>
                     )}
                     {stat.badge && (
-                      <Badge variant="outline" className="text-xs text-red-600 border-red-600">
+                      <Badge variant="outline" className="text-xs text-red-600 border-red-600 mt-1">
                         {stat.badge}
                       </Badge>
                     )}
-                    <Button size="sm" variant="outline" asChild className="w-full">
-                      <Link href={stat.href}>View Details</Link>
-                    </Button>
                   </div>
+                  <Button size="sm" variant="outline" asChild className="w-full mt-auto">
+                    <Link href={stat.href}>View Details</Link>
+                  </Button>
                 </CardContent>
               </Card>
             );

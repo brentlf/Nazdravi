@@ -131,44 +131,62 @@ export default function PayInvoice() {
           return;
         }
 
-        // In a real implementation, this would fetch the actual invoice
-        // For demo purposes, we'll create a sample invoice
-        const sampleInvoice: Invoice = {
-          invoiceNumber,
-          clientName: "Client Name",
-          amount: 85.00,
-          currency: "EUR",
-          description: "Nutrition Consultation - Initial Assessment",
-          sessionDate: new Date().toISOString().split('T')[0],
-          sessionType: "Initial",
-          status: "pending",
-          dueDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
-          stripePaymentIntentId: "pi_demo"
+        // Fetch real invoice data from Firebase
+        const { db } = await import('@/lib/firebase');
+        const { collection, query, where, getDocs } = await import('firebase/firestore');
+        
+        const invoicesRef = collection(db, 'invoices');
+        const q = query(invoicesRef, where('invoiceNumber', '==', invoiceNumber));
+        const querySnapshot = await getDocs(q);
+        
+        if (querySnapshot.empty) {
+          setError("Invoice not found");
+          setLoading(false);
+          return;
+        }
+
+        const invoiceDoc = querySnapshot.docs[0];
+        const invoiceData = invoiceDoc.data();
+        
+        const realInvoice: Invoice = {
+          invoiceNumber: invoiceData.invoiceNumber,
+          clientName: invoiceData.clientName,
+          amount: invoiceData.amount,
+          currency: invoiceData.currency || "EUR",
+          description: invoiceData.description,
+          sessionDate: invoiceData.sessionDate || new Date().toISOString().split('T')[0],
+          sessionType: invoiceData.sessionType || "Consultation",
+          status: invoiceData.status,
+          dueDate: invoiceData.dueDate?.toDate?.()?.toISOString()?.split('T')[0] || new Date().toISOString().split('T')[0],
+          stripePaymentIntentId: invoiceData.stripePaymentIntentId || ""
         };
 
-        setInvoice(sampleInvoice);
+        setInvoice(realInvoice);
 
-        // Create payment intent for this invoice
-        const response = await fetch('/api/invoices/create', {
+        // Create Stripe payment intent for this invoice
+        const response = await fetch('/api/create-payment-intent', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
           },
           body: JSON.stringify({
-            appointmentId: 'demo_appointment',
-            userId: 'demo_user',
-            clientName: sampleInvoice.clientName,
-            clientEmail: 'client@example.com',
-            amount: sampleInvoice.amount,
-            description: sampleInvoice.description,
-            sessionDate: sampleInvoice.sessionDate,
-            sessionType: sampleInvoice.sessionType,
+            amount: realInvoice.amount,
+            currency: realInvoice.currency,
+            metadata: {
+              invoiceNumber: realInvoice.invoiceNumber,
+              clientName: realInvoice.clientName
+            }
           }),
         });
 
-        const data = await response.json();
-        setClientSecret(data.clientSecret);
+        if (response.ok) {
+          const data = await response.json();
+          setClientSecret(data.clientSecret);
+        } else {
+          throw new Error('Failed to create payment intent');
+        }
       } catch (err) {
+        console.error('Error fetching invoice:', err);
         setError("Failed to load invoice details");
       } finally {
         setLoading(false);
