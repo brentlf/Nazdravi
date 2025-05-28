@@ -568,14 +568,24 @@ export async function registerRoutes(app: Express): Promise<Server> {
         });
       }
 
-      // Create payment intent with Stripe (requires STRIPE_SECRET_KEY)
-      const paymentIntent = {
-        id: `pi_${Date.now()}`,
-        client_secret: `pi_${Date.now()}_secret_${Math.random().toString(36).substr(2, 9)}`,
+      // Initialize Stripe with secret key
+      const Stripe = (await import('stripe')).default;
+      const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
+        apiVersion: '2025-04-30.basil',
+      });
+
+      // Create real Stripe payment intent
+      const paymentIntent = await stripe.paymentIntents.create({
         amount: Math.round(amount * 100), // Convert to cents
         currency: currency.toLowerCase(),
-        status: 'requires_payment_method'
-      };
+        metadata: metadata || {},
+        payment_method_types: ['card', 'ideal'], // Support cards and iDEAL
+        automatic_payment_methods: {
+          enabled: true,
+        },
+      });
+
+      console.log(`Created Stripe payment intent: ${paymentIntent.id} for €${amount}`);
 
       res.json({ 
         clientSecret: paymentIntent.client_secret,
@@ -583,11 +593,62 @@ export async function registerRoutes(app: Express): Promise<Server> {
       });
 
     } catch (error: any) {
-      console.error("Error creating payment intent:", error);
+      console.error("Error creating Stripe payment intent:", error);
       res.status(500).json({ 
         success: false, 
         error: error.message || "Failed to create payment intent" 
       });
+    }
+  });
+
+  // Stripe webhook handler for payment completion
+  app.post("/api/stripe-webhook", async (req, res) => {
+    try {
+      const Stripe = (await import('stripe')).default;
+      const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
+        apiVersion: '2025-04-30.basil',
+      });
+
+      const sig = req.headers['stripe-signature'];
+      let event;
+
+      try {
+        event = stripe.webhooks.constructEvent(req.body, sig!, process.env.STRIPE_WEBHOOK_SECRET || 'whsec_test');
+      } catch (err: any) {
+        console.log(`Webhook signature verification failed.`, err.message);
+        return res.status(400).send(`Webhook Error: ${err.message}`);
+      }
+
+      // Handle payment success
+      if (event.type === 'payment_intent.succeeded') {
+        const paymentIntent = event.data.object;
+        console.log(`Payment succeeded: ${paymentIntent.id}`);
+        
+        // Update invoice status in Firebase
+        if (paymentIntent.metadata?.invoiceNumber) {
+          const admin = (await import('firebase-admin')).default;
+          const db = admin.firestore();
+          
+          const invoicesRef = db.collection('invoices');
+          const query = invoicesRef.where('invoiceNumber', '==', paymentIntent.metadata.invoiceNumber);
+          const snapshot = await query.get();
+          
+          if (!snapshot.empty) {
+            const invoiceDoc = snapshot.docs[0];
+            await invoiceDoc.ref.update({
+              status: 'paid',
+              paidAt: admin.firestore.FieldValue.serverTimestamp(),
+              stripePaymentIntentId: paymentIntent.id
+            });
+            console.log(`Updated invoice ${paymentIntent.metadata.invoiceNumber} to paid status`);
+          }
+        }
+      }
+
+      res.json({ received: true });
+    } catch (error: any) {
+      console.error("Webhook error:", error);
+      res.status(500).json({ error: error.message });
     }
   });
 
