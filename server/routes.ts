@@ -305,33 +305,6 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const { email, name, amount, invoiceNumber, paymentUrl } = req.body;
       
-      if (!email || !name) {
-        return res.status(400).json({ success: false, error: "Missing required fields: email and name" });
-      }
-      
-      // Queue email in Firebase with correct format matching Firebase Functions expectations
-      const docRef = await db.collection("mail").add({
-        to: email,
-        toName: name,
-        type: "payment-reminder",
-        status: "pending",
-        amount: amount || 0,
-        invoiceNumber: invoiceNumber || '',
-        paymentUrl: paymentUrl || '',
-        createdAt: new Date()
-      });
-
-      res.json({ success: true, message: "Payment reminder email queued", docId: docRef.id });
-    } catch (error: any) {
-      console.error("Error queuing payment reminder email:", error);
-      res.status(500).json({ success: false, error: error.message });
-    }
-  });
-
-  app.post("/api/emails/payment-reminder", async (req, res) => {
-    try {
-      const { email, name, amount, invoiceNumber, paymentUrl } = req.body;
-      
       // Validate required fields
       if (!email || !name) {
         return res.status(400).json({ success: false, error: "Missing required fields: email and name" });
