@@ -38,6 +38,24 @@ export async function registerRoutes(app: Express): Promise<Server> {
         createdAt: new Date()
       });
 
+      // Add status checking for debugging
+      setTimeout(async () => {
+        try {
+          const doc = await db.collection("mail").doc(docRef.id).get();
+          const data = doc.data();
+          console.log("📧 Welcome email status after 10 seconds:", data?.status);
+          if (data?.status === "sent") {
+            console.log("✅ Welcome email successfully processed and sent!");
+          } else if (data?.status === "failed") {
+            console.log("❌ Welcome email processing failed:", data?.error);
+          } else {
+            console.log("⏳ Welcome email still pending - check Firebase Functions logs");
+          }
+        } catch (error) {
+          console.error("Error checking welcome email status:", error);
+        }
+      }, 10000);
+
       res.json({ success: true, message: "Welcome email queued", docId: docRef.id });
     } catch (error: any) {
       console.error("Error queuing welcome email:", error);
