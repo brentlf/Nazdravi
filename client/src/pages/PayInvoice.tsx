@@ -211,7 +211,9 @@ export default function PayInvoice() {
           sessionDate: invoiceResult.invoice.sessionDate || new Date().toISOString().split('T')[0],
           sessionType: invoiceResult.invoice.sessionType,
           status: invoiceResult.invoice.status,
-          dueDate: invoiceResult.invoice.dueDate || new Date().toISOString().split('T')[0],
+          dueDate: invoiceResult.invoice.dueDate?._seconds 
+            ? new Date(invoiceResult.invoice.dueDate._seconds * 1000).toISOString().split('T')[0]
+            : new Date().toISOString().split('T')[0],
           stripePaymentIntentId: invoiceResult.invoice.stripePaymentIntentId
         };
 
