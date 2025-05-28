@@ -95,7 +95,7 @@ export default function AdminInvoices() {
     !hasExistingInvoice(apt.id)
   ) || [];
 
-  // Smart invoice type detection with accounting flow awareness
+  // Smart invoice type detection with accounting flow awareness and tooltips
   const getInvoiceTypeIcon = (invoice: any) => {
     const desc = invoice.description?.toLowerCase() || '';
     const isReissued = invoice.isReissued === true;
@@ -104,12 +104,19 @@ export default function AdminInvoices() {
     const isLateReschedule = desc.includes('late') && desc.includes('reschedule');
     const isCustom = desc.includes('custom') && !isReissued;
     
-    if (hasAccountingFlow) return <div className="flex items-center gap-1" title="Has accounting adjustments"><RefreshCw className="w-4 h-4 text-blue-500" /><span className="text-xs text-blue-600">•</span></div>;
-    if (isReissued) return <RefreshCw className="w-4 h-4 text-blue-500" />;
-    if (isNoShow) return <Ban className="w-4 h-4 text-red-500" />;
-    if (isLateReschedule) return <Clock className="w-4 h-4 text-orange-500" />;
-    if (isCustom) return <Edit className="w-4 h-4 text-purple-500" />;
-    return <CheckCircle className="w-4 h-4 text-green-500" />;
+    if (hasAccountingFlow) {
+      return (
+        <div className="flex items-center gap-1 cursor-help" title="Has accounting adjustments (credit notes/reissues)">
+          <RefreshCw className="w-4 h-4 text-blue-500" />
+          <span className="text-xs text-blue-600">•</span>
+        </div>
+      );
+    }
+    if (isReissued) return <div className="cursor-help" title="Reissued Invoice"><RefreshCw className="w-4 h-4 text-blue-500" /></div>;
+    if (isNoShow) return <div className="cursor-help" title="No-Show Penalty"><Ban className="w-4 h-4 text-red-500" /></div>;
+    if (isLateReschedule) return <div className="cursor-help" title="Late Reschedule Fee"><Clock className="w-4 h-4 text-orange-500" /></div>;
+    if (isCustom) return <div className="cursor-help" title="Custom Amount"><Edit className="w-4 h-4 text-purple-500" /></div>;
+    return <div className="cursor-help" title="Standard Session Rate"><CheckCircle className="w-4 h-4 text-green-500" /></div>;
   };
 
   // Smart amount display considering net amounts after credits
@@ -292,9 +299,19 @@ export default function AdminInvoices() {
         }),
       });
 
+      console.log('Response status:', response.status, 'Response headers:', response.headers);
+      
       if (response.ok) {
-        const result = await response.json();
-        console.log('Reissue success result:', result);
+        let result;
+        try {
+          result = await response.json();
+          console.log('Reissue success result:', result);
+        } catch (jsonError) {
+          console.error('Failed to parse JSON response:', jsonError);
+          const textResponse = await response.text();
+          console.error('Raw response:', textResponse);
+          throw new Error('Server returned invalid JSON response');
+        }
         
         toast({
           title: "Invoice Reissued Successfully!",
@@ -748,7 +765,9 @@ export default function AdminInvoices() {
                       {invoices.map((invoice) => (
                         <TableRow key={invoice.id} className="hover:bg-muted/50 h-12">
                           <TableCell className="text-center p-2">
-                            {getInvoiceTypeIcon(invoice)}
+                            <div className="flex justify-center items-center">
+                              {getInvoiceTypeIcon(invoice)}
+                            </div>
                           </TableCell>
                           <TableCell className="p-2">
                             <div className="font-mono text-xs">{invoice.invoiceNumber}</div>
@@ -780,15 +799,17 @@ export default function AdminInvoices() {
                           </TableCell>
                           <TableCell className="p-2">
                             <div className="flex gap-1 justify-center">
-                              <Button
-                                variant="ghost"
-                                size="sm"
-                                className="h-8 w-8 p-0"
-                                onClick={() => window.open(invoice.paymentUrl || '#', '_blank')}
-                                title="View Invoice"
-                              >
-                                <Eye className="w-3 h-3" />
-                              </Button>
+                              {invoice.paymentUrl && (
+                                <Button
+                                  variant="ghost"
+                                  size="sm"
+                                  className="h-8 w-8 p-0"
+                                  onClick={() => window.open(invoice.paymentUrl, '_blank')}
+                                  title="View Payment Link"
+                                >
+                                  <Eye className="w-3 h-3" />
+                                </Button>
+                              )}
                               {invoice.status === 'pending' && (
                                 <Button
                                   variant="ghost"

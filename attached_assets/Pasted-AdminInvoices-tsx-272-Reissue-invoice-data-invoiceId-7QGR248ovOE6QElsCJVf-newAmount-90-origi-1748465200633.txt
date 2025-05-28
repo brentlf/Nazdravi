@@ -1,0 +1,21 @@
+AdminInvoices.tsx:272 Reissue invoice data: {invoiceId: '7QGR248ovOE6QElsCJVf', newAmount: 90, originalAmount: 95, requestBody: {…}}invoiceId: "7QGR248ovOE6QElsCJVf"newAmount: 90originalAmount: 95requestBody: newAmount: 90originalInvoiceId: "7QGR248ovOE6QElsCJVf"reason: "Amount adjustment"[[Prototype]]: Objectconstructor: ƒ Object()hasOwnProperty: ƒ hasOwnProperty()isPrototypeOf: ƒ isPrototypeOf()propertyIsEnumerable: ƒ propertyIsEnumerable()toLocaleString: ƒ toLocaleString()toString: ƒ toString()valueOf: ƒ valueOf()__defineGetter__: ƒ __defineGetter__()__defineSetter__: ƒ __defineSetter__()__lookupGetter__: ƒ __lookupGetter__()__lookupSetter__: ƒ __lookupSetter__()__proto__: (...)get __proto__: ƒ __proto__()set __proto__: ƒ __proto__()[[Prototype]]: Objectconstructor: ƒ Object()hasOwnProperty: ƒ hasOwnProperty()isPrototypeOf: ƒ isPrototypeOf()propertyIsEnumerable: ƒ propertyIsEnumerable()toLocaleString: ƒ toLocaleString()toString: ƒ toString()valueOf: ƒ valueOf()__defineGetter__: ƒ __defineGetter__()__defineSetter__: ƒ __defineSetter__()__lookupGetter__: ƒ __lookupGetter__()__lookupSetter__: ƒ __lookupSetter__()__proto__: (...)get __proto__: ƒ __proto__()set __proto__: ƒ __proto__()
+ Reissue error details: SyntaxError: Unexpected token '<', "<!DOCTYPE "... is not valid JSON
+overrideMethod @ chrome-extension://f…ld/installHook.js:1
+handleReissueInvoice @ AdminInvoices.tsx:322
+await in handleReissueInvoice
+onClick @ AdminInvoices.tsx:903
+callCallback2 @ /@fs/home/runner/wor….js?v=1a8e8de5:3674
+invokeGuardedCallbackDev @ /@fs/home/runner/wor….js?v=1a8e8de5:3699
+invokeGuardedCallback @ /@fs/home/runner/wor….js?v=1a8e8de5:3733
+invokeGuardedCallbackAndCatchFirstError @ /@fs/home/runner/wor….js?v=1a8e8de5:3736
+executeDispatch @ /@fs/home/runner/wor….js?v=1a8e8de5:7014
+processDispatchQueueItemsInOrder @ /@fs/home/runner/wor….js?v=1a8e8de5:7034
+processDispatchQueue @ /@fs/home/runner/wor….js?v=1a8e8de5:7043
+dispatchEventsForPlugins @ /@fs/home/runner/wor….js?v=1a8e8de5:7051
+(anonymous) @ /@fs/home/runner/wor….js?v=1a8e8de5:7174
+batchedUpdates$1 @ /@fs/home/runner/wor…js?v=1a8e8de5:18913
+batchedUpdates @ /@fs/home/runner/wor….js?v=1a8e8de5:3579
+dispatchEventForPluginEventSystem @ /@fs/home/runner/wor….js?v=1a8e8de5:7173
+dispatchEventWithEnableCapturePhaseSelectiveHydrationWithoutDiscreteEventReplay @ /@fs/home/runner/wor….js?v=1a8e8de5:5478
+dispatchEvent @ /@fs/home/runner/wor….js?v=1a8e8de5:5472
+dispatchDiscreteEvent @ /@fs/home/runner/wor….js?v=1a8e8de5:5449
