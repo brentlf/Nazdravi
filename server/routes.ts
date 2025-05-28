@@ -8,6 +8,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Debug middleware to log all email-related requests
   app.use('/api/emails', (req, res, next) => {
     console.log(`🔍 MIDDLEWARE DEBUG: ${req.method} ${req.path} - ${req.url}`);
+    if (req.path === '/welcome') {
+      console.log('🚨 MIDDLEWARE: Welcome request detected!');
+    }
     next();
   });
 

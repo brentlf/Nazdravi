@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { Calendar, Clock, Plus, CheckCircle, XCircle, AlertCircle, Shield, ArrowLeft, Edit, Trash2 } from "lucide-react";
+import { Calendar, Clock, Plus, CheckCircle, XCircle, AlertCircle, Shield, ArrowLeft, Edit, Trash2, FileText, ChevronDown, ChevronUp, ExternalLink, Video } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -51,7 +51,49 @@ const appointmentSchema = z.object({
   timeslot: z.string().min(1, "Please select a time slot"),
 });
 
+// Pre-evaluation form schema
+const preEvaluationSchema = z.object({
+  // Basic Information
+  age: z.number().min(16, "Must be at least 16 years old").max(120),
+  gender: z.enum(["male", "female", "other", "prefer-not-to-say"]),
+  height: z.number().min(100, "Height must be at least 100cm").max(250, "Height must be less than 250cm"),
+  weight: z.number().min(30, "Weight must be at least 30kg").max(300, "Weight must be less than 300kg"),
+  
+  // Health Goals
+  primaryGoal: z.enum([
+    "weight-loss", 
+    "weight-gain", 
+    "muscle-building", 
+    "general-health", 
+    "sports-performance", 
+    "medical-condition-support",
+    "other"
+  ]),
+  specificGoals: z.string().min(20, "Please describe your specific goals (minimum 20 characters)"),
+  
+  // Current Health Status
+  chronicConditions: z.array(z.string()).default([]),
+  currentMedications: z.string().optional(),
+  allergies: z.string().optional(),
+  
+  // Lifestyle
+  activityLevel: z.enum(["sedentary", "lightly-active", "moderately-active", "very-active", "extremely-active"]),
+  sleepHours: z.number().min(3).max(12),
+  stressLevel: z.number().min(1).max(10),
+  
+  // Dietary Information
+  currentDiet: z.enum(["omnivore", "vegetarian", "vegan", "keto", "paleo", "mediterranean", "other"]),
+  foodRestrictions: z.string().optional(),
+  waterIntake: z.number().min(0).max(10),
+  alcoholConsumption: z.enum(["never", "rarely", "weekly", "daily"]),
+  
+  // Additional Information
+  previousNutritionCoaching: z.boolean().default(false),
+  additionalNotes: z.string().optional(),
+});
+
 type AppointmentFormData = z.infer<typeof appointmentSchema>;
+type PreEvaluationFormData = z.infer<typeof preEvaluationSchema>;
 
 export default function DashboardAppointments() {
   const [isBookingOpen, setIsBookingOpen] = useState(false);
@@ -61,12 +103,21 @@ export default function DashboardAppointments() {
   const [isCancelOpen, setIsCancelOpen] = useState(false);
   const [selectedAppointment, setSelectedAppointment] = useState<any>(null);
   const [rescheduleDate, setRescheduleDate] = useState("");
+  const [showAllAppointments, setShowAllAppointments] = useState(false);
+  const [isPreEvaluationOpen, setIsPreEvaluationOpen] = useState(false);
+  const [hasPreEvaluation, setHasPreEvaluation] = useState(false);
   const { effectiveUser: user, isAdminViewingClient } = useAuth();
   const { toast } = useToast();
   const { add: addAppointment, update: updateAppointment, loading: booking } = useFirestoreActions("appointments");
+  const { add: addPreEvaluation, loading: submittingPreEval } = useFirestoreActions("preEvaluations");
 
   // Check if user has completed consent form from Firebase
   const { data: consentRecords } = useFirestoreCollection("consentRecords", [
+    where("userId", "==", user?.uid || "")
+  ]);
+
+  // Check if user has completed pre-evaluation form
+  const { data: preEvaluationRecords } = useFirestoreCollection("preEvaluations", [
     where("userId", "==", user?.uid || "")
   ]);
 
@@ -81,6 +132,15 @@ export default function DashboardAppointments() {
       setHasConsent(hasValidConsent);
     }
   }, [consentRecords, user?.uid]);
+
+  useEffect(() => {
+    if (user?.uid && preEvaluationRecords) {
+      const hasCompletedPreEval = preEvaluationRecords.some(record => 
+        record.status === "completed"
+      );
+      setHasPreEvaluation(hasCompletedPreEval);
+    }
+  }, [preEvaluationRecords, user?.uid]);
 
   // Get available time slots for selected date
   const { availableSlots, loading: slotsLoading } = useAvailableSlots(selectedDate);
