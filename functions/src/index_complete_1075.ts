@@ -37,6 +37,7 @@ class ResendEmailService {
         text: params.text || ''
       });
 
+      
       const options = {
         hostname: 'api.resend.com',
         port: 443,
@@ -397,24 +398,24 @@ Vee Nutrition Team`
             
             <div style="text-align: center; margin: 30px 0;">
               <a href="https://your-domain.replit.app/dashboard/invoices" style="background-color: #A5CBA4; color: white; padding: 12px 25px; text-decoration: none; border-radius: 5px; font-weight: bold;">
-                Pay Invoice Now
+                View & Pay Invoice
               </a>
             </div>
             
             <div style="border-top: 1px solid #eee; padding-top: 20px; margin-top: 30px; text-align: center; color: #999; font-size: 14px;">
-              <p>Vee Nutrition | Professional Nutrition Services</p>
-              <p>Thank you for choosing us for your nutrition journey!</p>
+              <p>Vee Nutrition | Your Health, Our Priority</p>
+              <p>Payment is typically due within 7 days of session completion</p>
             </div>
           </div>
         </div>
       `,
-      text: `Session complete! Your invoice (${invoiceId}) for €${amount} is ready for payment. Visit your dashboard to pay online.`
+      text: `Session complete! Your invoice (${invoiceId}) for €${amount} is ready. View and pay at your dashboard.`
     };
   }
 
   getLateRescheduleTemplate(name: string, date: string, time: string): EmailTemplate {
     return {
-      subject: 'Late Reschedule Fee Applied - Vee Nutrition',
+      subject: 'Late Reschedule Notice - €5 Fee Applied - Vee Nutrition',
       html: `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; background-color: #f8faf8;">
           <div style="background-color: white; padding: 30px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
@@ -422,36 +423,40 @@ Vee Nutrition Team`
               <h1 style="color: #A5CBA4; margin: 0;">🌿 Vee Nutrition</h1>
             </div>
             
-            <h2 style="color: #333; margin-bottom: 20px;">⚠️ Late Reschedule Notice</h2>
+            <h2 style="color: #333; margin-bottom: 20px;">⏰ Late Reschedule Fee Applied</h2>
             
             <p style="color: #666; line-height: 1.6; margin-bottom: 20px;">
-              Hi ${name}, your reschedule request for ${date} at ${time} was within our 4 working hour policy window.
+              Hi ${name}, your reschedule request for ${date} at ${time} has been processed.
             </p>
             
             <div style="background-color: #fff3cd; padding: 20px; border-radius: 8px; margin: 20px 0; border-left: 4px solid #ffc107;">
               <h3 style="color: #856404; margin-top: 0;">Late Reschedule Fee</h3>
-              <p style="margin: 5px 0; color: #856404;"><strong>Fee Applied:</strong> €5</p>
-              <p style="margin: 5px 0; color: #856404;"><strong>Reason:</strong> Reschedule within 4 working hours</p>
+              <p style="color: #856404; margin: 10px 0;">
+                Since your reschedule request was made within 4 working hours of your appointment, a €5 late reschedule fee has been applied according to our cancellation policy.
+              </p>
+              <p style="color: #856404; margin: 10px 0; font-size: 14px;">
+                <strong>Fee Amount:</strong> €5.00
+              </p>
             </div>
             
-            <p style="color: #666; line-height: 1.6; margin: 20px 0;">
-              This fee helps us manage our scheduling efficiently. We understand emergencies happen - for future appointments, please provide more notice when possible.
+            <p style="color: #666; line-height: 1.6; margin-bottom: 20px;">
+              This fee will be added to your next invoice. We understand that sometimes urgent changes are necessary, and we appreciate your understanding of our policy.
             </p>
             
             <div style="border-top: 1px solid #eee; padding-top: 20px; margin-top: 30px; text-align: center; color: #999; font-size: 14px;">
-              <p>Vee Nutrition | Professional Scheduling Policy</p>
-              <p>Working Hours: Mon-Fri 9am-10pm, Sat 9am-12pm</p>
+              <p>Vee Nutrition | Your Health, Our Priority</p>
+              <p>To avoid future fees, please reschedule at least 4 working hours in advance</p>
             </div>
           </div>
         </div>
       `,
-      text: `Late reschedule notice: A €5 fee has been applied for rescheduling your ${date} ${time} appointment within 4 working hours.`
+      text: `Late reschedule notice: Your appointment on ${date} at ${time} has been rescheduled. A €5 late reschedule fee applies.`
     };
   }
 
-  getNoShowTemplate(name: string, date: string, time: string, penaltyAmount: number): EmailTemplate {
+  getNoShowPenaltyTemplate(name: string, date: string, time: string, penaltyAmount: number): EmailTemplate {
     return {
-      subject: 'Missed Appointment - No-Show Fee Applied - Vee Nutrition',
+      subject: 'Missed Appointment - No-Show Penalty Applied - Vee Nutrition',
       html: `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; background-color: #f8faf8;">
           <div style="background-color: white; padding: 30px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
@@ -462,33 +467,37 @@ Vee Nutrition Team`
             <h2 style="color: #333; margin-bottom: 20px;">❌ Missed Appointment Notice</h2>
             
             <p style="color: #666; line-height: 1.6; margin-bottom: 20px;">
-              Hi ${name}, we missed you at your appointment on ${date} at ${time}.
+              Hi ${name}, we noticed you missed your scheduled appointment on ${date} at ${time}.
             </p>
             
             <div style="background-color: #f8d7da; padding: 20px; border-radius: 8px; margin: 20px 0; border-left: 4px solid #dc3545;">
               <h3 style="color: #721c24; margin-top: 0;">No-Show Penalty</h3>
-              <p style="margin: 5px 0; color: #721c24;"><strong>Fee Applied:</strong> €${penaltyAmount}</p>
-              <p style="margin: 5px 0; color: #721c24;"><strong>Rate:</strong> 50% of original appointment cost</p>
+              <p style="color: #721c24; margin: 10px 0;">
+                According to our cancellation policy, a no-show penalty of 50% of the original appointment cost has been applied.
+              </p>
+              <p style="color: #721c24; margin: 10px 0; font-size: 16px;">
+                <strong>Penalty Amount:</strong> €${penaltyAmount.toFixed(2)}
+              </p>
             </div>
             
-            <p style="color: #666; line-height: 1.6; margin: 20px 0;">
-              We understand that unexpected situations arise. To avoid future no-show fees, please cancel or reschedule at least 4 working hours in advance.
+            <p style="color: #666; line-height: 1.6; margin-bottom: 20px;">
+              We understand that emergencies happen. If there were extenuating circumstances, please contact us to discuss your situation.
             </p>
             
             <div style="text-align: center; margin: 30px 0;">
-              <a href="https://your-domain.replit.app/book" style="background-color: #A5CBA4; color: white; padding: 12px 25px; text-decoration: none; border-radius: 5px; font-weight: bold;">
+              <a href="https://your-domain.replit.app/dashboard/appointments" style="background-color: #A5CBA4; color: white; padding: 12px 25px; text-decoration: none; border-radius: 5px; font-weight: bold;">
                 Book New Appointment
               </a>
             </div>
             
             <div style="border-top: 1px solid #eee; padding-top: 20px; margin-top: 30px; text-align: center; color: #999; font-size: 14px;">
-              <p>Vee Nutrition | We're Here When You're Ready</p>
-              <p>Let's get back on track with your nutrition journey</p>
+              <p>Vee Nutrition | Your Health, Our Priority</p>
+              <p>Please contact us if you have questions about this penalty</p>
             </div>
           </div>
         </div>
       `,
-      text: `Missed appointment notice: A €${penaltyAmount} no-show fee (50% of appointment cost) has been applied for your missed ${date} ${time} appointment.`
+      text: `Missed appointment notice: You missed your appointment on ${date} at ${time}. A no-show penalty of €${penaltyAmount.toFixed(2)} has been applied.`
     };
   }
 
@@ -505,41 +514,50 @@ Vee Nutrition Team`
             <h2 style="color: #333; margin-bottom: 20px;">❌ Appointment Cancelled</h2>
             
             <p style="color: #666; line-height: 1.6; margin-bottom: 20px;">
-              Hi ${name}, we need to cancel your upcoming appointment scheduled for ${date} at ${time}.
+              Hi ${name}, your appointment scheduled for ${date} at ${time} has been cancelled.
             </p>
             
             ${reason ? `
-            <div style="background-color: #f8d7da; padding: 20px; border-radius: 8px; margin: 20px 0; border-left: 4px solid #dc3545;">
-              <h3 style="color: #721c24; margin-top: 0;">Cancellation Reason</h3>
-              <p style="margin: 0; color: #721c24;">${reason}</p>
+            <div style="background-color: #d1ecf1; padding: 20px; border-radius: 8px; margin: 20px 0; border-left: 4px solid #17a2b8;">
+              <h3 style="color: #0c5460; margin-top: 0;">Cancellation Reason</h3>
+              <p style="margin: 0; color: #0c5460;">${reason}</p>
             </div>
             ` : ''}
             
-            <p style="color: #666; line-height: 1.6; margin: 20px 0;">
-              We sincerely apologize for any inconvenience. Please reschedule at your earliest convenience so we can continue supporting your nutrition journey.
-            </p>
+            <div style="background-color: #d4edda; padding: 20px; border-radius: 8px; margin: 20px 0; border-left: 4px solid #28a745;">
+              <h3 style="color: #155724; margin-top: 0;">Rebook Your Appointment</h3>
+              <p style="color: #155724; margin: 0;">
+                We'd love to see you soon! Please book a new appointment at your convenience through your dashboard.
+              </p>
+            </div>
             
             <div style="text-align: center; margin: 30px 0;">
-              <a href="https://your-domain.replit.app/book" style="background-color: #A5CBA4; color: white; padding: 12px 25px; text-decoration: none; border-radius: 5px; font-weight: bold;">
-                Reschedule Appointment
+              <a href="https://your-domain.replit.app/dashboard/appointments" style="background-color: #A5CBA4; color: white; padding: 12px 25px; text-decoration: none; border-radius: 5px; font-weight: bold;">
+                Book New Appointment
               </a>
             </div>
             
             <div style="border-top: 1px solid #eee; padding-top: 20px; margin-top: 30px; text-align: center; color: #999; font-size: 14px;">
               <p>Vee Nutrition | Your Health, Our Priority</p>
-              <p>We're here when you're ready to continue</p>
+              <p>Questions? Reply to this email or contact us through your dashboard</p>
             </div>
           </div>
         </div>
       `,
-      text: `Appointment cancelled: Your ${date} ${time} appointment has been cancelled. ${reason ? `Reason: ${reason}` : ''} Please reschedule at your convenience.`
+      text: `Appointment cancelled: Your appointment on ${date} at ${time} has been cancelled. ${reason ? `Reason: ${reason}` : ''} Please book a new appointment when convenient.`
     };
   }
 
-  // Admin notification email templates
-  getAdminNewAppointmentTemplate(appointment: any): EmailTemplate {
+  // Admin notification templates
+  getAdminNewAppointmentTemplate(appointmentData: {
+    clientName: string;
+    clientEmail: string;
+    type: string;
+    date: string;
+    time: string;
+  }): EmailTemplate {
     return {
-      subject: `New Appointment Request - ${appointment.clientName || appointment.name}`,
+      subject: `New Appointment Request - ${appointmentData.clientName}`,
       html: `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; background-color: #f8faf8;">
           <div style="background-color: white; padding: 30px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
@@ -549,33 +567,33 @@ Vee Nutrition Team`
             
             <h2 style="color: #333; margin-bottom: 20px;">📅 New Appointment Request</h2>
             
-            <p style="color: #666; line-height: 1.6; margin-bottom: 20px;">
-              A new appointment has been requested and needs your confirmation.
-            </p>
+            <div style="background-color: #fff3cd; padding: 20px; border-radius: 8px; margin: 20px 0; border-left: 4px solid #ffc107;">
+              <h3 style="color: #856404; margin-top: 0;">Client Information</h3>
+              <p style="margin: 5px 0; color: #856404;"><strong>Name:</strong> ${appointmentData.clientName}</p>
+              <p style="margin: 5px 0; color: #856404;"><strong>Email:</strong> ${appointmentData.clientEmail}</p>
+            </div>
             
-            <div style="background-color: #A5CBA4; color: white; padding: 25px; border-radius: 8px; margin: 20px 0;">
-              <h3 style="margin: 0 0 15px 0; font-size: 18px;">Client Details</h3>
-              <p style="margin: 5px 0; font-size: 16px;"><strong>Name:</strong> ${appointment.clientName || appointment.name}</p>
-              <p style="margin: 5px 0; font-size: 16px;"><strong>Email:</strong> ${appointment.clientEmail || appointment.email}</p>
-              <p style="margin: 5px 0; font-size: 16px;"><strong>Type:</strong> ${appointment.appointmentType || appointment.type}</p>
-              <p style="margin: 5px 0; font-size: 16px;"><strong>Date:</strong> ${appointment.date}</p>
-              <p style="margin: 5px 0; font-size: 16px;"><strong>Time:</strong> ${appointment.time}</p>
+            <div style="background-color: #d4edda; padding: 20px; border-radius: 8px; margin: 20px 0; border-left: 4px solid #28a745;">
+              <h3 style="color: #155724; margin-top: 0;">Appointment Details</h3>
+              <p style="margin: 5px 0; color: #155724;"><strong>Type:</strong> ${appointmentData.type}</p>
+              <p style="margin: 5px 0; color: #155724;"><strong>Date:</strong> ${appointmentData.date}</p>
+              <p style="margin: 5px 0; color: #155724;"><strong>Time:</strong> ${appointmentData.time}</p>
             </div>
             
             <div style="text-align: center; margin: 30px 0;">
               <a href="https://your-domain.replit.app/admin/appointments" style="background-color: #A5CBA4; color: white; padding: 12px 25px; text-decoration: none; border-radius: 5px; font-weight: bold;">
-                Review & Confirm
+                Manage Appointments
               </a>
             </div>
             
             <div style="border-top: 1px solid #eee; padding-top: 20px; margin-top: 30px; text-align: center; color: #999; font-size: 14px;">
-              <p>Vee Nutrition Admin Panel</p>
-              <p>Client awaiting confirmation</p>
+              <p>Vee Nutrition Admin Dashboard</p>
+              <p>Please confirm or reschedule this appointment promptly</p>
             </div>
           </div>
         </div>
       `,
-      text: `New appointment request from ${appointment.clientName || appointment.name} for ${appointment.appointmentType || appointment.type} on ${appointment.date} at ${appointment.time}.`
+      text: `New appointment request from ${appointmentData.clientName} (${appointmentData.clientEmail}) for ${appointmentData.type} on ${appointmentData.date} at ${appointmentData.time}.`
     };
   }
 
@@ -592,30 +610,30 @@ Vee Nutrition Team`
             <h2 style="color: #333; margin-bottom: 20px;">🏥 Health Information Update</h2>
             
             <p style="color: #666; line-height: 1.6; margin-bottom: 20px;">
-              A client has updated their health information and it may require your review.
+              ${clientName} has updated their health information.
             </p>
             
-            <div style="background-color: #f0f8f0; padding: 20px; border-radius: 8px; margin: 20px 0; border-left: 4px solid #A5CBA4;">
-              <h3 style="color: #A5CBA4; margin-top: 0;">Update Details</h3>
-              <p style="margin: 5px 0; color: #666;"><strong>Client:</strong> ${clientName}</p>
-              <p style="margin: 5px 0; color: #666;"><strong>Email:</strong> ${clientEmail}</p>
-              <p style="margin: 5px 0; color: #666;"><strong>Update Type:</strong> ${updateType}</p>
+            <div style="background-color: #d1ecf1; padding: 20px; border-radius: 8px; margin: 20px 0; border-left: 4px solid #17a2b8;">
+              <h3 style="color: #0c5460; margin-top: 0;">Update Details</h3>
+              <p style="margin: 5px 0; color: #0c5460;"><strong>Client:</strong> ${clientName}</p>
+              <p style="margin: 5px 0; color: #0c5460;"><strong>Email:</strong> ${clientEmail}</p>
+              <p style="margin: 5px 0; color: #0c5460;"><strong>Update Type:</strong> ${updateType}</p>
             </div>
             
             <div style="text-align: center; margin: 30px 0;">
-              <a href="https://your-domain.replit.app/admin/users" style="background-color: #A5CBA4; color: white; padding: 12px 25px; text-decoration: none; border-radius: 5px; font-weight: bold;">
-                Review Update
+              <a href="https://your-domain.replit.app/admin/clients" style="background-color: #A5CBA4; color: white; padding: 12px 25px; text-decoration: none; border-radius: 5px; font-weight: bold;">
+                Review Client Profile
               </a>
             </div>
             
             <div style="border-top: 1px solid #eee; padding-top: 20px; margin-top: 30px; text-align: center; color: #999; font-size: 14px;">
-              <p>Vee Nutrition Admin Panel</p>
-              <p>Health information updated</p>
+              <p>Vee Nutrition Admin Dashboard</p>
+              <p>Please review the updated health information</p>
             </div>
           </div>
         </div>
       `,
-      text: `${clientName} (${clientEmail}) has updated their health information: ${updateType}. Please review the changes.`
+      text: `Health information update from ${clientName} (${clientEmail}). Update type: ${updateType}.`
     };
   }
 
@@ -631,16 +649,12 @@ Vee Nutrition Team`
             
             <h2 style="color: #333; margin-bottom: 20px;">💰 Payment Received</h2>
             
-            <p style="color: #666; line-height: 1.6; margin-bottom: 20px;">
-              A payment has been successfully processed for one of your clients.
-            </p>
-            
             <div style="background-color: #d4edda; padding: 20px; border-radius: 8px; margin: 20px 0; border-left: 4px solid #28a745;">
               <h3 style="color: #155724; margin-top: 0;">Payment Details</h3>
               <p style="margin: 5px 0; color: #155724;"><strong>Client:</strong> ${clientName}</p>
-              <p style="margin: 5px 0; color: #155724;"><strong>Amount:</strong> €${amount}</p>
-              <p style="margin: 5px 0; color: #155724;"><strong>Invoice:</strong> ${invoiceId}</p>
-              <p style="margin: 5px 0; color: #155724;"><strong>Method:</strong> ${paymentMethod}</p>
+              <p style="margin: 5px 0; color: #155724;"><strong>Amount:</strong> €${amount.toFixed(2)}</p>
+              <p style="margin: 5px 0; color: #155724;"><strong>Invoice ID:</strong> ${invoiceId}</p>
+              <p style="margin: 5px 0; color: #155724;"><strong>Payment Method:</strong> ${paymentMethod}</p>
             </div>
             
             <div style="text-align: center; margin: 30px 0;">
@@ -650,19 +664,19 @@ Vee Nutrition Team`
             </div>
             
             <div style="border-top: 1px solid #eee; padding-top: 20px; margin-top: 30px; text-align: center; color: #999; font-size: 14px;">
-              <p>Vee Nutrition Admin Panel</p>
-              <p>Payment successfully processed</p>
+              <p>Vee Nutrition Admin Dashboard</p>
+              <p>Payment has been successfully processed</p>
             </div>
           </div>
         </div>
       `,
-      text: `Payment received: ${clientName} paid €${amount} for invoice ${invoiceId} via ${paymentMethod}.`
+      text: `Payment received from ${clientName}: €${amount.toFixed(2)} for invoice ${invoiceId} via ${paymentMethod}.`
     };
   }
 
   getAdminPlanUpgradeTemplate(clientName: string, planType: string, previousPlan: string): EmailTemplate {
     return {
-      subject: `Plan Upgrade - ${clientName} upgraded to ${planType}`,
+      subject: `Plan Upgrade - ${clientName} - ${planType}`,
       html: `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; background-color: #f8faf8;">
           <div style="background-color: white; padding: 30px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
@@ -673,36 +687,36 @@ Vee Nutrition Team`
             <h2 style="color: #333; margin-bottom: 20px;">⬆️ Service Plan Upgrade</h2>
             
             <p style="color: #666; line-height: 1.6; margin-bottom: 20px;">
-              Great news! A client has upgraded their service plan.
+              ${clientName} has upgraded their service plan.
             </p>
             
-            <div style="background-color: #fff3cd; padding: 20px; border-radius: 8px; margin: 20px 0; border-left: 4px solid #ffc107;">
-              <h3 style="color: #856404; margin-top: 0;">Upgrade Details</h3>
-              <p style="margin: 5px 0; color: #856404;"><strong>Client:</strong> ${clientName}</p>
-              <p style="margin: 5px 0; color: #856404;"><strong>Previous Plan:</strong> ${previousPlan}</p>
-              <p style="margin: 5px 0; color: #856404;"><strong>New Plan:</strong> ${planType}</p>
+            <div style="background-color: #d4edda; padding: 20px; border-radius: 8px; margin: 20px 0; border-left: 4px solid #28a745;">
+              <h3 style="color: #155724; margin-top: 0;">Upgrade Details</h3>
+              <p style="margin: 5px 0; color: #155724;"><strong>Client:</strong> ${clientName}</p>
+              <p style="margin: 5px 0; color: #155724;"><strong>Previous Plan:</strong> ${previousPlan}</p>
+              <p style="margin: 5px 0; color: #155724;"><strong>New Plan:</strong> ${planType}</p>
             </div>
             
             <div style="text-align: center; margin: 30px 0;">
-              <a href="https://your-domain.replit.app/admin/users" style="background-color: #A5CBA4; color: white; padding: 12px 25px; text-decoration: none; border-radius: 5px; font-weight: bold;">
-                View Client Details
+              <a href="https://your-domain.replit.app/admin/clients" style="background-color: #A5CBA4; color: white; padding: 12px 25px; text-decoration: none; border-radius: 5px; font-weight: bold;">
+                View Client Profile
               </a>
             </div>
             
             <div style="border-top: 1px solid #eee; padding-top: 20px; margin-top: 30px; text-align: center; color: #999; font-size: 14px;">
-              <p>Vee Nutrition Admin Panel</p>
-              <p>Client successfully upgraded</p>
+              <p>Vee Nutrition Admin Dashboard</p>
+              <p>Client's service level has been updated</p>
             </div>
           </div>
         </div>
       `,
-      text: `Plan upgrade: ${clientName} upgraded from ${previousPlan} to ${planType}.`
+      text: `Service plan upgrade: ${clientName} upgraded from ${previousPlan} to ${planType}.`
     };
   }
 
   getAdminClientMessageTemplate(clientName: string, clientEmail: string, messageType: string, urgency: string): EmailTemplate {
     return {
-      subject: `Client Message - ${clientName} (${urgency} Priority)`,
+      subject: `New Client Message - ${clientName} - ${urgency}`,
       html: `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; background-color: #f8faf8;">
           <div style="background-color: white; padding: 30px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
@@ -712,16 +726,12 @@ Vee Nutrition Team`
             
             <h2 style="color: #333; margin-bottom: 20px;">💬 New Client Message</h2>
             
-            <p style="color: #666; line-height: 1.6; margin-bottom: 20px;">
-              You have received a new message from a client that requires your attention.
-            </p>
-            
-            <div style="background-color: ${urgency === 'High' ? '#f8d7da' : urgency === 'Medium' ? '#fff3cd' : '#d1ecf1'}; padding: 20px; border-radius: 8px; margin: 20px 0; border-left: 4px solid ${urgency === 'High' ? '#dc3545' : urgency === 'Medium' ? '#ffc107' : '#17a2b8'};">
-              <h3 style="color: ${urgency === 'High' ? '#721c24' : urgency === 'Medium' ? '#856404' : '#0c5460'}; margin-top: 0;">Message Details</h3>
-              <p style="margin: 5px 0; color: ${urgency === 'High' ? '#721c24' : urgency === 'Medium' ? '#856404' : '#0c5460'};"><strong>Client:</strong> ${clientName}</p>
-              <p style="margin: 5px 0; color: ${urgency === 'High' ? '#721c24' : urgency === 'Medium' ? '#856404' : '#0c5460'};"><strong>Email:</strong> ${clientEmail}</p>
-              <p style="margin: 5px 0; color: ${urgency === 'High' ? '#721c24' : urgency === 'Medium' ? '#856404' : '#0c5460'};"><strong>Type:</strong> ${messageType}</p>
-              <p style="margin: 5px 0; color: ${urgency === 'High' ? '#721c24' : urgency === 'Medium' ? '#856404' : '#0c5460'};"><strong>Priority:</strong> ${urgency}</p>
+            <div style="background-color: ${urgency === 'High' ? '#f8d7da' : urgency === 'Medium' ? '#fff3cd' : '#d4edda'}; padding: 20px; border-radius: 8px; margin: 20px 0; border-left: 4px solid ${urgency === 'High' ? '#dc3545' : urgency === 'Medium' ? '#ffc107' : '#28a745'};">
+              <h3 style="color: ${urgency === 'High' ? '#721c24' : urgency === 'Medium' ? '#856404' : '#155724'}; margin-top: 0;">Message Details</h3>
+              <p style="margin: 5px 0; color: ${urgency === 'High' ? '#721c24' : urgency === 'Medium' ? '#856404' : '#155724'};"><strong>Client:</strong> ${clientName}</p>
+              <p style="margin: 5px 0; color: ${urgency === 'High' ? '#721c24' : urgency === 'Medium' ? '#856404' : '#155724'};"><strong>Email:</strong> ${clientEmail}</p>
+              <p style="margin: 5px 0; color: ${urgency === 'High' ? '#721c24' : urgency === 'Medium' ? '#856404' : '#155724'};"><strong>Message Type:</strong> ${messageType}</p>
+              <p style="margin: 5px 0; color: ${urgency === 'High' ? '#721c24' : urgency === 'Medium' ? '#856404' : '#155724'};"><strong>Urgency:</strong> ${urgency}</p>
             </div>
             
             <div style="text-align: center; margin: 30px 0;">
@@ -731,13 +741,13 @@ Vee Nutrition Team`
             </div>
             
             <div style="border-top: 1px solid #eee; padding-top: 20px; margin-top: 30px; text-align: center; color: #999; font-size: 14px;">
-              <p>Vee Nutrition Admin Panel</p>
-              <p>Client awaiting response</p>
+              <p>Vee Nutrition Admin Dashboard</p>
+              <p>Please respond to this message promptly</p>
             </div>
           </div>
         </div>
       `,
-      text: `New ${urgency.toLowerCase()} priority message from ${clientName} (${clientEmail}) - Type: ${messageType}. Please respond promptly.`
+      text: `New ${urgency.toLowerCase()} priority message from ${clientName} (${clientEmail}). Type: ${messageType}.`
     };
   }
 }
@@ -748,17 +758,14 @@ const emailService = new ResendEmailService();
 export const onUserCreated = functions.firestore
   .document('users/{userId}')
   .onCreate(async (snap: any, context: any) => {
-    const userData = snap.data();
-    const name = userData.name || userData.displayName || userData.email;
+    const user = snap.data();
+    console.log('New user created:', user.email);
     
-    console.log('New user created:', userData.email);
+    const template = emailService.getAccountConfirmationTemplate(user.name);
     
-    const template = emailService.getAccountConfirmationTemplate(name);
-    
-    // Add to email queue
     await admin.firestore().collection('mail').add({
-      to: userData.email,
-      toName: name,
+      to: user.email,
+      toName: user.name,
       subject: template.subject,
       html: template.html,
       text: template.text,
@@ -768,14 +775,13 @@ export const onUserCreated = functions.firestore
     });
   });
 
-// 2. Appointment Confirmed
+// 2. Appointment Status Changed to Confirmed
 export const onAppointmentConfirmed = functions.firestore
   .document('appointments/{appointmentId}')
   .onUpdate(async (change: any, context: any) => {
     const before = change.before.data();
     const after = change.after.data();
     
-    // Check if status changed to confirmed
     if (before.status !== 'confirmed' && after.status === 'confirmed') {
       console.log('Appointment confirmed:', after.clientEmail);
       
@@ -786,7 +792,6 @@ export const onAppointmentConfirmed = functions.firestore
         after.type
       );
       
-      // Add to email queue
       await admin.firestore().collection('mail').add({
         to: after.clientEmail,
         toName: after.clientName,
@@ -800,41 +805,15 @@ export const onAppointmentConfirmed = functions.firestore
     }
   });
 
-// 3. New Appointment Created - Admin Notification
-export const onAppointmentCreated = functions.firestore
-  .document('appointments/{appointmentId}')
-  .onCreate(async (snap: any, context: any) => {
-    const appointmentData = snap.data();
-    
-    console.log('New appointment created:', appointmentData.clientEmail);
-    
-    const template = emailService.getAdminNewAppointmentTemplate(appointmentData);
-    
-    // Send admin notification
-    await admin.firestore().collection('mail').add({
-      to: 'admin@veenutrition.com',
-      toName: 'Vee Nutrition Admin',
-      subject: template.subject,
-      html: template.html,
-      text: template.text,
-      type: 'admin-new-appointment',
-      status: 'pending',
-      createdAt: admin.firestore.FieldValue.serverTimestamp(),
-    });
-    
-    console.log('Admin notification queued for new appointment');
-  });
-
-// 4. Reschedule Request
+// 3. Reschedule Request Created
 export const onRescheduleRequest = functions.firestore
   .document('appointments/{appointmentId}')
   .onUpdate(async (change: any, context: any) => {
     const before = change.before.data();
     const after = change.after.data();
     
-    // Check if reschedule was requested
-    if (!before.rescheduleRequested && after.rescheduleRequested) {
-      console.log('Reschedule requested for:', after.clientEmail);
+    if (before.status !== 'reschedule_requested' && after.status === 'reschedule_requested') {
+      console.log('Reschedule request created:', after.clientEmail);
       
       const template = emailService.getRescheduleRequestTemplate(
         after.clientName,
@@ -844,20 +823,20 @@ export const onRescheduleRequest = functions.firestore
         after.rescheduleReason
       );
       
-      // Send to admin email
       await admin.firestore().collection('mail').add({
         to: 'admin@veenutrition.com',
         toName: 'Vee Nutrition Admin',
         subject: template.subject,
         html: template.html,
         text: template.text,
-        type: 'reschedule-request',
+        type: 'admin-reschedule-request',
         status: 'pending',
         createdAt: admin.firestore.FieldValue.serverTimestamp(),
       });
     }
   });
 
+// 4. Enhanced Mail Queue Processor
 export const processMailQueue = functions.firestore
   .document('mail/{mailId}')
   .onCreate(async (snap: any, context: any) => {
@@ -867,25 +846,36 @@ export const processMailQueue = functions.firestore
       return;
     }
     
-    console.log('Processing email from queue:', mailData.to, 'Type:', mailData.type, 'Updated trigger');
+    console.log('Processing email from queue:', mailData.to, 'Type:', mailData.type);
     
     try {
       let template;
       
       switch (mailData.type) {
-        case 'payment-reminder':
-          template = emailService.getPaymentReminderTemplate(
-            mailData.toName,
-            mailData.amount,
-            mailData.invoiceNumber,
-            mailData.paymentUrl
+        case 'account-confirmation':
+        case 'welcome':
+          template = emailService.getAccountConfirmationTemplate(
+            mailData.data?.name || mailData.toName
           );
           break;
-        case 'account-confirmation':
-          template = emailService.getAccountConfirmationTemplate(mailData.toName);
+        case 'payment-reminder':
+          template = emailService.getPaymentReminderTemplate(
+            mailData.data.name,
+            mailData.data.amount,
+            mailData.data.invoiceNumber,
+            mailData.data.paymentUrl
+          );
           break;
-        case 'no-show':
-          template = emailService.getNoShowTemplate(
+        case 'reschedule-confirmation':
+          template = emailService.getRescheduleConfirmationTemplate(
+            mailData.data.name,
+            mailData.data.newDate,
+            mailData.data.newTime,
+            mailData.data.type || 'Consultation'
+          );
+          break;
+        case 'no-show-penalty':
+          template = emailService.getNoShowPenaltyTemplate(
             mailData.data.name,
             mailData.data.date,
             mailData.data.time,
@@ -1027,7 +1017,6 @@ export const processMailQueue = functions.firestore
     }
   });
 
-
 // 5. Daily Reminder Scheduler
 export const sendDailyReminders = functions.pubsub
   .schedule('0 18 * * *') // 6 PM daily
@@ -1070,4 +1059,3 @@ export const sendDailyReminders = functions.pubsub
     await Promise.all(promises);
     console.log(`Queued ${promises.length} reminder emails`);
   });
-
