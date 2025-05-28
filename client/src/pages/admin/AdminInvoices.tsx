@@ -69,12 +69,12 @@ export default function AdminInvoices() {
   }, [allInvoices]);
 
   // For display purposes, show the main invoices with smart indicators
-  const invoices = invoiceGroups.map(group => ({
+  const invoices = invoiceGroups.map((group: any) => ({
     ...group.original,
     _hasAccountingFlow: group.creditNotes.length > 0 || group.reissued.length > 0,
     _creditNotes: group.creditNotes,
     _reissued: group.reissued,
-    _netAmount: group.original.amount - group.creditNotes.reduce((sum, cn) => sum + cn.amount, 0)
+    _netAmount: group.original.amount - group.creditNotes.reduce((sum: number, cn: any) => sum + cn.amount, 0)
   }));
 
   // Fetch appointments that can be invoiced
@@ -280,7 +280,7 @@ export default function AdminInvoices() {
         }
       });
       
-      const response = await fetch('/api/invoices/reissue', {
+      const response = await fetch('/api/invoices/reissue-with-accounting', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -760,11 +760,11 @@ export default function AdminInvoices() {
                               })}
                             </div>
                           </TableCell>
-                          <TableCell className="p-2 text-right">
-                            <div className="font-semibold text-sm">€{invoice.amount.toFixed(2)}</div>
+                          <TableCell className="p-2">
+                            {getDisplayAmount(invoice)}
                           </TableCell>
                           <TableCell className="p-2 text-center">
-                            {getStatusBadge(invoice.status)}
+                            {getSmartStatusBadge(invoice)}
                           </TableCell>
                           <TableCell className="p-2">
                             <div className="flex gap-1 justify-center">
