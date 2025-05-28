@@ -596,7 +596,6 @@ export default function DashboardAppointments() {
                   </div>
                 ) : (
                   <div className="space-y-4">
-                    {/* Show limited appointments initially */}
                     {(showAllAppointments ? sortedAppointments : sortedAppointments.slice(0, 3)).map((appointment) => {
                       const appointmentDate = parseAppointmentDate(appointment);
                       const isFuture = appointmentDate > new Date();
@@ -686,7 +685,6 @@ export default function DashboardAppointments() {
                             </div>
                           )}
                         </div>
-                        </div>
                       );
                     })}
                     
@@ -695,7 +693,7 @@ export default function DashboardAppointments() {
                       <Button
                         variant="ghost"
                         onClick={() => setShowAllAppointments(!showAllAppointments)}
-                        className="w-full"
+                        className="w-full mt-4"
                       >
                         {showAllAppointments ? (
                           <>
