@@ -179,7 +179,7 @@ export default function DashboardInvoices() {
                       <div className="flex items-center gap-2">
                         {getStatusBadge(invoice.status)}
                         
-                        {invoice.status === "pending" && invoice.paymentUrl && (
+                        {invoice.status === "pending" && (
                           <Button 
                             onClick={() => handlePayInvoice(invoice)}
                             size="sm"

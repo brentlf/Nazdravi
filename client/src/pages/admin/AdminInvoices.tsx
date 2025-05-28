@@ -760,7 +760,20 @@ export default function AdminInvoices() {
                           </TableCell>
                           <TableCell className="p-2">
                             <div className="font-mono text-xs">{invoice.invoiceNumber}</div>
-                            {invoice._hasAccountingFlow && (
+                            {invoice.isReissued && (
+                              <div className="text-xs mt-1 space-y-1">
+                                <Badge variant="outline" className="text-xs bg-yellow-50 text-yellow-700 border-yellow-200">
+                                  Reissued Invoice
+                                </Badge>
+                                <div className="text-gray-600">
+                                  Original: €{invoice.originalAmount?.toFixed(2)} → Current: €{invoice.amount.toFixed(2)}
+                                </div>
+                                <div className="text-gray-500 italic">
+                                  {invoice.reissueReason}
+                                </div>
+                              </div>
+                            )}
+                            {invoice._hasAccountingFlow && !invoice.isReissued && (
                               <div className="text-xs text-blue-600 mt-1">
                                 {invoice._creditNotes?.length > 0 && `${invoice._creditNotes.length} credit note(s)`}
                                 {invoice._reissued?.length > 0 && ` • ${invoice._reissued.length} reissue(s)`}

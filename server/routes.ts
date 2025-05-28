@@ -556,6 +556,62 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Invoice creation endpoint with Stripe payment URL generation
+  app.post("/api/invoices/create", async (req, res) => {
+    try {
+      const { appointmentId, userId, clientName, clientEmail, amount, description, sessionDate, sessionType } = req.body;
+      
+      if (!userId || !clientName || !clientEmail || !amount) {
+        return res.status(400).json({ 
+          success: false, 
+          error: "Missing required fields" 
+        });
+      }
+
+      // Generate unique invoice number
+      const timestamp = Date.now();
+      const invoiceNumber = `INV-${timestamp}`;
+      
+      // Create invoice data
+      const invoiceData = {
+        appointmentId: appointmentId || null,
+        userId,
+        clientName,
+        clientEmail,
+        invoiceNumber,
+        amount,
+        currency: "EUR",
+        description: description || "Consultation invoice",
+        sessionDate: sessionDate || new Date().toISOString(),
+        sessionType: sessionType || "Initial",
+        invoiceType: "session",
+        status: "pending",
+        createdAt: new Date(),
+        dueDate: new Date(Date.now() + 14 * 24 * 60 * 60 * 1000), // 14 days from now
+        // Generate payment URL - clients will be able to pay via this link
+        paymentUrl: `/pay-invoice/${invoiceNumber}`
+      };
+
+      // Save invoice to Firebase
+      const docRef = await db.collection("invoices").add(invoiceData);
+
+      res.json({ 
+        success: true, 
+        message: "Invoice created successfully",
+        invoiceId: docRef.id,
+        invoiceNumber: invoiceNumber,
+        paymentUrl: invoiceData.paymentUrl
+      });
+
+    } catch (error: any) {
+      console.error("Error creating invoice:", error);
+      res.status(500).json({ 
+        success: false, 
+        error: error.message || "Failed to create invoice" 
+      });
+    }
+  });
+
   // Invoice reissue endpoint using PUT method to avoid routing conflicts
   app.put("/api/invoices/:id/reissue", async (req, res) => {
     console.log('🚨 REISSUE ROUTE HIT - Processing reissue request');
