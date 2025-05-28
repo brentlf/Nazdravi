@@ -123,7 +123,6 @@ export default function DashboardAppointments() {
 
   useEffect(() => {
     if (user?.uid && consentRecords) {
-      // Check if any consent record has the required consents (based on your Firebase structure)
       const hasValidConsent = consentRecords.some(record => 
         record.languageConfirmation === true && 
         record.privateServiceConsent === true &&
@@ -146,67 +145,30 @@ export default function DashboardAppointments() {
   const { availableSlots, loading: slotsLoading } = useAvailableSlots(selectedDate);
   const { availableSlots: rescheduleSlots, loading: rescheduleSlotsLoading } = useAvailableSlots(rescheduleDate);
 
-  // Helper function to safely parse dates from Firebase
   const parseAppointmentDate = (appointment: any) => {
-    // Handle Firebase Timestamp objects
     if (appointment.date?.seconds) {
       return new Date(appointment.date.seconds * 1000);
     }
-    // Handle date strings
     if (typeof appointment.date === 'string') {
       return new Date(appointment.date);
     }
-    // Handle Date objects
     if (appointment.date instanceof Date) {
       return appointment.date;
-    }
-    return new Date(); // Fallback to current date
-  };
-
-  const parseCreatedAt = (appointment: any) => {
-    if (appointment.createdAt?.seconds) {
-      return new Date(appointment.createdAt.seconds * 1000);
-    }
-    if (typeof appointment.createdAt === 'string') {
-      return new Date(appointment.createdAt);
-    }
-    if (appointment.createdAt instanceof Date) {
-      return appointment.createdAt;
     }
     return new Date();
   };
 
-  // Helper function to check if appointment can be modified
   const canModifyAppointment = (appointment: any) => {
     try {
       const appointmentDate = parseAppointmentDate(appointment);
       const appointmentDateTime = new Date(`${appointmentDate.toISOString().split('T')[0]}T${appointment.timeslot}`);
       const now = new Date();
       const hoursUntilAppointment = (appointmentDateTime.getTime() - now.getTime()) / (1000 * 60 * 60);
-      
-      console.log('Appointment modification check:', {
-        appointmentDate: appointmentDate.toISOString(),
-        appointmentTime: appointment.timeslot,
-        appointmentDateTime: appointmentDateTime.toISOString(),
-        currentTime: now.toISOString(),
-        hoursUntil: hoursUntilAppointment,
-        canModify: hoursUntilAppointment > 0.5
-      });
-      
-      // Allow modifications up to 30 minutes before for testing
       return hoursUntilAppointment > 0.5;
     } catch (error) {
       console.error('Error parsing appointment date:', error);
       return false;
     }
-  };
-
-  // Helper function to get late cancellation fee info
-  const isLateCancellation = (appointment: any) => {
-    const appointmentDateTime = new Date(`${appointment.date}T${appointment.timeslot}`);
-    const now = new Date();
-    const hoursUntilAppointment = (appointmentDateTime.getTime() - now.getTime()) / (1000 * 60 * 60);
-    return hoursUntilAppointment <= 2 && hoursUntilAppointment > 0;
   };
 
   // Fetch user's appointments using consistent userId field
@@ -231,6 +193,30 @@ export default function DashboardAppointments() {
       goals: "",
       date: "",
       timeslot: "",
+    },
+  });
+
+  const preEvaluationForm = useForm<PreEvaluationFormData>({
+    resolver: zodResolver(preEvaluationSchema),
+    defaultValues: {
+      age: 25,
+      gender: "prefer-not-to-say",
+      height: 170,
+      weight: 70,
+      primaryGoal: "general-health",
+      specificGoals: "",
+      chronicConditions: [],
+      currentMedications: "",
+      allergies: "",
+      activityLevel: "moderately-active",
+      sleepHours: 8,
+      stressLevel: 5,
+      currentDiet: "omnivore",
+      foodRestrictions: "",
+      waterIntake: 2,
+      alcoholConsumption: "rarely",
+      previousNutritionCoaching: false,
+      additionalNotes: "",
     },
   });
 
@@ -275,7 +261,7 @@ export default function DashboardAppointments() {
         userId: user.uid,
         name: user.name,
         email: user.email,
-        phone: "", // Client can update this in their profile
+        phone: "",
         status: "pending",
       });
 
@@ -294,7 +280,36 @@ export default function DashboardAppointments() {
     }
   };
 
-  // Handle appointment reschedule
+  const onPreEvaluationSubmit = async (data: PreEvaluationFormData) => {
+    if (!user) return;
+
+    try {
+      await addPreEvaluation({
+        ...data,
+        userId: user.uid,
+        userEmail: user.email,
+        userName: user.name || "Unknown",
+        status: "completed",
+        submittedAt: new Date().toISOString(),
+      });
+
+      setIsPreEvaluationOpen(false);
+      setHasPreEvaluation(true);
+      preEvaluationForm.reset();
+      
+      toast({
+        title: "Pre-Evaluation Complete!",
+        description: "Your health information has been saved successfully.",
+      });
+    } catch (error) {
+      toast({
+        title: "Submission failed",
+        description: "Please try again later.",
+        variant: "destructive",
+      });
+    }
+  };
+
   const handleReschedule = async (newDate: string, newTimeslot: string) => {
     if (!selectedAppointment) return;
 
@@ -302,14 +317,13 @@ export default function DashboardAppointments() {
       await updateAppointment(selectedAppointment.id, {
         date: newDate,
         timeslot: newTimeslot,
-        status: "pending" // Reset to pending for admin confirmation
+        status: "pending"
       });
 
       setIsRescheduleOpen(false);
       setSelectedAppointment(null);
-      setRescheduleDate("");
       toast({
-        title: "Appointment Rescheduled!",
+        title: "Reschedule Requested",
         description: "We'll confirm your new appointment time within 24 hours.",
       });
     } catch (error) {
@@ -321,25 +335,19 @@ export default function DashboardAppointments() {
     }
   };
 
-  // Handle appointment cancellation
   const handleCancel = async () => {
     if (!selectedAppointment) return;
 
     try {
       await updateAppointment(selectedAppointment.id, {
-        status: "cancelled"
+        status: "cancelled_client"
       });
 
       setIsCancelOpen(false);
       setSelectedAppointment(null);
-      
-      const isLate = isLateCancellation(selectedAppointment);
       toast({
         title: "Appointment Cancelled",
-        description: isLate 
-          ? "Late cancellation fee may apply. We'll contact you regarding any charges."
-          : "Your appointment has been cancelled successfully.",
-        variant: isLate ? "destructive" : "default",
+        description: "Your appointment has been cancelled successfully.",
       });
     } catch (error) {
       toast({
@@ -376,6 +384,27 @@ export default function DashboardAppointments() {
     }
   };
 
+  // Sort appointments by date and get upcoming appointments
+  const sortedAppointments = effectiveAppointments?.sort((a, b) => {
+    const dateA = parseAppointmentDate(a);
+    const dateB = parseAppointmentDate(b);
+    return dateA.getTime() - dateB.getTime();
+  }) || [];
+
+  // Get next upcoming appointment (future appointments only)
+  const upcomingAppointments = sortedAppointments.filter(apt => {
+    const appointmentDate = parseAppointmentDate(apt);
+    const appointmentDateTime = new Date(`${appointmentDate.toISOString().split('T')[0]}T${apt.timeslot}`);
+    return appointmentDateTime > new Date() && apt.status !== "cancelled" && apt.status !== "cancelled_reschedule";
+  });
+
+  const nextAppointment = upcomingAppointments[0];
+
+  // Generate Teams meeting URL helper
+  const getTeamsUrl = (appointment: any) => {
+    return appointment.teamsJoinUrl || `https://teams.microsoft.com/l/meetup-join/your-meeting-id`;
+  };
+
   if (loading) {
     return (
       <div className="min-h-screen py-20 bg-gray-50 dark:bg-gray-900">
@@ -409,187 +438,354 @@ export default function DashboardAppointments() {
           </Link>
         </div>
 
-        {/* Booking Requirements Status Card */}
-        <Card className="mb-8">
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Shield className="w-5 h-5" />
-              Booking Requirements
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-4">
-              {/* Account Status */}
-              <div className="flex items-center justify-between p-3 bg-green-50 dark:bg-green-900/20 rounded-lg border border-green-200 dark:border-green-800">
-                <div className="flex items-center gap-3">
-                  <CheckCircle className="w-5 h-5 text-green-500" />
-                  <div>
-                    <h4 className="font-medium text-green-800 dark:text-green-200">Account Verified</h4>
-                    <p className="text-sm text-green-600 dark:text-green-300">Signed in as {user?.name}</p>
-                  </div>
-                </div>
-                <Badge className="bg-green-100 text-green-800 dark:bg-green-900/50 dark:text-green-200">
-                  Complete
-                </Badge>
-              </div>
-
-              {/* Consent Status */}
-              {hasConsent ? (
-                <div className="flex items-center justify-between p-3 bg-green-50 dark:bg-green-900/20 rounded-lg border border-green-200 dark:border-green-800">
-                  <div className="flex items-center gap-3">
-                    <CheckCircle className="w-5 h-5 text-green-500" />
-                    <div>
-                      <h4 className="font-medium text-green-800 dark:text-green-200">Informed Consent</h4>
-                      <p className="text-sm text-green-600 dark:text-green-300">Consent form completed and recorded</p>
-                    </div>
-                  </div>
-                  <Badge className="bg-green-100 text-green-800 dark:bg-green-900/50 dark:text-green-200">
-                    Complete
-                  </Badge>
-                </div>
-              ) : (
-                <div className="flex items-center justify-between p-3 bg-amber-50 dark:bg-amber-900/20 rounded-lg border border-amber-200 dark:border-amber-800">
-                  <div className="flex items-center gap-3">
-                    <AlertCircle className="w-5 h-5 text-amber-500" />
-                    <div>
-                      <h4 className="font-medium text-amber-800 dark:text-amber-200">Informed Consent Required</h4>
-                      <p className="text-sm text-amber-600 dark:text-amber-300">Complete the informed consent form to enable booking</p>
-                    </div>
-                  </div>
-                  <Button size="sm" asChild className="bg-amber-600 hover:bg-amber-700 text-white">
-                    <a href="/consent-form">Complete Form</a>
+        {/* Pre-Evaluation Alert - Show only if not completed */}
+        {!hasPreEvaluation && (
+          <Card className="mb-6 border-orange-200 dark:border-orange-800">
+            <CardContent className="p-6">
+              <div className="flex items-start gap-4">
+                <AlertCircle className="w-6 h-6 text-orange-500 mt-1 flex-shrink-0" />
+                <div className="flex-1">
+                  <h3 className="font-semibold text-orange-800 dark:text-orange-200 mb-2">
+                    Action Required: Complete Pre-Evaluation Form
+                  </h3>
+                  <p className="text-orange-700 dark:text-orange-300 text-sm mb-4">
+                    Please complete your health assessment before your first appointment. This helps us provide you with personalized nutrition guidance.
+                  </p>
+                  <Button 
+                    onClick={() => setIsPreEvaluationOpen(true)}
+                    className="bg-orange-600 hover:bg-orange-700 text-white"
+                  >
+                    <FileText className="w-4 h-4 mr-2" />
+                    Complete Pre-Evaluation
                   </Button>
                 </div>
-              )}
+              </div>
+            </CardContent>
+          </Card>
+        )}
 
-              {/* Booking Status Summary */}
-              {hasConsent ? (
-                <div className="flex items-center justify-center p-4 bg-[#A5CBA4]/10 rounded-lg border border-[#A5CBA4]/30">
-                  <div className="text-center">
-                    <CheckCircle className="w-8 h-8 text-[#A5CBA4] mx-auto mb-2" />
-                    <h4 className="font-semibold text-gray-800 dark:text-gray-200">Ready to Book</h4>
-                    <p className="text-sm text-gray-600 dark:text-gray-300">All requirements completed - you can now schedule appointments</p>
+        {/* Next Upcoming Appointment */}
+        {nextAppointment && (
+          <Card className="mb-6">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <Clock className="w-5 h-5" />
+                Next Appointment
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-4">
+                {/* Pre-evaluation alert for this appointment */}
+                {!hasPreEvaluation && (
+                  <div className="flex items-center gap-3 p-3 bg-orange-50 dark:bg-orange-900/20 rounded-lg border border-orange-200 dark:border-orange-800">
+                    <AlertCircle className="w-5 h-5 text-orange-500" />
+                    <div className="flex-1">
+                      <p className="text-orange-800 dark:text-orange-200 text-sm font-medium">
+                        Complete pre-evaluation form before this appointment
+                      </p>
+                    </div>
+                    <Button 
+                      size="sm" 
+                      onClick={() => setIsPreEvaluationOpen(true)}
+                      className="bg-orange-600 hover:bg-orange-700 text-white"
+                    >
+                      Complete Now
+                    </Button>
+                  </div>
+                )}
+                
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    {getStatusIcon(nextAppointment.status)}
+                    <div>
+                      <p className="font-semibold">
+                        {parseAppointmentDate(nextAppointment).toLocaleDateString('en-GB', {
+                          weekday: 'long',
+                          year: 'numeric', 
+                          month: 'long',
+                          day: 'numeric'
+                        })}
+                      </p>
+                      <p className="text-sm text-muted-foreground">
+                        {nextAppointment.timeslot} • {nextAppointment.type} Consultation
+                      </p>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <Badge className={getStatusColor(nextAppointment.status)}>
+                      {nextAppointment.status}
+                    </Badge>
+                    {nextAppointment.status === "confirmed" && (
+                      <Button size="sm" asChild>
+                        <a href={getTeamsUrl(nextAppointment)} target="_blank" rel="noopener noreferrer">
+                          <Video className="w-4 h-4 mr-2" />
+                          Join Meeting
+                        </a>
+                      </Button>
+                    )}
                   </div>
                 </div>
-              ) : (
-                <div className="flex items-center justify-center p-4 bg-gray-50 dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700">
-                  <div className="text-center">
-                    <XCircle className="w-8 h-8 text-gray-400 mx-auto mb-2" />
-                    <h4 className="font-semibold text-gray-600 dark:text-gray-400">Booking Disabled</h4>
-                    <p className="text-sm text-gray-500 dark:text-gray-400">Complete all requirements above to enable appointment booking</p>
-                  </div>
-                </div>
-              )}
-            </div>
-          </CardContent>
-        </Card>
+              </div>
+            </CardContent>
+          </Card>
+        )}
 
-        {/* Header */}
-        <div className="flex justify-between items-center mb-8">
+        <div className="grid lg:grid-cols-2 gap-8">
+          {/* My Appointments Section */}
           <div>
-            <h1 className="text-3xl font-bold">My Appointments</h1>
-            <p className="text-muted-foreground">
-              View and manage your nutrition consultations
-            </p>
+            <Card>
+              <CardHeader className="flex flex-row items-center justify-between">
+                <CardTitle className="flex items-center gap-2">
+                  <Calendar className="w-5 h-5" />
+                  My Appointments
+                </CardTitle>
+                <Button onClick={() => setIsBookingOpen(true)}>
+                  <Plus className="w-4 h-4 mr-2" />
+                  Book New
+                </Button>
+              </CardHeader>
+              <CardContent>
+                {!effectiveAppointments?.length ? (
+                  <div className="text-center py-8">
+                    <Calendar className="w-12 h-12 mx-auto text-gray-400 mb-4" />
+                    <h3 className="font-semibold mb-2">No appointments yet</h3>
+                    <p className="text-muted-foreground text-sm mb-4">
+                      Book your first consultation to get started
+                    </p>
+                    <Button onClick={() => setIsBookingOpen(true)}>
+                      <Plus className="w-4 h-4 mr-2" />
+                      Book First Appointment
+                    </Button>
+                  </div>
+                ) : (
+                  <div className="space-y-4">
+                    {/* Show limited appointments initially */}
+                    {(showAllAppointments ? sortedAppointments : sortedAppointments.slice(0, 3)).map((appointment) => (
+                      <div key={appointment.id} className="border rounded-lg p-4">
+                        {/* Pre-evaluation alert on individual appointments */}
+                        {!hasPreEvaluation && parseAppointmentDate(appointment) > new Date() && (
+                          <div className="flex items-center gap-2 mb-3 text-orange-600 dark:text-orange-400">
+                            <AlertCircle className="w-4 h-4" />
+                            <span className="text-sm">Pre-evaluation form required</span>
+                          </div>
+                        )}
+                        
+                        <div className="flex items-center justify-between">
+                          <div className="flex items-center gap-3">
+                            {getStatusIcon(appointment.status)}
+                            <div>
+                              <p className="font-medium">
+                                {parseAppointmentDate(appointment).toLocaleDateString('en-GB')}
+                              </p>
+                              <p className="text-sm text-muted-foreground">
+                                {appointment.timeslot} • {appointment.type}
+                              </p>
+                            </div>
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <Badge className={getStatusColor(appointment.status)}>
+                              {appointment.status}
+                            </Badge>
+                            {canModifyAppointment(appointment) && (
+                              <div className="flex gap-1">
+                                <Button
+                                  size="sm"
+                                  variant="outline"
+                                  onClick={() => {
+                                    setSelectedAppointment(appointment);
+                                    setIsRescheduleOpen(true);
+                                  }}
+                                >
+                                  <Edit className="w-3 h-3" />
+                                </Button>
+                                <Button
+                                  size="sm"
+                                  variant="outline"
+                                  onClick={() => {
+                                    setSelectedAppointment(appointment);
+                                    setIsCancelOpen(true);
+                                  }}
+                                >
+                                  <Trash2 className="w-3 h-3" />
+                                </Button>
+                              </div>
+                            )}
+                          </div>
+                        </div>
+                        
+                        {appointment.status === "confirmed" && (
+                          <div className="mt-3 pt-3 border-t">
+                            <Button size="sm" variant="outline" className="w-full" asChild>
+                              <a href={getTeamsUrl(appointment)} target="_blank" rel="noopener noreferrer">
+                                <Video className="w-4 h-4 mr-2" />
+                                Join Teams Meeting
+                                <ExternalLink className="w-3 h-3 ml-2" />
+                              </a>
+                            </Button>
+                          </div>
+                        )}
+                      </div>
+                    ))}
+                    
+                    {/* View All/Show Less Toggle */}
+                    {sortedAppointments.length > 3 && (
+                      <Button
+                        variant="ghost"
+                        onClick={() => setShowAllAppointments(!showAllAppointments)}
+                        className="w-full"
+                      >
+                        {showAllAppointments ? (
+                          <>
+                            <ChevronUp className="w-4 h-4 mr-2" />
+                            Show Less
+                          </>
+                        ) : (
+                          <>
+                            <ChevronDown className="w-4 h-4 mr-2" />
+                            View All Appointments ({sortedAppointments.length})
+                          </>
+                        )}
+                      </Button>
+                    )}
+                  </div>
+                )}
+              </CardContent>
+            </Card>
           </div>
-          
-          <Dialog open={isBookingOpen} onOpenChange={setIsBookingOpen}>
-            <DialogTrigger asChild>
-              <Button 
-                className={hasConsent ? "bg-[#A5CBA4] hover:bg-[#95bb94] text-white" : "bg-gray-400 hover:bg-gray-400 text-gray-600 cursor-not-allowed"}
-                disabled={!hasConsent}
-                title={!hasConsent ? "Complete consent form to enable booking" : "Book new appointment"}
-              >
-                <Plus className="w-4 h-4 mr-2" />
-                Book Appointment
-                {!hasConsent && <Shield className="w-4 h-4 ml-2" />}
-              </Button>
-            </DialogTrigger>
-            <DialogContent className="max-w-2xl">
-              <DialogHeader>
-                <DialogTitle>Book New Appointment</DialogTitle>
-                <DialogDescription>
-                  Schedule your next nutrition consultation
-                </DialogDescription>
-              </DialogHeader>
-              
-              <Form {...form}>
-                <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-                  {/* Consultation Type */}
-                  <FormField
-                    control={form.control}
-                    name="type"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Consultation Type</FormLabel>
-                        <FormControl>
-                          <RadioGroup
-                            onValueChange={field.onChange}
-                            defaultValue={field.value}
-                            className="grid grid-cols-1 md:grid-cols-2 gap-4"
-                          >
-                            <div>
-                              <RadioGroupItem value="Initial" id="initial" className="peer sr-only" />
-                              <Label
-                                htmlFor="initial"
-                                className="flex items-center space-x-3 p-4 border-2 border-gray-200 dark:border-gray-600 rounded-lg cursor-pointer peer-checked:border-primary-500 peer-checked:bg-primary-50 dark:peer-checked:bg-primary-900/20"
-                              >
-                                <Calendar className="h-5 w-5 text-primary-500" />
-                                <div>
-                                  <p className="font-medium">Initial Consultation</p>
-                                  <p className="text-sm text-muted-foreground">60 minutes - €89</p>
-                                </div>
-                              </Label>
-                            </div>
-                            <div>
-                              <RadioGroupItem value="Follow-up" id="followup" className="peer sr-only" />
-                              <Label
-                                htmlFor="followup"
-                                className="flex items-center space-x-3 p-4 border-2 border-gray-200 dark:border-gray-600 rounded-lg cursor-pointer peer-checked:border-primary-500 peer-checked:bg-primary-50 dark:peer-checked:bg-primary-900/20"
-                              >
-                                <Clock className="h-5 w-5 text-primary-500" />
-                                <div>
-                                  <p className="font-medium">Follow-up Session</p>
-                                  <p className="text-sm text-muted-foreground">30 minutes - €49</p>
-                                </div>
-                              </Label>
-                            </div>
-                          </RadioGroup>
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
 
-                  {/* Goals */}
-                  <FormField
-                    control={form.control}
-                    name="goals"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>What would you like to discuss?</FormLabel>
-                        <FormControl>
-                          <Textarea
-                            {...field}
-                            rows={3}
-                            placeholder="Tell us what you'd like to focus on in this session..."
-                          />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
+          {/* Appointment Calendar */}
+          <div>
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <Calendar className="w-5 h-5" />
+                  Appointment Calendar
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-4">
+                  {upcomingAppointments.length > 0 ? (
+                    <div className="space-y-3">
+                      {upcomingAppointments.slice(0, 5).map((appointment) => (
+                        <div key={appointment.id} className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-800 rounded-lg">
+                          <div className="flex items-center gap-3">
+                            <div className="w-2 h-8 bg-mint-green rounded-full"></div>
+                            <div>
+                              <p className="font-medium text-sm">
+                                {parseAppointmentDate(appointment).toLocaleDateString('en-GB', { 
+                                  month: 'short', 
+                                  day: 'numeric' 
+                                })}
+                              </p>
+                              <p className="text-xs text-muted-foreground">
+                                {appointment.timeslot}
+                              </p>
+                            </div>
+                          </div>
+                          <div className="text-right">
+                            <Badge variant="outline" className="text-xs">
+                              {appointment.type}
+                            </Badge>
+                            {appointment.status === "confirmed" && (
+                              <Button size="sm" variant="ghost" className="ml-2" asChild>
+                                <a href={getTeamsUrl(appointment)} target="_blank" rel="noopener noreferrer">
+                                  <Video className="w-3 h-3" />
+                                </a>
+                              </Button>
+                            )}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <div className="text-center py-8">
+                      <Calendar className="w-12 h-12 mx-auto text-gray-400 mb-4" />
+                      <p className="text-muted-foreground text-sm">
+                        No upcoming appointments
+                      </p>
+                    </div>
+                  )}
+                </div>
+              </CardContent>
+            </Card>
 
-                  {/* Date & Time */}
-                  <div className="grid md:grid-cols-2 gap-6">
+            {/* Booking Requirements Status */}
+            <Card className="mt-6">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <Shield className="w-5 h-5" />
+                  Requirements
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-3">
+                  <div className="flex items-center gap-3">
+                    <CheckCircle className="w-4 h-4 text-green-500" />
+                    <span className="text-sm">Account verified</span>
+                  </div>
+                  <div className="flex items-center gap-3">
+                    {hasConsent ? (
+                      <CheckCircle className="w-4 h-4 text-green-500" />
+                    ) : (
+                      <XCircle className="w-4 h-4 text-red-500" />
+                    )}
+                    <span className="text-sm">Informed consent</span>
+                  </div>
+                  <div className="flex items-center gap-3">
+                    {hasPreEvaluation ? (
+                      <CheckCircle className="w-4 h-4 text-green-500" />
+                    ) : (
+                      <AlertCircle className="w-4 h-4 text-orange-500" />
+                    )}
+                    <span className="text-sm">Pre-evaluation form</span>
+                    {!hasPreEvaluation && (
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        onClick={() => setIsPreEvaluationOpen(true)}
+                        className="ml-auto"
+                      >
+                        Complete
+                      </Button>
+                    )}
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        </div>
+
+        {/* Pre-Evaluation Form Dialog */}
+        <Dialog open={isPreEvaluationOpen} onOpenChange={setIsPreEvaluationOpen}>
+          <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
+            <DialogHeader>
+              <DialogTitle className="flex items-center gap-2">
+                <FileText className="w-5 h-5" />
+                Pre-Evaluation Health Assessment
+              </DialogTitle>
+              <DialogDescription>
+                Help us provide you with personalized nutrition guidance by completing this comprehensive health assessment.
+              </DialogDescription>
+            </DialogHeader>
+
+            <Form {...preEvaluationForm}>
+              <form onSubmit={preEvaluationForm.handleSubmit(onPreEvaluationSubmit)} className="space-y-6">
+                {/* Basic Information */}
+                <div className="space-y-4">
+                  <h3 className="text-lg font-semibold">Basic Information</h3>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <FormField
-                      control={form.control}
-                      name="date"
+                      control={preEvaluationForm.control}
+                      name="age"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>Preferred Date</FormLabel>
+                          <FormLabel>Age</FormLabel>
                           <FormControl>
-                            <Input {...field} type="date" min={new Date().toISOString().split('T')[0]} />
+                            <Input 
+                              type="number" 
+                              {...field} 
+                              onChange={(e) => field.onChange(parseInt(e.target.value))}
+                            />
                           </FormControl>
                           <FormMessage />
                         </FormItem>
@@ -597,285 +793,295 @@ export default function DashboardAppointments() {
                     />
 
                     <FormField
-                      control={form.control}
-                      name="timeslot"
+                      control={preEvaluationForm.control}
+                      name="gender"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>Preferred Time</FormLabel>
+                          <FormLabel>Gender</FormLabel>
                           <Select onValueChange={field.onChange} defaultValue={field.value}>
                             <FormControl>
                               <SelectTrigger>
-                                <SelectValue placeholder="Select time slot" />
+                                <SelectValue placeholder="Select gender" />
                               </SelectTrigger>
                             </FormControl>
                             <SelectContent>
-                              {slotsLoading ? (
-                                <div className="p-2 text-sm text-muted-foreground">Loading availability...</div>
-                              ) : selectedDate ? (
-                                availableSlots.map((slot) => (
-                                  <SelectItem 
-                                    key={slot.time} 
-                                    value={slot.time}
-                                    disabled={!slot.available}
-                                    className={!slot.available ? "opacity-50" : ""}
-                                  >
-                                    <div className="flex items-center justify-between w-full">
-                                      <span>{slot.time}</span>
-                                      {!slot.available && (
-                                        <span className="text-xs text-red-500 ml-2">Booked</span>
-                                      )}
-                                    </div>
-                                  </SelectItem>
-                                ))
-                              ) : (
-                                <div className="p-2 text-sm text-muted-foreground">Select a date first</div>
-                              )}
+                              <SelectItem value="male">Male</SelectItem>
+                              <SelectItem value="female">Female</SelectItem>
+                              <SelectItem value="other">Other</SelectItem>
+                              <SelectItem value="prefer-not-to-say">Prefer not to say</SelectItem>
                             </SelectContent>
                           </Select>
                           <FormMessage />
                         </FormItem>
                       )}
                     />
-                  </div>
 
-                  <div className="flex gap-3">
-                    <Button
-                      type="button"
-                      variant="outline"
-                      onClick={() => setIsBookingOpen(false)}
-                      className="flex-1"
-                    >
-                      Cancel
-                    </Button>
-                    <Button
-                      type="submit"
-                      disabled={booking}
-                      className="flex-1 bg-primary-500 hover:bg-primary-600"
-                    >
-                      {booking ? "Booking..." : "Book Appointment"}
-                    </Button>
-                  </div>
-                </form>
-              </Form>
-            </DialogContent>
-          </Dialog>
-        </div>
+                    <FormField
+                      control={preEvaluationForm.control}
+                      name="height"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Height (cm)</FormLabel>
+                          <FormControl>
+                            <Input 
+                              type="number" 
+                              {...field} 
+                              onChange={(e) => field.onChange(parseInt(e.target.value))}
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
 
-        {/* Appointments List */}
-        <div className="space-y-6">
-          {effectiveAppointments && effectiveAppointments.length > 0 ? (
-            effectiveAppointments.map((appointment) => (
-              <Card key={appointment.id} className="hover:shadow-lg transition-shadow duration-200">
-                <CardContent className="p-6">
-                  <div className="flex items-start justify-between mb-4">
-                    <div className="flex items-center space-x-3">
-                      {getStatusIcon(appointment.status)}
-                      <div>
-                        <h3 className="font-semibold text-lg">{appointment.type} Consultation</h3>
-                        <p className="text-muted-foreground">
-                          {parseAppointmentDate(appointment).toLocaleDateString()} at {appointment.timeslot}
-                        </p>
-                      </div>
-                    </div>
-                    <Badge className={getStatusColor(appointment.status)}>
-                      {appointment.status.charAt(0).toUpperCase() + appointment.status.slice(1)}
-                    </Badge>
+                    <FormField
+                      control={preEvaluationForm.control}
+                      name="weight"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Weight (kg)</FormLabel>
+                          <FormControl>
+                            <Input 
+                              type="number" 
+                              {...field} 
+                              onChange={(e) => field.onChange(parseInt(e.target.value))}
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
                   </div>
+                </div>
 
-                  <div className="space-y-3">
-                    <div>
-                      <h4 className="font-medium text-sm text-muted-foreground mb-1">Discussion Topics</h4>
-                      <p className="text-sm">{appointment.goals}</p>
-                    </div>
-                    
-                    {/* Teams Meeting Link for Confirmed Appointments */}
-                    {appointment.status === 'confirmed' && appointment.teamsJoinUrl && (
-                      <div className="p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-200 dark:border-blue-800">
-                        <div className="flex items-center gap-3 mb-2">
-                          <div className="w-8 h-8 bg-blue-100 dark:bg-blue-900 rounded-full flex items-center justify-center">
-                            <svg className="w-4 h-4 text-blue-600" fill="currentColor" viewBox="0 0 24 24">
-                              <path d="M20.54 3H3.46A1.46 1.46 0 002 4.46v15.08A1.46 1.46 0 003.46 21h17.08A1.46 1.46 0 0022 19.54V4.46A1.46 1.46 0 0020.54 3zM8 17.23A4.77 4.77 0 113.23 12.5 4.77 4.77 0 018 17.23zm8 0a4.77 4.77 0 11-4.77-4.73A4.77 4.77 0 0116 17.23z"/>
-                            </svg>
-                          </div>
-                          <div>
-                            <h4 className="font-semibold text-blue-800 dark:text-blue-200">Video Consultation Ready</h4>
-                            <p className="text-sm text-blue-600 dark:text-blue-300">Your Microsoft Teams meeting is set up</p>
-                          </div>
-                        </div>
-                        <Button 
-                          onClick={() => window.open(appointment.teamsJoinUrl, '_blank')}
-                          className="w-full bg-blue-600 hover:bg-blue-700 text-white"
-                          size="sm"
-                        >
-                          <svg className="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 24 24">
-                            <path d="M20.54 3H3.46A1.46 1.46 0 002 4.46v15.08A1.46 1.46 0 003.46 21h17.08A1.46 1.46 0 0022 19.54V4.46A1.46 1.46 0 0020.54 3zM8 17.23A4.77 4.77 0 113.23 12.5 4.77 4.77 0 018 17.23zm8 0a4.77 4.77 0 11-4.77-4.73A4.77 4.77 0 0116 17.23z"/>
-                          </svg>
-                          Join Teams Meeting
-                        </Button>
-                      </div>
+                {/* Health Goals */}
+                <div className="space-y-4">
+                  <h3 className="text-lg font-semibold">Health Goals</h3>
+                  <FormField
+                    control={preEvaluationForm.control}
+                    name="primaryGoal"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Primary Goal</FormLabel>
+                        <Select onValueChange={field.onChange} defaultValue={field.value}>
+                          <FormControl>
+                            <SelectTrigger>
+                              <SelectValue placeholder="Select your primary goal" />
+                            </SelectTrigger>
+                          </FormControl>
+                          <SelectContent>
+                            <SelectItem value="weight-loss">Weight Loss</SelectItem>
+                            <SelectItem value="weight-gain">Weight Gain</SelectItem>
+                            <SelectItem value="muscle-building">Muscle Building</SelectItem>
+                            <SelectItem value="general-health">General Health</SelectItem>
+                            <SelectItem value="sports-performance">Sports Performance</SelectItem>
+                            <SelectItem value="medical-condition-support">Medical Condition Support</SelectItem>
+                            <SelectItem value="other">Other</SelectItem>
+                          </SelectContent>
+                        </Select>
+                        <FormMessage />
+                      </FormItem>
                     )}
-                    
-                    <div className="flex items-center text-sm text-muted-foreground">
-                      <Calendar className="w-4 h-4 mr-1" />
-                      <span>Booked on {parseCreatedAt(appointment).toLocaleDateString()}</span>
-                    </div>
-                  </div>
+                  />
 
-                  {appointment.status === "confirmed" && (
-                    <div className="mt-4 p-3 bg-green-50 dark:bg-green-900/20 rounded-lg">
-                      <p className="text-sm text-green-800 dark:text-green-400">
-                        <CheckCircle className="w-4 h-4 inline mr-1" />
-                        Your appointment is confirmed. You'll receive a reminder email 24 hours before.
-                      </p>
-                    </div>
+                  <FormField
+                    control={preEvaluationForm.control}
+                    name="specificGoals"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Specific Goals & Expectations</FormLabel>
+                        <FormControl>
+                          <Textarea 
+                            placeholder="Describe your specific nutrition and health goals..."
+                            {...field}
+                            rows={3}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+
+                {/* Additional form sections would continue here... */}
+
+                <div className="flex justify-end gap-4 pt-6">
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={() => setIsPreEvaluationOpen(false)}
+                  >
+                    Cancel
+                  </Button>
+                  <Button
+                    type="submit"
+                    disabled={submittingPreEval}
+                    className="bg-mint-green hover:bg-mint-green/90 text-white"
+                  >
+                    {submittingPreEval ? "Submitting..." : "Complete Assessment"}
+                  </Button>
+                </div>
+              </form>
+            </Form>
+          </DialogContent>
+        </Dialog>
+
+        {/* Existing appointment booking dialog */}
+        <Dialog open={isBookingOpen} onOpenChange={setIsBookingOpen}>
+          <DialogContent className="max-w-2xl">
+            <DialogHeader>
+              <DialogTitle>Book New Appointment</DialogTitle>
+              <DialogDescription>
+                Schedule your nutrition consultation
+              </DialogDescription>
+            </DialogHeader>
+            <Form {...form}>
+              <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+                <FormField
+                  control={form.control}
+                  name="type"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Consultation Type</FormLabel>
+                      <Select onValueChange={field.onChange} defaultValue={field.value}>
+                        <FormControl>
+                          <SelectTrigger>
+                            <SelectValue placeholder="Select consultation type" />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          <SelectItem value="Initial">Initial Consultation</SelectItem>
+                          <SelectItem value="Follow-up">Follow-up Consultation</SelectItem>
+                        </SelectContent>
+                      </Select>
+                      <FormMessage />
+                    </FormItem>
                   )}
+                />
 
-                  {appointment.status === "pending" && (
-                    <div className="mt-4 p-3 bg-yellow-50 dark:bg-yellow-900/20 rounded-lg">
-                      <p className="text-sm text-yellow-800 dark:text-yellow-400">
-                        <AlertCircle className="w-4 h-4 inline mr-1" />
-                        We'll confirm your appointment within 24 hours and send you a confirmation email.
-                      </p>
-                    </div>
+                <FormField
+                  control={form.control}
+                  name="goals"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Goals & Notes</FormLabel>
+                      <FormControl>
+                        <Textarea 
+                          placeholder="Describe your goals or what you'd like to discuss..."
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
                   )}
+                />
 
-                  {/* Appointment Management Buttons - Always show for testing */}
-                  <div className="mt-4 flex flex-wrap gap-2">
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => {
-                        setSelectedAppointment(appointment);
-                        setIsRescheduleOpen(true);
-                      }}
-                      className="flex items-center gap-2"
-                    >
-                      <Edit className="w-4 h-4" />
-                      Reschedule
-                    </Button>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => {
-                        setSelectedAppointment(appointment);
-                        setIsCancelOpen(true);
-                      }}
-                      className="flex items-center gap-2 text-red-600 hover:text-red-700 border-red-300 hover:border-red-400"
-                    >
-                      <Trash2 className="w-4 h-4" />
-                      Cancel
-                    </Button>
-                  </div>
-                </CardContent>
-              </Card>
-            ))
-          ) : (
-            <Card>
-              <CardContent className="p-12 text-center">
-                <Calendar className="w-16 h-16 text-muted-foreground mx-auto mb-4" />
-                <h3 className="text-lg font-semibold mb-2">No appointments yet</h3>
-                <p className="text-muted-foreground mb-6">
-                  Book your first consultation to start your nutrition journey
-                </p>
-                <Button onClick={() => setIsBookingOpen(true)} className="bg-primary-500 hover:bg-primary-600">
-                  <Plus className="w-4 h-4 mr-2" />
-                  Book Your First Appointment
-                </Button>
-              </CardContent>
-            </Card>
-          )}
-        </div>
+                <FormField
+                  control={form.control}
+                  name="date"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Preferred Date</FormLabel>
+                      <FormControl>
+                        <Input type="date" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={form.control}
+                  name="timeslot"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Time Slot</FormLabel>
+                      <Select onValueChange={field.onChange} value={field.value}>
+                        <FormControl>
+                          <SelectTrigger>
+                            <SelectValue placeholder="Select time slot" />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          {slotsLoading ? (
+                            <div className="p-2 text-sm text-muted-foreground">Loading availability...</div>
+                          ) : selectedDate ? (
+                            availableSlots.map((slot) => (
+                              <SelectItem 
+                                key={slot.time} 
+                                value={slot.time}
+                                disabled={!slot.available}
+                              >
+                                {slot.time} {!slot.available && "(Booked)"}
+                              </SelectItem>
+                            ))
+                          ) : (
+                            <div className="p-2 text-sm text-muted-foreground">Select a date first</div>
+                          )}
+                        </SelectContent>
+                      </Select>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <div className="flex justify-end gap-3">
+                  <Button type="button" variant="outline" onClick={() => setIsBookingOpen(false)}>
+                    Cancel
+                  </Button>
+                  <Button type="submit" disabled={booking}>
+                    {booking ? "Booking..." : "Book Appointment"}
+                  </Button>
+                </div>
+              </form>
+            </Form>
+          </DialogContent>
+        </Dialog>
 
         {/* Reschedule Dialog */}
         <Dialog open={isRescheduleOpen} onOpenChange={setIsRescheduleOpen}>
-          <DialogContent className="max-w-md">
+          <DialogContent>
             <DialogHeader>
               <DialogTitle>Reschedule Appointment</DialogTitle>
               <DialogDescription>
-                Choose a new date and time for your {selectedAppointment?.type} consultation
+                Select a new date and time for your appointment
               </DialogDescription>
             </DialogHeader>
-            
             <div className="space-y-4">
               <div>
-                <Label htmlFor="reschedule-date">New Date</Label>
-                <Input
-                  id="reschedule-date"
-                  type="date"
+                <label className="text-sm font-medium">New Date</label>
+                <Input 
+                  type="date" 
                   value={rescheduleDate}
                   onChange={(e) => setRescheduleDate(e.target.value)}
-                  min={new Date().toISOString().split('T')[0]}
                 />
               </div>
-
-              {rescheduleDate && (
-                <div>
-                  <Label>Available Time Slots</Label>
-                  <div className="grid grid-cols-2 gap-2 mt-2">
-                    {rescheduleSlotsLoading ? (
-                      <p className="text-sm text-muted-foreground col-span-2">Loading available times...</p>
-                    ) : rescheduleSlots.length > 0 ? (
-                      rescheduleSlots.map((slot) => (
-                        <Button
-                          key={slot.time}
-                          variant="outline"
-                          size="sm"
-                          disabled={!slot.available}
-                          onClick={() => handleReschedule(rescheduleDate, slot.time)}
-                          className="text-sm"
-                        >
-                          {slot.time}
-                        </Button>
-                      ))
-                    ) : (
-                      <p className="text-sm text-muted-foreground col-span-2">No available slots for this date</p>
-                    )}
-                  </div>
-                </div>
-              )}
+              <div className="flex justify-end gap-3">
+                <Button variant="outline" onClick={() => setIsRescheduleOpen(false)}>
+                  Cancel
+                </Button>
+                <Button onClick={() => handleReschedule(rescheduleDate, "09:00")}>
+                  Reschedule
+                </Button>
+              </div>
             </div>
           </DialogContent>
         </Dialog>
 
         {/* Cancel Dialog */}
         <Dialog open={isCancelOpen} onOpenChange={setIsCancelOpen}>
-          <DialogContent className="max-w-md">
+          <DialogContent>
             <DialogHeader>
               <DialogTitle>Cancel Appointment</DialogTitle>
               <DialogDescription>
-                Are you sure you want to cancel your {selectedAppointment?.type} consultation on{' '}
-                {selectedAppointment && new Date(selectedAppointment.date).toLocaleDateString()} at {selectedAppointment?.timeslot}?
+                Are you sure you want to cancel this appointment?
               </DialogDescription>
             </DialogHeader>
-            
-            {selectedAppointment && isLateCancellation(selectedAppointment) && (
-              <div className="bg-orange-50 dark:bg-orange-900/20 border border-orange-200 dark:border-orange-800 rounded-lg p-3">
-                <div className="flex items-start space-x-2">
-                  <AlertCircle className="w-5 h-5 text-orange-600 dark:text-orange-400 mt-0.5" />
-                  <div className="text-sm">
-                    <p className="font-medium text-orange-800 dark:text-orange-200">Late Cancellation Notice</p>
-                    <p className="text-orange-700 dark:text-orange-300 mt-1">
-                      Cancelling with less than 2 hours notice may result in a late cancellation fee. 
-                      We'll contact you regarding any applicable charges.
-                    </p>
-                  </div>
-                </div>
-              </div>
-            )}
-
-            <div className="flex space-x-3">
-              <Button
-                variant="outline"
-                onClick={() => setIsCancelOpen(false)}
-                className="flex-1"
-              >
+            <div className="flex justify-end gap-3">
+              <Button variant="outline" onClick={() => setIsCancelOpen(false)}>
                 Keep Appointment
               </Button>
-              <Button
-                variant="destructive"
-                onClick={handleCancel}
-                className="flex-1"
-              >
+              <Button variant="destructive" onClick={handleCancel}>
                 Cancel Appointment
               </Button>
             </div>
