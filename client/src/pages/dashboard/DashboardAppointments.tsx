@@ -401,7 +401,11 @@ export default function DashboardAppointments() {
   const upcomingAppointments = sortedAppointments.filter(apt => {
     const appointmentDate = parseAppointmentDate(apt);
     const appointmentDateTime = new Date(`${appointmentDate.toISOString().split('T')[0]}T${apt.timeslot}`);
-    return appointmentDateTime > new Date() && apt.status !== "cancelled" && apt.status !== "cancelled_reschedule";
+    const now = new Date();
+    return appointmentDateTime > now && 
+           apt.status !== "cancelled" && 
+           apt.status !== "cancelled_reschedule" &&
+           apt.status !== "cancelled_client";
   });
 
   const nextAppointment = upcomingAppointments[0];
@@ -566,64 +570,70 @@ export default function DashboardAppointments() {
                 ) : (
                   <div className="space-y-4">
                     {/* Show limited appointments initially */}
-                    {(showAllAppointments ? sortedAppointments : sortedAppointments.slice(0, 3)).map((appointment) => (
-                      <div key={appointment.id} className="border rounded-lg p-4">
-                        {/* Pre-evaluation alert on individual appointments */}
-                        {!hasPreEvaluation && parseAppointmentDate(appointment) > new Date() && (
-                          <div className="flex items-center gap-2 mb-3 text-orange-600 dark:text-orange-400">
-                            <AlertCircle className="w-4 h-4" />
-                            <span className="text-sm">Pre-evaluation form required</span>
-                          </div>
-                        )}
-                        
-                        <div className="flex items-center justify-between">
-                          <div className="flex items-center gap-3">
-                            {getStatusIcon(appointment.status)}
-                            <div>
-                              <p className="font-medium">
-                                {parseAppointmentDate(appointment).toLocaleDateString('en-GB')}
-                              </p>
-                              <p className="text-sm text-muted-foreground">
-                                {appointment.timeslot} • {appointment.type}
-                              </p>
+                    {(showAllAppointments ? sortedAppointments : sortedAppointments.slice(0, 3)).map((appointment) => {
+                      const appointmentDate = parseAppointmentDate(appointment);
+                      const isFuture = appointmentDate > new Date();
+                      
+                      return (
+                        <div key={appointment.id} className="border rounded-lg p-4">
+                          {/* Pre-evaluation alert on individual appointments */}
+                          {!hasPreEvaluation && isFuture && (
+                            <div className="flex items-center gap-2 mb-3 text-orange-600 dark:text-orange-400">
+                              <AlertCircle className="w-4 h-4" />
+                              <span className="text-sm">Pre-evaluation form required</span>
+                            </div>
+                          )}
+                          
+                          <div className="flex items-center justify-between">
+                            <div className="flex items-center gap-3">
+                              {getStatusIcon(appointment.status)}
+                              <div>
+                                <p className="font-medium">
+                                  {appointmentDate.toLocaleDateString('en-GB')}
+                                </p>
+                                <p className="text-sm text-muted-foreground">
+                                  {appointment.timeslot} • {appointment.type}
+                                </p>
+                              </div>
+                            </div>
+                            <div className="flex items-center gap-2">
+                              <Badge className={getStatusColor(appointment.status)}>
+                                {appointment.status}
+                              </Badge>
+                              
+                              {/* Show edit options for all future appointments */}
+                              {isFuture && canModifyAppointment(appointment) && (
+                                <div className="flex gap-1">
+                                  <Button
+                                    size="sm"
+                                    variant="outline"
+                                    onClick={() => {
+                                      setSelectedAppointment(appointment);
+                                      setIsRescheduleOpen(true);
+                                    }}
+                                    title="Reschedule appointment"
+                                  >
+                                    <Edit className="w-3 h-3" />
+                                  </Button>
+                                  <Button
+                                    size="sm"
+                                    variant="outline"
+                                    onClick={() => {
+                                      setSelectedAppointment(appointment);
+                                      setIsCancelOpen(true);
+                                    }}
+                                    title="Cancel appointment"
+                                  >
+                                    <Trash2 className="w-3 h-3" />
+                                  </Button>
+                                </div>
+                              )}
                             </div>
                           </div>
-                          <div className="flex items-center gap-2">
-                            <Badge className={getStatusColor(appointment.status)}>
-                              {appointment.status}
-                            </Badge>
-                            {/* Always show edit options for future appointments regardless of status */}
-                            {canModifyAppointment(appointment) && (
-                              <div className="flex gap-1">
-                                <Button
-                                  size="sm"
-                                  variant="outline"
-                                  onClick={() => {
-                                    setSelectedAppointment(appointment);
-                                    setIsRescheduleOpen(true);
-                                  }}
-                                  title="Reschedule appointment"
-                                >
-                                  <Edit className="w-3 h-3" />
-                                </Button>
-                                <Button
-                                  size="sm"
-                                  variant="outline"
-                                  onClick={() => {
-                                    setSelectedAppointment(appointment);
-                                    setIsCancelOpen(true);
-                                  }}
-                                  title="Cancel appointment"
-                                >
-                                  <Trash2 className="w-3 h-3" />
-                                </Button>
-                              </div>
-                            )}
-                          </div>
-                        </div>
-                        
-                        {appointment.status === "confirmed" && (
-                          <div className="mt-3 pt-3 border-t">
+                          
+                          {/* Show action buttons for different appointment states */}
+                        <div className="mt-3 pt-3 border-t space-y-2">
+                          {appointment.status === "confirmed" && isFuture && (
                             <Button size="sm" variant="outline" className="w-full" asChild>
                               <a href={getTeamsUrl(appointment)} target="_blank" rel="noopener noreferrer">
                                 <Video className="w-4 h-4 mr-2" />
@@ -631,10 +641,27 @@ export default function DashboardAppointments() {
                                 <ExternalLink className="w-3 h-3 ml-2" />
                               </a>
                             </Button>
-                          </div>
-                        )}
-                      </div>
-                    ))}
+                          )}
+                          
+                          {appointment.status === "pending" && (
+                            <div className="text-center">
+                              <p className="text-xs text-muted-foreground">
+                                Awaiting confirmation - you'll receive an email once confirmed
+                              </p>
+                            </div>
+                          )}
+                          
+                          {!isFuture && (
+                            <div className="text-center">
+                              <p className="text-xs text-muted-foreground">
+                                {appointment.status === "done" ? "Session completed" : "Past appointment"}
+                              </p>
+                            </div>
+                          )}
+                        </div>
+                        </div>
+                      );
+                    })}
                     
                     {/* View All/Show Less Toggle */}
                     {sortedAppointments.length > 3 && (
@@ -729,45 +756,59 @@ export default function DashboardAppointments() {
                       </h3>
                     </div>
 
-                    {/* Upcoming Appointments List */}
+                    {/* Upcoming Appointments List - Only Future Appointments */}
                     <div className="space-y-3 border-t pt-4">
                       <h4 className="font-medium text-sm text-muted-foreground">Upcoming Sessions</h4>
-                      {upcomingAppointments.slice(0, 4).map((appointment) => (
-                        <div key={appointment.id} className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-800 rounded-lg">
-                          <div className="flex items-center gap-3">
-                            <div className="flex flex-col items-center">
-                              <span className="text-xs font-medium text-mint-green">
-                                {parseAppointmentDate(appointment).toLocaleDateString('en-GB', { 
-                                  month: 'short' 
-                                }).toUpperCase()}
-                              </span>
-                              <span className="text-lg font-bold">
-                                {parseAppointmentDate(appointment).getDate()}
-                              </span>
+                      {upcomingAppointments.slice(0, 4).map((appointment) => {
+                        const appointmentDate = parseAppointmentDate(appointment);
+                        const appointmentDateTime = new Date(`${appointmentDate.toISOString().split('T')[0]}T${appointment.timeslot}`);
+                        const now = new Date();
+                        
+                        // Only show if appointment is in the future
+                        if (appointmentDateTime <= now) return null;
+                        
+                        return (
+                          <div key={appointment.id} className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-800 rounded-lg">
+                            <div className="flex items-center gap-3">
+                              <div className="flex flex-col items-center">
+                                <span className="text-xs font-medium text-mint-green">
+                                  {appointmentDate.toLocaleDateString('en-GB', { 
+                                    month: 'short' 
+                                  }).toUpperCase()}
+                                </span>
+                                <span className="text-lg font-bold">
+                                  {appointmentDate.getDate()}
+                                </span>
+                              </div>
+                              <div>
+                                <p className="font-medium text-sm">
+                                  {appointment.timeslot}
+                                </p>
+                                <p className="text-xs text-muted-foreground">
+                                  {appointment.type} Session
+                                </p>
+                              </div>
                             </div>
-                            <div>
-                              <p className="font-medium text-sm">
-                                {appointment.timeslot}
-                              </p>
-                              <p className="text-xs text-muted-foreground">
-                                {appointment.type} Session
-                              </p>
+                            <div className="flex items-center gap-2">
+                              <Badge variant="outline" className="text-xs">
+                                {appointment.status}
+                              </Badge>
+                              {appointment.status === "confirmed" && (
+                                <Button size="sm" variant="ghost" asChild>
+                                  <a href={getTeamsUrl(appointment)} target="_blank" rel="noopener noreferrer">
+                                    <Video className="w-3 h-3" />
+                                  </a>
+                                </Button>
+                              )}
                             </div>
                           </div>
-                          <div className="flex items-center gap-2">
-                            <Badge variant="outline" className="text-xs">
-                              {appointment.status}
-                            </Badge>
-                            {appointment.status === "confirmed" && (
-                              <Button size="sm" variant="ghost" asChild>
-                                <a href={getTeamsUrl(appointment)} target="_blank" rel="noopener noreferrer">
-                                  <Video className="w-3 h-3" />
-                                </a>
-                              </Button>
-                            )}
-                          </div>
-                        </div>
-                      ))}
+                        );
+                      })}
+                      {upcomingAppointments.length === 0 && (
+                        <p className="text-center text-sm text-muted-foreground py-4">
+                          No upcoming sessions scheduled
+                        </p>
+                      )}
                     </div>
                   </div>
                 ) : (
