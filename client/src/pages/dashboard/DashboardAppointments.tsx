@@ -567,10 +567,10 @@ export default function DashboardAppointments() {
           </Card>
         )}
 
-        <div className="grid lg:grid-cols-2 gap-8">
+        <div className="grid lg:grid-cols-2 gap-8 lg:items-start">
           {/* My Appointments Section */}
-          <div>
-            <Card className="h-[580px]">
+          <div className="flex flex-col">
+            <Card className="flex-1 h-full">
               <CardHeader className="flex flex-row items-center justify-between">
                 <CardTitle className="flex items-center gap-2">
                   <Calendar className="w-5 h-5" />
@@ -581,7 +581,7 @@ export default function DashboardAppointments() {
                   Book New
                 </Button>
               </CardHeader>
-              <CardContent className="h-[calc(100%-80px)] flex flex-col">
+              <CardContent className="flex-1 flex flex-col min-h-[400px]">
                 {!effectiveAppointments?.length ? (
                   <div className="text-center py-8">
                     <Calendar className="w-12 h-12 mx-auto text-gray-400 mb-4" />
@@ -715,9 +715,9 @@ export default function DashboardAppointments() {
             </Card>
           </div>
 
-          {/* Appointment Calendar */}
-          <div>
-            <Card>
+          {/* Appointment Calendar & Requirements */}
+          <div className="flex flex-col space-y-6">
+            <Card className="flex-1">
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                   <Calendar className="w-5 h-5" />
