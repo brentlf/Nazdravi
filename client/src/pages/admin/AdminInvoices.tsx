@@ -304,12 +304,12 @@ export default function AdminInvoices() {
       if (response.ok) {
         let result;
         try {
-          result = await response.json();
+          const responseText = await response.text();
+          console.log('Raw response text:', responseText);
+          result = JSON.parse(responseText);
           console.log('Reissue success result:', result);
         } catch (jsonError) {
           console.error('Failed to parse JSON response:', jsonError);
-          const textResponse = await response.text();
-          console.error('Raw response:', textResponse);
           throw new Error('Server returned invalid JSON response');
         }
         

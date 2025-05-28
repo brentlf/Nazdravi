@@ -1,0 +1,70 @@
+hook.js:608 Warning: Missing `Description` or `aria-describedby={undefined}` for {DialogContent}. Error Component Stack
+    at DescriptionWarning (chunk-FQWEBTNQ.js?v=1a8e8de5:331:29)
+    at chunk-FQWEBTNQ.js?v=1a8e8de5:235:13
+    at chunk-FQWEBTNQ.js?v=1a8e8de5:158:58
+    at Presence (chunk-WIIJQEXM.js?v=1a8e8de5:24:11)
+    at chunk-FQWEBTNQ.js?v=1a8e8de5:149:64
+    at chunk-2K77HOHX.js?v=1a8e8de5:79:13
+    at chunk-2K77HOHX.js?v=1a8e8de5:56:13
+    at chunk-AXMZZQ2X.js?v=1a8e8de5:42:13
+    at chunk-S2ZUYA2N.js?v=1a8e8de5:260:22
+    at Presence (chunk-WIIJQEXM.js?v=1a8e8de5:24:11)
+    at Provider (chunk-5AJU3CG7.js?v=1a8e8de5:38:15)
+    at DialogPortal (chunk-FQWEBTNQ.js?v=1a8e8de5:111:11)
+    at _c3 (dialog.tsx:35:6)
+    at Provider (chunk-5AJU3CG7.js?v=1a8e8de5:38:15)
+    at Dialog (chunk-FQWEBTNQ.js?v=1a8e8de5:52:5)
+    at div (<anonymous>)
+    at td (<anonymous>)
+    at _c13 (table.tsx:87:6)
+    at tr (<anonymous>)
+    at _c9 (table.tsx:57:6)
+    at tbody (<anonymous>)
+    at _c5 (table.tsx:30:6)
+    at table (<anonymous>)
+    at div (<anonymous>)
+    at _c (table.tsx:8:6)
+    at div (<anonymous>)
+    at div (<anonymous>)
+    at _c9 (card.tsx:62:6)
+    at div (<anonymous>)
+    at _c (card.tsx:8:6)
+    at div (<anonymous>)
+    at chunk-AXMZZQ2X.js?v=1a8e8de5:42:13
+    at Presence (chunk-WIIJQEXM.js?v=1a8e8de5:24:11)
+    at @radix-ui_react-tabs.js?v=1a8e8de5:175:13
+    at _c5 (tabs.tsx:41:6)
+    at div (<anonymous>)
+    at chunk-AXMZZQ2X.js?v=1a8e8de5:42:13
+    at Provider (chunk-5AJU3CG7.js?v=1a8e8de5:38:15)
+    at @radix-ui_react-tabs.js?v=1a8e8de5:53:7
+    at div (<anonymous>)
+    at AdminInvoices (AdminInvoices.tsx:21:57)
+    at main (<anonymous>)
+    at div (<anonymous>)
+    at Layout (App.tsx:60:19)
+    at RouteGuard (RouteGuard.tsx:12:30)
+    at Route (wouter.js?v=1a8e8de5:323:16)
+    at Switch (wouter.js?v=1a8e8de5:379:17)
+    at Router (<anonymous>)
+    at Provider (chunk-5AJU3CG7.js?v=1a8e8de5:38:15)
+    at TooltipProvider (@radix-ui_react-tooltip.js?v=1a8e8de5:63:5)
+    at AuthProvider (AuthContext.tsx:46:32)
+    at LanguageProvider (LanguageContext.tsx:29:36)
+    at ThemeProvider (ThemeContext.tsx:24:33)
+    at QueryClientProvider (@tanstack_react-query.js?v=1a8e8de5:2805:3)
+    at App (<anonymous>)
+overrideMethod @ hook.js:608
+AdminInvoices.tsx:279 Reissue invoice data: Object
+AdminInvoices.tsx:302 Response status: 200 Response headers: Headers
+hook.js:608 Failed to parse JSON response: SyntaxError: Unexpected token '<', "<!DOCTYPE "... is not valid JSON
+overrideMethod @ hook.js:608
+hook.js:608 Reissue error details: TypeError: Failed to execute 'text' on 'Response': body stream already read
+    at handleReissueInvoice (AdminInvoices.tsx:311:47)
+overrideMethod @ hook.js:608
+
+                
+          
+          
+          
+         Chrome is moving towards a new experience that allows users to choose to browse without third-party cookies.
