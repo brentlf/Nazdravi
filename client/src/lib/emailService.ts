@@ -200,7 +200,8 @@ class EmailService implements EmailNotificationService {
     clientEmail: string,
     appointmentType: string,
     date: string,
-    time: string
+    time: string,
+    isTest: boolean = false
   ): Promise<void> {
     try {
       await apiRequest('POST', '/api/emails/admin/new-appointment', {
@@ -208,7 +209,8 @@ class EmailService implements EmailNotificationService {
         email: clientEmail,
         type: appointmentType,
         date: date,
-        timeslot: time
+        timeslot: time,
+        isTest: isTest
       });
       console.log('Admin new appointment notification sent successfully');
     } catch (error) {
@@ -220,13 +222,15 @@ class EmailService implements EmailNotificationService {
   async sendAdminHealthUpdate(
     clientName: string,
     clientEmail: string,
-    updateType: string
+    updateType: string,
+    isTest: boolean = false
   ): Promise<void> {
     try {
       await apiRequest('POST', '/api/emails/admin/health-update', {
         clientName,
         clientEmail,
         updateType,
+        isTest: isTest
       });
       console.log('Admin health update notification sent successfully');
     } catch (error) {
