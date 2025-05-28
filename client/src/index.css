@@ -1,52 +1,52 @@
-@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Source+Sans+Pro:wght@300;400;500;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;500;600;700&family=Caveat:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&family=Poppins:wght@300;400;500;600;700&display=swap');
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 :root {
-  /* Mediterranean Color Palette */
-  --primary: 20 85% 65%; /* #E17B47 - warm terracotta */
+  /* Natural Mediterranean Palette - Inspired by your examples */
+  --primary: 150 30% 60%; /* #7BA688 - soft sage green */
   --primary-foreground: 0 0% 100%;
   
   /* Background Colors */
-  --background: 45 100% 97%; /* #FEFCF7 - warm cream */
-  --foreground: 25 20% 25%; /* #4A453F - warm charcoal */
+  --background: 30 20% 96%; /* #F7F5F2 - natural cream */
+  --foreground: 30 15% 25%; /* #443F3A - warm brown */
   
-  /* Mediterranean UI Colors */
-  --muted: 35 25% 92%; /* #F4F1EA - soft sand */
-  --muted-foreground: 25 15% 45%; /* #6B6660 - warm gray */
-  --popover: 45 50% 96%; /* #FAF7F0 - cream white */
-  --popover-foreground: 25 20% 25%;
-  --card: 45 50% 98%; /* #FCFAF6 - warm white */
-  --card-foreground: 25 20% 25%;
-  --border: 35 20% 88%; /* #E8E3DA - warm border */
-  --input: 35 20% 90%; /* #EBE6DD - input background */
-  --secondary: 180 25% 85%; /* #C8D4D2 - sage green */
-  --secondary-foreground: 25 20% 25%;
-  --accent: 55 60% 88%; /* #F0E5A6 - golden accent */
-  --accent-foreground: 25 20% 25%;
-  --destructive: 0 65% 55%; /* Mediterranean red */
+  /* Natural UI Colors */
+  --muted: 30 15% 92%; /* #F0EDE8 - soft beige */
+  --muted-foreground: 30 10% 50%; /* #7A746E - muted brown */
+  --popover: 30 25% 97%; /* #F9F7F4 - warm white */
+  --popover-foreground: 30 15% 25%;
+  --card: 30 30% 98%; /* #FAFAF8 - soft white */
+  --card-foreground: 30 15% 25%;
+  --border: 30 15% 88%; /* #E4E0DB - gentle border */
+  --input: 30 15% 93%; /* #F2F0EB - soft input */
+  --secondary: 160 20% 88%; /* #D4DDD7 - pale sage */
+  --secondary-foreground: 30 15% 25%;
+  --accent: 150 25% 85%; /* #D1E0D5 - light sage */
+  --accent-foreground: 30 15% 25%;
+  --destructive: 15 65% 60%; /* Warm red */
   --destructive-foreground: 0 0% 98%;
-  --ring: 20 85% 65%;
-  --radius: 1rem;
+  --ring: 150 30% 60%;
+  --radius: 1.25rem;
   
-  /* Mediterranean Chart Colors */
-  --chart-1: 20 85% 65%; /* Terracotta */
-  --chart-2: 180 25% 75%; /* Sage green */
-  --chart-3: 55 60% 80%; /* Golden */
-  --chart-4: 200 50% 70%; /* Mediterranean blue */
-  --chart-5: 15 70% 60%; /* Warm coral */
+  /* Natural Chart Colors */
+  --chart-1: 150 30% 60%; /* Sage green */
+  --chart-2: 30 35% 75%; /* Warm beige */
+  --chart-3: 160 25% 70%; /* Muted green */
+  --chart-4: 45 40% 80%; /* Soft gold */
+  --chart-5: 20 30% 65%; /* Natural brown */
   
-  /* Mediterranean Sidebar Colors */
-  --sidebar-background: 45 50% 96%; /* Warm cream */
-  --sidebar-foreground: 25 20% 25%;
-  --sidebar-primary: 20 85% 65%; /* Terracotta */
+  /* Natural Sidebar Colors */
+  --sidebar-background: 30 25% 97%; /* Soft cream */
+  --sidebar-foreground: 30 15% 25%;
+  --sidebar-primary: 150 30% 60%; /* Sage green */
   --sidebar-primary-foreground: 0 0% 100%;
-  --sidebar-accent: 35 25% 90%; /* Soft sand */
-  --sidebar-accent-foreground: 25 20% 25%;
-  --sidebar-border: 35 20% 85%;
-  --sidebar-ring: 20 85% 65%;
+  --sidebar-accent: 30 15% 90%; /* Light beige */
+  --sidebar-accent-foreground: 30 15% 25%;
+  --sidebar-border: 30 15% 85%;
+  --sidebar-ring: 150 30% 60%;
 }
 
 .dark {
@@ -89,25 +89,38 @@
   
   body {
     @apply bg-background text-foreground antialiased;
-    font-family: 'Source Sans Pro', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
     font-feature-settings: "rlig" 1, "calt" 1;
     line-height: 1.6;
   }
   
-  /* Mediterranean Typography */
+  /* Natural, Homey Typography with Mediterranean Feel */
   h1, h2, h3, h4, h5, h6 {
-    font-family: 'Playfair Display', Georgia, serif;
+    font-family: 'Caveat', cursive;
     font-weight: 600;
-    line-height: 1.3;
+    line-height: 1.2;
     color: hsl(var(--foreground));
+    letter-spacing: 0.02em;
   }
   
-  h1 { @apply text-4xl lg:text-5xl mb-6; }
-  h2 { @apply text-3xl lg:text-4xl mb-5; }
-  h3 { @apply text-2xl lg:text-3xl mb-4; }
-  h4 { @apply text-xl lg:text-2xl mb-3; }
-  h5 { @apply text-lg lg:text-xl mb-3; }
-  h6 { @apply text-base lg:text-lg mb-2; }
+  /* Special handwritten style for decorative headings */
+  .heading-script {
+    font-family: 'Dancing Script', cursive;
+    font-weight: 500;
+  }
+  
+  /* Clean modern body text */
+  .body-text {
+    font-family: 'Poppins', -apple-system, BlinkMacSystemFont, sans-serif;
+    font-weight: 400;
+  }
+  
+  h1 { @apply text-4xl lg:text-6xl mb-6; font-weight: 700; }
+  h2 { @apply text-3xl lg:text-5xl mb-5; font-weight: 600; }
+  h3 { @apply text-2xl lg:text-4xl mb-4; font-weight: 600; }
+  h4 { @apply text-xl lg:text-3xl mb-3; font-weight: 500; }
+  h5 { @apply text-lg lg:text-2xl mb-3; font-weight: 500; }
+  h6 { @apply text-base lg:text-xl mb-2; font-weight: 500; }
   
   /* Smooth scrolling */
   html {
