@@ -1,50 +1,52 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Source+Sans+Pro:wght@300;400;500;600&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 :root {
-  /* Vee Nutrition Brand Colors */
-  --primary: 135 62% 70%; /* #A5CBA4 - mint green */
+  /* Mediterranean Color Palette */
+  --primary: 20 85% 65%; /* #E17B47 - warm terracotta */
   --primary-foreground: 0 0% 100%;
   
   /* Background Colors */
-  --background: 120 25% 98%; /* #F8FAF8 - off white */
-  --foreground: 210 11% 15%; /* #2D3748 - text primary */
+  --background: 45 100% 97%; /* #FEFCF7 - warm cream */
+  --foreground: 25 20% 25%; /* #4A453F - warm charcoal */
   
-  /* UI Colors */
-  --muted: 120 6% 95%;
-  --muted-foreground: 215 16% 47%; /* #4A5568 - text secondary */
-  --popover: 0 0% 100%;
-  --popover-foreground: 210 11% 15%;
-  --card: 0 0% 100%;
-  --card-foreground: 210 11% 15%;
-  --border: 214 32% 91%;
-  --input: 214 32% 91%;
-  --secondary: 120 6% 95%;
-  --secondary-foreground: 210 11% 15%;
-  --accent: 120 6% 95%;
-  --accent-foreground: 210 11% 15%;
-  --destructive: 0 84% 60%;
+  /* Mediterranean UI Colors */
+  --muted: 35 25% 92%; /* #F4F1EA - soft sand */
+  --muted-foreground: 25 15% 45%; /* #6B6660 - warm gray */
+  --popover: 45 50% 96%; /* #FAF7F0 - cream white */
+  --popover-foreground: 25 20% 25%;
+  --card: 45 50% 98%; /* #FCFAF6 - warm white */
+  --card-foreground: 25 20% 25%;
+  --border: 35 20% 88%; /* #E8E3DA - warm border */
+  --input: 35 20% 90%; /* #EBE6DD - input background */
+  --secondary: 180 25% 85%; /* #C8D4D2 - sage green */
+  --secondary-foreground: 25 20% 25%;
+  --accent: 55 60% 88%; /* #F0E5A6 - golden accent */
+  --accent-foreground: 25 20% 25%;
+  --destructive: 0 65% 55%; /* Mediterranean red */
   --destructive-foreground: 0 0% 98%;
-  --ring: 210 11% 15%;
-  --radius: 0.75rem;
+  --ring: 20 85% 65%;
+  --radius: 1rem;
   
-  /* Chart colors */
-  --chart-1: 135 62% 70%;
-  --chart-2: 198 93% 60%;
-  --chart-3: 49 96% 53%;
-  --chart-4: 283 39% 53%;
-  --chart-5: 13 93% 69%;
+  /* Mediterranean Chart Colors */
+  --chart-1: 20 85% 65%; /* Terracotta */
+  --chart-2: 180 25% 75%; /* Sage green */
+  --chart-3: 55 60% 80%; /* Golden */
+  --chart-4: 200 50% 70%; /* Mediterranean blue */
+  --chart-5: 15 70% 60%; /* Warm coral */
   
-  /* Sidebar colors */
-  --sidebar-background: 0 0% 98%;
-  --sidebar-foreground: 240 5.3% 26.1%;
-  --sidebar-primary: 135 62% 70%;
+  /* Mediterranean Sidebar Colors */
+  --sidebar-background: 45 50% 96%; /* Warm cream */
+  --sidebar-foreground: 25 20% 25%;
+  --sidebar-primary: 20 85% 65%; /* Terracotta */
   --sidebar-primary-foreground: 0 0% 100%;
-  --sidebar-accent: 120 6% 95%;
-  --sidebar-accent-foreground: 240 5.9% 10%;
-  --sidebar-border: 220 13% 91%;
-  --sidebar-ring: 217.2 10.6% 64.9%;
+  --sidebar-accent: 35 25% 90%; /* Soft sand */
+  --sidebar-accent-foreground: 25 20% 25%;
+  --sidebar-border: 35 20% 85%;
+  --sidebar-ring: 20 85% 65%;
 }
 
 .dark {
@@ -86,9 +88,26 @@
   }
   
   body {
-    @apply bg-background text-foreground font-sans antialiased;
+    @apply bg-background text-foreground antialiased;
+    font-family: 'Source Sans Pro', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
     font-feature-settings: "rlig" 1, "calt" 1;
+    line-height: 1.6;
   }
+  
+  /* Mediterranean Typography */
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-weight: 600;
+    line-height: 1.3;
+    color: hsl(var(--foreground));
+  }
+  
+  h1 { @apply text-4xl lg:text-5xl mb-6; }
+  h2 { @apply text-3xl lg:text-4xl mb-5; }
+  h3 { @apply text-2xl lg:text-3xl mb-4; }
+  h4 { @apply text-xl lg:text-2xl mb-3; }
+  h5 { @apply text-lg lg:text-xl mb-3; }
+  h6 { @apply text-base lg:text-lg mb-2; }
   
   /* Smooth scrolling */
   html {
@@ -114,17 +133,37 @@
 }
 
 @layer components {
-  /* Primary color variations for different states */
-  .primary-50 { background-color: hsl(135, 70%, 95%); }
-  .primary-100 { background-color: hsl(135, 65%, 90%); }
-  .primary-200 { background-color: hsl(135, 62%, 85%); }
-  .primary-300 { background-color: hsl(135, 62%, 80%); }
-  .primary-400 { background-color: hsl(135, 62%, 75%); }
-  .primary-500 { background-color: hsl(135, 62%, 70%); } /* Main brand color */
-  .primary-600 { background-color: hsl(135, 60%, 65%); }
-  .primary-700 { background-color: hsl(135, 55%, 55%); }
-  .primary-800 { background-color: hsl(135, 50%, 45%); }
-  .primary-900 { background-color: hsl(135, 45%, 35%); }
+  /* Mediterranean color variations */
+  .mediterranean-primary-50 { background-color: hsl(20, 85%, 95%); }
+  .mediterranean-primary-100 { background-color: hsl(20, 85%, 90%); }
+  .mediterranean-primary-200 { background-color: hsl(20, 85%, 80%); }
+  .mediterranean-primary-300 { background-color: hsl(20, 85%, 70%); }
+  .mediterranean-primary-400 { background-color: hsl(20, 85%, 65%); } /* Main terracotta */
+  .mediterranean-primary-500 { background-color: hsl(20, 85%, 60%); }
+  .mediterranean-primary-600 { background-color: hsl(20, 80%, 55%); }
+  .mediterranean-primary-700 { background-color: hsl(20, 75%, 45%); }
+  .mediterranean-primary-800 { background-color: hsl(20, 70%, 35%); }
+  .mediterranean-primary-900 { background-color: hsl(20, 65%, 25%); }
+  
+  /* Mediterranean card styles */
+  .mediterranean-card {
+    @apply bg-card border border-border rounded-2xl shadow-sm;
+    background: linear-gradient(135deg, hsl(var(--card)), hsl(45, 30%, 96%));
+    backdrop-filter: blur(10px);
+  }
+  
+  /* Mediterranean button styles */
+  .mediterranean-button {
+    @apply px-6 py-3 rounded-xl font-medium transition-all duration-300;
+    background: linear-gradient(135deg, hsl(var(--primary)), hsl(15, 80%, 60%));
+    color: hsl(var(--primary-foreground));
+    box-shadow: 0 4px 15px hsla(var(--primary), 0.25);
+  }
+  
+  .mediterranean-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px hsla(var(--primary), 0.35);
+  }
   
   /* Animation utilities */
   .animate-fade-in {
