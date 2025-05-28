@@ -26,14 +26,19 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(400).json({ success: false, error: "Missing required fields: email and name" });
       }
       
-      // Send email directly using Resend service
-      const success = await mailerLiteService.sendAccountConfirmation(email, name);
-      
-      if (success) {
-        res.json({ success: true, message: "Welcome email sent successfully" });
-      } else {
-        res.status(500).json({ success: false, error: "Failed to send welcome email" });
-      }
+      // Queue email in Firebase using same format as working automated emails
+      const docRef = await db.collection("mail").add({
+        to: email,
+        toName: name,
+        subject: `Welcome to Vee Nutrition - Account Confirmation`,
+        html: `<div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; background-color: #f8faf8;"><div style="background-color: white; padding: 30px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);"><div style="text-align: center; margin-bottom: 30px;"><h1 style="color: #A5CBA4; margin: 0;">🌿 Vee Nutrition</h1></div><h2 style="color: #333; margin-bottom: 20px;">Welcome to Your Health Journey!</h2><p style="color: #666; line-height: 1.6; margin-bottom: 20px;">Dear ${name},</p><p style="color: #666; line-height: 1.6; margin-bottom: 20px;">Welcome to Vee Nutrition! Your account has been successfully created and we're excited to support you on your wellness journey.</p><div style="background-color: #A5CBA4; color: white; padding: 25px; border-radius: 8px; margin: 20px 0; text-align: center;"><h3 style="margin: 0 0 15px 0; font-size: 18px;">🎯 Your Next Steps</h3><p style="margin: 5px 0; font-size: 16px;">✓ Complete your health profile</p><p style="margin: 5px 0; font-size: 16px;">✓ Schedule your first consultation</p><p style="margin: 5px 0; font-size: 16px;">✓ Start your personalized nutrition plan</p></div><div style="text-align: center; margin: 30px 0;"><a href="https://your-domain.replit.app/dashboard" style="background-color: #A5CBA4; color: white; padding: 12px 25px; text-decoration: none; border-radius: 5px; font-weight: bold;">Access Your Dashboard</a></div><div style="border-top: 1px solid #eee; padding-top: 20px; margin-top: 30px; text-align: center; color: #999; font-size: 14px;"><p>Vee Nutrition | Transforming Lives Through Nutrition</p><p>Email: info@veenutrition.com</p></div></div></div>`,
+        text: `Welcome to Vee Nutrition! Dear ${name}, your account has been successfully created. Access your dashboard to get started with your personalized nutrition journey.`,
+        type: 'account-confirmation',
+        status: "pending",
+        createdAt: new Date()
+      });
+
+      res.json({ success: true, message: "Welcome email queued", docId: docRef.id });
 
       // Add status checking for debugging
       setTimeout(async () => {
