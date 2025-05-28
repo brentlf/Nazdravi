@@ -7,7 +7,7 @@ if (!process.env.STRIPE_SECRET_KEY) {
 }
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
-  apiVersion: "2023-10-16",
+  apiVersion: "2025-04-30.basil",
 });
 
 export interface InvoiceItem {
@@ -106,7 +106,9 @@ export class InvoiceManagementService {
       const paymentIntent = await stripe.paymentIntents.create({
         amount: Math.round(totalAmount * 100), // Convert to cents
         currency: 'eur',
-        payment_method_types: ['card', 'ideal'],
+        automatic_payment_methods: {
+          enabled: true,
+        },
         metadata: {
           invoiceNumber,
           userId: data.userId,
@@ -182,7 +184,9 @@ export class InvoiceManagementService {
     const paymentIntent = await stripe.paymentIntents.create({
       amount: Math.round(data.subscriptionAmount * 100),
       currency: 'eur',
-      payment_method_types: ['card', 'ideal'],
+      automatic_payment_methods: {
+        enabled: true,
+      },
       metadata: {
         invoiceNumber,
         userId: data.userId,
@@ -324,7 +328,9 @@ export class InvoiceManagementService {
     const paymentIntent = await stripe.paymentIntents.create({
       amount: Math.round(totalAmount * 100),
       currency: 'eur',
-      payment_method_types: ['card', 'ideal'],
+      automatic_payment_methods: {
+        enabled: true,
+      },
       metadata: {
         invoiceNumber,
         userId,

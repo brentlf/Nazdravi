@@ -579,7 +579,6 @@ export async function registerRoutes(app: Express): Promise<Server> {
         amount: Math.round(amount * 100), // Convert to cents
         currency: currency.toLowerCase(),
         metadata: metadata || {},
-        payment_method_types: ['card', 'ideal'], // Support cards and iDEAL
         automatic_payment_methods: {
           enabled: true,
         },
