@@ -801,17 +801,84 @@ export default function AdminInvoices() {
                           </TableCell>
                           <TableCell className="p-2">
                             <div className="flex gap-1 justify-center">
-                              {invoice.paymentUrl && (
-                                <Button
-                                  variant="ghost"
-                                  size="sm"
-                                  className="h-8 w-8 p-0"
-                                  onClick={() => window.open(invoice.paymentUrl, '_blank')}
-                                  title="View Payment Link"
-                                >
-                                  <Eye className="w-3 h-3" />
-                                </Button>
-                              )}
+                              <Dialog>
+                                <DialogTrigger asChild>
+                                  <Button
+                                    variant="ghost"
+                                    size="sm"
+                                    className="h-8 w-8 p-0"
+                                    title="View Invoice Details"
+                                  >
+                                    <Eye className="w-3 h-3" />
+                                  </Button>
+                                </DialogTrigger>
+                                <DialogContent className="max-w-2xl">
+                                  <DialogHeader>
+                                    <DialogTitle>Invoice Details - {invoice.invoiceNumber}</DialogTitle>
+                                  </DialogHeader>
+                                  
+                                  <div className="space-y-4">
+                                    {/* Client Information */}
+                                    <div className="grid grid-cols-2 gap-4">
+                                      <div>
+                                        <h4 className="font-medium text-sm text-gray-700">Client</h4>
+                                        <p className="text-sm">{invoice.clientName}</p>
+                                        <p className="text-xs text-gray-500">{invoice.clientEmail}</p>
+                                      </div>
+                                      <div>
+                                        <h4 className="font-medium text-sm text-gray-700">Status</h4>
+                                        <div className="mt-1">{getSmartStatusBadge(invoice)}</div>
+                                      </div>
+                                    </div>
+
+                                    {/* Invoice Details */}
+                                    <div className="grid grid-cols-2 gap-4">
+                                      <div>
+                                        <h4 className="font-medium text-sm text-gray-700">Amount</h4>
+                                        <p className="text-lg font-bold">€{invoice.amount.toFixed(2)}</p>
+                                      </div>
+                                      <div>
+                                        <h4 className="font-medium text-sm text-gray-700">Date</h4>
+                                        <p className="text-sm">{new Date(invoice.sessionDate || invoice.createdAt).toLocaleDateString()}</p>
+                                      </div>
+                                    </div>
+
+                                    {/* Description */}
+                                    <div>
+                                      <h4 className="font-medium text-sm text-gray-700">Description</h4>
+                                      <p className="text-sm">{invoice.description}</p>
+                                    </div>
+
+                                    {/* Reissue Information */}
+                                    {invoice.isReissued && (
+                                      <div className="p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
+                                        <h4 className="font-medium text-sm text-yellow-800 mb-2">Reissue Information</h4>
+                                        <div className="space-y-1 text-sm">
+                                          <p><strong>Original Amount:</strong> €{invoice.originalAmount?.toFixed(2)}</p>
+                                          <p><strong>Current Amount:</strong> €{invoice.amount.toFixed(2)}</p>
+                                          <p><strong>Reason:</strong> {invoice.reissueReason}</p>
+                                          <p><strong>Difference:</strong> €{(invoice.amount - (invoice.originalAmount || 0)).toFixed(2)}</p>
+                                        </div>
+                                      </div>
+                                    )}
+
+                                    {/* Payment Link */}
+                                    {invoice.paymentUrl && (
+                                      <div>
+                                        <h4 className="font-medium text-sm text-gray-700">Payment Link</h4>
+                                        <Button 
+                                          variant="outline" 
+                                          size="sm" 
+                                          onClick={() => window.open(invoice.paymentUrl, '_blank')}
+                                          className="mt-1"
+                                        >
+                                          Open Payment Page
+                                        </Button>
+                                      </div>
+                                    )}
+                                  </div>
+                                </DialogContent>
+                              </Dialog>
                               {invoice.status === 'pending' && (
                                 <Button
                                   variant="ghost"
