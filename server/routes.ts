@@ -38,8 +38,6 @@ export async function registerRoutes(app: Express): Promise<Server> {
         createdAt: new Date()
       });
 
-      res.json({ success: true, message: "Welcome email queued", docId: docRef.id });
-
       // Add status checking for debugging
       setTimeout(async () => {
         try {
