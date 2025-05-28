@@ -243,7 +243,8 @@ class EmailService implements EmailNotificationService {
     clientName: string,
     amount: number,
     invoiceId: string,
-    paymentMethod: string
+    paymentMethod: string,
+    isTest: boolean = false
   ): Promise<void> {
     try {
       await apiRequest('POST', '/api/emails/admin/payment-received', {
@@ -251,6 +252,7 @@ class EmailService implements EmailNotificationService {
         amount,
         invoiceId,
         paymentMethod,
+        isTest: isTest
       });
       console.log('Admin payment received notification sent successfully');
     } catch (error) {
@@ -262,13 +264,15 @@ class EmailService implements EmailNotificationService {
   async sendAdminPlanUpgrade(
     clientName: string,
     planType: string,
-    previousPlan: string
+    previousPlan: string,
+    isTest: boolean = false
   ): Promise<void> {
     try {
       await apiRequest('POST', '/api/emails/admin/plan-upgrade', {
         clientName,
         planType,
         previousPlan,
+        isTest: isTest
       });
       console.log('Admin plan upgrade notification sent successfully');
     } catch (error) {
@@ -281,7 +285,8 @@ class EmailService implements EmailNotificationService {
     clientName: string,
     clientEmail: string,
     messageType: string,
-    urgency: string
+    urgency: string,
+    isTest: boolean = false
   ): Promise<void> {
     try {
       await apiRequest('POST', '/api/emails/admin/client-message', {
@@ -289,6 +294,7 @@ class EmailService implements EmailNotificationService {
         clientEmail,
         messageType,
         urgency,
+        isTest: isTest
       });
       console.log('Admin client message notification sent successfully');
     } catch (error) {

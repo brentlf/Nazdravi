@@ -292,7 +292,8 @@ export default function AdminEmailScheduler() {
         "testclient@example.com",
         "Initial Consultation",
         tomorrow.toLocaleDateString(),
-        "10:00"
+        "10:00",
+        true
       );
       
       toast({
@@ -316,7 +317,8 @@ export default function AdminEmailScheduler() {
       await emailService.sendAdminHealthUpdate(
         "Test Client",
         "testclient@example.com",
-        "Medical History Update"
+        "Medical History Update",
+        true
       );
       
       toast({
@@ -341,7 +343,8 @@ export default function AdminEmailScheduler() {
         "Test Client",
         95.00,
         "INV-TEST123",
-        "Credit Card"
+        "Credit Card",
+        true
       );
       
       toast({
@@ -365,7 +368,8 @@ export default function AdminEmailScheduler() {
       await emailService.sendAdminPlanUpgrade(
         "Test Client",
         "Complete Program",
-        "Pay-as-you-go"
+        "Pay-as-you-go",
+        true
       );
       
       toast({
