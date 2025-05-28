@@ -858,7 +858,8 @@ export const onRescheduleRequest = functions.firestore
     }
   });
 
-// 4. Process Mail Queue - Updated for admin email support
+// 4. Process Mail Queue - DISABLED - Firebase extension handles all emails
+/*
 export const processMailQueue = functions.firestore
   .document('mail/{mailId}')
   .onCreate(async (snap: any, context: any) => {
@@ -1027,6 +1028,7 @@ export const processMailQueue = functions.firestore
       });
     }
   });
+*/
 
 // 5. Daily Reminder Scheduler
 export const sendDailyReminders = functions.pubsub
