@@ -202,6 +202,16 @@ export const invoiceSchema = z.object({
   paidAt: z.date().optional(),
   stripePaymentIntentId: z.string().optional(),
   paymentUrl: z.string().optional(),
+  
+  // Enhanced accounting flow fields for reissued invoices
+  type: z.enum(["invoice", "credit"]).default("invoice"), // Regular invoice or credit note
+  originalInvoiceId: z.string().optional(), // Reference to original invoice for credit notes/reissues
+  creditNoteNumber: z.string().optional(), // Credit note number when credited
+  isReissued: z.boolean().optional(), // Indicates if this is a reissued invoice
+  originalAmount: z.number().optional(), // Original amount before reissue
+  reissueReason: z.string().optional(), // Reason for reissue
+  isActive: z.boolean().default(true), // Whether this invoice is active (not superseded)
+  replacedByInvoiceId: z.string().optional(), // ID of the new invoice that replaced this one
 });
 
 // Firebase Collection Names

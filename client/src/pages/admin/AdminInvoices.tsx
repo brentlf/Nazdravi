@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
@@ -32,14 +32,50 @@ export default function AdminInvoices() {
   const { user } = useAuth();
   const queryClient = useQueryClient();
 
-  // Fetch invoices (only active ones)
+  // Fetch all invoices including credit notes for proper accounting flow
   const { data: allInvoices, loading: loadingInvoices } = useFirestoreCollection<Invoice>("invoices", [
     orderBy("createdAt", "desc"),
     limit(100)
   ]);
 
-  // Filter to show only active invoices (hide credited/superseded ones)
-  const invoices = allInvoices?.filter(invoice => invoice.isActive !== false) || [];
+  // Group invoices by accounting flow - main invoices and their related credit notes/reissues
+  const invoiceGroups = useMemo(() => {
+    if (!allInvoices) return [];
+    
+    const groups = new Map();
+    
+    allInvoices.forEach(invoice => {
+      if (invoice.originalInvoiceId) {
+        // This is a credit note or reissued invoice
+        const originalId = invoice.originalInvoiceId;
+        if (!groups.has(originalId)) {
+          groups.set(originalId, { original: null, creditNotes: [], reissued: [] });
+        }
+        if (invoice.type === 'credit') {
+          groups.get(originalId).creditNotes.push(invoice);
+        } else {
+          groups.get(originalId).reissued.push(invoice);
+        }
+      } else {
+        // This is an original invoice
+        if (!groups.has(invoice.id)) {
+          groups.set(invoice.id, { original: null, creditNotes: [], reissued: [] });
+        }
+        groups.get(invoice.id).original = invoice;
+      }
+    });
+    
+    return Array.from(groups.values()).filter(group => group.original);
+  }, [allInvoices]);
+
+  // For display purposes, show the main invoices with smart indicators
+  const invoices = invoiceGroups.map(group => ({
+    ...group.original,
+    _hasAccountingFlow: group.creditNotes.length > 0 || group.reissued.length > 0,
+    _creditNotes: group.creditNotes,
+    _reissued: group.reissued,
+    _netAmount: group.original.amount - group.creditNotes.reduce((sum, cn) => sum + cn.amount, 0)
+  }));
 
   // Fetch appointments that can be invoiced
   const { data: allAppointments } = useFirestoreCollection<Appointment>("appointments", [
@@ -59,19 +95,57 @@ export default function AdminInvoices() {
     !hasExistingInvoice(apt.id)
   ) || [];
 
-  // Detect invoice type based on description and amount patterns
-  const getInvoiceTypeIcon = (invoice: Invoice) => {
+  // Smart invoice type detection with accounting flow awareness
+  const getInvoiceTypeIcon = (invoice: any) => {
     const desc = invoice.description?.toLowerCase() || '';
     const isReissued = invoice.isReissued === true;
+    const hasAccountingFlow = invoice._hasAccountingFlow;
     const isNoShow = desc.includes('no-show') || desc.includes('penalty');
     const isLateReschedule = desc.includes('late') && desc.includes('reschedule');
     const isCustom = desc.includes('custom') && !isReissued;
     
-    if (isReissued) return <RefreshCw className="w-4 h-4 text-blue-500" title="Reissued Invoice" />;
-    if (isNoShow) return <Ban className="w-4 h-4 text-red-500" title="No-Show Penalty" />;
-    if (isLateReschedule) return <Clock className="w-4 h-4 text-orange-500" title="Late Reschedule Fee" />;
-    if (isCustom) return <Edit className="w-4 h-4 text-purple-500" title="Custom Amount" />;
-    return <CheckCircle className="w-4 h-4 text-green-500" title="Standard Session Rate" />;
+    if (hasAccountingFlow) return <div className="flex items-center gap-1" title="Has accounting adjustments"><RefreshCw className="w-4 h-4 text-blue-500" /><span className="text-xs text-blue-600">•</span></div>;
+    if (isReissued) return <RefreshCw className="w-4 h-4 text-blue-500" />;
+    if (isNoShow) return <Ban className="w-4 h-4 text-red-500" />;
+    if (isLateReschedule) return <Clock className="w-4 h-4 text-orange-500" />;
+    if (isCustom) return <Edit className="w-4 h-4 text-purple-500" />;
+    return <CheckCircle className="w-4 h-4 text-green-500" />;
+  };
+
+  // Smart amount display considering net amounts after credits
+  const getDisplayAmount = (invoice: any) => {
+    if (invoice._hasAccountingFlow && invoice._netAmount !== invoice.amount) {
+      return (
+        <div className="text-right">
+          <div className="text-sm font-medium">€{invoice._netAmount.toFixed(2)}</div>
+          <div className="text-xs text-muted-foreground line-through">€{invoice.amount.toFixed(2)}</div>
+        </div>
+      );
+    }
+    return <div className="text-right font-medium">€{invoice.amount.toFixed(2)}</div>;
+  };
+
+  // Enhanced status badge showing payment requirements
+  const getSmartStatusBadge = (invoice: any) => {
+    const hasCredits = invoice._creditNotes?.length > 0;
+    const isFullyCredited = invoice._netAmount === 0;
+    
+    if (isFullyCredited) {
+      return <Badge variant="outline" className="text-green-600 border-green-600">No Payment Due</Badge>;
+    }
+    
+    if (hasCredits && invoice.status === 'pending') {
+      return <Badge variant="outline" className="text-orange-600 border-orange-600">Adjusted - Pending</Badge>;
+    }
+    
+    const statusColors = {
+      pending: "bg-orange-100 text-orange-800 dark:bg-orange-900/20 dark:text-orange-400",
+      paid: "bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-400",
+      overdue: "bg-red-100 text-red-800 dark:bg-red-900/20 dark:text-red-400",
+      cancelled: "bg-gray-100 text-gray-800 dark:bg-gray-900/20 dark:text-gray-400"
+    };
+    
+    return <Badge className={statusColors[invoice.status as keyof typeof statusColors]}>{invoice.status}</Badge>;
   };
 
   const getStatusBadge = (status: string) => {
@@ -666,6 +740,12 @@ export default function AdminInvoices() {
                           </TableCell>
                           <TableCell className="p-2">
                             <div className="font-mono text-xs">{invoice.invoiceNumber}</div>
+                            {invoice._hasAccountingFlow && (
+                              <div className="text-xs text-blue-600 mt-1">
+                                {invoice._creditNotes?.length > 0 && `${invoice._creditNotes.length} credit note(s)`}
+                                {invoice._reissued?.length > 0 && ` • ${invoice._reissued.length} reissue(s)`}
+                              </div>
+                            )}
                           </TableCell>
                           <TableCell className="p-2">
                             <div className="font-medium text-sm truncate">{invoice.clientName}</div>
