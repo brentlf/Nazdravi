@@ -16,6 +16,34 @@ export async function registerRoutes(app: Express): Promise<Server> {
     console.log('🚨 TEST ROUTE HIT - Server is working!');
     res.json({ success: true, message: 'Server routes are working' });
   });
+
+  // Welcome email route
+  app.post("/api/emails/welcome", async (req, res) => {
+    try {
+      const { email, name } = req.body;
+      
+      if (!email || !name) {
+        return res.status(400).json({ success: false, error: "Missing required fields: email and name" });
+      }
+      
+      // Queue email in Firebase with correct format
+      const docRef = await db.collection("mail").add({
+        to: email,
+        toName: name,
+        type: "welcome",
+        status: "pending",
+        data: { 
+          name: name || ''
+        },
+        createdAt: new Date()
+      });
+
+      res.json({ success: true, message: "Welcome email queued", docId: docRef.id });
+    } catch (error: any) {
+      console.error("Error queuing welcome email:", error);
+      res.status(500).json({ success: false, error: error.message });
+    }
+  });
   
   // Email automation test routes
   app.post("/api/emails/appointment-confirmation", async (req, res) => {
@@ -216,6 +244,36 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.json({ success: true, message: "Invoice generated email queued", docId: docRef.id });
     } catch (error: any) {
       console.error("Error queuing invoice generated email:", error);
+      res.status(500).json({ success: false, error: error.message });
+    }
+  });
+
+  app.post("/api/emails/payment-reminder", async (req, res) => {
+    try {
+      const { email, name, amount, invoiceNumber, paymentUrl } = req.body;
+      
+      if (!email || !name) {
+        return res.status(400).json({ success: false, error: "Missing required fields: email and name" });
+      }
+      
+      // Queue email in Firebase with correct format
+      const docRef = await db.collection("mail").add({
+        to: email,
+        toName: name,
+        type: "payment-reminder",
+        status: "pending",
+        data: { 
+          name: name || '',
+          amount: amount || 0,
+          invoiceNumber: invoiceNumber || '',
+          paymentUrl: paymentUrl || ''
+        },
+        createdAt: new Date()
+      });
+
+      res.json({ success: true, message: "Payment reminder email queued", docId: docRef.id });
+    } catch (error: any) {
+      console.error("Error queuing payment reminder email:", error);
       res.status(500).json({ success: false, error: error.message });
     }
   });

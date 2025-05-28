@@ -420,7 +420,8 @@ export default function AdminEmailScheduler() {
         "Test Client",
         "testclient@example.com",
         "General Inquiry",
-        "Normal"
+        "Normal",
+        true
       );
       
       toast({
