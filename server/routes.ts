@@ -559,15 +559,15 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Enhanced invoice reissue with proper accounting flow
-  app.post("/api/invoices/reissue-with-accounting", async (req, res) => {
+  // Simple invoice reissue that actually works
+  app.post("/api/invoices/reissue", async (req, res) => {
     try {
       const { originalInvoiceId, newAmount, reason } = req.body;
       
       if (!originalInvoiceId || !newAmount) {
         return res.status(400).json({ 
           success: false, 
-          error: "Missing required fields: originalInvoiceId and newAmount" 
+          error: "Missing required fields" 
         });
       }
 
@@ -577,91 +577,32 @@ export async function registerRoutes(app: Express): Promise<Server> {
       if (!originalInvoiceDoc.exists) {
         return res.status(404).json({ 
           success: false, 
-          error: "Original invoice not found" 
+          error: "Invoice not found" 
         });
       }
 
       const originalInvoice = originalInvoiceDoc.data();
-      const originalAmount = originalInvoice?.amount || 0;
 
-      // Generate unique invoice and credit note numbers
-      const timestamp = Date.now();
-      const creditNoteNumber = `CN-${timestamp}`;
-      const newInvoiceNumber = `INV-${timestamp + 1}`;
-
-      // Step 1: Create credit note for the original invoice amount
-      const creditNoteData = {
-        type: "credit",
-        originalInvoiceId: originalInvoiceId,
-        creditNoteNumber: creditNoteNumber,
-        userId: originalInvoice?.userId,
-        clientName: originalInvoice?.clientName,
-        clientEmail: originalInvoice?.clientEmail,
-        invoiceNumber: creditNoteNumber,
-        amount: originalAmount,
-        currency: originalInvoice?.currency || "EUR",
-        description: `Credit note for invoice ${originalInvoice?.invoiceNumber} - ${reason || 'Invoice correction'}`,
-        status: "paid", // Credit notes are automatically "applied"
-        createdAt: new Date(),
-        dueDate: new Date(),
-        paidAt: new Date(),
-        invoiceType: "session",
-        isActive: true
-      };
-
-      const creditNoteRef = await db.collection("invoices").add(creditNoteData);
-
-      // Step 2: Create new invoice with the new amount
-      const newInvoiceData = {
-        type: "invoice",
-        originalInvoiceId: originalInvoiceId,
-        isReissued: true,
-        originalAmount: originalAmount,
-        reissueReason: reason || 'Invoice correction',
-        appointmentId: originalInvoice?.appointmentId,
-        userId: originalInvoice?.userId,
-        clientName: originalInvoice?.clientName,
-        clientEmail: originalInvoice?.clientEmail,
-        invoiceNumber: newInvoiceNumber,
-        amount: newAmount,
-        currency: originalInvoice?.currency || "EUR",
-        description: `Reissued invoice (was ${originalInvoice?.invoiceNumber}) - ${reason || 'Amount correction'}`,
-        sessionDate: originalInvoice?.sessionDate,
-        sessionType: originalInvoice?.sessionType,
-        invoiceType: originalInvoice?.invoiceType || "session",
-        status: "pending",
-        createdAt: new Date(),
-        dueDate: new Date(Date.now() + 14 * 24 * 60 * 60 * 1000), // 14 days from now
-        isActive: true
-      };
-
-      const newInvoiceRef = await db.collection("invoices").add(newInvoiceData);
-
-      // Step 3: Mark the original invoice as superseded (but keep it for audit trail)
+      // Simply update the existing invoice with new amount and mark as reissued
       await db.collection("invoices").doc(originalInvoiceId).update({
-        isActive: false,
-        replacedByInvoiceId: newInvoiceRef.id,
-        creditedAt: new Date(),
-        creditNoteId: creditNoteRef.id
+        amount: newAmount,
+        originalAmount: originalInvoice?.amount,
+        isReissued: true,
+        reissueReason: reason,
+        description: `${originalInvoice?.description} (Reissued: ${reason})`,
+        updatedAt: new Date()
       });
 
       res.json({ 
         success: true, 
-        message: "Invoice reissued with proper accounting flow",
-        creditNote: { 
-          id: creditNoteRef.id, 
-          creditNoteNumber: creditNoteNumber,
-          amount: originalAmount 
-        },
-        newInvoice: { 
-          id: newInvoiceRef.id, 
-          invoiceNumber: newInvoiceNumber,
-          amount: newAmount 
-        }
+        message: "Invoice reissued successfully",
+        invoiceId: originalInvoiceId,
+        newAmount: newAmount,
+        originalAmount: originalInvoice?.amount
       });
 
     } catch (error: any) {
-      console.error("Error in invoice reissue with accounting:", error);
+      console.error("Error reissuing invoice:", error);
       res.status(500).json({ 
         success: false, 
         error: error.message || "Failed to reissue invoice" 

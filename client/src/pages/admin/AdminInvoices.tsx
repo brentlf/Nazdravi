@@ -287,7 +287,7 @@ export default function AdminInvoices() {
         }
       });
       
-      const response = await fetch('/api/invoices/reissue-with-accounting', {
+      const response = await fetch('/api/invoices/reissue', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -315,19 +315,26 @@ export default function AdminInvoices() {
         
         toast({
           title: "Invoice Reissued Successfully!",
-          description: `Credit note and new invoice created. Refreshing page to show changes...`,
+          description: `Invoice amount updated from €${result.originalAmount} to €${result.newAmount}`,
         });
         
-        // Force refresh the data by invalidating multiple query patterns
-        queryClient.invalidateQueries({ queryKey: ['invoices'] });
-        queryClient.invalidateQueries({ queryKey: ['appointments'] });
+        // Update the invoice in the local state immediately
+        setInvoices(prevInvoices => 
+          prevInvoices.map(inv => 
+            inv.id === invoice.id 
+              ? { 
+                  ...inv, 
+                  amount: newAmount,
+                  originalAmount: result.originalAmount,
+                  isReissued: true,
+                  description: inv.description + ` (Reissued: ${newAmount !== result.originalAmount ? 'Amount adjustment' : 'Invoice correction'})`
+                }
+              : inv
+          )
+        );
         
-        // Refresh the page to show the updated accounting flow
-        setTimeout(() => {
-          window.location.reload();
-        }, 1000);
-        
-        setReissueInvoice(null);
+        setShowReissueDialog(false);
+        setSelectedInvoice(null);
         setReissueAmount("");
         setIsReissuing(false);
       } else {
