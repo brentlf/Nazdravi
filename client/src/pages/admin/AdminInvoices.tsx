@@ -289,48 +289,41 @@ export default function AdminInvoices() {
         }
       });
       
-      const response = await fetch('/api/invoices/reissue', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          originalInvoiceId: invoice.id,
-          newAmount: newAmount,
-          reason: newAmount !== invoice.amount ? 'Amount adjustment' : 'Invoice correction'
-        }),
+      // Direct Firebase update since API routing is broken
+      const { db } = await import('@/lib/firebase');
+      const { doc, updateDoc, getDoc } = await import('firebase/firestore');
+      
+      const invoiceRef = doc(db, 'invoices', invoice.id);
+      const invoiceSnap = await getDoc(invoiceRef);
+      
+      if (!invoiceSnap.exists()) {
+        throw new Error('Invoice not found');
+      }
+      
+      const originalInvoice = invoiceSnap.data();
+      const originalAmount = originalInvoice.amount;
+      
+      // Update the invoice directly in Firebase
+      await updateDoc(invoiceRef, {
+        amount: newAmount,
+        originalAmount: originalAmount,
+        isReissued: true,
+        reissueReason: newAmount !== originalAmount ? 'Amount adjustment' : 'Invoice correction',
+        description: `${originalInvoice.description} (Reissued: ${newAmount !== originalAmount ? 'Amount adjustment' : 'Invoice correction'})`,
+        updatedAt: new Date()
       });
 
-      console.log('Response status:', response.status, 'Response headers:', response.headers);
+      toast({
+        title: "Invoice Reissued Successfully!",
+        description: `Invoice amount updated from €${originalAmount} to €${newAmount}`,
+      });
       
-      if (response.ok) {
-        let result;
-        try {
-          const responseText = await response.text();
-          console.log('Raw response text:', responseText);
-          result = JSON.parse(responseText);
-          console.log('Reissue success result:', result);
-        } catch (jsonError) {
-          console.error('Failed to parse JSON response:', jsonError);
-          throw new Error('Server returned invalid JSON response');
-        }
-        
-        toast({
-          title: "Invoice Reissued Successfully!",
-          description: `Invoice amount updated from €${result.originalAmount} to €${result.newAmount}`,
-        });
-        
-        // Invalidate queries to refresh the data from Firestore
-        queryClient.invalidateQueries({ queryKey: ['invoices'] });
-        
-        setReissueInvoice(null);
-        setReissueAmount("");
-        setIsReissuing(false);
-      } else {
-        const errorText = await response.text();
-        console.error('Reissue failed with status:', response.status, 'Error:', errorText);
-        throw new Error(`Server error: ${response.status} - ${errorText}`);
-      }
+      // Invalidate queries to refresh the data from Firestore
+      queryClient.invalidateQueries({ queryKey: ['invoices'] });
+      
+      setReissueInvoice(null);
+      setReissueAmount("");
+      setIsReissuing(false);
     } catch (error) {
       console.error('Reissue error details:', error);
       toast({

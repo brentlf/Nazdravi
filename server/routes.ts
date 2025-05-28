@@ -556,20 +556,17 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Test route for invoice API
-  app.get("/api/invoices/test", (req, res) => {
-    console.log('🚨 INVOICE TEST ROUTE HIT - Invoice API is working!');
-    res.json({ success: true, message: 'Invoice API routes are working' });
-  });
-
-  // Simple invoice reissue that actually works
-  app.post("/api/invoices/reissue", async (req, res) => {
+  // Invoice reissue endpoint using PUT method to avoid routing conflicts
+  app.put("/api/invoices/:id/reissue", async (req, res) => {
     console.log('🚨 REISSUE ROUTE HIT - Processing reissue request');
+    console.log('Request params:', req.params);
     console.log('Request body:', req.body);
+    
     try {
-      const { originalInvoiceId, newAmount, reason } = req.body;
+      const invoiceId = req.params.id;
+      const { newAmount, reason } = req.body;
       
-      if (!originalInvoiceId || !newAmount) {
+      if (!invoiceId || !newAmount) {
         return res.status(400).json({ 
           success: false, 
           error: "Missing required fields" 
@@ -577,7 +574,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }
 
       // Get the original invoice
-      const originalInvoiceDoc = await db.collection("invoices").doc(originalInvoiceId).get();
+      const originalInvoiceDoc = await db.collection("invoices").doc(invoiceId).get();
       
       if (!originalInvoiceDoc.exists) {
         return res.status(404).json({ 
@@ -589,7 +586,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const originalInvoice = originalInvoiceDoc.data();
 
       // Simply update the existing invoice with new amount and mark as reissued
-      await db.collection("invoices").doc(originalInvoiceId).update({
+      await db.collection("invoices").doc(invoiceId).update({
         amount: newAmount,
         originalAmount: originalInvoice?.amount,
         isReissued: true,
@@ -601,7 +598,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.json({ 
         success: true, 
         message: "Invoice reissued successfully",
-        invoiceId: originalInvoiceId,
+        invoiceId: invoiceId,
         newAmount: newAmount,
         originalAmount: originalInvoice?.amount
       });
