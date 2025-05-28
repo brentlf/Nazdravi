@@ -13,6 +13,8 @@ if (!import.meta.env.VITE_STRIPE_PUBLIC_KEY) {
 }
 const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLIC_KEY);
 
+
+
 interface Invoice {
   invoiceNumber: string;
   clientName: string;
@@ -121,6 +123,51 @@ export default function PayInvoice() {
   const [clientSecret, setClientSecret] = useState("");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+
+  // Function to convert technical descriptions to customer-friendly service descriptions
+  const getServiceDescription = (description: string, sessionType: string) => {
+    const desc = description?.toLowerCase() || '';
+    const type = sessionType?.toLowerCase() || '';
+    
+    // Check for specific service types
+    if (desc.includes('no-show') || desc.includes('penalty')) {
+      return 'No-Show Fee - Missed Appointment Penalty';
+    }
+    
+    if (desc.includes('late') && desc.includes('reschedule')) {
+      return 'Late Reschedule Fee - Short Notice Cancellation';
+    }
+    
+    if (desc.includes('reissued') || desc.includes('adjustment')) {
+      if (type.includes('initial') || desc.includes('initial')) {
+        return 'Initial Nutrition Consultation (Adjusted Amount)';
+      }
+      if (type.includes('follow')) {
+        return 'Follow-up Consultation (Adjusted Amount)';
+      }
+      return 'Nutrition Consultation (Adjusted Amount)';
+    }
+    
+    if (desc.includes('subscription') || desc.includes('monthly')) {
+      return 'Monthly Subscription - Complete Nutrition Program';
+    }
+    
+    // Standard consultation types
+    if (type.includes('initial') || desc.includes('initial')) {
+      return 'Initial Nutrition Consultation';
+    }
+    
+    if (type.includes('follow') || desc.includes('follow')) {
+      return 'Follow-up Nutrition Consultation';
+    }
+    
+    if (type.includes('check') || desc.includes('check')) {
+      return 'Progress Check-in Session';
+    }
+    
+    // Default to a clean version of the description
+    return 'Nutrition Consultation Service';
+  };
 
   useEffect(() => {
     const fetchInvoice = async () => {
@@ -255,7 +302,7 @@ export default function PayInvoice() {
                 </div>
                 <div>
                   <p className="text-sm font-medium text-muted-foreground">Service</p>
-                  <p className="font-medium">{invoice.description}</p>
+                  <p className="font-medium">{getServiceDescription(invoice.description, invoice.sessionType)}</p>
                 </div>
                 <div>
                   <p className="text-sm font-medium text-muted-foreground">Due Date</p>
