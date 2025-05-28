@@ -293,13 +293,23 @@ export default function AdminInvoices() {
       });
 
       if (response.ok) {
+        const result = await response.json();
+        
         toast({
-          title: "Invoice Reissued",
-          description: `New invoice for €${newAmount.toFixed(2)} has been created successfully.`,
+          title: "Invoice Reissued with Proper Accounting",
+          description: `Credit note ${result.creditNote?.creditNoteNumber} created for €${invoice.amount.toFixed(2)}, new invoice ${result.newInvoice?.invoiceNumber} created for €${newAmount.toFixed(2)}`,
         });
         
-        // Invalidate and refetch data to show updated lists
+        // Force refresh the data by invalidating multiple query patterns
         queryClient.invalidateQueries({ queryKey: ['invoices'] });
+        queryClient.invalidateQueries({ queryKey: ['appointments'] });
+        // Force refetch immediately
+        queryClient.refetchQueries({ queryKey: ['invoices'] });
+        
+        // Refresh the page to show the updated accounting flow
+        setTimeout(() => {
+          window.location.reload();
+        }, 500);
         
         setReissueInvoice(null);
         setReissueAmount("");
