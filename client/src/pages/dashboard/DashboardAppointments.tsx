@@ -164,7 +164,13 @@ export default function DashboardAppointments() {
       const appointmentDateTime = new Date(`${appointmentDate.toISOString().split('T')[0]}T${appointment.timeslot}`);
       const now = new Date();
       const hoursUntilAppointment = (appointmentDateTime.getTime() - now.getTime()) / (1000 * 60 * 60);
-      return hoursUntilAppointment > 0.5;
+      
+      // Allow modifications for appointments that are at least 30 minutes in the future
+      // And not already completed or cancelled
+      return hoursUntilAppointment > 0.5 && 
+             appointment.status !== "done" && 
+             appointment.status !== "cancelled" &&
+             appointment.status !== "cancelled_client";
     } catch (error) {
       console.error('Error parsing appointment date:', error);
       return false;
@@ -586,6 +592,7 @@ export default function DashboardAppointments() {
                             <Badge className={getStatusColor(appointment.status)}>
                               {appointment.status}
                             </Badge>
+                            {/* Always show edit options for future appointments regardless of status */}
                             {canModifyAppointment(appointment) && (
                               <div className="flex gap-1">
                                 <Button
@@ -595,6 +602,7 @@ export default function DashboardAppointments() {
                                     setSelectedAppointment(appointment);
                                     setIsRescheduleOpen(true);
                                   }}
+                                  title="Reschedule appointment"
                                 >
                                   <Edit className="w-3 h-3" />
                                 </Button>
@@ -605,6 +613,7 @@ export default function DashboardAppointments() {
                                     setSelectedAppointment(appointment);
                                     setIsCancelOpen(true);
                                   }}
+                                  title="Cancel appointment"
                                 >
                                   <Trash2 className="w-3 h-3" />
                                 </Button>
@@ -663,31 +672,94 @@ export default function DashboardAppointments() {
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="space-y-4">
-                  {upcomingAppointments.length > 0 ? (
-                    <div className="space-y-3">
-                      {upcomingAppointments.slice(0, 5).map((appointment) => (
+                {upcomingAppointments.length > 0 ? (
+                  <div className="space-y-4">
+                    {/* Mini Calendar Grid */}
+                    <div className="grid grid-cols-7 gap-2 mb-4">
+                      {/* Day Headers */}
+                      {['S', 'M', 'T', 'W', 'T', 'F', 'S'].map((day, index) => (
+                        <div key={index} className="text-center text-xs font-medium text-muted-foreground p-2">
+                          {day}
+                        </div>
+                      ))}
+                      
+                      {/* Calendar Days for Current Month */}
+                      {Array.from({ length: 35 }, (_, index) => {
+                        const currentDate = new Date();
+                        const firstDayOfMonth = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1);
+                        const startDate = new Date(firstDayOfMonth);
+                        startDate.setDate(startDate.getDate() - firstDayOfMonth.getDay());
+                        
+                        const cellDate = new Date(startDate);
+                        cellDate.setDate(cellDate.getDate() + index);
+                        
+                        const isCurrentMonth = cellDate.getMonth() === currentDate.getMonth();
+                        const isToday = cellDate.toDateString() === currentDate.toDateString();
+                        
+                        // Check if this date has an appointment
+                        const hasAppointment = upcomingAppointments.some(apt => {
+                          const aptDate = parseAppointmentDate(apt);
+                          return aptDate.toDateString() === cellDate.toDateString();
+                        });
+                        
+                        return (
+                          <div
+                            key={index}
+                            className={`
+                              relative h-8 w-8 flex items-center justify-center text-xs rounded
+                              ${isCurrentMonth ? 'text-foreground' : 'text-muted-foreground'}
+                              ${isToday ? 'bg-primary text-primary-foreground font-bold' : ''}
+                              ${hasAppointment ? 'bg-mint-green/20 border border-mint-green' : ''}
+                              ${!isCurrentMonth ? 'opacity-30' : ''}
+                            `}
+                          >
+                            {cellDate.getDate()}
+                            {hasAppointment && (
+                              <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-1 h-1 bg-mint-green rounded-full"></div>
+                            )}
+                          </div>
+                        );
+                      })}
+                    </div>
+
+                    {/* Month/Year Header */}
+                    <div className="text-center border-t pt-4">
+                      <h3 className="font-semibold text-lg">
+                        {new Date().toLocaleDateString('en-GB', { month: 'long', year: 'numeric' })}
+                      </h3>
+                    </div>
+
+                    {/* Upcoming Appointments List */}
+                    <div className="space-y-3 border-t pt-4">
+                      <h4 className="font-medium text-sm text-muted-foreground">Upcoming Sessions</h4>
+                      {upcomingAppointments.slice(0, 4).map((appointment) => (
                         <div key={appointment.id} className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-800 rounded-lg">
                           <div className="flex items-center gap-3">
-                            <div className="w-2 h-8 bg-mint-green rounded-full"></div>
+                            <div className="flex flex-col items-center">
+                              <span className="text-xs font-medium text-mint-green">
+                                {parseAppointmentDate(appointment).toLocaleDateString('en-GB', { 
+                                  month: 'short' 
+                                }).toUpperCase()}
+                              </span>
+                              <span className="text-lg font-bold">
+                                {parseAppointmentDate(appointment).getDate()}
+                              </span>
+                            </div>
                             <div>
                               <p className="font-medium text-sm">
-                                {parseAppointmentDate(appointment).toLocaleDateString('en-GB', { 
-                                  month: 'short', 
-                                  day: 'numeric' 
-                                })}
+                                {appointment.timeslot}
                               </p>
                               <p className="text-xs text-muted-foreground">
-                                {appointment.timeslot}
+                                {appointment.type} Session
                               </p>
                             </div>
                           </div>
-                          <div className="text-right">
+                          <div className="flex items-center gap-2">
                             <Badge variant="outline" className="text-xs">
-                              {appointment.type}
+                              {appointment.status}
                             </Badge>
                             {appointment.status === "confirmed" && (
-                              <Button size="sm" variant="ghost" className="ml-2" asChild>
+                              <Button size="sm" variant="ghost" asChild>
                                 <a href={getTeamsUrl(appointment)} target="_blank" rel="noopener noreferrer">
                                   <Video className="w-3 h-3" />
                                 </a>
@@ -697,15 +769,15 @@ export default function DashboardAppointments() {
                         </div>
                       ))}
                     </div>
-                  ) : (
-                    <div className="text-center py-8">
-                      <Calendar className="w-12 h-12 mx-auto text-gray-400 mb-4" />
-                      <p className="text-muted-foreground text-sm">
-                        No upcoming appointments
-                      </p>
-                    </div>
-                  )}
-                </div>
+                  </div>
+                ) : (
+                  <div className="text-center py-8">
+                    <Calendar className="w-12 h-12 mx-auto text-gray-400 mb-4" />
+                    <p className="text-muted-foreground text-sm">
+                      No upcoming appointments
+                    </p>
+                  </div>
+                )}
               </CardContent>
             </Card>
 
