@@ -28,6 +28,8 @@ export default function AdminInvoices() {
   const [reissueInvoice, setReissueInvoice] = useState<Invoice | null>(null);
   const [reissueAmount, setReissueAmount] = useState("");
   const [isReissuing, setIsReissuing] = useState(false);
+  const [showReissueDialog, setShowReissueDialog] = useState(false);
+  const [selectedInvoice, setSelectedInvoice] = useState<Invoice | null>(null);
   const { toast } = useToast();
   const { user } = useAuth();
   const queryClient = useQueryClient();
@@ -318,23 +320,10 @@ export default function AdminInvoices() {
           description: `Invoice amount updated from €${result.originalAmount} to €${result.newAmount}`,
         });
         
-        // Update the invoice in the local state immediately
-        setInvoices(prevInvoices => 
-          prevInvoices.map(inv => 
-            inv.id === invoice.id 
-              ? { 
-                  ...inv, 
-                  amount: newAmount,
-                  originalAmount: result.originalAmount,
-                  isReissued: true,
-                  description: inv.description + ` (Reissued: ${newAmount !== result.originalAmount ? 'Amount adjustment' : 'Invoice correction'})`
-                }
-              : inv
-          )
-        );
+        // Invalidate queries to refresh the data from Firestore
+        queryClient.invalidateQueries({ queryKey: ['invoices'] });
         
-        setShowReissueDialog(false);
-        setSelectedInvoice(null);
+        setReissueInvoice(null);
         setReissueAmount("");
         setIsReissuing(false);
       } else {

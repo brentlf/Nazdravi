@@ -5,12 +5,9 @@ import { mailerLiteService } from "./email";
 
 export async function registerRoutes(app: Express): Promise<Server> {
   
-  // Debug middleware to log all email-related requests
-  app.use('/api/emails', (req, res, next) => {
-    console.log(`🔍 MIDDLEWARE DEBUG: ${req.method} ${req.path} - ${req.url}`);
-    if (req.path === '/welcome') {
-      console.log('🚨 MIDDLEWARE: Welcome request detected!');
-    }
+  // Debug middleware to log all API requests
+  app.use('/api', (req, res, next) => {
+    console.log(`🔍 API DEBUG: ${req.method} ${req.path} - ${req.url}`);
     next();
   });
 
@@ -559,8 +556,16 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Test route for invoice API
+  app.get("/api/invoices/test", (req, res) => {
+    console.log('🚨 INVOICE TEST ROUTE HIT - Invoice API is working!');
+    res.json({ success: true, message: 'Invoice API routes are working' });
+  });
+
   // Simple invoice reissue that actually works
   app.post("/api/invoices/reissue", async (req, res) => {
+    console.log('🚨 REISSUE ROUTE HIT - Processing reissue request');
+    console.log('Request body:', req.body);
     try {
       const { originalInvoiceId, newAmount, reason } = req.body;
       
