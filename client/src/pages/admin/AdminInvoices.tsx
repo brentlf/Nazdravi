@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import React, { useState, useMemo } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
@@ -294,33 +294,35 @@ export default function AdminInvoices() {
 
       if (response.ok) {
         const result = await response.json();
+        console.log('Reissue success result:', result);
         
         toast({
-          title: "Invoice Reissued with Proper Accounting",
-          description: `Credit note ${result.creditNote?.creditNoteNumber} created for €${invoice.amount.toFixed(2)}, new invoice ${result.newInvoice?.invoiceNumber} created for €${newAmount.toFixed(2)}`,
+          title: "Invoice Reissued Successfully!",
+          description: `Credit note and new invoice created. Refreshing page to show changes...`,
         });
         
         // Force refresh the data by invalidating multiple query patterns
         queryClient.invalidateQueries({ queryKey: ['invoices'] });
         queryClient.invalidateQueries({ queryKey: ['appointments'] });
-        // Force refetch immediately
-        queryClient.refetchQueries({ queryKey: ['invoices'] });
         
         // Refresh the page to show the updated accounting flow
         setTimeout(() => {
           window.location.reload();
-        }, 500);
+        }, 1000);
         
         setReissueInvoice(null);
         setReissueAmount("");
         setIsReissuing(false);
       } else {
-        throw new Error('Failed to reissue invoice');
+        const errorText = await response.text();
+        console.error('Reissue failed with status:', response.status, 'Error:', errorText);
+        throw new Error(`Server error: ${response.status} - ${errorText}`);
       }
     } catch (error) {
+      console.error('Reissue error details:', error);
       toast({
         title: "Failed to Reissue Invoice",
-        description: "Please try again later.",
+        description: error instanceof Error ? error.message : "Please try again later.",
         variant: "destructive",
       });
       setIsReissuing(false);

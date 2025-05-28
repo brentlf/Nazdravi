@@ -1,0 +1,241 @@
+/src/pages/admin/Adm…?t=1748464468978:57 Uncaught ReferenceError: useMemo is not defined
+    at AdminInvoices (/src/pages/admin/AdminInvoices.tsx?t=1748464468978:57:25)
+    at renderWithHooks (/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-RPCDYKBN.js?v=1a8e8de5:11548:26)
+    at mountIndeterminateComponent (/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-RPCDYKBN.js?v=1a8e8de5:14926:21)
+    at beginWork (/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-RPCDYKBN.js?v=1a8e8de5:15914:22)
+    at HTMLUnknownElement.callCallback2 (/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-RPCDYKBN.js?v=1a8e8de5:3674:22)
+    at Object.invokeGuardedCallbackDev (/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-RPCDYKBN.js?v=1a8e8de5:3699:24)
+    at invokeGuardedCallback (/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-RPCDYKBN.js?v=1a8e8de5:3733:39)
+    at beginWork$1 (/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-RPCDYKBN.js?v=1a8e8de5:19765:15)
+    at performUnitOfWork (/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-RPCDYKBN.js?v=1a8e8de5:19198:20)
+    at workLoopSync (/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-RPCDYKBN.js?v=1a8e8de5:19137:13)
+/src/pages/admin/Adm…?t=1748464468978:57 Uncaught ReferenceError: useMemo is not defined
+    at AdminInvoices (/src/pages/admin/AdminInvoices.tsx?t=1748464468978:57:25)
+    at renderWithHooks (/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-RPCDYKBN.js?v=1a8e8de5:11548:26)
+    at mountIndeterminateComponent (/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-RPCDYKBN.js?v=1a8e8de5:14926:21)
+    at beginWork (/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-RPCDYKBN.js?v=1a8e8de5:15914:22)
+    at HTMLUnknownElement.callCallback2 (/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-RPCDYKBN.js?v=1a8e8de5:3674:22)
+    at Object.invokeGuardedCallbackDev (/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-RPCDYKBN.js?v=1a8e8de5:3699:24)
+    at invokeGuardedCallback (/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-RPCDYKBN.js?v=1a8e8de5:3733:39)
+    at beginWork$1 (/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-RPCDYKBN.js?v=1a8e8de5:19765:15)
+    at performUnitOfWork (/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-RPCDYKBN.js?v=1a8e8de5:19198:20)
+    at workLoopSync (/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-RPCDYKBN.js?v=1a8e8de5:19137:13)
+ The above error occurred in the <AdminInvoices> component:
+
+    at AdminInvoices (https://e394ccd4-b3dd-43ba-8feb-deda267050d2-00-3v6n3vit95c2j.spock.replit.dev/src/pages/admin/AdminInvoices.tsx?t=1748464468978:37:57)
+    at main
+    at div
+    at Layout (https://e394ccd4-b3dd-43ba-8feb-deda267050d2-00-3v6n3vit95c2j.spock.replit.dev/src/App.tsx?t=1748464194938&v=XHy-h0D4tVbU23Xpk_PAE:68:19)
+    at RouteGuard (https://e394ccd4-b3dd-43ba-8feb-deda267050d2-00-3v6n3vit95c2j.spock.replit.dev/src/components/common/RouteGuard.tsx:21:30)
+    at Route (https://e394ccd4-b3dd-43ba-8feb-deda267050d2-00-3v6n3vit95c2j.spock.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/wouter.js?v=1a8e8de5:323:16)
+    at Switch (https://e394ccd4-b3dd-43ba-8feb-deda267050d2-00-3v6n3vit95c2j.spock.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/wouter.js?v=1a8e8de5:379:17)
+    at Router
+    at Provider (https://e394ccd4-b3dd-43ba-8feb-deda267050d2-00-3v6n3vit95c2j.spock.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-5AJU3CG7.js?v=1a8e8de5:38:15)
+    at TooltipProvider (https://e394ccd4-b3dd-43ba-8feb-deda267050d2-00-3v6n3vit95c2j.spock.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/@radix-ui_react-tooltip.js?v=1a8e8de5:63:5)
+    at AuthProvider (https://e394ccd4-b3dd-43ba-8feb-deda267050d2-00-3v6n3vit95c2j.spock.replit.dev/src/contexts/AuthContext.tsx:40:32)
+    at LanguageProvider (https://e394ccd4-b3dd-43ba-8feb-deda267050d2-00-3v6n3vit95c2j.spock.replit.dev/src/contexts/LanguageContext.tsx:32:36)
+    at ThemeProvider (https://e394ccd4-b3dd-43ba-8feb-deda267050d2-00-3v6n3vit95c2j.spock.replit.dev/src/contexts/ThemeContext.tsx:29:33)
+    at QueryClientProvider (https://e394ccd4-b3dd-43ba-8feb-deda267050d2-00-3v6n3vit95c2j.spock.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/@tanstack_react-query.js?v=1a8e8de5:2805:3)
+    at App
+
+Consider adding an error boundary to your tree to customize error handling behavior.
+Visit https://reactjs.org/link/error-boundaries to learn more about error boundaries.
+overrideMethod @ chrome-extension://f…ld/installHook.js:1
+/src/pages/admin/Adm…?t=1748464468978:57 Uncaught (in promise) ReferenceError: useMemo is not defined
+    at AdminInvoices (/src/pages/admin/AdminInvoices.tsx?t=1748464468978:57:25)
+    at renderWithHooks (/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-RPCDYKBN.js?v=1a8e8de5:11548:26)
+    at mountIndeterminateComponent (/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-RPCDYKBN.js?v=1a8e8de5:14926:21)
+    at beginWork (/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-RPCDYKBN.js?v=1a8e8de5:15914:22)
+    at beginWork$1 (/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-RPCDYKBN.js?v=1a8e8de5:19753:22)
+    at performUnitOfWork (/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-RPCDYKBN.js?v=1a8e8de5:19198:20)
+    at workLoopSync (/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-RPCDYKBN.js?v=1a8e8de5:19137:13)
+    at renderRootSync (/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-RPCDYKBN.js?v=1a8e8de5:19116:15)
+    at recoverFromConcurrentError (/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-RPCDYKBN.js?v=1a8e8de5:18736:28)
+    at performSyncWorkOnRoot (/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-RPCDYKBN.js?v=1a8e8de5:18879:28)
+ Warning: Missing `Description` or `aria-describedby={undefined}` for {DialogContent}. Error Component Stack
+    at DescriptionWarning (/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-FQWEBTNQ.js?v=1a8e8de5:331:29)
+    at /@fs/home/runner/workspace/node_modules/.vite/deps/chunk-FQWEBTNQ.js?v=1a8e8de5:235:13
+    at /@fs/home/runner/workspace/node_modules/.vite/deps/chunk-FQWEBTNQ.js?v=1a8e8de5:158:58
+    at Presence (/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-WIIJQEXM.js?v=1a8e8de5:24:11)
+    at /@fs/home/runner/workspace/node_modules/.vite/deps/chunk-FQWEBTNQ.js?v=1a8e8de5:149:64
+    at /@fs/home/runner/workspace/node_modules/.vite/deps/chunk-2K77HOHX.js?v=1a8e8de5:79:13
+    at /@fs/home/runner/workspace/node_modules/.vite/deps/chunk-2K77HOHX.js?v=1a8e8de5:56:13
+    at /@fs/home/runner/workspace/node_modules/.vite/deps/chunk-AXMZZQ2X.js?v=1a8e8de5:42:13
+    at /@fs/home/runner/workspace/node_modules/.vite/deps/chunk-S2ZUYA2N.js?v=1a8e8de5:260:22
+    at Presence (/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-WIIJQEXM.js?v=1a8e8de5:24:11)
+    at Provider (/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-5AJU3CG7.js?v=1a8e8de5:38:15)
+    at DialogPortal (/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-FQWEBTNQ.js?v=1a8e8de5:111:11)
+    at _c3 (/src/components/ui/dialog.tsx:52:12)
+    at Provider (/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-5AJU3CG7.js?v=1a8e8de5:38:15)
+    at Dialog (/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-FQWEBTNQ.js?v=1a8e8de5:52:5)
+    at div (<anonymous>)
+    at td (<anonymous>)
+    at _c13 (/src/components/ui/table.tsx:152:13)
+    at tr (<anonymous>)
+    at _c9 (/src/components/ui/table.tsx:102:12)
+    at tbody (<anonymous>)
+    at _c5 (/src/components/ui/table.tsx:55:12)
+    at table (<anonymous>)
+    at div (<anonymous>)
+    at _c (/src/components/ui/table.tsx:20:11)
+    at div (<anonymous>)
+    at div (<anonymous>)
+    at _c9 (/src/components/ui/card.tsx:114:12)
+    at div (<anonymous>)
+    at _c (/src/components/ui/card.tsx:20:11)
+    at div (<anonymous>)
+    at /@fs/home/runner/workspace/node_modules/.vite/deps/chunk-AXMZZQ2X.js?v=1a8e8de5:42:13
+    at Presence (/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-WIIJQEXM.js?v=1a8e8de5:24:11)
+    at /@fs/home/runner/workspace/node_modules/.vite/deps/@radix-ui_react-tabs.js?v=1a8e8de5:175:13
+    at _c5 (/src/components/ui/tabs.tsx:72:12)
+    at div (<anonymous>)
+    at /@fs/home/runner/workspace/node_modules/.vite/deps/chunk-AXMZZQ2X.js?v=1a8e8de5:42:13
+    at Provider (/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-5AJU3CG7.js?v=1a8e8de5:38:15)
+    at /@fs/home/runner/workspace/node_modules/.vite/deps/@radix-ui_react-tabs.js?v=1a8e8de5:53:7
+    at div (<anonymous>)
+    at AdminInvoices (/src/pages/admin/AdminInvoices.tsx?t=1748464705331:37:57)
+    at main (<anonymous>)
+    at div (<anonymous>)
+    at Layout (App.tsx:60:19)
+    at RouteGuard (/src/components/common/RouteGuard.tsx:21:30)
+    at Route (/@fs/home/runner/workspace/node_modules/.vite/deps/wouter.js?v=1a8e8de5:323:16)
+    at Switch (/@fs/home/runner/workspace/node_modules/.vite/deps/wouter.js?v=1a8e8de5:379:17)
+    at Router (<anonymous>)
+    at Provider (/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-5AJU3CG7.js?v=1a8e8de5:38:15)
+    at TooltipProvider (/@fs/home/runner/workspace/node_modules/.vite/deps/@radix-ui_react-tooltip.js?v=1a8e8de5:63:5)
+    at AuthProvider (/src/contexts/AuthContext.tsx:40:32)
+    at LanguageProvider (/src/contexts/LanguageContext.tsx:32:36)
+    at ThemeProvider (/src/contexts/ThemeContext.tsx:29:33)
+    at QueryClientProvider (/@fs/home/runner/workspace/node_modules/.vite/deps/@tanstack_react-query.js?v=1a8e8de5:2805:3)
+    at App (<anonymous>)
+overrideMethod @ chrome-extension://f…ld/installHook.js:1
+ Reissue invoice data: Object
+ Warning: Missing `Description` or `aria-describedby={undefined}` for {DialogContent}. Error Component Stack
+    at DescriptionWarning (/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-FQWEBTNQ.js?v=1a8e8de5:331:29)
+    at /@fs/home/runner/workspace/node_modules/.vite/deps/chunk-FQWEBTNQ.js?v=1a8e8de5:235:13
+    at /@fs/home/runner/workspace/node_modules/.vite/deps/chunk-FQWEBTNQ.js?v=1a8e8de5:158:58
+    at Presence (/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-WIIJQEXM.js?v=1a8e8de5:24:11)
+    at /@fs/home/runner/workspace/node_modules/.vite/deps/chunk-FQWEBTNQ.js?v=1a8e8de5:149:64
+    at /@fs/home/runner/workspace/node_modules/.vite/deps/chunk-2K77HOHX.js?v=1a8e8de5:79:13
+    at /@fs/home/runner/workspace/node_modules/.vite/deps/chunk-2K77HOHX.js?v=1a8e8de5:56:13
+    at /@fs/home/runner/workspace/node_modules/.vite/deps/chunk-AXMZZQ2X.js?v=1a8e8de5:42:13
+    at /@fs/home/runner/workspace/node_modules/.vite/deps/chunk-S2ZUYA2N.js?v=1a8e8de5:260:22
+    at Presence (/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-WIIJQEXM.js?v=1a8e8de5:24:11)
+    at Provider (/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-5AJU3CG7.js?v=1a8e8de5:38:15)
+    at DialogPortal (/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-FQWEBTNQ.js?v=1a8e8de5:111:11)
+    at _c3 (/src/components/ui/dialog.tsx:52:12)
+    at Provider (/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-5AJU3CG7.js?v=1a8e8de5:38:15)
+    at Dialog (/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-FQWEBTNQ.js?v=1a8e8de5:52:5)
+    at div (<anonymous>)
+    at td (<anonymous>)
+    at _c13 (/src/components/ui/table.tsx:152:13)
+    at tr (<anonymous>)
+    at _c9 (/src/components/ui/table.tsx:102:12)
+    at tbody (<anonymous>)
+    at _c5 (/src/components/ui/table.tsx:55:12)
+    at table (<anonymous>)
+    at div (<anonymous>)
+    at _c (/src/components/ui/table.tsx:20:11)
+    at div (<anonymous>)
+    at div (<anonymous>)
+    at _c9 (/src/components/ui/card.tsx:114:12)
+    at div (<anonymous>)
+    at _c (/src/components/ui/card.tsx:20:11)
+    at div (<anonymous>)
+    at /@fs/home/runner/workspace/node_modules/.vite/deps/chunk-AXMZZQ2X.js?v=1a8e8de5:42:13
+    at Presence (/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-WIIJQEXM.js?v=1a8e8de5:24:11)
+    at /@fs/home/runner/workspace/node_modules/.vite/deps/@radix-ui_react-tabs.js?v=1a8e8de5:175:13
+    at _c5 (/src/components/ui/tabs.tsx:72:12)
+    at div (<anonymous>)
+    at /@fs/home/runner/workspace/node_modules/.vite/deps/chunk-AXMZZQ2X.js?v=1a8e8de5:42:13
+    at Provider (/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-5AJU3CG7.js?v=1a8e8de5:38:15)
+    at /@fs/home/runner/workspace/node_modules/.vite/deps/@radix-ui_react-tabs.js?v=1a8e8de5:53:7
+    at div (<anonymous>)
+    at AdminInvoices (/src/pages/admin/AdminInvoices.tsx?t=1748464912901:37:57)
+    at main (<anonymous>)
+    at div (<anonymous>)
+    at Layout (App.tsx:60:19)
+    at RouteGuard (/src/components/common/RouteGuard.tsx:21:30)
+    at Route (/@fs/home/runner/workspace/node_modules/.vite/deps/wouter.js?v=1a8e8de5:323:16)
+    at Switch (/@fs/home/runner/workspace/node_modules/.vite/deps/wouter.js?v=1a8e8de5:379:17)
+    at Router (<anonymous>)
+    at Provider (/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-5AJU3CG7.js?v=1a8e8de5:38:15)
+    at TooltipProvider (/@fs/home/runner/workspace/node_modules/.vite/deps/@radix-ui_react-tooltip.js?v=1a8e8de5:63:5)
+    at AuthProvider (/src/contexts/AuthContext.tsx:40:32)
+    at LanguageProvider (/src/contexts/LanguageContext.tsx:32:36)
+    at ThemeProvider (/src/contexts/ThemeContext.tsx:29:33)
+    at QueryClientProvider (/@fs/home/runner/workspace/node_modules/.vite/deps/@tanstack_react-query.js?v=1a8e8de5:2805:3)
+    at App (<anonymous>)
+overrideMethod @ chrome-extension://f…ld/installHook.js:1
+ Reissue invoice data: Object
+ Reissue invoice data: Object
+ Reissue invoice data: Object
+ Warning: Missing `Description` or `aria-describedby={undefined}` for {DialogContent}. Error Component Stack
+    at DescriptionWarning (/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-FQWEBTNQ.js?v=1a8e8de5:331:29)
+    at /@fs/home/runner/workspace/node_modules/.vite/deps/chunk-FQWEBTNQ.js?v=1a8e8de5:235:13
+    at /@fs/home/runner/workspace/node_modules/.vite/deps/chunk-FQWEBTNQ.js?v=1a8e8de5:158:58
+    at Presence (/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-WIIJQEXM.js?v=1a8e8de5:24:11)
+    at /@fs/home/runner/workspace/node_modules/.vite/deps/chunk-FQWEBTNQ.js?v=1a8e8de5:149:64
+    at /@fs/home/runner/workspace/node_modules/.vite/deps/chunk-2K77HOHX.js?v=1a8e8de5:79:13
+    at /@fs/home/runner/workspace/node_modules/.vite/deps/chunk-2K77HOHX.js?v=1a8e8de5:56:13
+    at /@fs/home/runner/workspace/node_modules/.vite/deps/chunk-AXMZZQ2X.js?v=1a8e8de5:42:13
+    at /@fs/home/runner/workspace/node_modules/.vite/deps/chunk-S2ZUYA2N.js?v=1a8e8de5:260:22
+    at Presence (/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-WIIJQEXM.js?v=1a8e8de5:24:11)
+    at Provider (/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-5AJU3CG7.js?v=1a8e8de5:38:15)
+    at DialogPortal (/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-FQWEBTNQ.js?v=1a8e8de5:111:11)
+    at _c3 (/src/components/ui/dialog.tsx:52:12)
+    at Provider (/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-5AJU3CG7.js?v=1a8e8de5:38:15)
+    at Dialog (/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-FQWEBTNQ.js?v=1a8e8de5:52:5)
+    at div (<anonymous>)
+    at td (<anonymous>)
+    at _c13 (/src/components/ui/table.tsx:152:13)
+    at tr (<anonymous>)
+    at _c9 (/src/components/ui/table.tsx:102:12)
+    at tbody (<anonymous>)
+    at _c5 (/src/components/ui/table.tsx:55:12)
+    at table (<anonymous>)
+    at div (<anonymous>)
+    at _c (/src/components/ui/table.tsx:20:11)
+    at div (<anonymous>)
+    at div (<anonymous>)
+    at _c9 (/src/components/ui/card.tsx:114:12)
+    at div (<anonymous>)
+    at _c (/src/components/ui/card.tsx:20:11)
+    at div (<anonymous>)
+    at /@fs/home/runner/workspace/node_modules/.vite/deps/chunk-AXMZZQ2X.js?v=1a8e8de5:42:13
+    at Presence (/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-WIIJQEXM.js?v=1a8e8de5:24:11)
+    at /@fs/home/runner/workspace/node_modules/.vite/deps/@radix-ui_react-tabs.js?v=1a8e8de5:175:13
+    at _c5 (/src/components/ui/tabs.tsx:72:12)
+    at div (<anonymous>)
+    at /@fs/home/runner/workspace/node_modules/.vite/deps/chunk-AXMZZQ2X.js?v=1a8e8de5:42:13
+    at Provider (/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-5AJU3CG7.js?v=1a8e8de5:38:15)
+    at /@fs/home/runner/workspace/node_modules/.vite/deps/@radix-ui_react-tabs.js?v=1a8e8de5:53:7
+    at div (<anonymous>)
+    at AdminInvoices (/src/pages/admin/AdminInvoices.tsx?t=1748465028777:37:57)
+    at main (<anonymous>)
+    at div (<anonymous>)
+    at Layout (App.tsx:60:19)
+    at RouteGuard (/src/components/common/RouteGuard.tsx:21:30)
+    at Route (/@fs/home/runner/workspace/node_modules/.vite/deps/wouter.js?v=1a8e8de5:323:16)
+    at Switch (/@fs/home/runner/workspace/node_modules/.vite/deps/wouter.js?v=1a8e8de5:379:17)
+    at Router (<anonymous>)
+    at Provider (/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-5AJU3CG7.js?v=1a8e8de5:38:15)
+    at TooltipProvider (/@fs/home/runner/workspace/node_modules/.vite/deps/@radix-ui_react-tooltip.js?v=1a8e8de5:63:5)
+    at AuthProvider (/src/contexts/AuthContext.tsx:40:32)
+    at LanguageProvider (/src/contexts/LanguageContext.tsx:32:36)
+    at ThemeProvider (/src/contexts/ThemeContext.tsx:29:33)
+    at QueryClientProvider (/@fs/home/runner/workspace/node_modules/.vite/deps/@tanstack_react-query.js?v=1a8e8de5:2805:3)
+    at App (<anonymous>)
+overrideMethod @ chrome-extension://f…ld/installHook.js:1
+ Reissue invoice data: Object
+ Reissue error details: SyntaxError: Unexpected token '<', "<!DOCTYPE "... is not valid JSON
+overrideMethod @ chrome-extension://f…ld/installHook.js:1
+ Reissue invoice data: Object
+ Reissue error details: SyntaxError: Unexpected token '<', "<!DOCTYPE "... is not valid JSON
+overrideMethod @ chrome-extension://f…ld/installHook.js:1
+
+                
+          
+          
+          
+         Chrome is moving towards a new experience that allows users to choose to browse without third-party cookies.
