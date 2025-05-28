@@ -26,6 +26,9 @@ interface Invoice {
   status: string;
   dueDate: string;
   stripePaymentIntentId: string;
+  originalAmount?: number;
+  adjustmentAmount?: number;
+  adjustmentReason?: string;
 }
 
 const PaymentForm = ({ invoice, clientSecret }: { invoice: Invoice; clientSecret: string }) => {
@@ -310,10 +313,32 @@ export default function PayInvoice() {
                 </div>
               </div>
               
-              <div className="border-t pt-4">
-                <div className="flex justify-between items-center text-lg font-bold">
-                  <span>Total Amount</span>
-                  <span>€{invoice.amount.toFixed(2)} {invoice.currency}</span>
+              <div className="border-t pt-4 space-y-3">
+                {/* Itemized breakdown */}
+                <div className="space-y-2">
+                  <div className="flex justify-between items-center">
+                    <span>{getServiceDescription(invoice.description, invoice.sessionType)}</span>
+                    <span>€{(invoice.originalAmount || invoice.amount).toFixed(2)}</span>
+                  </div>
+                  
+                  {invoice.originalAmount && invoice.adjustmentAmount && (
+                    <div className="flex justify-between items-center text-green-600">
+                      <span className="text-sm">
+                        {invoice.adjustmentAmount > 0 ? 'Additional charge' : 'Discount applied'}
+                        {invoice.adjustmentReason && ` (${invoice.adjustmentReason})`}
+                      </span>
+                      <span className="text-sm">
+                        {invoice.adjustmentAmount > 0 ? '+' : ''}€{invoice.adjustmentAmount.toFixed(2)}
+                      </span>
+                    </div>
+                  )}
+                </div>
+
+                <div className="border-t pt-3">
+                  <div className="flex justify-between items-center text-lg font-bold">
+                    <span>Total Amount</span>
+                    <span>€{invoice.amount.toFixed(2)} {invoice.currency}</span>
+                  </div>
                 </div>
               </div>
             </CardContent>

@@ -574,14 +574,16 @@ export async function registerRoutes(app: Express): Promise<Server> {
         apiVersion: '2025-04-30.basil',
       });
 
-      // Create real Stripe payment intent
+      // Create real Stripe payment intent with iDEAL support
       const paymentIntent = await stripe.paymentIntents.create({
         amount: Math.round(amount * 100), // Convert to cents
         currency: currency.toLowerCase(),
         metadata: metadata || {},
         automatic_payment_methods: {
           enabled: true,
+          allow_redirects: 'always'
         },
+        payment_method_types: ['card', 'ideal', 'bancontact', 'eps', 'klarna'],
       });
 
       console.log(`Created Stripe payment intent: ${paymentIntent.id} for €${amount}`);
