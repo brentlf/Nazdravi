@@ -302,18 +302,15 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(400).json({ success: false, error: "Missing required fields: email and name" });
       }
       
-      // Queue email in Firebase with correct format for processMailQueue function
+      // Queue email in Firebase with correct format matching Firebase Functions expectations
       const docRef = await db.collection("mail").add({
         to: email,
         toName: name,
         type: "payment-reminder",
         status: "pending",
-        data: {
-          name,
-          amount: amount || 0,
-          invoiceNumber: invoiceNumber || '',
-          paymentUrl: paymentUrl || ''
-        },
+        amount: amount || 0,
+        invoiceNumber: invoiceNumber || '',
+        paymentUrl: paymentUrl || '',
         createdAt: new Date()
       });
 
