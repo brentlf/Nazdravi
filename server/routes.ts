@@ -19,12 +19,14 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   // Welcome email route
   app.post("/api/emails/welcome", async (req, res) => {
+    console.log("🚨 WELCOME EMAIL ROUTE HIT!");
     try {
       const { email, name } = req.body;
       
       console.log("🚨 WELCOME EMAIL DEBUG - Request received:", { email, name });
       
       if (!email || !name) {
+        console.log("🚨 WELCOME EMAIL DEBUG - Missing fields!");
         return res.status(400).json({ success: false, error: "Missing required fields: email and name" });
       }
       

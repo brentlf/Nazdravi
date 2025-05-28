@@ -1,0 +1,83 @@
+
+                
+          
+          
+          
+         Chrome is moving towards a new experience that allows users to choose to browse without third-party cookies.
+emailService.ts:22 Welcome email sent successfully
+RouteGuard.tsx:29 Warning: Cannot update a component (`RouteGuard`) while rendering a different component (`RouteGuard`). To locate the bad setState() call inside `RouteGuard`, follow the stack trace as described in https://reactjs.org/link/setstate-in-render Error Component Stack
+    at RouteGuard (RouteGuard.tsx:12:30)
+    at Route (wouter.js?v=1a8e8de5:323:16)
+    at Switch (wouter.js?v=1a8e8de5:379:17)
+    at Router (<anonymous>)
+    at Provider (chunk-5AJU3CG7.js?v=1a8e8de5:38:15)
+    at TooltipProvider (@radix-ui_react-tooltip.js?v=1a8e8de5:63:5)
+    at AuthProvider (AuthContext.tsx:46:32)
+    at LanguageProvider (LanguageContext.tsx:29:36)
+    at ThemeProvider (ThemeContext.tsx:24:33)
+    at QueryClientProvider (@tanstack_react-query.js?v=1a8e8de5:2805:3)
+    at App (<anonymous>)
+overrideMethod @ hook.js:608
+printWarning @ chunk-RPCDYKBN.js?v=1a8e8de5:521
+error @ chunk-RPCDYKBN.js?v=1a8e8de5:505
+warnAboutRenderPhaseUpdatesInDEV @ chunk-RPCDYKBN.js?v=1a8e8de5:19793
+scheduleUpdateOnFiber @ chunk-RPCDYKBN.js?v=1a8e8de5:18546
+forceStoreRerender @ chunk-RPCDYKBN.js?v=1a8e8de5:11999
+handleStoreChange @ chunk-RPCDYKBN.js?v=1a8e8de5:11981
+history.<computed> @ wouter.js?v=1a8e8de5:224
+navigate @ wouter.js?v=1a8e8de5:214
+(anonymous) @ wouter.js?v=1a8e8de5:265
+(anonymous) @ wouter.js?v=1a8e8de5:178
+RouteGuard @ RouteGuard.tsx:29
+renderWithHooks @ chunk-RPCDYKBN.js?v=1a8e8de5:11548
+updateFunctionComponent @ chunk-RPCDYKBN.js?v=1a8e8de5:14582
+beginWork @ chunk-RPCDYKBN.js?v=1a8e8de5:15924
+beginWork$1 @ chunk-RPCDYKBN.js?v=1a8e8de5:19753
+performUnitOfWork @ chunk-RPCDYKBN.js?v=1a8e8de5:19198
+workLoopSync @ chunk-RPCDYKBN.js?v=1a8e8de5:19137
+renderRootSync @ chunk-RPCDYKBN.js?v=1a8e8de5:19116
+performConcurrentWorkOnRoot @ chunk-RPCDYKBN.js?v=1a8e8de5:18678
+workLoop @ chunk-RPCDYKBN.js?v=1a8e8de5:197
+flushWork @ chunk-RPCDYKBN.js?v=1a8e8de5:176
+performWorkUntilDeadline @ chunk-RPCDYKBN.js?v=1a8e8de5:384
+AuthContext.tsx:124 
+            
+            
+           POST https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyDeCDsiz1aY-K6LPFRjfMWxr7dWtWgGoGw 400 (Bad Request)
+(anonymous) @ firebase_auth.js?v=1a8e8de5:1099
+await in (anonymous)
+_performFetchWithErrorHandling @ firebase_auth.js?v=1a8e8de5:1108
+_performApiRequest @ firebase_auth.js?v=1a8e8de5:1065
+_performSignInRequest @ firebase_auth.js?v=1a8e8de5:1143
+signInWithPassword @ firebase_auth.js?v=1a8e8de5:3437
+handleRecaptchaFlow @ firebase_auth.js?v=1a8e8de5:3190
+_getIdTokenResponse @ firebase_auth.js?v=1a8e8de5:3520
+_processCredentialSavingMfaContextIfNecessary @ firebase_auth.js?v=1a8e8de5:4544
+_signInWithCredential @ firebase_auth.js?v=1a8e8de5:4628
+signInWithCredential @ firebase_auth.js?v=1a8e8de5:4636
+signInWithEmailAndPassword @ firebase_auth.js?v=1a8e8de5:4871
+signIn @ AuthContext.tsx:124
+onSubmit @ Login.tsx:61
+(anonymous) @ chunk-4BFJKWC4.js?v=1a8e8de5:1465
+await in (anonymous)
+callCallback2 @ chunk-RPCDYKBN.js?v=1a8e8de5:3674
+invokeGuardedCallbackDev @ chunk-RPCDYKBN.js?v=1a8e8de5:3699
+invokeGuardedCallback @ chunk-RPCDYKBN.js?v=1a8e8de5:3733
+invokeGuardedCallbackAndCatchFirstError @ chunk-RPCDYKBN.js?v=1a8e8de5:3736
+executeDispatch @ chunk-RPCDYKBN.js?v=1a8e8de5:7014
+processDispatchQueueItemsInOrder @ chunk-RPCDYKBN.js?v=1a8e8de5:7034
+processDispatchQueue @ chunk-RPCDYKBN.js?v=1a8e8de5:7043
+dispatchEventsForPlugins @ chunk-RPCDYKBN.js?v=1a8e8de5:7051
+(anonymous) @ chunk-RPCDYKBN.js?v=1a8e8de5:7174
+batchedUpdates$1 @ chunk-RPCDYKBN.js?v=1a8e8de5:18913
+batchedUpdates @ chunk-RPCDYKBN.js?v=1a8e8de5:3579
+dispatchEventForPluginEventSystem @ chunk-RPCDYKBN.js?v=1a8e8de5:7173
+dispatchEventWithEnableCapturePhaseSelectiveHydrationWithoutDiscreteEventReplay @ chunk-RPCDYKBN.js?v=1a8e8de5:5478
+dispatchEvent @ chunk-RPCDYKBN.js?v=1a8e8de5:5472
+dispatchDiscreteEvent @ chunk-RPCDYKBN.js?v=1a8e8de5:5449
+DashboardOverview.tsx:85 Dashboard Appointments Debug: {userId: 'GHs80OQAuefSw83xsRw505Qpk813', userEmail: 'craziesabroad@gmail.com', appointmentsByUserId: 0, appointmentsByEmail: 0, appointmentsByUser: 0, …}
+DashboardOverview.tsx:85 Dashboard Appointments Debug: {userId: 'GHs80OQAuefSw83xsRw505Qpk813', userEmail: 'craziesabroad@gmail.com', appointmentsByUserId: 4, appointmentsByEmail: 4, appointmentsByUser: 0, …}
+DashboardOverview.tsx:85 Dashboard Appointments Debug: {userId: 'GHs80OQAuefSw83xsRw505Qpk813', userEmail: 'craziesabroad@gmail.com', appointmentsByUserId: 4, appointmentsByEmail: 4, appointmentsByUser: 0, …}
+emailService.ts:22 Welcome email sent successfully
+emailService.ts:22 Welcome email sent successfully
+emailService.ts:78 Appointment reminder email sent successfully
