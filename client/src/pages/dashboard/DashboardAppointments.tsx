@@ -570,7 +570,7 @@ export default function DashboardAppointments() {
         <div className="grid lg:grid-cols-2 gap-8">
           {/* My Appointments Section */}
           <div>
-            <Card>
+            <Card className="h-[580px]">
               <CardHeader className="flex flex-row items-center justify-between">
                 <CardTitle className="flex items-center gap-2">
                   <Calendar className="w-5 h-5" />
@@ -581,7 +581,7 @@ export default function DashboardAppointments() {
                   Book New
                 </Button>
               </CardHeader>
-              <CardContent>
+              <CardContent className="h-[calc(100%-80px)] flex flex-col">
                 {!effectiveAppointments?.length ? (
                   <div className="text-center py-8">
                     <Calendar className="w-12 h-12 mx-auto text-gray-400 mb-4" />
@@ -595,7 +595,7 @@ export default function DashboardAppointments() {
                     </Button>
                   </div>
                 ) : (
-                  <div className="space-y-4">
+                  <div className="space-y-4 flex-1 overflow-y-auto">
                     {(showAllAppointments ? sortedAppointments : sortedAppointments.slice(0, 3)).map((appointment) => {
                       const appointmentDate = parseAppointmentDate(appointment);
                       const isFuture = appointmentDate > new Date();
@@ -687,7 +687,7 @@ export default function DashboardAppointments() {
                         </div>
                         </div>
                       );
-                    })}
+                      })}
                     
                     {/* View All/Show Less Toggle */}
                     {sortedAppointments.length > 3 && (
