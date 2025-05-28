@@ -390,11 +390,11 @@ export default function DashboardAppointments() {
     }
   };
 
-  // Sort appointments by date and get upcoming appointments
+  // Sort appointments by date (newest first, oldest last)
   const sortedAppointments = effectiveAppointments?.sort((a, b) => {
     const dateA = parseAppointmentDate(a);
     const dateB = parseAppointmentDate(b);
-    return dateA.getTime() - dateB.getTime();
+    return dateB.getTime() - dateA.getTime(); // Reverse sort - newest first
   }) || [];
 
   // Get next upcoming appointment (future appointments only)
@@ -533,6 +533,33 @@ export default function DashboardAppointments() {
                         </a>
                       </Button>
                     )}
+                    {/* Edit options for next appointment */}
+                    {canModifyAppointment(nextAppointment) && (
+                      <div className="flex gap-1">
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          onClick={() => {
+                            setSelectedAppointment(nextAppointment);
+                            setIsRescheduleOpen(true);
+                          }}
+                          title="Reschedule appointment"
+                        >
+                          <Edit className="w-3 h-3" />
+                        </Button>
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          onClick={() => {
+                            setSelectedAppointment(nextAppointment);
+                            setIsCancelOpen(true);
+                          }}
+                          title="Cancel appointment"
+                        >
+                          <Trash2 className="w-3 h-3" />
+                        </Button>
+                      </div>
+                    )}
                   </div>
                 </div>
               </div>
@@ -601,8 +628,8 @@ export default function DashboardAppointments() {
                                 {appointment.status}
                               </Badge>
                               
-                              {/* Show edit options for all future appointments */}
-                              {isFuture && canModifyAppointment(appointment) && (
+                              {/* Show edit options for appointments that can be modified */}
+                              {canModifyAppointment(appointment) && (
                                 <div className="flex gap-1">
                                   <Button
                                     size="sm"
