@@ -685,6 +685,7 @@ export default function DashboardAppointments() {
                             </div>
                           )}
                         </div>
+                        </div>
                       );
                     })}
                     
