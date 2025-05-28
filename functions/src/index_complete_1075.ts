@@ -855,15 +855,15 @@ export const processMailQueue = functions.firestore
         case 'account-confirmation':
         case 'welcome':
           template = emailService.getAccountConfirmationTemplate(
-            mailData.data?.name || mailData.toName
+            mailData.data?.name || mailData.toName || 'Client'
           );
           break;
         case 'payment-reminder':
           template = emailService.getPaymentReminderTemplate(
-            mailData.data.name,
-            mailData.data.amount,
-            mailData.data.invoiceNumber,
-            mailData.data.paymentUrl
+            mailData.data?.name || mailData.toName || 'Client',
+            mailData.data?.amount || 0,
+            mailData.data?.invoiceNumber || 'Unknown',
+            mailData.data?.paymentUrl || '#'
           );
           break;
         case 'reschedule-confirmation':
