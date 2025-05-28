@@ -601,6 +601,62 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Invoice lookup endpoint for payment page
+  app.get("/api/invoices/:invoiceNumber", async (req, res) => {
+    try {
+      const { invoiceNumber } = req.params;
+      
+      if (!invoiceNumber) {
+        return res.status(400).json({ 
+          success: false, 
+          error: "Invoice number is required" 
+        });
+      }
+
+      // Fetch invoice from Firebase
+      const admin = (await import('firebase-admin')).default;
+      const db = admin.firestore();
+      
+      const invoicesRef = db.collection('invoices');
+      const query = invoicesRef.where('invoiceNumber', '==', invoiceNumber);
+      const snapshot = await query.get();
+      
+      if (snapshot.empty) {
+        return res.status(404).json({ 
+          success: false, 
+          error: "Invoice not found" 
+        });
+      }
+
+      const invoiceDoc = snapshot.docs[0];
+      const invoiceData = invoiceDoc.data();
+
+      res.json({ 
+        success: true, 
+        invoice: {
+          invoiceNumber: invoiceData.invoiceNumber,
+          clientName: invoiceData.clientName,
+          clientEmail: invoiceData.clientEmail,
+          amount: invoiceData.amount,
+          currency: invoiceData.currency || "EUR",
+          description: invoiceData.description,
+          sessionDate: invoiceData.sessionDate,
+          sessionType: invoiceData.sessionType || "Consultation",
+          status: invoiceData.status,
+          dueDate: invoiceData.dueDate,
+          stripePaymentIntentId: invoiceData.stripePaymentIntentId || ""
+        }
+      });
+
+    } catch (error: any) {
+      console.error("Error fetching invoice:", error);
+      res.status(500).json({ 
+        success: false, 
+        error: error.message || "Failed to fetch invoice" 
+      });
+    }
+  });
+
   // Stripe webhook handler for payment completion
   app.post("/api/stripe-webhook", async (req, res) => {
     try {

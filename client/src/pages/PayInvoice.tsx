@@ -131,34 +131,38 @@ export default function PayInvoice() {
           return;
         }
 
-        // Fetch real invoice data from Firebase
-        const { db } = await import('@/lib/firebase');
-        const { collection, query, where, getDocs } = await import('firebase/firestore');
+        // Fetch invoice data from API endpoint
+        const invoiceResponse = await fetch(`/api/invoices/${invoiceNumber}`);
         
-        const invoicesRef = collection(db, 'invoices');
-        const q = query(invoicesRef, where('invoiceNumber', '==', invoiceNumber));
-        const querySnapshot = await getDocs(q);
-        
-        if (querySnapshot.empty) {
-          setError("Invoice not found");
+        if (!invoiceResponse.ok) {
+          if (invoiceResponse.status === 404) {
+            setError("Invoice not found");
+          } else {
+            setError("Failed to load invoice details");
+          }
           setLoading(false);
           return;
         }
 
-        const invoiceDoc = querySnapshot.docs[0];
-        const invoiceData = invoiceDoc.data();
+        const invoiceResult = await invoiceResponse.json();
         
+        if (!invoiceResult.success) {
+          setError(invoiceResult.error || "Failed to load invoice");
+          setLoading(false);
+          return;
+        }
+
         const realInvoice: Invoice = {
-          invoiceNumber: invoiceData.invoiceNumber,
-          clientName: invoiceData.clientName,
-          amount: invoiceData.amount,
-          currency: invoiceData.currency || "EUR",
-          description: invoiceData.description,
-          sessionDate: invoiceData.sessionDate || new Date().toISOString().split('T')[0],
-          sessionType: invoiceData.sessionType || "Consultation",
-          status: invoiceData.status,
-          dueDate: invoiceData.dueDate?.toDate?.()?.toISOString()?.split('T')[0] || new Date().toISOString().split('T')[0],
-          stripePaymentIntentId: invoiceData.stripePaymentIntentId || ""
+          invoiceNumber: invoiceResult.invoice.invoiceNumber,
+          clientName: invoiceResult.invoice.clientName,
+          amount: invoiceResult.invoice.amount,
+          currency: invoiceResult.invoice.currency,
+          description: invoiceResult.invoice.description,
+          sessionDate: invoiceResult.invoice.sessionDate || new Date().toISOString().split('T')[0],
+          sessionType: invoiceResult.invoice.sessionType,
+          status: invoiceResult.invoice.status,
+          dueDate: invoiceResult.invoice.dueDate || new Date().toISOString().split('T')[0],
+          stripePaymentIntentId: invoiceResult.invoice.stripePaymentIntentId
         };
 
         setInvoice(realInvoice);
