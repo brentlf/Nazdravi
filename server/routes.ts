@@ -584,6 +584,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
           allow_redirects: 'always'
         },
         payment_method_types: ['card', 'ideal', 'bancontact', 'eps', 'klarna'],
+        setup_future_usage: 'off_session',
       });
 
       console.log(`Created Stripe payment intent: ${paymentIntent.id} for €${amount}`);

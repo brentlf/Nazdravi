@@ -309,7 +309,7 @@ export default function PayInvoice() {
                 </div>
                 <div>
                   <p className="text-sm font-medium text-muted-foreground">Due Date</p>
-                  <p className="font-medium">{new Date(invoice.dueDate).toLocaleDateString()}</p>
+                  <p className="font-medium">{invoice.dueDate && invoice.dueDate !== 'Invalid Date' ? new Date(invoice.dueDate).toLocaleDateString() : 'Upon receipt'}</p>
                 </div>
               </div>
               
