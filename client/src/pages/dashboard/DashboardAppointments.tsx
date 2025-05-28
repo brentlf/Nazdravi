@@ -687,7 +687,7 @@ export default function DashboardAppointments() {
                         </div>
                         </div>
                       );
-                      })}
+                    })}
                     
                     {/* View All/Show Less Toggle */}
                     {sortedAppointments.length > 3 && (
