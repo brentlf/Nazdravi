@@ -120,16 +120,16 @@ export default function Appointment() {
                     </span>
                   </div>
                 ) : (
-                  <div className="flex items-center justify-between p-3 bg-amber-50 dark:bg-amber-900/20 rounded-lg border border-amber-200 dark:border-amber-800">
-                    <div className="flex items-center gap-3">
-                      <AlertTriangle className="w-5 h-5 text-amber-500" />
+                  <div className="flex items-center justify-between p-2 bg-amber-50 dark:bg-amber-900/20 rounded border border-amber-200 dark:border-amber-800">
+                    <div className="flex items-center gap-2">
+                      <AlertTriangle className="w-4 h-4 text-amber-500" />
                       <div>
-                        <h4 className="font-medium text-amber-800 dark:text-amber-200">{t("informed-consent-required", "appointment")}</h4>
-                        <p className="text-sm text-amber-600 dark:text-amber-300">{t("complete-consent", "appointment")}</p>
+                        <p className="font-medium text-amber-800 dark:text-amber-200 text-sm">{t("informed-consent-required", "appointment")}</p>
+                        <p className="text-xs text-amber-600 dark:text-amber-300">{t("complete-consent", "appointment")}</p>
                       </div>
                     </div>
                     <Link href="/consent-form">
-                      <Button size="sm" className="bg-amber-600 hover:bg-amber-700 text-white">
+                      <Button size="sm" className="bg-amber-600 hover:bg-amber-700 text-white text-xs px-2 py-1">
                         {t("complete-form", "appointment")}
                       </Button>
                     </Link>
