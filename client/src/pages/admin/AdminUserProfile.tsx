@@ -240,29 +240,46 @@ function AdminUserProfile() {
         
         preEvalSnapshot.forEach(doc => {
           const data = doc.data();
+          console.log('Pre-evaluation form data structure:', {
+            docId: doc.id,
+            userId: data.userId,
+            targetUserId: userId,
+            dataKeys: Object.keys(data),
+            healthGoals: data.healthGoals,
+            currentWeight: data.currentWeight,
+            heightCm: data.heightCm,
+            activityLevel: data.activityLevel
+          });
+          
           if (data.userId === userId) {
             // Merge pre-evaluation data (this usually has the most complete health info)
             combinedHealthData = {
               ...combinedHealthData,
-              healthGoals: data.healthGoals?.length ? data.healthGoals : combinedHealthData.healthGoals,
+              healthGoals: data.healthGoals || combinedHealthData.healthGoals,
               currentWeight: data.currentWeight || combinedHealthData.currentWeight,
               targetWeight: data.targetWeight || combinedHealthData.targetWeight,
               height: data.heightCm || data.height || combinedHealthData.height,
               activityLevel: data.activityLevel || combinedHealthData.activityLevel,
-              medicalConditions: data.medicalConditions?.length ? data.medicalConditions : combinedHealthData.medicalConditions,
-              medications: data.medications?.length ? data.medications : combinedHealthData.medications,
-              allergies: data.allergies?.length ? data.allergies : combinedHealthData.allergies,
-              dietaryRestrictions: data.dietaryRestrictions?.length ? data.dietaryRestrictions : combinedHealthData.dietaryRestrictions,
+              medicalConditions: data.medicalConditions || combinedHealthData.medicalConditions,
+              medications: data.medications || combinedHealthData.medications,
+              allergies: data.allergies || combinedHealthData.allergies,
+              dietaryRestrictions: data.dietaryRestrictions || combinedHealthData.dietaryRestrictions,
               previousDietExperience: data.previousDietExperience || combinedHealthData.previousDietExperience,
               motivationLevel: data.motivationLevel || combinedHealthData.motivationLevel,
               availableTimeForCooking: data.availableTimeForCooking || combinedHealthData.availableTimeForCooking,
-              preferredMealTimes: data.preferredMealTimes?.length ? data.preferredMealTimes : combinedHealthData.preferredMealTimes,
+              preferredMealTimes: data.preferredMealTimes || combinedHealthData.preferredMealTimes,
               budgetRange: data.budgetRange || combinedHealthData.budgetRange,
               additionalNotes: data.additionalNotes || combinedHealthData.additionalNotes,
               preEvaluationCompleted: true,
               preEvaluationDate: data.completedAt || data.submittedAt
             };
-            console.log('Merged pre-evaluation form data');
+            console.log('Merged pre-evaluation form data with keys:', Object.keys(combinedHealthData));
+            console.log('Sample merged data:', {
+              healthGoals: combinedHealthData.healthGoals,
+              currentWeight: combinedHealthData.currentWeight,
+              height: combinedHealthData.height,
+              activityLevel: combinedHealthData.activityLevel
+            });
           }
         });
       } catch (error) {
