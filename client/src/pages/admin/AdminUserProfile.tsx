@@ -178,99 +178,117 @@ function AdminUserProfile() {
     if (!userId || !user) return;
     
     try {
-      let healthData = null;
+      let combinedHealthData: any = {};
       
-      // Try to fetch from consentRecords collection first
+      // First, get health data from the user's profile (updated by health assessments)
+      if (user.healthGoals || user.medicalConditions || user.medications || user.allergies) {
+        combinedHealthData = {
+          healthGoals: user.healthGoals || [],
+          currentWeight: user.currentWeight || '',
+          targetWeight: user.targetWeight || '',
+          height: user.height || '',
+          activityLevel: user.activityLevel || '',
+          medicalConditions: user.medicalConditions || [],
+          medications: user.medications || [],
+          allergies: user.allergies || [],
+          dietaryRestrictions: user.dietaryRestrictions || [],
+          previousDietExperience: user.previousDietExperience || '',
+          motivationLevel: user.motivationLevel || '',
+          availableTimeForCooking: user.availableTimeForCooking || '',
+          preferredMealTimes: user.preferredMealTimes || [],
+          budgetRange: user.budgetRange || '',
+          additionalNotes: user.additionalNotes || '',
+          gpContact: user.gpContact || '',
+          emergencyContact: user.emergencyContact || '',
+          emergencyContactPhone: user.emergencyContactPhone || ''
+        };
+        console.log('Found health data in user profile');
+      }
+      
+      // Then, fetch from consentRecords collection to get consent form data
       try {
         const consentFormsRef = collection(db, 'consentRecords');
         const consentSnapshot = await getDocs(consentFormsRef);
-        console.log('Debug: Total consent forms in collection:', consentSnapshot.size);
         
         consentSnapshot.forEach(doc => {
           const data = doc.data();
-          console.log('Debug: Consent form structure:', {
-            docId: doc.id,
-            userId: data.userId,
-            email: data.email,
-            targetUserId: userId,
-            match: data.userId === userId
-          });
-          
           if (data.userId === userId || data.userEmail === user.email) {
-            healthData = data;
-            console.log(`Found consent record for user ${user.email}:`, doc.id);
-            console.log('Consent record data keys:', Object.keys(data));
+            // Merge consent form data (don't overwrite existing data unless it's more complete)
+            combinedHealthData = {
+              ...combinedHealthData,
+              gpContact: data.gpContact || combinedHealthData.gpContact,
+              emergencyContact: data.emergencyContact || combinedHealthData.emergencyContact,
+              emergencyContactPhone: data.emergencyContactPhone || combinedHealthData.emergencyContactPhone,
+              medicalConditions: data.medicalConditions?.length ? data.medicalConditions : combinedHealthData.medicalConditions,
+              medications: data.medications?.length ? data.medications : combinedHealthData.medications,
+              allergies: data.allergies?.length ? data.allergies : combinedHealthData.allergies,
+              // Add any other consent-specific fields
+              consentFormCompleted: true,
+              consentFormDate: data.submittedAt || data.createdAt
+            };
+            console.log('Merged consent record data');
           }
         });
       } catch (error) {
         console.log('Error fetching consent forms:', (error as any).message);
       }
       
-      // If no consent form found, try preEvaluationForms
-      if (!healthData) {
-        try {
-          const preEvalRef = collection(db, 'preEvaluationForms');
-          const preEvalSnapshot = await getDocs(preEvalRef);
-          console.log('Debug: Total pre-evaluation forms in collection:', preEvalSnapshot.size);
-          
-          preEvalSnapshot.forEach(doc => {
-            const data = doc.data();
-            if (data.userId === userId) {
-              healthData = data;
-              console.log(`Found pre-evaluation form for userId ${userId}:`, doc.id);
-            }
-          });
-        } catch (error) {
-          console.log('Error fetching pre-evaluation forms:', (error as any).message);
-        }
-      }
-      
-      console.log('Debug: Found health data:', healthData ? 'Yes' : 'No');
-      
-      // Let's check what collections actually exist and have data
-      if (!healthData) {
-        console.log('No health data found. Let me check other possible collections...');
+      // Finally, fetch from preEvaluationForms collection to get assessment data
+      try {
+        const preEvalRef = collection(db, 'preEvaluationForms');
+        const preEvalSnapshot = await getDocs(preEvalRef);
         
-        // Check if there are any other collections that might contain health data
-        const possibleCollections = ['users', 'healthAssessments', 'medicalInfo', 'clientProfiles'];
-        
-        for (const collectionName of possibleCollections) {
-          try {
-            const testRef = collection(db, collectionName);
-            const testSnapshot = await getDocs(testRef);
-            if (testSnapshot.size > 0) {
-              console.log(`Found ${testSnapshot.size} documents in ${collectionName} collection`);
-              
-              // Check if any contain health-related data for this user
-              testSnapshot.forEach(doc => {
-                const data = doc.data();
-                if (data.userId === userId && (data.medicalConditions || data.allergies || data.medications || data.emergencyContact)) {
-                  console.log(`Found health data in ${collectionName} collection:`, doc.id);
-                  healthData = data;
-                }
-              });
-            }
-          } catch (error) {
-            console.log(`No access to ${collectionName} collection`);
+        preEvalSnapshot.forEach(doc => {
+          const data = doc.data();
+          if (data.userId === userId) {
+            // Merge pre-evaluation data (this usually has the most complete health info)
+            combinedHealthData = {
+              ...combinedHealthData,
+              healthGoals: data.healthGoals?.length ? data.healthGoals : combinedHealthData.healthGoals,
+              currentWeight: data.currentWeight || combinedHealthData.currentWeight,
+              targetWeight: data.targetWeight || combinedHealthData.targetWeight,
+              height: data.heightCm || data.height || combinedHealthData.height,
+              activityLevel: data.activityLevel || combinedHealthData.activityLevel,
+              medicalConditions: data.medicalConditions?.length ? data.medicalConditions : combinedHealthData.medicalConditions,
+              medications: data.medications?.length ? data.medications : combinedHealthData.medications,
+              allergies: data.allergies?.length ? data.allergies : combinedHealthData.allergies,
+              dietaryRestrictions: data.dietaryRestrictions?.length ? data.dietaryRestrictions : combinedHealthData.dietaryRestrictions,
+              previousDietExperience: data.previousDietExperience || combinedHealthData.previousDietExperience,
+              motivationLevel: data.motivationLevel || combinedHealthData.motivationLevel,
+              availableTimeForCooking: data.availableTimeForCooking || combinedHealthData.availableTimeForCooking,
+              preferredMealTimes: data.preferredMealTimes?.length ? data.preferredMealTimes : combinedHealthData.preferredMealTimes,
+              budgetRange: data.budgetRange || combinedHealthData.budgetRange,
+              additionalNotes: data.additionalNotes || combinedHealthData.additionalNotes,
+              preEvaluationCompleted: true,
+              preEvaluationDate: data.completedAt || data.submittedAt
+            };
+            console.log('Merged pre-evaluation form data');
           }
-        }
+        });
+      } catch (error) {
+        console.log('Error fetching pre-evaluation forms:', (error as any).message);
       }
-      if (healthData) {
-        console.log('Debug: Health data structure:', Object.keys(healthData));
-        setPreEvaluationForm(healthData);
+      
+      // Set the combined health data
+      if (Object.keys(combinedHealthData).length > 0) {
+        console.log('Setting combined health data with keys:', Object.keys(combinedHealthData));
+        setPreEvaluationForm(combinedHealthData);
         
         // Update user object with health information from forms
         setUser(prev => prev ? {
           ...prev,
-          medicalConditions: healthData.medicalConditions || prev.medicalConditions || [],
-          medications: healthData.medications || prev.medications || [],
-          allergies: healthData.allergies || prev.allergies || [],
-          phone: healthData.phone || prev.phone,
-          address: healthData.address || prev.address,
-          emergencyContact: healthData.emergencyContact || prev.emergencyContact,
-          dateOfBirth: healthData.dateOfBirth || prev.dateOfBirth,
-          gpContact: healthData.gpContact || prev.gpContact
+          medicalConditions: combinedHealthData.medicalConditions || prev.medicalConditions || [],
+          medications: combinedHealthData.medications || prev.medications || [],
+          allergies: combinedHealthData.allergies || prev.allergies || [],
+          phone: combinedHealthData.phone || prev.phone,
+          address: combinedHealthData.address || prev.address,
+          emergencyContact: combinedHealthData.emergencyContact || prev.emergencyContact,
+          dateOfBirth: combinedHealthData.dateOfBirth || prev.dateOfBirth,
+          gpContact: combinedHealthData.gpContact || prev.gpContact
         } : null);
+      } else {
+        console.log('No health data found in any collection');
+        setPreEvaluationForm(null);
       }
     } catch (error) {
       console.error('Error fetching health information:', error);
@@ -514,36 +532,157 @@ function AdminUserProfile() {
             </CardHeader>
             <CardContent>
               {preEvaluationForm ? (
-                <div className="space-y-4">
-                  <div>
-                    <p className="text-sm font-medium">Health Goals</p>
-                    <p className="text-sm text-muted-foreground">
-                      {preEvaluationForm.healthGoals?.join(', ') || 'Not specified'}
-                    </p>
+                <div className="space-y-6">
+                  {/* Basic Health Information */}
+                  <div className="space-y-4">
+                    <h4 className="font-medium text-sage-dark">Basic Health Information</h4>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div>
+                        <p className="text-sm font-medium">Health Goals</p>
+                        <p className="text-sm text-muted-foreground">
+                          {preEvaluationForm.healthGoals?.length ? preEvaluationForm.healthGoals.join(', ') : 'Not specified'}
+                        </p>
+                      </div>
+                      <div>
+                        <p className="text-sm font-medium">Activity Level</p>
+                        <p className="text-sm text-muted-foreground">
+                          {preEvaluationForm.activityLevel || 'Not specified'}
+                        </p>
+                      </div>
+                      <div>
+                        <p className="text-sm font-medium">Current Weight</p>
+                        <p className="text-sm text-muted-foreground">
+                          {preEvaluationForm.currentWeight ? `${preEvaluationForm.currentWeight} kg` : 'Not specified'}
+                        </p>
+                      </div>
+                      <div>
+                        <p className="text-sm font-medium">Target Weight</p>
+                        <p className="text-sm text-muted-foreground">
+                          {preEvaluationForm.targetWeight ? `${preEvaluationForm.targetWeight} kg` : 'Not specified'}
+                        </p>
+                      </div>
+                      <div>
+                        <p className="text-sm font-medium">Height</p>
+                        <p className="text-sm text-muted-foreground">
+                          {preEvaluationForm.height ? `${preEvaluationForm.height} cm` : 'Not specified'}
+                        </p>
+                      </div>
+                      <div>
+                        <p className="text-sm font-medium">Motivation Level</p>
+                        <p className="text-sm text-muted-foreground">
+                          {preEvaluationForm.motivationLevel || 'Not specified'}
+                        </p>
+                      </div>
+                    </div>
                   </div>
-                  <div>
-                    <p className="text-sm font-medium">Current Weight</p>
-                    <p className="text-sm text-muted-foreground">{preEvaluationForm.currentWeight} kg</p>
+
+                  {/* Medical Information */}
+                  <div className="space-y-4">
+                    <h4 className="font-medium text-sage-dark">Medical Information</h4>
+                    <div className="space-y-3">
+                      <div>
+                        <p className="text-sm font-medium">Medical Conditions</p>
+                        <p className="text-sm text-muted-foreground">
+                          {preEvaluationForm.medicalConditions?.length ? preEvaluationForm.medicalConditions.join(', ') : 'None reported'}
+                        </p>
+                      </div>
+                      <div>
+                        <p className="text-sm font-medium">Medications</p>
+                        <p className="text-sm text-muted-foreground">
+                          {preEvaluationForm.medications?.length ? preEvaluationForm.medications.join(', ') : 'None reported'}
+                        </p>
+                      </div>
+                      <div>
+                        <p className="text-sm font-medium">Allergies</p>
+                        <p className="text-sm text-muted-foreground">
+                          {preEvaluationForm.allergies?.length ? preEvaluationForm.allergies.join(', ') : 'None reported'}
+                        </p>
+                      </div>
+                    </div>
                   </div>
-                  <div>
-                    <p className="text-sm font-medium">Target Weight</p>
-                    <p className="text-sm text-muted-foreground">{preEvaluationForm.targetWeight} kg</p>
+
+                  {/* Dietary Information */}
+                  <div className="space-y-4">
+                    <h4 className="font-medium text-sage-dark">Dietary Information</h4>
+                    <div className="space-y-3">
+                      <div>
+                        <p className="text-sm font-medium">Dietary Restrictions</p>
+                        <p className="text-sm text-muted-foreground">
+                          {preEvaluationForm.dietaryRestrictions?.length ? preEvaluationForm.dietaryRestrictions.join(', ') : 'None specified'}
+                        </p>
+                      </div>
+                      <div>
+                        <p className="text-sm font-medium">Previous Diet Experience</p>
+                        <p className="text-sm text-muted-foreground">
+                          {preEvaluationForm.previousDietExperience || 'Not specified'}
+                        </p>
+                      </div>
+                      <div>
+                        <p className="text-sm font-medium">Budget Range</p>
+                        <p className="text-sm text-muted-foreground">
+                          {preEvaluationForm.budgetRange || 'Not specified'}
+                        </p>
+                      </div>
+                    </div>
                   </div>
-                  <div>
-                    <p className="text-sm font-medium">Medical Conditions</p>
-                    <p className="text-sm text-muted-foreground">
-                      {user.medicalConditions?.join(', ') || 'None reported'}
-                    </p>
+
+                  {/* Lifestyle Information */}
+                  <div className="space-y-4">
+                    <h4 className="font-medium text-sage-dark">Lifestyle Information</h4>
+                    <div className="space-y-3">
+                      <div>
+                        <p className="text-sm font-medium">Available Time for Cooking</p>
+                        <p className="text-sm text-muted-foreground">
+                          {preEvaluationForm.availableTimeForCooking || 'Not specified'}
+                        </p>
+                      </div>
+                      <div>
+                        <p className="text-sm font-medium">Preferred Meal Times</p>
+                        <p className="text-sm text-muted-foreground">
+                          {preEvaluationForm.preferredMealTimes?.length ? preEvaluationForm.preferredMealTimes.join(', ') : 'Not specified'}
+                        </p>
+                      </div>
+                    </div>
                   </div>
-                  <div>
-                    <p className="text-sm font-medium">Medications</p>
-                    <p className="text-sm text-muted-foreground">
-                      {user.medications?.join(', ') || 'None reported'}
-                    </p>
+
+                  {/* Contact Information */}
+                  <div className="space-y-4">
+                    <h4 className="font-medium text-sage-dark">Emergency & Medical Contacts</h4>
+                    <div className="space-y-3">
+                      <div>
+                        <p className="text-sm font-medium">GP Contact</p>
+                        <p className="text-sm text-muted-foreground">{preEvaluationForm.gpContact || user.gpContact || 'Not provided'}</p>
+                      </div>
+                      <div>
+                        <p className="text-sm font-medium">Emergency Contact</p>
+                        <p className="text-sm text-muted-foreground">{preEvaluationForm.emergencyContact || user.emergencyContact || 'Not provided'}</p>
+                      </div>
+                    </div>
                   </div>
-                  <div>
-                    <p className="text-sm font-medium">GP Contact</p>
-                    <p className="text-sm text-muted-foreground">{user.gpContact || 'Not provided'}</p>
+
+                  {/* Additional Notes */}
+                  {preEvaluationForm.additionalNotes && (
+                    <div className="space-y-4">
+                      <h4 className="font-medium text-sage-dark">Additional Notes</h4>
+                      <p className="text-sm text-muted-foreground">{preEvaluationForm.additionalNotes}</p>
+                    </div>
+                  )}
+
+                  {/* Form Completion Status */}
+                  <div className="space-y-4 pt-4 border-t">
+                    <h4 className="font-medium text-sage-dark">Assessment Status</h4>
+                    <div className="flex gap-4">
+                      {preEvaluationForm.consentFormCompleted && (
+                        <Badge variant="outline" className="bg-green-50 text-green-700 border-green-200">
+                          Consent Form Complete
+                        </Badge>
+                      )}
+                      {preEvaluationForm.preEvaluationCompleted && (
+                        <Badge variant="outline" className="bg-blue-50 text-blue-700 border-blue-200">
+                          Health Assessment Complete
+                        </Badge>
+                      )}
+                    </div>
                   </div>
                 </div>
               ) : (
