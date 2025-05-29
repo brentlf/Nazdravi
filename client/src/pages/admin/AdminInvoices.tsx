@@ -884,7 +884,7 @@ export default function AdminInvoices() {
                                     <div className="grid grid-cols-2 gap-4">
                                       <div>
                                         <h4 className="font-medium text-sm text-gray-700">Amount</h4>
-                                        <p className="text-lg font-bold">€{invoice.amount.toFixed(2)}</p>
+                                        <p className="text-lg font-bold">€{(invoice.amount || 0).toFixed(2)}</p>
                                       </div>
                                       <div>
                                         <h4 className="font-medium text-sm text-gray-700">Date</h4>
