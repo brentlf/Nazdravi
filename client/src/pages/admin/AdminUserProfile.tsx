@@ -289,6 +289,22 @@ function AdminUserProfile() {
       // Set the combined health data
       if (Object.keys(combinedHealthData).length > 0) {
         console.log('Setting combined health data with keys:', Object.keys(combinedHealthData));
+        console.log('DETAILED HEALTH DATA:', {
+          healthGoals: combinedHealthData.healthGoals,
+          currentWeight: combinedHealthData.currentWeight,
+          targetWeight: combinedHealthData.targetWeight,
+          height: combinedHealthData.height,
+          activityLevel: combinedHealthData.activityLevel,
+          medicalConditions: combinedHealthData.medicalConditions,
+          medications: combinedHealthData.medications,
+          allergies: combinedHealthData.allergies,
+          dietaryRestrictions: combinedHealthData.dietaryRestrictions,
+          previousDietExperience: combinedHealthData.previousDietExperience,
+          motivationLevel: combinedHealthData.motivationLevel,
+          availableTimeForCooking: combinedHealthData.availableTimeForCooking,
+          preferredMealTimes: combinedHealthData.preferredMealTimes,
+          budgetRange: combinedHealthData.budgetRange
+        });
         setPreEvaluationForm(combinedHealthData);
         
         // Update user object with health information from forms

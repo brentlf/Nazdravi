@@ -1,0 +1,1239 @@
+ Setting combined health data with keys: Array(20)
+ User loaded, now fetching related data for: craziesabroad@gmail.com
+ Found health data in user profile
+ Appointment 1 structure: Object
+ Appointment 2 structure: Object
+ Appointment 3 structure: Object
+ Found appointment for userId GHs80OQAuefSw83xsRw505Qpk813: aXSzOdovEHmfcJWZbfJq
+ Total appointments found for user craziesabroad@gmail.com: 1
+ Debug: Total invoices in collection: 4
+ Merged consent record data
+ Setting combined health data with keys: Array(20)
+ User loaded, now fetching related data for: craziesabroad@gmail.com
+ Found health data in user profile
+ Appointment 1 structure: Object
+ Appointment 2 structure: Object
+ Appointment 3 structure: Object
+ Found appointment for userId GHs80OQAuefSw83xsRw505Qpk813: aXSzOdovEHmfcJWZbfJq
+ Total appointments found for user craziesabroad@gmail.com: 1
+ Debug: Total invoices in collection: 4
+ Merged consent record data
+ Setting combined health data with keys: Array(20)
+ User loaded, now fetching related data for: craziesabroad@gmail.com
+ Found health data in user profile
+ Appointment 1 structure: Object
+ Appointment 2 structure: Object
+ Appointment 3 structure: Object
+ Found appointment for userId GHs80OQAuefSw83xsRw505Qpk813: aXSzOdovEHmfcJWZbfJq
+ Total appointments found for user craziesabroad@gmail.com: 1
+ Debug: Total invoices in collection: 4
+ Merged consent record data
+ Setting combined health data with keys: Array(20)
+ User loaded, now fetching related data for: craziesabroad@gmail.com
+ Found health data in user profile
+ Appointment 1 structure: Object
+ Appointment 2 structure: Object
+ Appointment 3 structure: Object
+ Found appointment for userId GHs80OQAuefSw83xsRw505Qpk813: aXSzOdovEHmfcJWZbfJq
+ Total appointments found for user craziesabroad@gmail.com: 1
+ Debug: Total invoices in collection: 4
+ Merged consent record data
+ Setting combined health data with keys: Array(20)
+ User loaded, now fetching related data for: craziesabroad@gmail.com
+ Found health data in user profile
+ Appointment 1 structure: Object
+ Appointment 2 structure: Object
+ Appointment 3 structure: Object
+ Found appointment for userId GHs80OQAuefSw83xsRw505Qpk813: aXSzOdovEHmfcJWZbfJq
+ Total appointments found for user craziesabroad@gmail.com: 1
+ Debug: Total invoices in collection: 4
+ Merged consent record data
+ Setting combined health data with keys: Array(20)
+ User loaded, now fetching related data for: craziesabroad@gmail.com
+ Found health data in user profile
+ Appointment 1 structure: Object
+ Appointment 2 structure: Object
+ Appointment 3 structure: Object
+ Found appointment for userId GHs80OQAuefSw83xsRw505Qpk813: aXSzOdovEHmfcJWZbfJq
+ Total appointments found for user craziesabroad@gmail.com: 1
+ Debug: Total invoices in collection: 4
+ Merged consent record data
+ Setting combined health data with keys: Array(20)
+ User loaded, now fetching related data for: craziesabroad@gmail.com
+ Found health data in user profile
+ Appointment 1 structure: Object
+ Appointment 2 structure: Object
+ Appointment 3 structure: Object
+ Found appointment for userId GHs80OQAuefSw83xsRw505Qpk813: aXSzOdovEHmfcJWZbfJq
+ Total appointments found for user craziesabroad@gmail.com: 1
+ Debug: Total invoices in collection: 4
+ Merged consent record data
+ Setting combined health data with keys: Array(20)
+ User loaded, now fetching related data for: craziesabroad@gmail.com
+ Found health data in user profile
+ Appointment 1 structure: Object
+ Appointment 2 structure: Object
+ Appointment 3 structure: Object
+ Found appointment for userId GHs80OQAuefSw83xsRw505Qpk813: aXSzOdovEHmfcJWZbfJq
+ Total appointments found for user craziesabroad@gmail.com: 1
+ Debug: Total invoices in collection: 4
+ Merged consent record data
+ Setting combined health data with keys: Array(20)
+ User loaded, now fetching related data for: craziesabroad@gmail.com
+ Found health data in user profile
+ Appointment 1 structure: Object
+ Appointment 2 structure: Object
+ Appointment 3 structure: Object
+ Found appointment for userId GHs80OQAuefSw83xsRw505Qpk813: aXSzOdovEHmfcJWZbfJq
+ Total appointments found for user craziesabroad@gmail.com: 1
+ Debug: Total invoices in collection: 4
+ Merged consent record data
+ Setting combined health data with keys: Array(20)
+ User loaded, now fetching related data for: craziesabroad@gmail.com
+ Found health data in user profile
+ Appointment 1 structure: Object
+ Appointment 2 structure: Object
+ Appointment 3 structure: Object
+ Found appointment for userId GHs80OQAuefSw83xsRw505Qpk813: aXSzOdovEHmfcJWZbfJq
+ Total appointments found for user craziesabroad@gmail.com: 1
+ Debug: Total invoices in collection: 4
+ Merged consent record data
+ Setting combined health data with keys: Array(20)
+ User loaded, now fetching related data for: craziesabroad@gmail.com
+ Found health data in user profile
+ Appointment 1 structure: Object
+ Appointment 2 structure: Object
+ Appointment 3 structure: Object
+ Found appointment for userId GHs80OQAuefSw83xsRw505Qpk813: aXSzOdovEHmfcJWZbfJq
+ Total appointments found for user craziesabroad@gmail.com: 1
+ Debug: Total invoices in collection: 4
+ Merged consent record data
+ Setting combined health data with keys: Array(20)
+ User loaded, now fetching related data for: craziesabroad@gmail.com
+ Found health data in user profile
+ Appointment 1 structure: Object
+ Appointment 2 structure: Object
+ Appointment 3 structure: Object
+ Found appointment for userId GHs80OQAuefSw83xsRw505Qpk813: aXSzOdovEHmfcJWZbfJq
+ Total appointments found for user craziesabroad@gmail.com: 1
+ Debug: Total invoices in collection: 4
+ Merged consent record data
+ Setting combined health data with keys: Array(20)
+ User loaded, now fetching related data for: craziesabroad@gmail.com
+ Found health data in user profile
+ Appointment 1 structure: Object
+ Appointment 2 structure: Object
+ Appointment 3 structure: Object
+ Found appointment for userId GHs80OQAuefSw83xsRw505Qpk813: aXSzOdovEHmfcJWZbfJq
+ Total appointments found for user craziesabroad@gmail.com: 1
+ Debug: Total invoices in collection: 4
+ Merged consent record data
+ Setting combined health data with keys: Array(20)
+ User loaded, now fetching related data for: craziesabroad@gmail.com
+ Found health data in user profile
+ Appointment 1 structure: Object
+ Appointment 2 structure: Object
+ Appointment 3 structure: Object
+ Found appointment for userId GHs80OQAuefSw83xsRw505Qpk813: aXSzOdovEHmfcJWZbfJq
+ Total appointments found for user craziesabroad@gmail.com: 1
+ Debug: Total invoices in collection: 4
+ Merged consent record data
+ Setting combined health data with keys: Array(20)
+ User loaded, now fetching related data for: craziesabroad@gmail.com
+ Found health data in user profile
+ Appointment 1 structure: Object
+ Appointment 2 structure: Object
+ Appointment 3 structure: Object
+ Found appointment for userId GHs80OQAuefSw83xsRw505Qpk813: aXSzOdovEHmfcJWZbfJq
+ Total appointments found for user craziesabroad@gmail.com: 1
+ Debug: Total invoices in collection: 4
+ Merged consent record data
+ Setting combined health data with keys: Array(20)
+ User loaded, now fetching related data for: craziesabroad@gmail.com
+ Found health data in user profile
+ Appointment 1 structure: Object
+ Appointment 2 structure: Object
+ Appointment 3 structure: Object
+ Found appointment for userId GHs80OQAuefSw83xsRw505Qpk813: aXSzOdovEHmfcJWZbfJq
+ Total appointments found for user craziesabroad@gmail.com: 1
+ Debug: Total invoices in collection: 4
+ Merged consent record data
+ Setting combined health data with keys: Array(20)
+ User loaded, now fetching related data for: craziesabroad@gmail.com
+ Found health data in user profile
+ Appointment 1 structure: Object
+ Appointment 2 structure: Object
+ Appointment 3 structure: Object
+ Found appointment for userId GHs80OQAuefSw83xsRw505Qpk813: aXSzOdovEHmfcJWZbfJq
+ Total appointments found for user craziesabroad@gmail.com: 1
+ Debug: Total invoices in collection: 4
+ Merged consent record data
+ Setting combined health data with keys: Array(20)
+ User loaded, now fetching related data for: craziesabroad@gmail.com
+ Found health data in user profile
+ Appointment 1 structure: Object
+ Appointment 2 structure: Object
+ Appointment 3 structure: Object
+ Found appointment for userId GHs80OQAuefSw83xsRw505Qpk813: aXSzOdovEHmfcJWZbfJq
+ Total appointments found for user craziesabroad@gmail.com: 1
+ Debug: Total invoices in collection: 4
+ Merged consent record data
+ Setting combined health data with keys: Array(20)
+ User loaded, now fetching related data for: craziesabroad@gmail.com
+ Found health data in user profile
+ Appointment 1 structure: Object
+ Appointment 2 structure: Object
+ Appointment 3 structure: Object
+ Found appointment for userId GHs80OQAuefSw83xsRw505Qpk813: aXSzOdovEHmfcJWZbfJq
+ Total appointments found for user craziesabroad@gmail.com: 1
+ Debug: Total invoices in collection: 4
+ Merged consent record data
+ Setting combined health data with keys: Array(20)
+ User loaded, now fetching related data for: craziesabroad@gmail.com
+ Found health data in user profile
+ Appointment 1 structure: Object
+ Appointment 2 structure: Object
+ Appointment 3 structure: Object
+ Found appointment for userId GHs80OQAuefSw83xsRw505Qpk813: aXSzOdovEHmfcJWZbfJq
+ Total appointments found for user craziesabroad@gmail.com: 1
+ Debug: Total invoices in collection: 4
+ Merged consent record data
+ Setting combined health data with keys: Array(20)
+ User loaded, now fetching related data for: craziesabroad@gmail.com
+ Found health data in user profile
+ Appointment 1 structure: Object
+ Appointment 2 structure: Object
+ Appointment 3 structure: Object
+ Found appointment for userId GHs80OQAuefSw83xsRw505Qpk813: aXSzOdovEHmfcJWZbfJq
+ Total appointments found for user craziesabroad@gmail.com: 1
+ Debug: Total invoices in collection: 4
+ Merged consent record data
+ Setting combined health data with keys: Array(20)
+ User loaded, now fetching related data for: craziesabroad@gmail.com
+ Found health data in user profile
+ Appointment 1 structure: Object
+ Appointment 2 structure: Object
+ Appointment 3 structure: Object
+ Found appointment for userId GHs80OQAuefSw83xsRw505Qpk813: aXSzOdovEHmfcJWZbfJq
+ Total appointments found for user craziesabroad@gmail.com: 1
+ Debug: Total invoices in collection: 4
+ Merged consent record data
+ Setting combined health data with keys: Array(20)
+ User loaded, now fetching related data for: craziesabroad@gmail.com
+ Found health data in user profile
+ Appointment 1 structure: Object
+ Appointment 2 structure: Object
+ Appointment 3 structure: Object
+ Found appointment for userId GHs80OQAuefSw83xsRw505Qpk813: aXSzOdovEHmfcJWZbfJq
+ Total appointments found for user craziesabroad@gmail.com: 1
+ Debug: Total invoices in collection: 4
+ Merged consent record data
+ Setting combined health data with keys: Array(20)
+ User loaded, now fetching related data for: craziesabroad@gmail.com
+ Found health data in user profile
+ Appointment 1 structure: Object
+ Appointment 2 structure: Object
+ Appointment 3 structure: Object
+ Found appointment for userId GHs80OQAuefSw83xsRw505Qpk813: aXSzOdovEHmfcJWZbfJq
+ Total appointments found for user craziesabroad@gmail.com: 1
+ Debug: Total invoices in collection: 4
+ Merged consent record data
+ Setting combined health data with keys: Array(20)
+ User loaded, now fetching related data for: craziesabroad@gmail.com
+ Found health data in user profile
+ Appointment 1 structure: Object
+ Appointment 2 structure: Object
+ Appointment 3 structure: Object
+ Found appointment for userId GHs80OQAuefSw83xsRw505Qpk813: aXSzOdovEHmfcJWZbfJq
+ Total appointments found for user craziesabroad@gmail.com: 1
+ Debug: Total invoices in collection: 4
+ Merged consent record data
+ Setting combined health data with keys: Array(20)
+ User loaded, now fetching related data for: craziesabroad@gmail.com
+ Found health data in user profile
+ Appointment 1 structure: Object
+ Appointment 2 structure: Object
+ Appointment 3 structure: Object
+ Found appointment for userId GHs80OQAuefSw83xsRw505Qpk813: aXSzOdovEHmfcJWZbfJq
+ Total appointments found for user craziesabroad@gmail.com: 1
+ Debug: Total invoices in collection: 4
+ Merged consent record data
+ Setting combined health data with keys: Array(20)
+ User loaded, now fetching related data for: craziesabroad@gmail.com
+ Found health data in user profile
+ Appointment 1 structure: Object
+ Appointment 2 structure: Object
+ Appointment 3 structure: Object
+ Found appointment for userId GHs80OQAuefSw83xsRw505Qpk813: aXSzOdovEHmfcJWZbfJq
+ Total appointments found for user craziesabroad@gmail.com: 1
+ Debug: Total invoices in collection: 4
+ Merged consent record data
+ Setting combined health data with keys: Array(20)
+ User loaded, now fetching related data for: craziesabroad@gmail.com
+ Found health data in user profile
+ Appointment 1 structure: Object
+ Appointment 2 structure: Object
+ Appointment 3 structure: Object
+ Found appointment for userId GHs80OQAuefSw83xsRw505Qpk813: aXSzOdovEHmfcJWZbfJq
+ Total appointments found for user craziesabroad@gmail.com: 1
+ Debug: Total invoices in collection: 4
+ Merged consent record data
+ Setting combined health data with keys: Array(20)
+ User loaded, now fetching related data for: craziesabroad@gmail.com
+ Found health data in user profile
+ Appointment 1 structure: Object
+ Appointment 2 structure: Object
+ Appointment 3 structure: Object
+ Found appointment for userId GHs80OQAuefSw83xsRw505Qpk813: aXSzOdovEHmfcJWZbfJq
+ Total appointments found for user craziesabroad@gmail.com: 1
+ Debug: Total invoices in collection: 4
+ Merged consent record data
+ Setting combined health data with keys: Array(20)
+ User loaded, now fetching related data for: craziesabroad@gmail.com
+ Found health data in user profile
+ Appointment 1 structure: Object
+ Appointment 2 structure: Object
+ Appointment 3 structure: Object
+ Found appointment for userId GHs80OQAuefSw83xsRw505Qpk813: aXSzOdovEHmfcJWZbfJq
+ Total appointments found for user craziesabroad@gmail.com: 1
+ Debug: Total invoices in collection: 4
+ Merged consent record data
+ Setting combined health data with keys: Array(20)
+ User loaded, now fetching related data for: craziesabroad@gmail.com
+ Found health data in user profile
+ Appointment 1 structure: Object
+ Appointment 2 structure: Object
+ Appointment 3 structure: Object
+ Found appointment for userId GHs80OQAuefSw83xsRw505Qpk813: aXSzOdovEHmfcJWZbfJq
+ Total appointments found for user craziesabroad@gmail.com: 1
+ Debug: Total invoices in collection: 4
+ Merged consent record data
+ Setting combined health data with keys: Array(20)
+ User loaded, now fetching related data for: craziesabroad@gmail.com
+ Found health data in user profile
+ Appointment 1 structure: Object
+ Appointment 2 structure: Object
+ Appointment 3 structure: Object
+ Found appointment for userId GHs80OQAuefSw83xsRw505Qpk813: aXSzOdovEHmfcJWZbfJq
+ Total appointments found for user craziesabroad@gmail.com: 1
+ Debug: Total invoices in collection: 4
+ Merged consent record data
+ Setting combined health data with keys: Array(20)
+ User loaded, now fetching related data for: craziesabroad@gmail.com
+ Found health data in user profile
+ Appointment 1 structure: Object
+ Appointment 2 structure: Object
+ Appointment 3 structure: Object
+ Found appointment for userId GHs80OQAuefSw83xsRw505Qpk813: aXSzOdovEHmfcJWZbfJq
+ Total appointments found for user craziesabroad@gmail.com: 1
+ Debug: Total invoices in collection: 4
+ Merged consent record data
+ Setting combined health data with keys: Array(20)
+ User loaded, now fetching related data for: craziesabroad@gmail.com
+ Found health data in user profile
+ Appointment 1 structure: Object
+ Appointment 2 structure: Object
+ Appointment 3 structure: Object
+ Found appointment for userId GHs80OQAuefSw83xsRw505Qpk813: aXSzOdovEHmfcJWZbfJq
+ Total appointments found for user craziesabroad@gmail.com: 1
+ Debug: Total invoices in collection: 4
+ Merged consent record data
+ Setting combined health data with keys: Array(20)
+ User loaded, now fetching related data for: craziesabroad@gmail.com
+ Found health data in user profile
+ Appointment 1 structure: Object
+ Appointment 2 structure: Object
+ Appointment 3 structure: Object
+ Found appointment for userId GHs80OQAuefSw83xsRw505Qpk813: aXSzOdovEHmfcJWZbfJq
+ Total appointments found for user craziesabroad@gmail.com: 1
+ Debug: Total invoices in collection: 4
+ Merged consent record data
+ Setting combined health data with keys: Array(20)
+ User loaded, now fetching related data for: craziesabroad@gmail.com
+ Found health data in user profile
+ Appointment 1 structure: Object
+ Appointment 2 structure: Object
+ Appointment 3 structure: Object
+ Found appointment for userId GHs80OQAuefSw83xsRw505Qpk813: aXSzOdovEHmfcJWZbfJq
+ Total appointments found for user craziesabroad@gmail.com: 1
+ Debug: Total invoices in collection: 4
+ Merged consent record data
+ Setting combined health data with keys: Array(20)
+ User loaded, now fetching related data for: craziesabroad@gmail.com
+ Found health data in user profile
+ Appointment 1 structure: Object
+ Appointment 2 structure: Object
+ Appointment 3 structure: Object
+ Found appointment for userId GHs80OQAuefSw83xsRw505Qpk813: aXSzOdovEHmfcJWZbfJq
+ Total appointments found for user craziesabroad@gmail.com: 1
+ Debug: Total invoices in collection: 4
+ Merged consent record data
+ Setting combined health data with keys: Array(20)
+ User loaded, now fetching related data for: craziesabroad@gmail.com
+ Found health data in user profile
+ Appointment 1 structure: Object
+ Appointment 2 structure: Object
+ Appointment 3 structure: Object
+ Found appointment for userId GHs80OQAuefSw83xsRw505Qpk813: aXSzOdovEHmfcJWZbfJq
+ Total appointments found for user craziesabroad@gmail.com: 1
+ Debug: Total invoices in collection: 4
+ Merged consent record data
+ Setting combined health data with keys: Array(20)
+ User loaded, now fetching related data for: craziesabroad@gmail.com
+ Found health data in user profile
+ Appointment 1 structure: Object
+ Appointment 2 structure: Object
+ Appointment 3 structure: Object
+ Found appointment for userId GHs80OQAuefSw83xsRw505Qpk813: aXSzOdovEHmfcJWZbfJq
+ Total appointments found for user craziesabroad@gmail.com: 1
+ Debug: Total invoices in collection: 4
+ Merged consent record data
+ Setting combined health data with keys: Array(20)
+ User loaded, now fetching related data for: craziesabroad@gmail.com
+ Found health data in user profile
+ Appointment 1 structure: Object
+ Appointment 2 structure: Object
+ Appointment 3 structure: Object
+ Found appointment for userId GHs80OQAuefSw83xsRw505Qpk813: aXSzOdovEHmfcJWZbfJq
+ Total appointments found for user craziesabroad@gmail.com: 1
+ Debug: Total invoices in collection: 4
+ Merged consent record data
+ Setting combined health data with keys: Array(20)
+ User loaded, now fetching related data for: craziesabroad@gmail.com
+ Found health data in user profile
+ Appointment 1 structure: Object
+ Appointment 2 structure: Object
+ Appointment 3 structure: Object
+ Found appointment for userId GHs80OQAuefSw83xsRw505Qpk813: aXSzOdovEHmfcJWZbfJq
+ Total appointments found for user craziesabroad@gmail.com: 1
+ Debug: Total invoices in collection: 4
+ Merged consent record data
+ Setting combined health data with keys: Array(20)
+ User loaded, now fetching related data for: craziesabroad@gmail.com
+ Found health data in user profile
+ Appointment 1 structure: Object
+ Appointment 2 structure: Object
+ Appointment 3 structure: Object
+ Found appointment for userId GHs80OQAuefSw83xsRw505Qpk813: aXSzOdovEHmfcJWZbfJq
+ Total appointments found for user craziesabroad@gmail.com: 1
+ Debug: Total invoices in collection: 4
+ Merged consent record data
+ Setting combined health data with keys: Array(20)
+ User loaded, now fetching related data for: craziesabroad@gmail.com
+ Found health data in user profile
+ Appointment 1 structure: Object
+ Appointment 2 structure: Object
+ Appointment 3 structure: Object
+ Found appointment for userId GHs80OQAuefSw83xsRw505Qpk813: aXSzOdovEHmfcJWZbfJq
+ Total appointments found for user craziesabroad@gmail.com: 1
+ Debug: Total invoices in collection: 4
+ Merged consent record data
+ Setting combined health data with keys: Array(20)
+ User loaded, now fetching related data for: craziesabroad@gmail.com
+ Found health data in user profile
+ Appointment 1 structure: Object
+ Appointment 2 structure: Object
+ Appointment 3 structure: Object
+ Found appointment for userId GHs80OQAuefSw83xsRw505Qpk813: aXSzOdovEHmfcJWZbfJq
+ Total appointments found for user craziesabroad@gmail.com: 1
+ Debug: Total invoices in collection: 4
+ Merged consent record data
+ Setting combined health data with keys: Array(20)
+ User loaded, now fetching related data for: craziesabroad@gmail.com
+ Found health data in user profile
+ Appointment 1 structure: Object
+ Appointment 2 structure: Object
+ Appointment 3 structure: Object
+ Found appointment for userId GHs80OQAuefSw83xsRw505Qpk813: aXSzOdovEHmfcJWZbfJq
+ Total appointments found for user craziesabroad@gmail.com: 1
+ Debug: Total invoices in collection: 4
+ Merged consent record data
+ Setting combined health data with keys: Array(20)
+ User loaded, now fetching related data for: craziesabroad@gmail.com
+ Found health data in user profile
+ Appointment 1 structure: Object
+ Appointment 2 structure: Object
+ Appointment 3 structure: Object
+ Found appointment for userId GHs80OQAuefSw83xsRw505Qpk813: aXSzOdovEHmfcJWZbfJq
+ Total appointments found for user craziesabroad@gmail.com: 1
+ Debug: Total invoices in collection: 4
+ Merged consent record data
+ Setting combined health data with keys: Array(20)
+ User loaded, now fetching related data for: craziesabroad@gmail.com
+ Found health data in user profile
+ Appointment 1 structure: Object
+ Appointment 2 structure: Object
+ Appointment 3 structure: Object
+ Found appointment for userId GHs80OQAuefSw83xsRw505Qpk813: aXSzOdovEHmfcJWZbfJq
+ Total appointments found for user craziesabroad@gmail.com: 1
+ Debug: Total invoices in collection: 4
+ Merged consent record data
+ Setting combined health data with keys: Array(20)
+ User loaded, now fetching related data for: craziesabroad@gmail.com
+ Found health data in user profile
+ Appointment 1 structure: Object
+ Appointment 2 structure: Object
+ Appointment 3 structure: Object
+ Found appointment for userId GHs80OQAuefSw83xsRw505Qpk813: aXSzOdovEHmfcJWZbfJq
+ Total appointments found for user craziesabroad@gmail.com: 1
+ Debug: Total invoices in collection: 4
+ Merged consent record data
+ Setting combined health data with keys: Array(20)
+ User loaded, now fetching related data for: craziesabroad@gmail.com
+ Found health data in user profile
+ Appointment 1 structure: Object
+ Appointment 2 structure: Object
+ Appointment 3 structure: Object
+ Found appointment for userId GHs80OQAuefSw83xsRw505Qpk813: aXSzOdovEHmfcJWZbfJq
+ Total appointments found for user craziesabroad@gmail.com: 1
+ Debug: Total invoices in collection: 4
+ Merged consent record data
+ Setting combined health data with keys: Array(20)
+ User loaded, now fetching related data for: craziesabroad@gmail.com
+ Found health data in user profile
+ Appointment 1 structure: Object
+ Appointment 2 structure: Object
+ Appointment 3 structure: Object
+ Found appointment for userId GHs80OQAuefSw83xsRw505Qpk813: aXSzOdovEHmfcJWZbfJq
+ Total appointments found for user craziesabroad@gmail.com: 1
+ Debug: Total invoices in collection: 4
+ Merged consent record data
+ Setting combined health data with keys: Array(20)
+ User loaded, now fetching related data for: craziesabroad@gmail.com
+ Found health data in user profile
+ Appointment 1 structure: Object
+ Appointment 2 structure: Object
+ Appointment 3 structure: Object
+ Found appointment for userId GHs80OQAuefSw83xsRw505Qpk813: aXSzOdovEHmfcJWZbfJq
+ Total appointments found for user craziesabroad@gmail.com: 1
+ Debug: Total invoices in collection: 4
+ Merged consent record data
+ Setting combined health data with keys: Array(20)
+ User loaded, now fetching related data for: craziesabroad@gmail.com
+ Found health data in user profile
+ Appointment 1 structure: Object
+ Appointment 2 structure: Object
+ Appointment 3 structure: Object
+ Found appointment for userId GHs80OQAuefSw83xsRw505Qpk813: aXSzOdovEHmfcJWZbfJq
+ Total appointments found for user craziesabroad@gmail.com: 1
+ Debug: Total invoices in collection: 4
+ Merged consent record data
+ Setting combined health data with keys: Array(20)
+ User loaded, now fetching related data for: craziesabroad@gmail.com
+ Found health data in user profile
+ Appointment 1 structure: Object
+ Appointment 2 structure: Object
+ Appointment 3 structure: Object
+ Found appointment for userId GHs80OQAuefSw83xsRw505Qpk813: aXSzOdovEHmfcJWZbfJq
+ Total appointments found for user craziesabroad@gmail.com: 1
+ Debug: Total invoices in collection: 4
+ Merged consent record data
+ Setting combined health data with keys: Array(20)
+ User loaded, now fetching related data for: craziesabroad@gmail.com
+ Found health data in user profile
+ Appointment 1 structure: Object
+ Appointment 2 structure: Object
+ Appointment 3 structure: Object
+ Found appointment for userId GHs80OQAuefSw83xsRw505Qpk813: aXSzOdovEHmfcJWZbfJq
+ Total appointments found for user craziesabroad@gmail.com: 1
+ Debug: Total invoices in collection: 4
+ Merged consent record data
+ Setting combined health data with keys: Array(20)
+ User loaded, now fetching related data for: craziesabroad@gmail.com
+ Found health data in user profile
+ Appointment 1 structure: Object
+ Appointment 2 structure: Object
+ Appointment 3 structure: Object
+ Found appointment for userId GHs80OQAuefSw83xsRw505Qpk813: aXSzOdovEHmfcJWZbfJq
+ Total appointments found for user craziesabroad@gmail.com: 1
+ Debug: Total invoices in collection: 4
+ Merged consent record data
+ Setting combined health data with keys: Array(20)
+ User loaded, now fetching related data for: craziesabroad@gmail.com
+ Found health data in user profile
+ Appointment 1 structure: Object
+ Appointment 2 structure: Object
+ Appointment 3 structure: Object
+ Found appointment for userId GHs80OQAuefSw83xsRw505Qpk813: aXSzOdovEHmfcJWZbfJq
+ Total appointments found for user craziesabroad@gmail.com: 1
+ Debug: Total invoices in collection: 4
+ Merged consent record data
+ Setting combined health data with keys: Array(20)
+ User loaded, now fetching related data for: craziesabroad@gmail.com
+ Found health data in user profile
+ Appointment 1 structure: Object
+ Appointment 2 structure: Object
+ Appointment 3 structure: Object
+ Found appointment for userId GHs80OQAuefSw83xsRw505Qpk813: aXSzOdovEHmfcJWZbfJq
+ Total appointments found for user craziesabroad@gmail.com: 1
+ Debug: Total invoices in collection: 4
+ Merged consent record data
+ Setting combined health data with keys: Array(20)
+ User loaded, now fetching related data for: craziesabroad@gmail.com
+ Found health data in user profile
+ Appointment 1 structure: Object
+ Appointment 2 structure: Object
+ Appointment 3 structure: Object
+ Found appointment for userId GHs80OQAuefSw83xsRw505Qpk813: aXSzOdovEHmfcJWZbfJq
+ Total appointments found for user craziesabroad@gmail.com: 1
+ Debug: Total invoices in collection: 4
+ Merged consent record data
+ Setting combined health data with keys: Array(20)
+ User loaded, now fetching related data for: craziesabroad@gmail.com
+ Found health data in user profile
+ Appointment 1 structure: Object
+ Appointment 2 structure: Object
+ Appointment 3 structure: Object
+ Found appointment for userId GHs80OQAuefSw83xsRw505Qpk813: aXSzOdovEHmfcJWZbfJq
+ Total appointments found for user craziesabroad@gmail.com: 1
+ Debug: Total invoices in collection: 4
+ Merged consent record data
+ Setting combined health data with keys: Array(20)
+ User loaded, now fetching related data for: craziesabroad@gmail.com
+ Found health data in user profile
+ Appointment 1 structure: Object
+ Appointment 2 structure: Object
+ Appointment 3 structure: Object
+ Found appointment for userId GHs80OQAuefSw83xsRw505Qpk813: aXSzOdovEHmfcJWZbfJq
+ Total appointments found for user craziesabroad@gmail.com: 1
+ Debug: Total invoices in collection: 4
+ Merged consent record data
+ Setting combined health data with keys: Array(20)
+ User loaded, now fetching related data for: craziesabroad@gmail.com
+ Found health data in user profile
+ Appointment 1 structure: Object
+ Appointment 2 structure: Object
+ Appointment 3 structure: Object
+ Found appointment for userId GHs80OQAuefSw83xsRw505Qpk813: aXSzOdovEHmfcJWZbfJq
+ Total appointments found for user craziesabroad@gmail.com: 1
+ Debug: Total invoices in collection: 4
+ Merged consent record data
+ Setting combined health data with keys: Array(20)
+ User loaded, now fetching related data for: craziesabroad@gmail.com
+ Found health data in user profile
+ Appointment 1 structure: Object
+ Appointment 2 structure: Object
+ Appointment 3 structure: Object
+ Found appointment for userId GHs80OQAuefSw83xsRw505Qpk813: aXSzOdovEHmfcJWZbfJq
+ Total appointments found for user craziesabroad@gmail.com: 1
+ Debug: Total invoices in collection: 4
+ Merged consent record data
+ Setting combined health data with keys: Array(20)
+ User loaded, now fetching related data for: craziesabroad@gmail.com
+ Found health data in user profile
+ Appointment 1 structure: Object
+ Appointment 2 structure: Object
+ Appointment 3 structure: Object
+ Found appointment for userId GHs80OQAuefSw83xsRw505Qpk813: aXSzOdovEHmfcJWZbfJq
+ Total appointments found for user craziesabroad@gmail.com: 1
+ Debug: Total invoices in collection: 4
+ Merged consent record data
+ Setting combined health data with keys: Array(20)
+ User loaded, now fetching related data for: craziesabroad@gmail.com
+ Found health data in user profile
+ Appointment 1 structure: Object
+ Appointment 2 structure: Object
+ Appointment 3 structure: Object
+ Found appointment for userId GHs80OQAuefSw83xsRw505Qpk813: aXSzOdovEHmfcJWZbfJq
+ Total appointments found for user craziesabroad@gmail.com: 1
+ Debug: Total invoices in collection: 4
+ Merged consent record data
+ Setting combined health data with keys: Array(20)
+ User loaded, now fetching related data for: craziesabroad@gmail.com
+ Found health data in user profile
+ Appointment 1 structure: Object
+ Appointment 2 structure: Object
+ Appointment 3 structure: Object
+ Found appointment for userId GHs80OQAuefSw83xsRw505Qpk813: aXSzOdovEHmfcJWZbfJq
+ Total appointments found for user craziesabroad@gmail.com: 1
+ Debug: Total invoices in collection: 4
+ Merged consent record data
+ Setting combined health data with keys: Array(20)
+ User loaded, now fetching related data for: craziesabroad@gmail.com
+ Found health data in user profile
+ Appointment 1 structure: Object
+ Appointment 2 structure: Object
+ Appointment 3 structure: Object
+ Found appointment for userId GHs80OQAuefSw83xsRw505Qpk813: aXSzOdovEHmfcJWZbfJq
+ Total appointments found for user craziesabroad@gmail.com: 1
+ Debug: Total invoices in collection: 4
+ Merged consent record data
+ Setting combined health data with keys: Array(20)
+ User loaded, now fetching related data for: craziesabroad@gmail.com
+ Found health data in user profile
+ Appointment 1 structure: Object
+ Appointment 2 structure: Object
+ Appointment 3 structure: Object
+ Found appointment for userId GHs80OQAuefSw83xsRw505Qpk813: aXSzOdovEHmfcJWZbfJq
+ Total appointments found for user craziesabroad@gmail.com: 1
+ Debug: Total invoices in collection: 4
+ Merged consent record data
+ Setting combined health data with keys: Array(20)
+ User loaded, now fetching related data for: craziesabroad@gmail.com
+ Found health data in user profile
+ Appointment 1 structure: Object
+ Appointment 2 structure: Object
+ Appointment 3 structure: Object
+ Found appointment for userId GHs80OQAuefSw83xsRw505Qpk813: aXSzOdovEHmfcJWZbfJq
+ Total appointments found for user craziesabroad@gmail.com: 1
+ Debug: Total invoices in collection: 4
+ Merged consent record data
+ Setting combined health data with keys: Array(20)
+ User loaded, now fetching related data for: craziesabroad@gmail.com
+ Found health data in user profile
+ Appointment 1 structure: Object
+ Appointment 2 structure: Object
+ Appointment 3 structure: Object
+ Found appointment for userId GHs80OQAuefSw83xsRw505Qpk813: aXSzOdovEHmfcJWZbfJq
+ Total appointments found for user craziesabroad@gmail.com: 1
+ Debug: Total invoices in collection: 4
+ Merged consent record data
+ Setting combined health data with keys: Array(20)
+ User loaded, now fetching related data for: craziesabroad@gmail.com
+ Found health data in user profile
+ Appointment 1 structure: Object
+ Appointment 2 structure: Object
+ Appointment 3 structure: Object
+ Found appointment for userId GHs80OQAuefSw83xsRw505Qpk813: aXSzOdovEHmfcJWZbfJq
+ Total appointments found for user craziesabroad@gmail.com: 1
+ Debug: Total invoices in collection: 4
+ Merged consent record data
+ Setting combined health data with keys: Array(20)
+ User loaded, now fetching related data for: craziesabroad@gmail.com
+ Found health data in user profile
+ Appointment 1 structure: Object
+ Appointment 2 structure: Object
+ Appointment 3 structure: Object
+ Found appointment for userId GHs80OQAuefSw83xsRw505Qpk813: aXSzOdovEHmfcJWZbfJq
+ Total appointments found for user craziesabroad@gmail.com: 1
+ Debug: Total invoices in collection: 4
+ Merged consent record data
+ Setting combined health data with keys: Array(20)
+ User loaded, now fetching related data for: craziesabroad@gmail.com
+ Found health data in user profile
+ Appointment 1 structure: Object
+ Appointment 2 structure: Object
+ Appointment 3 structure: Object
+ Found appointment for userId GHs80OQAuefSw83xsRw505Qpk813: aXSzOdovEHmfcJWZbfJq
+ Total appointments found for user craziesabroad@gmail.com: 1
+ Debug: Total invoices in collection: 4
+ Merged consent record data
+ Setting combined health data with keys: Array(20)
+ User loaded, now fetching related data for: craziesabroad@gmail.com
+ Found health data in user profile
+ Appointment 1 structure: Object
+ Appointment 2 structure: Object
+ Appointment 3 structure: Object
+ Found appointment for userId GHs80OQAuefSw83xsRw505Qpk813: aXSzOdovEHmfcJWZbfJq
+ Total appointments found for user craziesabroad@gmail.com: 1
+ Debug: Total invoices in collection: 4
+ Merged consent record data
+ Setting combined health data with keys: Array(20)
+ User loaded, now fetching related data for: craziesabroad@gmail.com
+ Found health data in user profile
+ Appointment 1 structure: Object
+ Appointment 2 structure: Object
+ Appointment 3 structure: Object
+ Found appointment for userId GHs80OQAuefSw83xsRw505Qpk813: aXSzOdovEHmfcJWZbfJq
+ Total appointments found for user craziesabroad@gmail.com: 1
+ Debug: Total invoices in collection: 4
+ Merged consent record data
+ Setting combined health data with keys: Array(20)
+ User loaded, now fetching related data for: craziesabroad@gmail.com
+ Found health data in user profile
+ Appointment 1 structure: Object
+ Appointment 2 structure: Object
+ Appointment 3 structure: Object
+ Found appointment for userId GHs80OQAuefSw83xsRw505Qpk813: aXSzOdovEHmfcJWZbfJq
+ Total appointments found for user craziesabroad@gmail.com: 1
+ Debug: Total invoices in collection: 4
+ Merged consent record data
+ Setting combined health data with keys: Array(20)
+ User loaded, now fetching related data for: craziesabroad@gmail.com
+ Found health data in user profile
+ Appointment 1 structure: Object
+ Appointment 2 structure: Object
+ Appointment 3 structure: Object
+ Found appointment for userId GHs80OQAuefSw83xsRw505Qpk813: aXSzOdovEHmfcJWZbfJq
+ Total appointments found for user craziesabroad@gmail.com: 1
+ Debug: Total invoices in collection: 4
+ Merged consent record data
+ Setting combined health data with keys: Array(20)
+ User loaded, now fetching related data for: craziesabroad@gmail.com
+ Found health data in user profile
+ Appointment 1 structure: Object
+ Appointment 2 structure: Object
+ Appointment 3 structure: Object
+ Found appointment for userId GHs80OQAuefSw83xsRw505Qpk813: aXSzOdovEHmfcJWZbfJq
+ Total appointments found for user craziesabroad@gmail.com: 1
+ Debug: Total invoices in collection: 4
+ Merged consent record data
+ Setting combined health data with keys: Array(20)
+ User loaded, now fetching related data for: craziesabroad@gmail.com
+ Found health data in user profile
+ Appointment 1 structure: Object
+ Appointment 2 structure: Object
+ Appointment 3 structure: Object
+ Found appointment for userId GHs80OQAuefSw83xsRw505Qpk813: aXSzOdovEHmfcJWZbfJq
+ Total appointments found for user craziesabroad@gmail.com: 1
+ Debug: Total invoices in collection: 4
+ Merged consent record data
+ Setting combined health data with keys: Array(20)
+ User loaded, now fetching related data for: craziesabroad@gmail.com
+ Found health data in user profile
+ Appointment 1 structure: Object
+ Appointment 2 structure: Object
+ Appointment 3 structure: Object
+ Found appointment for userId GHs80OQAuefSw83xsRw505Qpk813: aXSzOdovEHmfcJWZbfJq
+ Total appointments found for user craziesabroad@gmail.com: 1
+ Debug: Total invoices in collection: 4
+ Merged consent record data
+ Setting combined health data with keys: Array(20)
+ User loaded, now fetching related data for: craziesabroad@gmail.com
+ Found health data in user profile
+ Appointment 1 structure: Object
+ Appointment 2 structure: Object
+ Appointment 3 structure: Object
+ Found appointment for userId GHs80OQAuefSw83xsRw505Qpk813: aXSzOdovEHmfcJWZbfJq
+ Total appointments found for user craziesabroad@gmail.com: 1
+ Debug: Total invoices in collection: 4
+ Merged consent record data
+ Setting combined health data with keys: Array(20)
+ User loaded, now fetching related data for: craziesabroad@gmail.com
+ Found health data in user profile
+ Appointment 1 structure: Object
+ Appointment 2 structure: Object
+ Appointment 3 structure: Object
+ Found appointment for userId GHs80OQAuefSw83xsRw505Qpk813: aXSzOdovEHmfcJWZbfJq
+ Total appointments found for user craziesabroad@gmail.com: 1
+ Debug: Total invoices in collection: 4
+ Merged consent record data
+ Setting combined health data with keys: Array(20)
+ User loaded, now fetching related data for: craziesabroad@gmail.com
+ Found health data in user profile
+ Appointment 1 structure: Object
+ Appointment 2 structure: Object
+ Appointment 3 structure: Object
+ Found appointment for userId GHs80OQAuefSw83xsRw505Qpk813: aXSzOdovEHmfcJWZbfJq
+ Total appointments found for user craziesabroad@gmail.com: 1
+ Debug: Total invoices in collection: 4
+ Merged consent record data
+ Setting combined health data with keys: Array(20)
+ User loaded, now fetching related data for: craziesabroad@gmail.com
+ Found health data in user profile
+ Appointment 1 structure: Object
+ Appointment 2 structure: Object
+ Appointment 3 structure: Object
+ Found appointment for userId GHs80OQAuefSw83xsRw505Qpk813: aXSzOdovEHmfcJWZbfJq
+ Total appointments found for user craziesabroad@gmail.com: 1
+ Debug: Total invoices in collection: 4
+ Merged consent record data
+ Setting combined health data with keys: Array(20)
+ User loaded, now fetching related data for: craziesabroad@gmail.com
+ Found health data in user profile
+ Appointment 1 structure: Object
+ Appointment 2 structure: Object
+ Appointment 3 structure: Object
+ Found appointment for userId GHs80OQAuefSw83xsRw505Qpk813: aXSzOdovEHmfcJWZbfJq
+ Total appointments found for user craziesabroad@gmail.com: 1
+ Debug: Total invoices in collection: 4
+ Merged consent record data
+ Setting combined health data with keys: Array(20)
+ User loaded, now fetching related data for: craziesabroad@gmail.com
+ Found health data in user profile
+ Appointment 1 structure: Object
+ Appointment 2 structure: Object
+ Appointment 3 structure: Object
+ Found appointment for userId GHs80OQAuefSw83xsRw505Qpk813: aXSzOdovEHmfcJWZbfJq
+ Total appointments found for user craziesabroad@gmail.com: 1
+ Debug: Total invoices in collection: 4
+ Merged consent record data
+ Setting combined health data with keys: Array(20)
+ User loaded, now fetching related data for: craziesabroad@gmail.com
+ Found health data in user profile
+ Appointment 1 structure: Object
+ Appointment 2 structure: Object
+ Appointment 3 structure: Object
+ Found appointment for userId GHs80OQAuefSw83xsRw505Qpk813: aXSzOdovEHmfcJWZbfJq
+ Total appointments found for user craziesabroad@gmail.com: 1
+ Debug: Total invoices in collection: 4
+ Merged consent record data
+ Setting combined health data with keys: Array(20)
+ User loaded, now fetching related data for: craziesabroad@gmail.com
+ Found health data in user profile
+ Appointment 1 structure: Object
+ Appointment 2 structure: Object
+ Appointment 3 structure: Object
+ Found appointment for userId GHs80OQAuefSw83xsRw505Qpk813: aXSzOdovEHmfcJWZbfJq
+ Total appointments found for user craziesabroad@gmail.com: 1
+ Debug: Total invoices in collection: 4
+ Merged consent record data
+ Setting combined health data with keys: Array(20)
+ User loaded, now fetching related data for: craziesabroad@gmail.com
+ Found health data in user profile
+ Appointment 1 structure: Object
+ Appointment 2 structure: Object
+ Appointment 3 structure: Object
+ Found appointment for userId GHs80OQAuefSw83xsRw505Qpk813: aXSzOdovEHmfcJWZbfJq
+ Total appointments found for user craziesabroad@gmail.com: 1
+ Debug: Total invoices in collection: 4
+ Merged consent record data
+ Setting combined health data with keys: Array(20)
+ User loaded, now fetching related data for: craziesabroad@gmail.com
+ Found health data in user profile
+ Appointment 1 structure: Object
+ Appointment 2 structure: Object
+ Appointment 3 structure: Object
+ Found appointment for userId GHs80OQAuefSw83xsRw505Qpk813: aXSzOdovEHmfcJWZbfJq
+ Total appointments found for user craziesabroad@gmail.com: 1
+ Debug: Total invoices in collection: 4
+ Merged consent record data
+ Setting combined health data with keys: Array(20)
+ User loaded, now fetching related data for: craziesabroad@gmail.com
+ Found health data in user profile
+AdminUserProfile.tsx:101 Appointment 1 structure: Object
+AdminUserProfile.tsx:101 Appointment 2 structure: Object
+AdminUserProfile.tsx:101 Appointment 3 structure: Object
+AdminUserProfile.tsx:118 Found appointment for userId GHs80OQAuefSw83xsRw505Qpk813: aXSzOdovEHmfcJWZbfJq
+AdminUserProfile.tsx:122 Total appointments found for user craziesabroad@gmail.com: 1
+AdminUserProfile.tsx:145 Debug: Total invoices in collection: 4
+AdminUserProfile.tsx:229 Merged consent record data
+AdminUserProfile.tsx:291 Setting combined health data with keys: Array(20)
+AdminUserProfile.tsx:54 User loaded, now fetching related data for: craziesabroad@gmail.com
+AdminUserProfile.tsx:205 Found health data in user profile
+AdminUserProfile.tsx:101 Appointment 1 structure: Object
+AdminUserProfile.tsx:101 Appointment 2 structure: Object
+AdminUserProfile.tsx:101 Appointment 3 structure: Object
+AdminUserProfile.tsx:118 Found appointment for userId GHs80OQAuefSw83xsRw505Qpk813: aXSzOdovEHmfcJWZbfJq
+AdminUserProfile.tsx:122 Total appointments found for user craziesabroad@gmail.com: 1
+AdminUserProfile.tsx:145 Debug: Total invoices in collection: 4
+AdminUserProfile.tsx:229 Merged consent record data
+AdminUserProfile.tsx:291 Setting combined health data with keys: Array(20)
+AdminUserProfile.tsx:54 User loaded, now fetching related data for: craziesabroad@gmail.com
+AdminUserProfile.tsx:205 Found health data in user profile
+AdminUserProfile.tsx:101 Appointment 1 structure: Object
+AdminUserProfile.tsx:101 Appointment 2 structure: Object
+AdminUserProfile.tsx:101 Appointment 3 structure: Object
+AdminUserProfile.tsx:118 Found appointment for userId GHs80OQAuefSw83xsRw505Qpk813: aXSzOdovEHmfcJWZbfJq
+AdminUserProfile.tsx:122 Total appointments found for user craziesabroad@gmail.com: 1
+AdminUserProfile.tsx:145 Debug: Total invoices in collection: 4
+AdminUserProfile.tsx:229 Merged consent record data
+AdminUserProfile.tsx:291 Setting combined health data with keys: Array(20)
+AdminUserProfile.tsx:54 User loaded, now fetching related data for: craziesabroad@gmail.com
+AdminUserProfile.tsx:205 Found health data in user profile
+AdminUserProfile.tsx:101 Appointment 1 structure: Object
+AdminUserProfile.tsx:101 Appointment 2 structure: Object
+AdminUserProfile.tsx:101 Appointment 3 structure: Object
+AdminUserProfile.tsx:118 Found appointment for userId GHs80OQAuefSw83xsRw505Qpk813: aXSzOdovEHmfcJWZbfJq
+AdminUserProfile.tsx:122 Total appointments found for user craziesabroad@gmail.com: 1
+AdminUserProfile.tsx:145 Debug: Total invoices in collection: 4
+AdminUserProfile.tsx:229 Merged consent record data
+AdminUserProfile.tsx:291 Setting combined health data with keys: Array(20)
+AdminUserProfile.tsx:54 User loaded, now fetching related data for: craziesabroad@gmail.com
+AdminUserProfile.tsx:205 Found health data in user profile
+AdminUserProfile.tsx:101 Appointment 1 structure: Object
+AdminUserProfile.tsx:101 Appointment 2 structure: Object
+AdminUserProfile.tsx:101 Appointment 3 structure: Object
+AdminUserProfile.tsx:118 Found appointment for userId GHs80OQAuefSw83xsRw505Qpk813: aXSzOdovEHmfcJWZbfJq
+AdminUserProfile.tsx:122 Total appointments found for user craziesabroad@gmail.com: 1
+AdminUserProfile.tsx:145 Debug: Total invoices in collection: 4
+AdminUserProfile.tsx:229 Merged consent record data
+AdminUserProfile.tsx:291 Setting combined health data with keys: Array(20)
+AdminUserProfile.tsx:54 User loaded, now fetching related data for: craziesabroad@gmail.com
+AdminUserProfile.tsx:205 Found health data in user profile
+AdminUserProfile.tsx:101 Appointment 1 structure: Object
+AdminUserProfile.tsx:101 Appointment 2 structure: Object
+AdminUserProfile.tsx:101 Appointment 3 structure: Object
+AdminUserProfile.tsx:118 Found appointment for userId GHs80OQAuefSw83xsRw505Qpk813: aXSzOdovEHmfcJWZbfJq
+AdminUserProfile.tsx:122 Total appointments found for user craziesabroad@gmail.com: 1
+AdminUserProfile.tsx:145 Debug: Total invoices in collection: 4
+AdminUserProfile.tsx:229 Merged consent record data
+AdminUserProfile.tsx:291 Setting combined health data with keys: Array(20)
+AdminUserProfile.tsx:54 User loaded, now fetching related data for: craziesabroad@gmail.com
+AdminUserProfile.tsx:205 Found health data in user profile
+AdminUserProfile.tsx:101 Appointment 1 structure: Object
+AdminUserProfile.tsx:101 Appointment 2 structure: Object
+AdminUserProfile.tsx:101 Appointment 3 structure: Object
+AdminUserProfile.tsx:118 Found appointment for userId GHs80OQAuefSw83xsRw505Qpk813: aXSzOdovEHmfcJWZbfJq
+AdminUserProfile.tsx:122 Total appointments found for user craziesabroad@gmail.com: 1
+AdminUserProfile.tsx:145 Debug: Total invoices in collection: 4
+AdminUserProfile.tsx:229 Merged consent record data
+AdminUserProfile.tsx:291 Setting combined health data with keys: Array(20)
+AdminUserProfile.tsx:54 User loaded, now fetching related data for: craziesabroad@gmail.com
+AdminUserProfile.tsx:205 Found health data in user profile
+AdminUserProfile.tsx:101 Appointment 1 structure: Object
+AdminUserProfile.tsx:101 Appointment 2 structure: Object
+AdminUserProfile.tsx:101 Appointment 3 structure: Object
+AdminUserProfile.tsx:118 Found appointment for userId GHs80OQAuefSw83xsRw505Qpk813: aXSzOdovEHmfcJWZbfJq
+AdminUserProfile.tsx:122 Total appointments found for user craziesabroad@gmail.com: 1
+AdminUserProfile.tsx:145 Debug: Total invoices in collection: 4
+AdminUserProfile.tsx:229 Merged consent record data
+AdminUserProfile.tsx:291 Setting combined health data with keys: Array(20)
+AdminUserProfile.tsx:54 User loaded, now fetching related data for: craziesabroad@gmail.com
+AdminUserProfile.tsx:205 Found health data in user profile
+AdminUserProfile.tsx:101 Appointment 1 structure: Object
+AdminUserProfile.tsx:101 Appointment 2 structure: Object
+AdminUserProfile.tsx:101 Appointment 3 structure: Object
+AdminUserProfile.tsx:118 Found appointment for userId GHs80OQAuefSw83xsRw505Qpk813: aXSzOdovEHmfcJWZbfJq
+AdminUserProfile.tsx:122 Total appointments found for user craziesabroad@gmail.com: 1
+AdminUserProfile.tsx:145 Debug: Total invoices in collection: 4
+AdminUserProfile.tsx:229 Merged consent record data
+AdminUserProfile.tsx:291 Setting combined health data with keys: Array(20)
+AdminUserProfile.tsx:54 User loaded, now fetching related data for: craziesabroad@gmail.com
+AdminUserProfile.tsx:205 Found health data in user profile
+AdminUserProfile.tsx:101 Appointment 1 structure: Object
+AdminUserProfile.tsx:101 Appointment 2 structure: Object
+AdminUserProfile.tsx:101 Appointment 3 structure: Object
+AdminUserProfile.tsx:118 Found appointment for userId GHs80OQAuefSw83xsRw505Qpk813: aXSzOdovEHmfcJWZbfJq
+AdminUserProfile.tsx:122 Total appointments found for user craziesabroad@gmail.com: 1
+AdminUserProfile.tsx:145 Debug: Total invoices in collection: 4
+AdminUserProfile.tsx:229 Merged consent record data
+AdminUserProfile.tsx:291 Setting combined health data with keys: Array(20)
+AdminUserProfile.tsx:54 User loaded, now fetching related data for: craziesabroad@gmail.com
+AdminUserProfile.tsx:205 Found health data in user profile
+AdminUserProfile.tsx:101 Appointment 1 structure: Object
+AdminUserProfile.tsx:101 Appointment 2 structure: Object
+AdminUserProfile.tsx:101 Appointment 3 structure: Object
+AdminUserProfile.tsx:118 Found appointment for userId GHs80OQAuefSw83xsRw505Qpk813: aXSzOdovEHmfcJWZbfJq
+AdminUserProfile.tsx:122 Total appointments found for user craziesabroad@gmail.com: 1
+AdminUserProfile.tsx:145 Debug: Total invoices in collection: 4
+AdminUserProfile.tsx:229 Merged consent record data
+
+                
+          
+          
+          
+         Chrome is moving towards a new experience that allows users to choose to browse without third-party cookies.
+AdminUserProfile.tsx:291 Setting combined health data with keys: (20) ['healthGoals', 'currentWeight', 'targetWeight', 'height', 'activityLevel', 'medicalConditions', 'medications', 'allergies', 'dietaryRestrictions', 'previousDietExperience', 'motivationLevel', 'availableTimeForCooking', 'preferredMealTimes', 'budgetRange', 'additionalNotes', 'gpContact', 'emergencyContact', 'emergencyContactPhone', 'consentFormCompleted', 'consentFormDate']
+AdminUserProfile.tsx:54 User loaded, now fetching related data for: craziesabroad@gmail.com
+AdminUserProfile.tsx:205 Found health data in user profile
+AdminUserProfile.tsx:101 Appointment 1 structure: {id: 'ArijNW8rNmfEAL2S2zta', fields: Array(13), userId: 's0cHDlZ7KfQUyBGhgGWUW30gK6v2', email: 'ytp004.lf@gmail.com', clientEmail: undefined, …}
+AdminUserProfile.tsx:101 Appointment 2 structure: {id: 'P59MfwBtV5WESkt6X3aZ', fields: Array(10), userId: 'ETyOD7S76BYI2ceQqMRysV5ozJi2', email: 'craziesreviews@gmail.com', clientEmail: undefined, …}
+AdminUserProfile.tsx:101 Appointment 3 structure: {id: 'aXSzOdovEHmfcJWZbfJq', fields: Array(12), userId: 'GHs80OQAuefSw83xsRw505Qpk813', email: 'craziesabroad@gmail.com', clientEmail: undefined, …}
+AdminUserProfile.tsx:118 Found appointment for userId GHs80OQAuefSw83xsRw505Qpk813: aXSzOdovEHmfcJWZbfJq
+AdminUserProfile.tsx:122 Total appointments found for user craziesabroad@gmail.com: 1
+AdminUserProfile.tsx:145 Debug: Total invoices in collection: 4
+AdminUserProfile.tsx:229 Merged consent record data
+AdminUserProfile.tsx:291 Setting combined health data with keys: (20) ['healthGoals', 'currentWeight', 'targetWeight', 'height', 'activityLevel', 'medicalConditions', 'medications', 'allergies', 'dietaryRestrictions', 'previousDietExperience', 'motivationLevel', 'availableTimeForCooking', 'preferredMealTimes', 'budgetRange', 'additionalNotes', 'gpContact', 'emergencyContact', 'emergencyContactPhone', 'consentFormCompleted', 'consentFormDate']
+AdminUserProfile.tsx:54 User loaded, now fetching related data for: craziesabroad@gmail.com
+AdminUserProfile.tsx:205 Found health data in user profile
+AdminUserProfile.tsx:101 Appointment 1 structure: {id: 'ArijNW8rNmfEAL2S2zta', fields: Array(13), userId: 's0cHDlZ7KfQUyBGhgGWUW30gK6v2', email: 'ytp004.lf@gmail.com', clientEmail: undefined, …}
+AdminUserProfile.tsx:101 Appointment 2 structure: {id: 'P59MfwBtV5WESkt6X3aZ', fields: Array(10), userId: 'ETyOD7S76BYI2ceQqMRysV5ozJi2', email: 'craziesreviews@gmail.com', clientEmail: undefined, …}
+AdminUserProfile.tsx:101 Appointment 3 structure: {id: 'aXSzOdovEHmfcJWZbfJq', fields: Array(12), userId: 'GHs80OQAuefSw83xsRw505Qpk813', email: 'craziesabroad@gmail.com', clientEmail: undefined, …}
+AdminUserProfile.tsx:118 Found appointment for userId GHs80OQAuefSw83xsRw505Qpk813: aXSzOdovEHmfcJWZbfJq
+AdminUserProfile.tsx:122 Total appointments found for user craziesabroad@gmail.com: 1
+AdminUserProfile.tsx:145 Debug: Total invoices in collection: 4
+AdminUserProfile.tsx:229 Merged consent record data
+AdminUserProfile.tsx:291 Setting combined health data with keys: (20) ['healthGoals', 'currentWeight', 'targetWeight', 'height', 'activityLevel', 'medicalConditions', 'medications', 'allergies', 'dietaryRestrictions', 'previousDietExperience', 'motivationLevel', 'availableTimeForCooking', 'preferredMealTimes', 'budgetRange', 'additionalNotes', 'gpContact', 'emergencyContact', 'emergencyContactPhone', 'consentFormCompleted', 'consentFormDate']
+AdminUserProfile.tsx:54 User loaded, now fetching related data for: craziesabroad@gmail.com
+AdminUserProfile.tsx:205 Found health data in user profile
+AdminUserProfile.tsx:101 Appointment 1 structure: {id: 'ArijNW8rNmfEAL2S2zta', fields: Array(13), userId: 's0cHDlZ7KfQUyBGhgGWUW30gK6v2', email: 'ytp004.lf@gmail.com', clientEmail: undefined, …}
+AdminUserProfile.tsx:101 Appointment 2 structure: {id: 'P59MfwBtV5WESkt6X3aZ', fields: Array(10), userId: 'ETyOD7S76BYI2ceQqMRysV5ozJi2', email: 'craziesreviews@gmail.com', clientEmail: undefined, …}
+AdminUserProfile.tsx:101 Appointment 3 structure: {id: 'aXSzOdovEHmfcJWZbfJq', fields: Array(12), userId: 'GHs80OQAuefSw83xsRw505Qpk813', email: 'craziesabroad@gmail.com', clientEmail: undefined, …}
+AdminUserProfile.tsx:118 Found appointment for userId GHs80OQAuefSw83xsRw505Qpk813: aXSzOdovEHmfcJWZbfJq
+AdminUserProfile.tsx:122 Total appointments found for user craziesabroad@gmail.com: 1
+AdminUserProfile.tsx:145 Debug: Total invoices in collection: 4
+AdminUserProfile.tsx:229 Merged consent record data
+AdminUserProfile.tsx:291 Setting combined health data with keys: (20) ['healthGoals', 'currentWeight', 'targetWeight', 'height', 'activityLevel', 'medicalConditions', 'medications', 'allergies', 'dietaryRestrictions', 'previousDietExperience', 'motivationLevel', 'availableTimeForCooking', 'preferredMealTimes', 'budgetRange', 'additionalNotes', 'gpContact', 'emergencyContact', 'emergencyContactPhone', 'consentFormCompleted', 'consentFormDate']
+AdminUserProfile.tsx:54 User loaded, now fetching related data for: craziesabroad@gmail.com
+AdminUserProfile.tsx:205 Found health data in user profile
+AdminUserProfile.tsx:101 Appointment 1 structure: {id: 'ArijNW8rNmfEAL2S2zta', fields: Array(13), userId: 's0cHDlZ7KfQUyBGhgGWUW30gK6v2', email: 'ytp004.lf@gmail.com', clientEmail: undefined, …}
+AdminUserProfile.tsx:101 Appointment 2 structure: {id: 'P59MfwBtV5WESkt6X3aZ', fields: Array(10), userId: 'ETyOD7S76BYI2ceQqMRysV5ozJi2', email: 'craziesreviews@gmail.com', clientEmail: undefined, …}
+AdminUserProfile.tsx:101 Appointment 3 structure: {id: 'aXSzOdovEHmfcJWZbfJq', fields: Array(12), userId: 'GHs80OQAuefSw83xsRw505Qpk813', email: 'craziesabroad@gmail.com', clientEmail: undefined, …}
+AdminUserProfile.tsx:118 Found appointment for userId GHs80OQAuefSw83xsRw505Qpk813: aXSzOdovEHmfcJWZbfJq
+AdminUserProfile.tsx:122 Total appointments found for user craziesabroad@gmail.com: 1
+AdminUserProfile.tsx:145 Debug: Total invoices in collection: 4
+AdminUserProfile.tsx:229 Merged consent record data
+AdminUserProfile.tsx:291 Setting combined health data with keys: (20) ['healthGoals', 'currentWeight', 'targetWeight', 'height', 'activityLevel', 'medicalConditions', 'medications', 'allergies', 'dietaryRestrictions', 'previousDietExperience', 'motivationLevel', 'availableTimeForCooking', 'preferredMealTimes', 'budgetRange', 'additionalNotes', 'gpContact', 'emergencyContact', 'emergencyContactPhone', 'consentFormCompleted', 'consentFormDate']
+AdminUserProfile.tsx:54 User loaded, now fetching related data for: craziesabroad@gmail.com
+AdminUserProfile.tsx:205 Found health data in user profile
+AdminUserProfile.tsx:101 Appointment 1 structure: {id: 'ArijNW8rNmfEAL2S2zta', fields: Array(13), userId: 's0cHDlZ7KfQUyBGhgGWUW30gK6v2', email: 'ytp004.lf@gmail.com', clientEmail: undefined, …}
+AdminUserProfile.tsx:101 Appointment 2 structure: {id: 'P59MfwBtV5WESkt6X3aZ', fields: Array(10), userId: 'ETyOD7S76BYI2ceQqMRysV5ozJi2', email: 'craziesreviews@gmail.com', clientEmail: undefined, …}
+AdminUserProfile.tsx:101 Appointment 3 structure: {id: 'aXSzOdovEHmfcJWZbfJq', fields: Array(12), userId: 'GHs80OQAuefSw83xsRw505Qpk813', email: 'craziesabroad@gmail.com', clientEmail: undefined, …}
+AdminUserProfile.tsx:118 Found appointment for userId GHs80OQAuefSw83xsRw505Qpk813: aXSzOdovEHmfcJWZbfJq
+AdminUserProfile.tsx:122 Total appointments found for user craziesabroad@gmail.com: 1
+AdminUserProfile.tsx:145 Debug: Total invoices in collection: 4
+AdminUserProfile.tsx:229 Merged consent record data
+AdminUserProfile.tsx:291 Setting combined health data with keys: (20) ['healthGoals', 'currentWeight', 'targetWeight', 'height', 'activityLevel', 'medicalConditions', 'medications', 'allergies', 'dietaryRestrictions', 'previousDietExperience', 'motivationLevel', 'availableTimeForCooking', 'preferredMealTimes', 'budgetRange', 'additionalNotes', 'gpContact', 'emergencyContact', 'emergencyContactPhone', 'consentFormCompleted', 'consentFormDate']
+AdminUserProfile.tsx:54 User loaded, now fetching related data for: craziesabroad@gmail.com
+AdminUserProfile.tsx:205 Found health data in user profile
+AdminUserProfile.tsx:101 Appointment 1 structure: {id: 'ArijNW8rNmfEAL2S2zta', fields: Array(13), userId: 's0cHDlZ7KfQUyBGhgGWUW30gK6v2', email: 'ytp004.lf@gmail.com', clientEmail: undefined, …}
+AdminUserProfile.tsx:101 Appointment 2 structure: {id: 'P59MfwBtV5WESkt6X3aZ', fields: Array(10), userId: 'ETyOD7S76BYI2ceQqMRysV5ozJi2', email: 'craziesreviews@gmail.com', clientEmail: undefined, …}
+AdminUserProfile.tsx:101 Appointment 3 structure: {id: 'aXSzOdovEHmfcJWZbfJq', fields: Array(12), userId: 'GHs80OQAuefSw83xsRw505Qpk813', email: 'craziesabroad@gmail.com', clientEmail: undefined, …}
+AdminUserProfile.tsx:118 Found appointment for userId GHs80OQAuefSw83xsRw505Qpk813: aXSzOdovEHmfcJWZbfJq
+AdminUserProfile.tsx:122 Total appointments found for user craziesabroad@gmail.com: 1
+AdminUserProfile.tsx:145 Debug: Total invoices in collection: 4
+AdminUserProfile.tsx:229 Merged consent record data
+AdminUserProfile.tsx:291 Setting combined health data with keys: (20) ['healthGoals', 'currentWeight', 'targetWeight', 'height', 'activityLevel', 'medicalConditions', 'medications', 'allergies', 'dietaryRestrictions', 'previousDietExperience', 'motivationLevel', 'availableTimeForCooking', 'preferredMealTimes', 'budgetRange', 'additionalNotes', 'gpContact', 'emergencyContact', 'emergencyContactPhone', 'consentFormCompleted', 'consentFormDate']
+AdminUserProfile.tsx:54 User loaded, now fetching related data for: craziesabroad@gmail.com
+AdminUserProfile.tsx:205 Found health data in user profile
+AdminUserProfile.tsx:101 Appointment 1 structure: {id: 'ArijNW8rNmfEAL2S2zta', fields: Array(13), userId: 's0cHDlZ7KfQUyBGhgGWUW30gK6v2', email: 'ytp004.lf@gmail.com', clientEmail: undefined, …}
+AdminUserProfile.tsx:101 Appointment 2 structure: {id: 'P59MfwBtV5WESkt6X3aZ', fields: Array(10), userId: 'ETyOD7S76BYI2ceQqMRysV5ozJi2', email: 'craziesreviews@gmail.com', clientEmail: undefined, …}
+AdminUserProfile.tsx:101 Appointment 3 structure: {id: 'aXSzOdovEHmfcJWZbfJq', fields: Array(12), userId: 'GHs80OQAuefSw83xsRw505Qpk813', email: 'craziesabroad@gmail.com', clientEmail: undefined, …}
+AdminUserProfile.tsx:118 Found appointment for userId GHs80OQAuefSw83xsRw505Qpk813: aXSzOdovEHmfcJWZbfJq
+AdminUserProfile.tsx:122 Total appointments found for user craziesabroad@gmail.com: 1
+AdminUserProfile.tsx:145 Debug: Total invoices in collection: 4
+AdminUserProfile.tsx:229 Merged consent record data
+AdminUserProfile.tsx:291 Setting combined health data with keys: (20) ['healthGoals', 'currentWeight', 'targetWeight', 'height', 'activityLevel', 'medicalConditions', 'medications', 'allergies', 'dietaryRestrictions', 'previousDietExperience', 'motivationLevel', 'availableTimeForCooking', 'preferredMealTimes', 'budgetRange', 'additionalNotes', 'gpContact', 'emergencyContact', 'emergencyContactPhone', 'consentFormCompleted', 'consentFormDate']
+AdminUserProfile.tsx:54 User loaded, now fetching related data for: craziesabroad@gmail.com
+AdminUserProfile.tsx:205 Found health data in user profile
+AdminUserProfile.tsx:101 Appointment 1 structure: {id: 'ArijNW8rNmfEAL2S2zta', fields: Array(13), userId: 's0cHDlZ7KfQUyBGhgGWUW30gK6v2', email: 'ytp004.lf@gmail.com', clientEmail: undefined, …}
+AdminUserProfile.tsx:101 Appointment 2 structure: {id: 'P59MfwBtV5WESkt6X3aZ', fields: Array(10), userId: 'ETyOD7S76BYI2ceQqMRysV5ozJi2', email: 'craziesreviews@gmail.com', clientEmail: undefined, …}
+AdminUserProfile.tsx:101 Appointment 3 structure: {id: 'aXSzOdovEHmfcJWZbfJq', fields: Array(12), userId: 'GHs80OQAuefSw83xsRw505Qpk813', email: 'craziesabroad@gmail.com', clientEmail: undefined, …}
+AdminUserProfile.tsx:118 Found appointment for userId GHs80OQAuefSw83xsRw505Qpk813: aXSzOdovEHmfcJWZbfJq
+AdminUserProfile.tsx:122 Total appointments found for user craziesabroad@gmail.com: 1
+AdminUserProfile.tsx:145 Debug: Total invoices in collection: 4
+AdminUserProfile.tsx:229 Merged consent record data
+AdminUserProfile.tsx:291 Setting combined health data with keys: (20) ['healthGoals', 'currentWeight', 'targetWeight', 'height', 'activityLevel', 'medicalConditions', 'medications', 'allergies', 'dietaryRestrictions', 'previousDietExperience', 'motivationLevel', 'availableTimeForCooking', 'preferredMealTimes', 'budgetRange', 'additionalNotes', 'gpContact', 'emergencyContact', 'emergencyContactPhone', 'consentFormCompleted', 'consentFormDate']
+AdminUserProfile.tsx:54 User loaded, now fetching related data for: craziesabroad@gmail.com
+AdminUserProfile.tsx:205 Found health data in user profile
+AdminUserProfile.tsx:101 Appointment 1 structure: {id: 'ArijNW8rNmfEAL2S2zta', fields: Array(13), userId: 's0cHDlZ7KfQUyBGhgGWUW30gK6v2', email: 'ytp004.lf@gmail.com', clientEmail: undefined, …}
+AdminUserProfile.tsx:101 Appointment 2 structure: {id: 'P59MfwBtV5WESkt6X3aZ', fields: Array(10), userId: 'ETyOD7S76BYI2ceQqMRysV5ozJi2', email: 'craziesreviews@gmail.com', clientEmail: undefined, …}
+AdminUserProfile.tsx:101 Appointment 3 structure: {id: 'aXSzOdovEHmfcJWZbfJq', fields: Array(12), userId: 'GHs80OQAuefSw83xsRw505Qpk813', email: 'craziesabroad@gmail.com', clientEmail: undefined, …}
+AdminUserProfile.tsx:118 Found appointment for userId GHs80OQAuefSw83xsRw505Qpk813: aXSzOdovEHmfcJWZbfJq
+AdminUserProfile.tsx:122 Total appointments found for user craziesabroad@gmail.com: 1
+AdminUserProfile.tsx:145 Debug: Total invoices in collection: 4
+AdminUserProfile.tsx:229 Merged consent record data
+AdminUserProfile.tsx:291 Setting combined health data with keys: (20) ['healthGoals', 'currentWeight', 'targetWeight', 'height', 'activityLevel', 'medicalConditions', 'medications', 'allergies', 'dietaryRestrictions', 'previousDietExperience', 'motivationLevel', 'availableTimeForCooking', 'preferredMealTimes', 'budgetRange', 'additionalNotes', 'gpContact', 'emergencyContact', 'emergencyContactPhone', 'consentFormCompleted', 'consentFormDate']
+AdminUserProfile.tsx:54 User loaded, now fetching related data for: craziesabroad@gmail.com
+AdminUserProfile.tsx:205 Found health data in user profile
+AdminUserProfile.tsx:101 Appointment 1 structure: {id: 'ArijNW8rNmfEAL2S2zta', fields: Array(13), userId: 's0cHDlZ7KfQUyBGhgGWUW30gK6v2', email: 'ytp004.lf@gmail.com', clientEmail: undefined, …}
+AdminUserProfile.tsx:101 Appointment 2 structure: {id: 'P59MfwBtV5WESkt6X3aZ', fields: Array(10), userId: 'ETyOD7S76BYI2ceQqMRysV5ozJi2', email: 'craziesreviews@gmail.com', clientEmail: undefined, …}
+AdminUserProfile.tsx:101 Appointment 3 structure: {id: 'aXSzOdovEHmfcJWZbfJq', fields: Array(12), userId: 'GHs80OQAuefSw83xsRw505Qpk813', email: 'craziesabroad@gmail.com', clientEmail: undefined, …}
+AdminUserProfile.tsx:118 Found appointment for userId GHs80OQAuefSw83xsRw505Qpk813: aXSzOdovEHmfcJWZbfJq
+AdminUserProfile.tsx:122 Total appointments found for user craziesabroad@gmail.com: 1
+AdminUserProfile.tsx:145 Debug: Total invoices in collection: 4
+AdminUserProfile.tsx:229 Merged consent record data
+AdminUserProfile.tsx:291 Setting combined health data with keys: (20) ['healthGoals', 'currentWeight', 'targetWeight', 'height', 'activityLevel', 'medicalConditions', 'medications', 'allergies', 'dietaryRestrictions', 'previousDietExperience', 'motivationLevel', 'availableTimeForCooking', 'preferredMealTimes', 'budgetRange', 'additionalNotes', 'gpContact', 'emergencyContact', 'emergencyContactPhone', 'consentFormCompleted', 'consentFormDate']
+AdminUserProfile.tsx:54 User loaded, now fetching related data for: craziesabroad@gmail.com
+AdminUserProfile.tsx:205 Found health data in user profile
+AdminUserProfile.tsx:101 Appointment 1 structure: {id: 'ArijNW8rNmfEAL2S2zta', fields: Array(13), userId: 's0cHDlZ7KfQUyBGhgGWUW30gK6v2', email: 'ytp004.lf@gmail.com', clientEmail: undefined, …}
+AdminUserProfile.tsx:101 Appointment 2 structure: {id: 'P59MfwBtV5WESkt6X3aZ', fields: Array(10), userId: 'ETyOD7S76BYI2ceQqMRysV5ozJi2', email: 'craziesreviews@gmail.com', clientEmail: undefined, …}
+AdminUserProfile.tsx:101 Appointment 3 structure: {id: 'aXSzOdovEHmfcJWZbfJq', fields: Array(12), userId: 'GHs80OQAuefSw83xsRw505Qpk813', email: 'craziesabroad@gmail.com', clientEmail: undefined, …}
+AdminUserProfile.tsx:118 Found appointment for userId GHs80OQAuefSw83xsRw505Qpk813: aXSzOdovEHmfcJWZbfJq
+AdminUserProfile.tsx:122 Total appointments found for user craziesabroad@gmail.com: 1
+AdminUserProfile.tsx:145 Debug: Total invoices in collection: 4
+AdminUserProfile.tsx:229 Merged consent record data
+AdminUserProfile.tsx:291 Setting combined health data with keys: (20) ['healthGoals', 'currentWeight', 'targetWeight', 'height', 'activityLevel', 'medicalConditions', 'medications', 'allergies', 'dietaryRestrictions', 'previousDietExperience', 'motivationLevel', 'availableTimeForCooking', 'preferredMealTimes', 'budgetRange', 'additionalNotes', 'gpContact', 'emergencyContact', 'emergencyContactPhone', 'consentFormCompleted', 'consentFormDate']
+AdminUserProfile.tsx:54 User loaded, now fetching related data for: craziesabroad@gmail.com
+AdminUserProfile.tsx:205 Found health data in user profile
+AdminUserProfile.tsx:101 Appointment 1 structure: {id: 'ArijNW8rNmfEAL2S2zta', fields: Array(13), userId: 's0cHDlZ7KfQUyBGhgGWUW30gK6v2', email: 'ytp004.lf@gmail.com', clientEmail: undefined, …}
+AdminUserProfile.tsx:101 Appointment 2 structure: {id: 'P59MfwBtV5WESkt6X3aZ', fields: Array(10), userId: 'ETyOD7S76BYI2ceQqMRysV5ozJi2', email: 'craziesreviews@gmail.com', clientEmail: undefined, …}
+AdminUserProfile.tsx:101 Appointment 3 structure: {id: 'aXSzOdovEHmfcJWZbfJq', fields: Array(12), userId: 'GHs80OQAuefSw83xsRw505Qpk813', email: 'craziesabroad@gmail.com', clientEmail: undefined, …}
+AdminUserProfile.tsx:118 Found appointment for userId GHs80OQAuefSw83xsRw505Qpk813: aXSzOdovEHmfcJWZbfJq
+AdminUserProfile.tsx:122 Total appointments found for user craziesabroad@gmail.com: 1
+AdminUserProfile.tsx:145 Debug: Total invoices in collection: 4
+AdminUserProfile.tsx:229 Merged consent record data
+AdminUserProfile.tsx:291 Setting combined health data with keys: (20) ['healthGoals', 'currentWeight', 'targetWeight', 'height', 'activityLevel', 'medicalConditions', 'medications', 'allergies', 'dietaryRestrictions', 'previousDietExperience', 'motivationLevel', 'availableTimeForCooking', 'preferredMealTimes', 'budgetRange', 'additionalNotes', 'gpContact', 'emergencyContact', 'emergencyContactPhone', 'consentFormCompleted', 'consentFormDate']
+AdminUserProfile.tsx:54 User loaded, now fetching related data for: craziesabroad@gmail.com
+AdminUserProfile.tsx:205 Found health data in user profile
+AdminUserProfile.tsx:101 Appointment 1 structure: {id: 'ArijNW8rNmfEAL2S2zta', fields: Array(13), userId: 's0cHDlZ7KfQUyBGhgGWUW30gK6v2', email: 'ytp004.lf@gmail.com', clientEmail: undefined, …}
+AdminUserProfile.tsx:101 Appointment 2 structure: {id: 'P59MfwBtV5WESkt6X3aZ', fields: Array(10), userId: 'ETyOD7S76BYI2ceQqMRysV5ozJi2', email: 'craziesreviews@gmail.com', clientEmail: undefined, …}
+AdminUserProfile.tsx:101 Appointment 3 structure: {id: 'aXSzOdovEHmfcJWZbfJq', fields: Array(12), userId: 'GHs80OQAuefSw83xsRw505Qpk813', email: 'craziesabroad@gmail.com', clientEmail: undefined, …}
+AdminUserProfile.tsx:118 Found appointment for userId GHs80OQAuefSw83xsRw505Qpk813: aXSzOdovEHmfcJWZbfJq
+AdminUserProfile.tsx:122 Total appointments found for user craziesabroad@gmail.com: 1
+AdminUserProfile.tsx:145 Debug: Total invoices in collection: 4
+AdminUserProfile.tsx:229 Merged consent record data
+AdminUserProfile.tsx:291 Setting combined health data with keys: (20) ['healthGoals', 'currentWeight', 'targetWeight', 'height', 'activityLevel', 'medicalConditions', 'medications', 'allergies', 'dietaryRestrictions', 'previousDietExperience', 'motivationLevel', 'availableTimeForCooking', 'preferredMealTimes', 'budgetRange', 'additionalNotes', 'gpContact', 'emergencyContact', 'emergencyContactPhone', 'consentFormCompleted', 'consentFormDate']
+AdminUserProfile.tsx:54 User loaded, now fetching related data for: craziesabroad@gmail.com
+AdminUserProfile.tsx:205 Found health data in user profile
+AdminUserProfile.tsx:101 Appointment 1 structure: {id: 'ArijNW8rNmfEAL2S2zta', fields: Array(13), userId: 's0cHDlZ7KfQUyBGhgGWUW30gK6v2', email: 'ytp004.lf@gmail.com', clientEmail: undefined, …}
+AdminUserProfile.tsx:101 Appointment 2 structure: {id: 'P59MfwBtV5WESkt6X3aZ', fields: Array(10), userId: 'ETyOD7S76BYI2ceQqMRysV5ozJi2', email: 'craziesreviews@gmail.com', clientEmail: undefined, …}
+AdminUserProfile.tsx:101 Appointment 3 structure: {id: 'aXSzOdovEHmfcJWZbfJq', fields: Array(12), userId: 'GHs80OQAuefSw83xsRw505Qpk813', email: 'craziesabroad@gmail.com', clientEmail: undefined, …}
+AdminUserProfile.tsx:118 Found appointment for userId GHs80OQAuefSw83xsRw505Qpk813: aXSzOdovEHmfcJWZbfJq
+AdminUserProfile.tsx:122 Total appointments found for user craziesabroad@gmail.com: 1
+AdminUserProfile.tsx:145 Debug: Total invoices in collection: 4
+AdminUserProfile.tsx:229 Merged consent record data
+AdminUserProfile.tsx:291 Setting combined health data with keys: (20) ['healthGoals', 'currentWeight', 'targetWeight', 'height', 'activityLevel', 'medicalConditions', 'medications', 'allergies', 'dietaryRestrictions', 'previousDietExperience', 'motivationLevel', 'availableTimeForCooking', 'preferredMealTimes', 'budgetRange', 'additionalNotes', 'gpContact', 'emergencyContact', 'emergencyContactPhone', 'consentFormCompleted', 'consentFormDate']
+AdminUserProfile.tsx:54 User loaded, now fetching related data for: craziesabroad@gmail.com
+AdminUserProfile.tsx:205 Found health data in user profile
+AdminUserProfile.tsx:101 Appointment 1 structure: {id: 'ArijNW8rNmfEAL2S2zta', fields: Array(13), userId: 's0cHDlZ7KfQUyBGhgGWUW30gK6v2', email: 'ytp004.lf@gmail.com', clientEmail: undefined, …}
+AdminUserProfile.tsx:101 Appointment 2 structure: {id: 'P59MfwBtV5WESkt6X3aZ', fields: Array(10), userId: 'ETyOD7S76BYI2ceQqMRysV5ozJi2', email: 'craziesreviews@gmail.com', clientEmail: undefined, …}
+AdminUserProfile.tsx:101 Appointment 3 structure: {id: 'aXSzOdovEHmfcJWZbfJq', fields: Array(12), userId: 'GHs80OQAuefSw83xsRw505Qpk813', email: 'craziesabroad@gmail.com', clientEmail: undefined, …}
+AdminUserProfile.tsx:118 Found appointment for userId GHs80OQAuefSw83xsRw505Qpk813: aXSzOdovEHmfcJWZbfJq
+AdminUserProfile.tsx:122 Total appointments found for user craziesabroad@gmail.com: 1
+AdminUserProfile.tsx:145 Debug: Total invoices in collection: 4
+AdminUserProfile.tsx:229 Merged consent record data
+AdminUserProfile.tsx:291 Setting combined health data with keys: (20) ['healthGoals', 'currentWeight', 'targetWeight', 'height', 'activityLevel', 'medicalConditions', 'medications', 'allergies', 'dietaryRestrictions', 'previousDietExperience', 'motivationLevel', 'availableTimeForCooking', 'preferredMealTimes', 'budgetRange', 'additionalNotes', 'gpContact', 'emergencyContact', 'emergencyContactPhone', 'consentFormCompleted', 'consentFormDate']
+AdminUserProfile.tsx:54 User loaded, now fetching related data for: craziesabroad@gmail.com
+AdminUserProfile.tsx:205 Found health data in user profile
+AdminUserProfile.tsx:101 Appointment 1 structure: {id: 'ArijNW8rNmfEAL2S2zta', fields: Array(13), userId: 's0cHDlZ7KfQUyBGhgGWUW30gK6v2', email: 'ytp004.lf@gmail.com', clientEmail: undefined, …}
+AdminUserProfile.tsx:101 Appointment 2 structure: {id: 'P59MfwBtV5WESkt6X3aZ', fields: Array(10), userId: 'ETyOD7S76BYI2ceQqMRysV5ozJi2', email: 'craziesreviews@gmail.com', clientEmail: undefined, …}
+AdminUserProfile.tsx:101 Appointment 3 structure: {id: 'aXSzOdovEHmfcJWZbfJq', fields: Array(12), userId: 'GHs80OQAuefSw83xsRw505Qpk813', email: 'craziesabroad@gmail.com', clientEmail: undefined, …}
+AdminUserProfile.tsx:118 Found appointment for userId GHs80OQAuefSw83xsRw505Qpk813: aXSzOdovEHmfcJWZbfJq
+AdminUserProfile.tsx:122 Total appointments found for user craziesabroad@gmail.com: 1
+AdminUserProfile.tsx:145 Debug: Total invoices in collection: 4
+AdminUserProfile.tsx:229 Merged consent record data
+AdminUserProfile.tsx:291 Setting combined health data with keys: (20) ['healthGoals', 'currentWeight', 'targetWeight', 'height', 'activityLevel', 'medicalConditions', 'medications', 'allergies', 'dietaryRestrictions', 'previousDietExperience', 'motivationLevel', 'availableTimeForCooking', 'preferredMealTimes', 'budgetRange', 'additionalNotes', 'gpContact', 'emergencyContact', 'emergencyContactPhone', 'consentFormCompleted', 'consentFormDate']
+AdminUserProfile.tsx:54 User loaded, now fetching related data for: craziesabroad@gmail.com
+AdminUserProfile.tsx:205 Found health data in user profile
+AdminUserProfile.tsx:101 Appointment 1 structure: {id: 'ArijNW8rNmfEAL2S2zta', fields: Array(13), userId: 's0cHDlZ7KfQUyBGhgGWUW30gK6v2', email: 'ytp004.lf@gmail.com', clientEmail: undefined, …}
+AdminUserProfile.tsx:101 Appointment 2 structure: {id: 'P59MfwBtV5WESkt6X3aZ', fields: Array(10), userId: 'ETyOD7S76BYI2ceQqMRysV5ozJi2', email: 'craziesreviews@gmail.com', clientEmail: undefined, …}
+AdminUserProfile.tsx:101 Appointment 3 structure: {id: 'aXSzOdovEHmfcJWZbfJq', fields: Array(12), userId: 'GHs80OQAuefSw83xsRw505Qpk813', email: 'craziesabroad@gmail.com', clientEmail: undefined, …}
+AdminUserProfile.tsx:118 Found appointment for userId GHs80OQAuefSw83xsRw505Qpk813: aXSzOdovEHmfcJWZbfJq
+AdminUserProfile.tsx:122 Total appointments found for user craziesabroad@gmail.com: 1
+AdminUserProfile.tsx:145 Debug: Total invoices in collection: 4
+AdminUserProfile.tsx:229 Merged consent record data
+AdminUserProfile.tsx:291 Setting combined health data with keys: (20) ['healthGoals', 'currentWeight', 'targetWeight', 'height', 'activityLevel', 'medicalConditions', 'medications', 'allergies', 'dietaryRestrictions', 'previousDietExperience', 'motivationLevel', 'availableTimeForCooking', 'preferredMealTimes', 'budgetRange', 'additionalNotes', 'gpContact', 'emergencyContact', 'emergencyContactPhone', 'consentFormCompleted', 'consentFormDate']
+AdminUserProfile.tsx:54 User loaded, now fetching related data for: craziesabroad@gmail.com
+AdminUserProfile.tsx:205 Found health data in user profile
+AdminUserProfile.tsx:101 Appointment 1 structure: {id: 'ArijNW8rNmfEAL2S2zta', fields: Array(13), userId: 's0cHDlZ7KfQUyBGhgGWUW30gK6v2', email: 'ytp004.lf@gmail.com', clientEmail: undefined, …}
+AdminUserProfile.tsx:101 Appointment 2 structure: {id: 'P59MfwBtV5WESkt6X3aZ', fields: Array(10), userId: 'ETyOD7S76BYI2ceQqMRysV5ozJi2', email: 'craziesreviews@gmail.com', clientEmail: undefined, …}
+AdminUserProfile.tsx:101 Appointment 3 structure: {id: 'aXSzOdovEHmfcJWZbfJq', fields: Array(12), userId: 'GHs80OQAuefSw83xsRw505Qpk813', email: 'craziesabroad@gmail.com', clientEmail: undefined, …}
+AdminUserProfile.tsx:118 Found appointment for userId GHs80OQAuefSw83xsRw505Qpk813: aXSzOdovEHmfcJWZbfJq
+AdminUserProfile.tsx:122 Total appointments found for user craziesabroad@gmail.com: 1
+AdminUserProfile.tsx:145 Debug: Total invoices in collection: 4
+AdminUserProfile.tsx:229 Merged consent record data
+AdminUserProfile.tsx:291 Setting combined health data with keys: (20) ['healthGoals', 'currentWeight', 'targetWeight', 'height', 'activityLevel', 'medicalConditions', 'medications', 'allergies', 'dietaryRestrictions', 'previousDietExperience', 'motivationLevel', 'availableTimeForCooking', 'preferredMealTimes', 'budgetRange', 'additionalNotes', 'gpContact', 'emergencyContact', 'emergencyContactPhone', 'consentFormCompleted', 'consentFormDate']
+AdminUserProfile.tsx:54 User loaded, now fetching related data for: craziesabroad@gmail.com
+AdminUserProfile.tsx:205 Found health data in user profile
+AdminUserProfile.tsx:101 Appointment 1 structure: {id: 'ArijNW8rNmfEAL2S2zta', fields: Array(13), userId: 's0cHDlZ7KfQUyBGhgGWUW30gK6v2', email: 'ytp004.lf@gmail.com', clientEmail: undefined, …}
+AdminUserProfile.tsx:101 Appointment 2 structure: {id: 'P59MfwBtV5WESkt6X3aZ', fields: Array(10), userId: 'ETyOD7S76BYI2ceQqMRysV5ozJi2', email: 'craziesreviews@gmail.com', clientEmail: undefined, …}
+AdminUserProfile.tsx:101 Appointment 3 structure: {id: 'aXSzOdovEHmfcJWZbfJq', fields: Array(12), userId: 'GHs80OQAuefSw83xsRw505Qpk813', email: 'craziesabroad@gmail.com', clientEmail: undefined, …}
+AdminUserProfile.tsx:118 Found appointment for userId GHs80OQAuefSw83xsRw505Qpk813: aXSzOdovEHmfcJWZbfJq
+AdminUserProfile.tsx:122 Total appointments found for user craziesabroad@gmail.com: 1
+AdminUserProfile.tsx:145 Debug: Total invoices in collection: 4
+AdminUserProfile.tsx:229 Merged consent record data
+AdminUserProfile.tsx:291 Setting combined health data with keys: (20) ['healthGoals', 'currentWeight', 'targetWeight', 'height', 'activityLevel', 'medicalConditions', 'medications', 'allergies', 'dietaryRestrictions', 'previousDietExperience', 'motivationLevel', 'availableTimeForCooking', 'preferredMealTimes', 'budgetRange', 'additionalNotes', 'gpContact', 'emergencyContact', 'emergencyContactPhone', 'consentFormCompleted', 'consentFormDate']
+AdminUserProfile.tsx:54 User loaded, now fetching related data for: craziesabroad@gmail.com
+AdminUserProfile.tsx:205 Found health data in user profile
+AdminUserProfile.tsx:101 Appointment 1 structure: {id: 'ArijNW8rNmfEAL2S2zta', fields: Array(13), userId: 's0cHDlZ7KfQUyBGhgGWUW30gK6v2', email: 'ytp004.lf@gmail.com', clientEmail: undefined, …}
+AdminUserProfile.tsx:101 Appointment 2 structure: {id: 'P59MfwBtV5WESkt6X3aZ', fields: Array(10), userId: 'ETyOD7S76BYI2ceQqMRysV5ozJi2', email: 'craziesreviews@gmail.com', clientEmail: undefined, …}
+AdminUserProfile.tsx:101 Appointment 3 structure: {id: 'aXSzOdovEHmfcJWZbfJq', fields: Array(12), userId: 'GHs80OQAuefSw83xsRw505Qpk813', email: 'craziesabroad@gmail.com', clientEmail: undefined, …}
+AdminUserProfile.tsx:118 Found appointment for userId GHs80OQAuefSw83xsRw505Qpk813: aXSzOdovEHmfcJWZbfJq
+AdminUserProfile.tsx:122 Total appointments found for user craziesabroad@gmail.com: 1
+AdminUserProfile.tsx:145 Debug: Total invoices in collection: 4
+AdminUserProfile.tsx:229 Merged consent record data
+AdminUserProfile.tsx:291 Setting combined health data with keys: (20) ['healthGoals', 'currentWeight', 'targetWeight', 'height', 'activityLevel', 'medicalConditions', 'medications', 'allergies', 'dietaryRestrictions', 'previousDietExperience', 'motivationLevel', 'availableTimeForCooking', 'preferredMealTimes', 'budgetRange', 'additionalNotes', 'gpContact', 'emergencyContact', 'emergencyContactPhone', 'consentFormCompleted', 'consentFormDate']
+AdminUserProfile.tsx:54 User loaded, now fetching related data for: craziesabroad@gmail.com
+AdminUserProfile.tsx:205 Found health data in user profile
+AdminUserProfile.tsx:101 Appointment 1 structure: {id: 'ArijNW8rNmfEAL2S2zta', fields: Array(13), userId: 's0cHDlZ7KfQUyBGhgGWUW30gK6v2', email: 'ytp004.lf@gmail.com', clientEmail: undefined, …}
+AdminUserProfile.tsx:101 Appointment 2 structure: {id: 'P59MfwBtV5WESkt6X3aZ', fields: Array(10), userId: 'ETyOD7S76BYI2ceQqMRysV5ozJi2', email: 'craziesreviews@gmail.com', clientEmail: undefined, …}
+AdminUserProfile.tsx:101 Appointment 3 structure: {id: 'aXSzOdovEHmfcJWZbfJq', fields: Array(12), userId: 'GHs80OQAuefSw83xsRw505Qpk813', email: 'craziesabroad@gmail.com', clientEmail: undefined, …}
+AdminUserProfile.tsx:118 Found appointment for userId GHs80OQAuefSw83xsRw505Qpk813: aXSzOdovEHmfcJWZbfJq
+AdminUserProfile.tsx:122 Total appointments found for user craziesabroad@gmail.com: 1
+AdminUserProfile.tsx:145 Debug: Total invoices in collection: 4
+AdminUserProfile.tsx:229 Merged consent record data
+ Setting combined health data with keys: (20) ['healthGoals', 'currentWeight', 'targetWeight', 'height', 'activityLevel', 'medicalConditions', 'medications', 'allergies', 'dietaryRestrictions', 'previousDietExperience', 'motivationLevel', 'availableTimeForCooking', 'preferredMealTimes', 'budgetRange', 'additionalNotes', 'gpContact', 'emergencyContact', 'emergencyContactPhone', 'consentFormCompleted', 'consentFormDate']
+ User loaded, now fetching related data for: craziesabroad@gmail.com
+ Found health data in user profile
+ Appointment 1 structure: {id: 'ArijNW8rNmfEAL2S2zta', fields: Array(13), userId: 's0cHDlZ7KfQUyBGhgGWUW30gK6v2', email: 'ytp004.lf@gmail.com', clientEmail: undefined, …}
+ Appointment 2 structure: {id: 'P59MfwBtV5WESkt6X3aZ', fields: Array(10), userId: 'ETyOD7S76BYI2ceQqMRysV5ozJi2', email: 'craziesreviews@gmail.com', clientEmail: undefined, …}
+ Appointment 3 structure: {id: 'aXSzOdovEHmfcJWZbfJq', fields: Array(12), userId: 'GHs80OQAuefSw83xsRw505Qpk813', email: 'craziesabroad@gmail.com', clientEmail: undefined, …}
+ Found appointment for userId GHs80OQAuefSw83xsRw505Qpk813: aXSzOdovEHmfcJWZbfJq
+ Total appointments found for user craziesabroad@gmail.com: 1
+ Debug: Total invoices in collection: 4
+ Merged consent record data
+ Setting combined health data with keys: (20) ['healthGoals', 'currentWeight', 'targetWeight', 'height', 'activityLevel', 'medicalConditions', 'medications', 'allergies', 'dietaryRestrictions', 'previousDietExperience', 'motivationLevel', 'availableTimeForCooking', 'preferredMealTimes', 'budgetRange', 'additionalNotes', 'gpContact', 'emergencyContact', 'emergencyContactPhone', 'consentFormCompleted', 'consentFormDate']
+ User loaded, now fetching related data for: craziesabroad@gmail.com
+ Found health data in user profile
+ Appointment 1 structure: {id: 'ArijNW8rNmfEAL2S2zta', fields: Array(13), userId: 's0cHDlZ7KfQUyBGhgGWUW30gK6v2', email: 'ytp004.lf@gmail.com', clientEmail: undefined, …}
+ Appointment 2 structure: {id: 'P59MfwBtV5WESkt6X3aZ', fields: Array(10), userId: 'ETyOD7S76BYI2ceQqMRysV5ozJi2', email: 'craziesreviews@gmail.com', clientEmail: undefined, …}
+ Appointment 3 structure: {id: 'aXSzOdovEHmfcJWZbfJq', fields: Array(12), userId: 'GHs80OQAuefSw83xsRw505Qpk813', email: 'craziesabroad@gmail.com', clientEmail: undefined, …}
+ Found appointment for userId GHs80OQAuefSw83xsRw505Qpk813: aXSzOdovEHmfcJWZbfJq
+ Total appointments found for user craziesabroad@gmail.com: 1
+ Debug: Total invoices in collection: 4
+ Merged consent record data
+ Setting combined health data with keys: (20) ['healthGoals', 'currentWeight', 'targetWeight', 'height', 'activityLevel', 'medicalConditions', 'medications', 'allergies', 'dietaryRestrictions', 'previousDietExperience', 'motivationLevel', 'availableTimeForCooking', 'preferredMealTimes', 'budgetRange', 'additionalNotes', 'gpContact', 'emergencyContact', 'emergencyContactPhone', 'consentFormCompleted', 'consentFormDate']
+ User loaded, now fetching related data for: craziesabroad@gmail.com
+ Found health data in user profile
