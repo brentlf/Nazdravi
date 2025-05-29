@@ -77,8 +77,8 @@ export function AppointmentsCalendar({ appointments }: AppointmentsCalendarProps
   };
 
   const handleJoinTeams = (appointment: Appointment) => {
-    if ((appointment as any).teamsJoinUrl) {
-      window.open((appointment as any).teamsJoinUrl, '_blank');
+    if (appointment.teamsJoinUrl) {
+      window.open(appointment.teamsJoinUrl, '_blank');
     }
   };
 
@@ -158,7 +158,7 @@ export function AppointmentsCalendar({ appointments }: AppointmentsCalendarProps
                           <span className="truncate text-xs">
                             {appointment.timeslot?.split('-')[0]} {appointment.name?.split(' ')[0]}
                           </span>
-                          {appointment.status === 'confirmed' && (appointment as any).teamsJoinUrl && (
+                          {appointment.status === 'confirmed' && appointment.teamsJoinUrl && (
                             <button
                               onClick={(e) => {
                                 e.stopPropagation();
@@ -208,7 +208,7 @@ export function AppointmentsCalendar({ appointments }: AppointmentsCalendarProps
                                       <StatusIcon className="w-3 h-3" />
                                       <span className="font-medium">{appointment.name}</span>
                                     </div>
-                                    {appointment.status === 'confirmed' && (appointment as any).teamsJoinUrl && (
+                                    {appointment.status === 'confirmed' && appointment.teamsJoinUrl && (
                                       <button
                                         onClick={(e) => {
                                           e.stopPropagation();

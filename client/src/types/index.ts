@@ -25,6 +25,7 @@ export interface Appointment {
   name: string;
   email: string;
   phone: string;
+  teamsJoinUrl?: string;
   createdAt: Date;
 }
 

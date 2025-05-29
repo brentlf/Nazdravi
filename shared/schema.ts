@@ -26,6 +26,7 @@ export const appointments = pgTable("appointments", {
   name: text("name").notNull(),
   email: text("email").notNull(),
   phone: text("phone").notNull(),
+  teamsJoinUrl: text("teams_join_url"), // Microsoft Teams meeting URL
   createdAt: timestamp("created_at").defaultNow().notNull(),
 });
 
