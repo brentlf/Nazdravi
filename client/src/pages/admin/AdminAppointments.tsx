@@ -996,97 +996,12 @@ export default function AdminAppointments() {
                             )}
 
                             <DialogFooter className="gap-2 flex-wrap">
-                              {selectedAppointment?.status === "pending" && (
-                                <>
-                                  <Button
-                                    variant="outline"
-                                    onClick={() => setSelectedAppointment(null)}
-                                  >
-                                    Close
-                                  </Button>
-                                  <Button
-                                    variant="outline"
-                                    onClick={() => handleStatusChange(selectedAppointment.id!, "reschedule_requested")}
-                                    disabled={actionLoading}
-                                    className="bg-orange-600 hover:bg-orange-700 text-white"
-                                  >
-                                    <CalendarX className="w-4 h-4 mr-2" />
-                                    {actionLoading ? "Processing..." : "Request New Time/Date"}
-                                  </Button>
-                                  <Button
-                                    variant="outline"
-                                    onClick={() => handleStatusChange(selectedAppointment.id!, "cancelled_reschedule")}
-                                    disabled={actionLoading}
-                                    className="bg-red-600 hover:bg-red-700 text-white"
-                                  >
-                                    <RotateCcw className="w-4 h-4 mr-2" />
-                                    {actionLoading ? "Processing..." : "Cancel & Reschedule"}
-                                  </Button>
-                                  <Button
-                                    onClick={() => handleStatusChange(selectedAppointment.id!, "confirmed")}
-                                    disabled={actionLoading}
-                                    className="bg-green-600 hover:bg-green-700"
-                                  >
-                                    {actionLoading ? "Confirming..." : "Confirm Appointment"}
-                                  </Button>
-                                </>
-                              )}
-                              
-                              {selectedAppointment?.status === "confirmed" && (
-                                <>
-                                  <Button
-                                    variant="outline"
-                                    onClick={() => setSelectedAppointment(null)}
-                                  >
-                                    Close
-                                  </Button>
-                                  <Button
-                                    variant="outline"
-                                    onClick={() => handleStatusChange(selectedAppointment.id!, "reschedule_requested")}
-                                    disabled={actionLoading}
-                                    className="bg-orange-600 hover:bg-orange-700 text-white"
-                                  >
-                                    <CalendarX className="w-4 h-4 mr-2" />
-                                    {actionLoading ? "Processing..." : "Request New Time/Date"}
-                                  </Button>
-                                  <Button
-                                    variant="outline"
-                                    onClick={() => handleStatusChange(selectedAppointment.id!, "cancelled_reschedule")}
-                                    disabled={actionLoading}
-                                    className="bg-red-600 hover:bg-red-700 text-white"
-                                  >
-                                    <RotateCcw className="w-4 h-4 mr-2" />
-                                    {actionLoading ? "Processing..." : "Cancel & Reschedule"}
-                                  </Button>
-                                  <Button
-                                    variant="outline"
-                                    onClick={() => handleNoShow(selectedAppointment)}
-                                    disabled={actionLoading}
-                                    className="bg-red-800 hover:bg-red-900 text-white"
-                                  >
-                                    <XCircle className="w-4 h-4 mr-2" />
-                                    {actionLoading ? "Processing..." : "Mark No-Show"}
-                                  </Button>
-                                  <Button
-                                    onClick={() => handleStatusChange(selectedAppointment.id!, "done")}
-                                    disabled={actionLoading}
-                                    className="bg-blue-600 hover:bg-blue-700"
-                                  >
-                                    {actionLoading ? "Updating..." : "Mark as Completed"}
-                                  </Button>
-                                </>
-                              )}
-                              
-                              {(selectedAppointment?.status === "done" || 
-                                selectedAppointment?.status === "reschedule_requested" || 
-                                selectedAppointment?.status === "cancelled_reschedule") && (
-                                <Button
-                                  variant="outline"
-                                  onClick={() => setSelectedAppointment(null)}
-                                >
-                                  Close
-                                </Button>
-                              )}
+                              <Button
+                                variant="outline"
+                                onClick={() => setSelectedAppointment(null)}
+                              >
+                                Close
+                              </Button>
                             </DialogFooter>
                           </DialogContent>
                         </Dialog>
@@ -1173,10 +1088,10 @@ export default function AdminAppointments() {
               </Button>
               <Button
                 onClick={handleEditAppointment}
-                disabled={actionLoading || !editDate || !editTimeslot}
+                disabled={updateLoading || !editDate || !editTimeslot}
                 className="bg-blue-600 hover:bg-blue-700"
               >
-                {actionLoading ? "Saving..." : "Save Changes"}
+                {updateLoading ? "Saving..." : "Save Changes"}
               </Button>
             </DialogFooter>
           </DialogContent>
