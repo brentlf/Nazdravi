@@ -448,15 +448,41 @@ export default function DashboardAppointments() {
           </Link>
         </div>
 
+        {/* Consent Form Alert - Show only if not completed */}
+        {!hasConsent && (
+          <Card className="mb-6 border-red-200 dark:border-red-800">
+            <CardContent className="p-6">
+              <div className="flex items-start gap-4">
+                <Shield className="w-6 h-6 text-red-500 mt-1 flex-shrink-0" />
+                <div className="flex-1">
+                  <h3 className="font-semibold text-red-800 dark:text-red-200 mb-2">
+                    Required: Complete Informed Consent Form
+                  </h3>
+                  <p className="text-red-700 dark:text-red-300 text-sm mb-4">
+                    You must complete the informed consent form before booking any appointments. This is required for all nutrition consultations.
+                  </p>
+                  <Button 
+                    onClick={() => window.location.href = '/consent-form'}
+                    className="bg-red-600 hover:bg-red-700 text-white"
+                  >
+                    <Shield className="w-4 h-4 mr-2" />
+                    Complete Consent Form
+                  </Button>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        )}
+
         {/* Pre-Evaluation Alert - Show only if not completed */}
-        {!hasPreEvaluation && (
+        {!hasPreEvaluation && hasConsent && (
           <Card className="mb-6 border-orange-200 dark:border-orange-800">
             <CardContent className="p-6">
               <div className="flex items-start gap-4">
                 <AlertCircle className="w-6 h-6 text-orange-500 mt-1 flex-shrink-0" />
                 <div className="flex-1">
                   <h3 className="font-semibold text-orange-800 dark:text-orange-200 mb-2">
-                    Action Required: Complete Pre-Evaluation Form
+                    Recommended: Complete Pre-Evaluation Form
                   </h3>
                   <p className="text-orange-700 dark:text-orange-300 text-sm mb-4">
                     Please complete your health assessment before your first appointment. This helps us provide you with personalized nutrition guidance.
@@ -883,6 +909,16 @@ export default function DashboardAppointments() {
                       <XCircle className="w-4 h-4 text-red-500" />
                     )}
                     <span className="text-sm">Informed consent</span>
+                    {!hasConsent && (
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        onClick={() => window.location.href = '/consent-form'}
+                        className="ml-auto"
+                      >
+                        Complete
+                      </Button>
+                    )}
                   </div>
                   <div className="flex items-center gap-3">
                     {hasPreEvaluation ? (
