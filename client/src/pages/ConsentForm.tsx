@@ -316,7 +316,7 @@ export default function ConsentForm() {
                               Language Comprehension Confirmation *
                             </FormLabel>
                             <FormDescription>
-                              I confirm that I can read, speak, and fully understand English OR Czech, 
+                              I confirm that I can read, speak, and fully understand English, Czech, OR Afrikaans, 
                               and I consent to receive nutrition consultation services in my selected language.
                             </FormDescription>
                           </div>
