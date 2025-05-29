@@ -10,6 +10,7 @@ import { useToast } from '@/hooks/use-toast';
 import { Calendar, CreditCard, Users, Euro, Clock, CheckCircle, AlertTriangle } from 'lucide-react';
 import { useFirestoreCollection } from '@/hooks/useFirestore';
 import { where } from 'firebase/firestore';
+import { Link } from 'wouter';
 
 interface User {
   uid: string;
@@ -146,9 +147,16 @@ export default function AdminSubscriptions() {
             Manage complete program subscriptions and billing cycles
           </p>
         </div>
-        <div className="flex items-center gap-2 text-sm text-muted-foreground">
-          <CreditCard className="w-4 h-4" />
-          3-Invoice Billing System
+        <div className="flex items-center gap-4">
+          <div className="flex items-center gap-2 text-sm text-muted-foreground">
+            <CreditCard className="w-4 h-4" />
+            3-Invoice Billing System
+          </div>
+          <Button variant="outline" asChild size="sm">
+            <Link href="/admin/invoices">
+              View Pay-as-you-go Invoices
+            </Link>
+          </Button>
         </div>
       </div>
 

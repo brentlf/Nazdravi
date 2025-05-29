@@ -85,16 +85,34 @@ export default function AdminInvoices() {
     limit(50)
   ]);
 
+  // Fetch users to check service plans
+  const { data: users } = useFirestoreCollection("users", []);
+
   // Check if an appointment already has an invoice
   const hasExistingInvoice = (appointmentId: string | undefined) => {
     if (!appointmentId) return false;
     return invoices?.some(invoice => invoice.appointmentId === appointmentId);
   };
 
-  // Filter appointments that need invoicing (not yet invoiced)
+  // Check if a user is on complete program (should not be invoiced for sessions)
+  const isCompleteProgramUser = (userId: string | undefined, userEmail: string | undefined) => {
+    if (!users) return false;
+    const user = users.find(u => u.uid === userId || u.email === userEmail);
+    return (user as any)?.servicePlan === 'complete-program';
+  };
+
+  // Filter appointments that need invoicing (not yet invoiced and NOT from complete program users)
   const toInvoiceAppointments = allAppointments?.filter(apt => 
     (apt.status === 'done' || apt.status === 'no-show' || apt.status === 'cancelled') && 
-    !hasExistingInvoice(apt.id)
+    !hasExistingInvoice(apt.id) &&
+    !isCompleteProgramUser(apt.userId, apt.email) // Exclude complete program users
+  ) || [];
+
+  // Complete program appointments (for reference/information only)
+  const completeProgramAppointments = allAppointments?.filter(apt => 
+    (apt.status === 'done' || apt.status === 'no-show' || apt.status === 'cancelled') && 
+    !hasExistingInvoice(apt.id) &&
+    isCompleteProgramUser(apt.userId, apt.email) // Only complete program users
   ) || [];
 
   // Smart invoice type detection with accounting flow awareness and tooltips
@@ -123,15 +141,18 @@ export default function AdminInvoices() {
 
   // Smart amount display considering net amounts after credits
   const getDisplayAmount = (invoice: any) => {
-    if (invoice._hasAccountingFlow && invoice._netAmount !== invoice.amount) {
+    const amount = invoice.amount || 0;
+    const netAmount = invoice._netAmount || 0;
+    
+    if (invoice._hasAccountingFlow && netAmount !== amount) {
       return (
         <div className="text-right">
-          <div className="text-sm font-medium">€{invoice._netAmount.toFixed(2)}</div>
-          <div className="text-xs text-muted-foreground line-through">€{invoice.amount.toFixed(2)}</div>
+          <div className="text-sm font-medium">€{netAmount.toFixed(2)}</div>
+          <div className="text-xs text-muted-foreground line-through">€{amount.toFixed(2)}</div>
         </div>
       );
     }
-    return <div className="text-right font-medium">€{invoice.amount.toFixed(2)}</div>;
+    return <div className="text-right font-medium">€{amount.toFixed(2)}</div>;
   };
 
   // Enhanced status badge showing payment requirements
@@ -421,12 +442,40 @@ export default function AdminInvoices() {
         </Card>
       </div>
 
+      {/* Complete Program Notice */}
+      {completeProgramAppointments.length > 0 && (
+        <Card className="bg-purple-50 dark:bg-purple-900/20 border-purple-200 dark:border-purple-800">
+          <CardContent className="p-4">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-lg bg-purple-100 dark:bg-purple-900 flex items-center justify-center">
+                  <Receipt className="w-5 h-5 text-purple-600" />
+                </div>
+                <div>
+                  <h3 className="font-medium text-purple-800 dark:text-purple-200">
+                    Complete Program Appointments
+                  </h3>
+                  <p className="text-sm text-purple-600 dark:text-purple-300">
+                    {completeProgramAppointments.length} completed appointments from subscription users - covered by monthly billing
+                  </p>
+                </div>
+              </div>
+              <Button variant="outline" asChild className="border-purple-200 text-purple-700 hover:bg-purple-100">
+                <Link href="/admin/subscriptions">
+                  Manage Subscriptions
+                </Link>
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
       {/* Tabbed Interface */}
       <Tabs defaultValue="to-invoice" className="w-full">
         <TabsList className="grid w-full grid-cols-2">
           <TabsTrigger value="to-invoice" className="flex items-center gap-2">
             <FileText className="w-4 h-4" />
-            To Invoice ({toInvoiceAppointments?.length || 0})
+            Pay-as-you-go ({toInvoiceAppointments?.length || 0})
           </TabsTrigger>
           <TabsTrigger value="invoiced" className="flex items-center gap-2">
             <Receipt className="w-4 h-4" />
