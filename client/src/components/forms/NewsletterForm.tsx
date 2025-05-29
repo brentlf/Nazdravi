@@ -98,7 +98,7 @@ export function NewsletterForm() {
             <Button
               type="submit"
               disabled={loading}
-              className="bg-white text-primary-600 hover:bg-gray-100 font-semibold"
+              className="text-primary-600 hover:bg-gray-100 font-semibold bg-[#008747]"
             >
               {loading ? (
                 "Subscribing..."
@@ -112,10 +112,9 @@ export function NewsletterForm() {
           </div>
         </form>
       </Form>
-
       {/* Free Resource Incentive */}
-      <div className="mt-8 bg-white/10 backdrop-blur-sm rounded-2xl p-6">
-        <div className="flex items-center justify-center space-x-3 mb-4">
+      <div className="mt-8 backdrop-blur-sm rounded-2xl p-6 bg-[#f7f2ed]">
+        <div className="flex items-center justify-center space-x-3 mb-4 text-[#000000]">
           <Gift className="w-6 h-6 text-white" />
           <h3 className="text-lg font-semibold text-white">{t("free-bonus", "home")}</h3>
         </div>
@@ -123,7 +122,6 @@ export function NewsletterForm() {
           {t("meal-planning-guide", "home")}
         </p>
       </div>
-
       <p className="text-white/80 text-sm mt-4 text-center">
         {t("privacy-notice", "home")}
       </p>
