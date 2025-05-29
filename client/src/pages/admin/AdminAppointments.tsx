@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Search, Calendar, Clock, CheckCircle, XCircle, AlertCircle, Filter, ArrowLeft, CalendarX, RotateCcw, Edit, FileText, Mail, Euro, UserCheck, ClipboardList, Video } from "lucide-react";
+import { Search, Calendar, Clock, CheckCircle, XCircle, AlertCircle, Filter, ArrowLeft, CalendarX, RotateCcw, Edit, FileText, Mail, Euro, UserCheck, ClipboardList, Video, ArrowUpDown, ArrowUp, ArrowDown } from "lucide-react";
 import { Link } from "wouter";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -210,6 +210,27 @@ export default function AdminAppointments() {
   };
 
   const processedAppointments = filteredAndSortedAppointments();
+
+  // Column sorting functionality
+  const handleColumnSort = (column: string) => {
+    if (sortBy === `${column}-asc`) {
+      setSortBy(`${column}-desc`);
+    } else if (sortBy === `${column}-desc`) {
+      setSortBy(`${column}-asc`);
+    } else {
+      setSortBy(`${column}-asc`);
+    }
+  };
+
+  const getSortIcon = (column: string) => {
+    if (sortBy === `${column}-asc`) {
+      return <ArrowUp className="w-4 h-4" />;
+    } else if (sortBy === `${column}-desc`) {
+      return <ArrowDown className="w-4 h-4" />;
+    } else {
+      return <ArrowUpDown className="w-4 h-4 opacity-50" />;
+    }
+  };
 
   // Helper function to get action item icons for each appointment
   const getActionItemIcons = (appointment: any) => {
@@ -838,24 +859,8 @@ export default function AdminAppointments() {
               </Select>
             </div>
 
-            {/* Sort Options Row */}
-            <div className="flex items-center justify-between mt-4 pt-4 border-t">
-              <div className="flex items-center gap-2">
-                <Label className="text-sm font-medium">Sort by:</Label>
-                <Select value={sortBy} onValueChange={setSortBy}>
-                  <SelectTrigger className="w-48">
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="date-desc">Date (Newest First)</SelectItem>
-                    <SelectItem value="date-asc">Date (Oldest First)</SelectItem>
-                    <SelectItem value="client-name">Client Name</SelectItem>
-                    <SelectItem value="status">Status</SelectItem>
-                    <SelectItem value="type">Appointment Type</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-              
+            {/* Results Summary */}
+            <div className="flex items-center justify-end mt-4 pt-4 border-t">
               <div className="text-sm text-muted-foreground">
                 Showing {processedAppointments.length} of {appointments?.length || 0} appointments
               </div>
@@ -885,10 +890,50 @@ export default function AdminAppointments() {
               <Table>
                 <TableHeader>
                   <TableRow>
-                    <TableHead>Client</TableHead>
-                    <TableHead>Type</TableHead>
-                    <TableHead>Date & Time</TableHead>
-                    <TableHead>Status</TableHead>
+                    <TableHead>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        className="h-auto p-0 font-semibold hover:bg-transparent"
+                        onClick={() => handleColumnSort('client-name')}
+                      >
+                        Client
+                        {getSortIcon('client-name')}
+                      </Button>
+                    </TableHead>
+                    <TableHead>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        className="h-auto p-0 font-semibold hover:bg-transparent"
+                        onClick={() => handleColumnSort('type')}
+                      >
+                        Type
+                        {getSortIcon('type')}
+                      </Button>
+                    </TableHead>
+                    <TableHead>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        className="h-auto p-0 font-semibold hover:bg-transparent"
+                        onClick={() => handleColumnSort('date')}
+                      >
+                        Date & Time
+                        {getSortIcon('date')}
+                      </Button>
+                    </TableHead>
+                    <TableHead>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        className="h-auto p-0 font-semibold hover:bg-transparent"
+                        onClick={() => handleColumnSort('status')}
+                      >
+                        Status
+                        {getSortIcon('status')}
+                      </Button>
+                    </TableHead>
                     <TableHead>Action Items</TableHead>
                     <TableHead>Email History</TableHead>
                     <TableHead>Booked</TableHead>
