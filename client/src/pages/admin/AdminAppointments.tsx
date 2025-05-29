@@ -920,6 +920,41 @@ export default function AdminAppointments() {
                                   </div>
                                 </div>
 
+                                {/* Teams Meeting URL */}
+                                <div>
+                                  <h4 className="font-semibold mb-2">Teams Meeting</h4>
+                                  <div className="p-4 bg-gray-50 dark:bg-gray-800 rounded-lg space-y-3">
+                                    <Input
+                                      placeholder="Enter Teams meeting URL..."
+                                      value={selectedAppointment.teamsJoinUrl || ""}
+                                      onChange={(e) => setSelectedAppointment(prev => prev ? {...prev, teamsJoinUrl: e.target.value} : null)}
+                                      className="w-full"
+                                    />
+                                    <Button
+                                      size="sm"
+                                      onClick={() => {
+                                        // Save Teams URL logic would go here
+                                        console.log('Save Teams URL:', selectedAppointment.teamsJoinUrl);
+                                      }}
+                                      disabled={updateLoading}
+                                      className="bg-blue-600 hover:bg-blue-700 text-white"
+                                    >
+                                      <Video className="w-3 h-3 mr-1" />
+                                      Save Meeting URL
+                                    </Button>
+                                    {selectedAppointment.teamsJoinUrl && (
+                                      <Button
+                                        size="sm"
+                                        variant="outline"
+                                        onClick={() => window.open(selectedAppointment.teamsJoinUrl, '_blank')}
+                                        className="ml-2"
+                                      >
+                                        Test Meeting Link
+                                      </Button>
+                                    )}
+                                  </div>
+                                </div>
+
                                 {/* Status Management */}
                                 <div>
                                   <h4 className="font-semibold mb-2">Status Management</h4>
