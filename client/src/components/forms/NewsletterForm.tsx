@@ -118,7 +118,7 @@ export function NewsletterForm() {
           <Gift className="w-6 h-6 text-white" />
           <h3 className="text-lg font-semibold text-white">{t("free-bonus", "home")}</h3>
         </div>
-        <p className="text-white/90 text-sm text-center">
+        <p className="text-sm text-center text-[#050000e6]">
           {t("meal-planning-guide", "home")}
         </p>
       </div>
