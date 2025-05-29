@@ -292,7 +292,7 @@ export class InvoiceManagementService {
     
     // Get user's complete program details
     const userDoc = await db.collection('users').doc(userId).get();
-    if (!userDoc.exists() || userDoc.data()?.servicePlan !== 'complete-program') {
+    if (!userDoc.exists || userDoc.data()?.servicePlan !== 'complete-program') {
       return { upcomingInvoices: [], overdueInvoices: [] };
     }
     
@@ -364,7 +364,7 @@ export class InvoiceManagementService {
 
     // Get invoice details for admin notification
     const invoiceDoc = await db.collection('invoices').doc(invoiceId).get();
-    if (invoiceDoc.exists()) {
+    if (invoiceDoc.exists) {
       const invoiceData = invoiceDoc.data();
       
       // Send admin notification

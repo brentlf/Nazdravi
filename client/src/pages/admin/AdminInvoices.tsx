@@ -11,7 +11,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useFirestoreCollection } from "@/hooks/useFirestore";
 import { orderBy, limit } from "firebase/firestore";
 import { useQueryClient } from "@tanstack/react-query";
-import { Receipt, Plus, Eye, Send, DollarSign, ArrowLeft, AlertTriangle, RefreshCw, Clock, Ban, CheckCircle, FileText, Edit } from "lucide-react";
+import { Receipt, Plus, Eye, Send, DollarSign, ArrowLeft, AlertTriangle, RefreshCw, Clock, Ban, CheckCircle, FileText, Edit, CreditCard, Calendar, Users, Euro } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/contexts/AuthContext";
 import { Link } from "wouter";
@@ -30,6 +30,12 @@ export default function AdminInvoices() {
   const [isReissuing, setIsReissuing] = useState(false);
   const [showReissueDialog, setShowReissueDialog] = useState(false);
   const [selectedInvoice, setSelectedInvoice] = useState<Invoice | null>(null);
+  
+  // Subscription management state
+  const [selectedUser, setSelectedUser] = useState("");
+  const [programStartDate, setProgramStartDate] = useState("");
+  const [isGeneratingSubscription, setIsGeneratingSubscription] = useState(false);
+  
   const { toast } = useToast();
   const { user } = useAuth();
   const queryClient = useQueryClient();
@@ -114,6 +120,60 @@ export default function AdminInvoices() {
     !hasExistingInvoice(apt.id) &&
     isCompleteProgramUser(apt.userId, apt.email) // Only complete program users
   ) || [];
+
+  // Get complete program users for subscription management
+  const completeProgramUsers = users?.filter(user => 
+    (user as any)?.servicePlan === 'complete-program'
+  ) || [];
+
+  // Get regular users for subscription creation
+  const regularUsers = users?.filter(user => 
+    (user as any)?.role === 'client' && 
+    (user as any)?.servicePlan !== 'complete-program'
+  ) || [];
+
+  // Generate subscription billing function
+  const handleGenerateSubscription = async () => {
+    if (!selectedUser || !programStartDate) {
+      toast({
+        title: "Missing Information",
+        description: "Please select a user and program start date",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setIsGeneratingSubscription(true);
+    try {
+      const response = await fetch('/api/subscriptions/generate-complete-program', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          userId: selectedUser,
+          programStartDate,
+        }),
+      });
+
+      if (response.ok) {
+        toast({
+          title: "Success",
+          description: "Complete program subscription created successfully",
+        });
+        setSelectedUser("");
+        setProgramStartDate("");
+        queryClient.invalidateQueries({ queryKey: ['/api/users'] });
+      } else {
+        throw new Error('Failed to create subscription');
+      }
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to create subscription",
+        variant: "destructive",
+      });
+    }
+    setIsGeneratingSubscription(false);
+  };
 
   // Smart invoice type detection with accounting flow awareness and tooltips
   const getInvoiceTypeIcon = (invoice: any) => {
@@ -472,14 +532,18 @@ export default function AdminInvoices() {
 
       {/* Tabbed Interface */}
       <Tabs defaultValue="to-invoice" className="w-full">
-        <TabsList className="grid w-full grid-cols-2">
+        <TabsList className="grid w-full grid-cols-3">
           <TabsTrigger value="to-invoice" className="flex items-center gap-2">
             <FileText className="w-4 h-4" />
             Pay-as-you-go ({toInvoiceAppointments?.length || 0})
           </TabsTrigger>
+          <TabsTrigger value="subscriptions" className="flex items-center gap-2">
+            <CreditCard className="w-4 h-4" />
+            Subscriptions
+          </TabsTrigger>
           <TabsTrigger value="invoiced" className="flex items-center gap-2">
             <Receipt className="w-4 h-4" />
-            Invoiced ({invoices?.length || 0})
+            All Invoices ({invoices?.length || 0})
           </TabsTrigger>
         </TabsList>
 
