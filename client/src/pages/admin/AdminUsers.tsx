@@ -204,7 +204,8 @@ export default function AdminUsers() {
           </CardHeader>
           <CardContent>
             {filteredUsers.length > 0 ? (
-              <Table>
+              <div className="h-96 overflow-y-auto border rounded-md">
+                <Table>
                 <TableHeader>
                   <TableRow>
                     <TableHead>User</TableHead>
@@ -392,6 +393,7 @@ export default function AdminUsers() {
                   ))}
                 </TableBody>
               </Table>
+              </div>
             ) : (
               <div className="text-center py-12">
                 <User className="w-16 h-16 text-muted-foreground mx-auto mb-4" />

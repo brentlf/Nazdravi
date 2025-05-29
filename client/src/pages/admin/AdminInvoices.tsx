@@ -443,7 +443,7 @@ export default function AdminInvoices() {
             </CardHeader>
             <CardContent className="p-0">
               {toInvoiceAppointments && toInvoiceAppointments.length > 0 ? (
-                <div className="overflow-x-auto">
+                <div className="h-80 overflow-y-auto border rounded-md">
                   <Table>
                     <TableHeader>
                       <TableRow className="hover:bg-transparent">
