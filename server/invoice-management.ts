@@ -151,14 +151,18 @@ export class InvoiceManagementService {
     month: number;
     year: number;
     subscriptionAmount: number;
+    billingCycle?: number; // 1, 2, or 3 for the three billing cycles
   }): Promise<{ invoiceId: string; paymentUrl: string }> {
     
-    // Check if invoice already exists for this month/year
+    const billingCycle = data.billingCycle || 1;
+    
+    // Check if invoice already exists for this month/year/cycle
     const existingInvoiceSnapshot = await db.collection("invoices")
       .where("userId", "==", data.userId)
       .where("subscriptionMonth", "==", data.month)
       .where("subscriptionYear", "==", data.year)
       .where("invoiceType", "==", "subscription")
+      .where("billingCycle", "==", billingCycle)
       .get();
     
     if (!existingInvoiceSnapshot.empty) {
@@ -170,14 +174,14 @@ export class InvoiceManagementService {
     }
 
     const items: InvoiceItem[] = [{
-      description: `Complete Program Subscription - ${this.getMonthName(data.month)} ${data.year}`,
+      description: `Complete Program - Month ${billingCycle} of 3 (${this.getMonthName(data.month)} ${data.year})`,
       amount: data.subscriptionAmount,
       type: 'subscription',
-      details: '3-month complete nutrition program'
+      details: '3-month complete nutrition program with unlimited consultations'
     }];
 
     // Create Stripe payment intent
-    const invoiceNumber = `SUB-${data.year}-${data.month.toString().padStart(2, '0')}-${Date.now()}`;
+    const invoiceNumber = `SUB-${data.year}-${data.month.toString().padStart(2, '0')}-${billingCycle}-${Date.now()}`;
     
     const paymentIntent = await stripe.paymentIntents.create({
       amount: Math.round(data.subscriptionAmount * 100),
@@ -188,6 +192,7 @@ export class InvoiceManagementService {
         userId: data.userId,
         subscriptionMonth: data.month.toString(),
         subscriptionYear: data.year.toString(),
+        billingCycle: billingCycle.toString(),
         servicePlan: 'complete-program'
       }
     });
@@ -209,6 +214,7 @@ export class InvoiceManagementService {
       invoiceType: 'subscription',
       subscriptionMonth: data.month,
       subscriptionYear: data.year,
+      billingCycle,
       invoiceNumber,
       status: 'unpaid',
       stripePaymentIntentId: paymentIntent.id,
@@ -228,6 +234,123 @@ export class InvoiceManagementService {
       invoiceId: invoiceRef.id,
       paymentUrl
     };
+  }
+
+  // Generate all 3 invoices for complete program (billed in advance)
+  async generateCompleteProgramInvoices(data: {
+    userId: string;
+    clientName: string;
+    clientEmail: string;
+    programStartDate: Date;
+    monthlyAmount: number;
+  }): Promise<{ invoices: Array<{ invoiceId: string; paymentUrl: string; billingCycle: number; month: number; year: number }> }> {
+    
+    const invoices = [];
+    const startDate = new Date(data.programStartDate);
+    
+    // Generate 3 invoices: Day 1, End of Month 1, End of Month 2
+    for (let cycle = 1; cycle <= 3; cycle++) {
+      let invoiceDate: Date;
+      
+      if (cycle === 1) {
+        // Day 1 - immediate billing
+        invoiceDate = startDate;
+      } else if (cycle === 2) {
+        // End of Month 1
+        invoiceDate = new Date(startDate.getFullYear(), startDate.getMonth() + 1, 0);
+      } else {
+        // End of Month 2
+        invoiceDate = new Date(startDate.getFullYear(), startDate.getMonth() + 2, 0);
+      }
+      
+      const invoice = await this.createSubscriptionInvoice({
+        userId: data.userId,
+        clientName: data.clientName,
+        clientEmail: data.clientEmail,
+        month: invoiceDate.getMonth() + 1,
+        year: invoiceDate.getFullYear(),
+        subscriptionAmount: data.monthlyAmount,
+        billingCycle: cycle
+      });
+      
+      invoices.push({
+        ...invoice,
+        billingCycle: cycle,
+        month: invoiceDate.getMonth() + 1,
+        year: invoiceDate.getFullYear()
+      });
+    }
+    
+    return { invoices };
+  }
+
+  // Check and generate upcoming subscription invoices
+  async checkUpcomingSubscriptionBilling(userId: string): Promise<{ 
+    upcomingInvoices: Array<{ dueDate: Date; amount: number; billingCycle: number }>;
+    overdueInvoices: Array<{ invoiceId: string; dueDate: Date; amount: number; billingCycle: number }>;
+  }> {
+    
+    // Get user's complete program details
+    const userDoc = await db.collection('users').doc(userId).get();
+    if (!userDoc.exists() || userDoc.data()?.servicePlan !== 'complete-program') {
+      return { upcomingInvoices: [], overdueInvoices: [] };
+    }
+    
+    const userData = userDoc.data();
+    const programStartDate = userData?.programStartDate?.toDate() || new Date();
+    const programEndDate = userData?.programEndDate?.toDate() || new Date();
+    
+    // Get existing invoices for this program period
+    const existingInvoices = await db.collection('invoices')
+      .where('userId', '==', userId)
+      .where('invoiceType', '==', 'subscription')
+      .where('createdAt', '>=', programStartDate)
+      .where('createdAt', '<=', programEndDate)
+      .get();
+    
+    const existingCycles = existingInvoices.docs.map(doc => doc.data().billingCycle);
+    const upcomingInvoices = [];
+    const overdueInvoices = [];
+    const now = new Date();
+    
+    // Check which billing cycles are missing or overdue
+    for (let cycle = 1; cycle <= 3; cycle++) {
+      if (!existingCycles.includes(cycle)) {
+        let dueDate: Date;
+        
+        if (cycle === 1) {
+          dueDate = programStartDate;
+        } else if (cycle === 2) {
+          dueDate = new Date(programStartDate.getFullYear(), programStartDate.getMonth() + 1, 0);
+        } else {
+          dueDate = new Date(programStartDate.getFullYear(), programStartDate.getMonth() + 2, 0);
+        }
+        
+        if (dueDate <= now) {
+          // Find existing overdue invoice
+          const overdueInvoice = existingInvoices.docs.find(doc => 
+            doc.data().billingCycle === cycle && doc.data().status === 'unpaid'
+          );
+          
+          if (overdueInvoice) {
+            overdueInvoices.push({
+              invoiceId: overdueInvoice.id,
+              dueDate,
+              amount: overdueInvoice.data().totalAmount,
+              billingCycle: cycle
+            });
+          }
+        } else {
+          upcomingInvoices.push({
+            dueDate,
+            amount: 150, // Default monthly amount - should come from user settings
+            billingCycle: cycle
+          });
+        }
+      }
+    }
+    
+    return { upcomingInvoices, overdueInvoices };
   }
 
   async markInvoiceAsPaid(invoiceId: string, paymentIntentId: string): Promise<void> {

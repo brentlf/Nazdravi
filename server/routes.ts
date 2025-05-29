@@ -2,8 +2,12 @@ import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { db } from "./firebase";
 import { mailerLiteService } from "./email";
+import { InvoiceManagementService } from "./invoice-management";
 
 export async function registerRoutes(app: Express): Promise<Server> {
+  
+  // Initialize invoice management service
+  const invoiceService = new InvoiceManagementService();
   
   // Debug middleware to log all API requests
   app.use('/api', (req, res, next) => {
@@ -856,6 +860,107 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.status(500).json({ 
         success: false, 
         error: error.message || "Failed to reissue invoice" 
+      });
+    }
+  });
+
+  // Generate Complete Program invoices (3 invoices billed in advance)
+  app.post("/api/subscriptions/generate-complete-program", async (req, res) => {
+    try {
+      const { userId, clientName, clientEmail, programStartDate, monthlyAmount } = req.body;
+      
+      if (!userId || !clientName || !clientEmail || !programStartDate || !monthlyAmount) {
+        return res.status(400).json({ 
+          success: false, 
+          error: "Missing required fields: userId, clientName, clientEmail, programStartDate, monthlyAmount" 
+        });
+      }
+
+      const result = await invoiceService.generateCompleteProgramInvoices({
+        userId,
+        clientName,
+        clientEmail,
+        programStartDate: new Date(programStartDate),
+        monthlyAmount
+      });
+
+      res.json({ 
+        success: true, 
+        message: "Complete program invoices generated successfully",
+        invoices: result.invoices
+      });
+
+    } catch (error: any) {
+      console.error("Error generating complete program invoices:", error);
+      res.status(500).json({ 
+        success: false, 
+        error: error.message || "Failed to generate complete program invoices" 
+      });
+    }
+  });
+
+  // Check subscription billing status for a user
+  app.get("/api/subscriptions/billing-status/:userId", async (req, res) => {
+    try {
+      const { userId } = req.params;
+      
+      if (!userId) {
+        return res.status(400).json({ 
+          success: false, 
+          error: "Missing userId parameter" 
+        });
+      }
+
+      const billingStatus = await invoiceService.checkUpcomingSubscriptionBilling(userId);
+
+      res.json({ 
+        success: true, 
+        ...billingStatus
+      });
+
+    } catch (error: any) {
+      console.error("Error checking subscription billing status:", error);
+      res.status(500).json({ 
+        success: false, 
+        error: error.message || "Failed to check billing status" 
+      });
+    }
+  });
+
+  // Create individual subscription invoice with billing cycle support
+  app.post("/api/subscriptions/create-invoice", async (req, res) => {
+    try {
+      const { userId, clientName, clientEmail, month, year, subscriptionAmount, billingCycle } = req.body;
+      
+      if (!userId || !clientName || !clientEmail || !month || !year || !subscriptionAmount) {
+        return res.status(400).json({ 
+          success: false, 
+          error: "Missing required fields: userId, clientName, clientEmail, month, year, subscriptionAmount" 
+        });
+      }
+
+      const result = await invoiceService.createSubscriptionInvoice({
+        userId,
+        clientName,
+        clientEmail,
+        month,
+        year,
+        subscriptionAmount,
+        billingCycle: billingCycle || 1
+      });
+
+      res.json({ 
+        success: true, 
+        message: "Subscription invoice created successfully",
+        invoiceId: result.invoiceId,
+        paymentUrl: result.paymentUrl
+      });
+
+    } catch (error: any) {
+      console.error("Error creating subscription invoice:", error);
+      res.status(500).json({ 
+        success: false, 
+        error: error.message || "Failed to create subscription invoice" 
       });
     }
   });
