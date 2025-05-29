@@ -866,7 +866,8 @@ export default function AdminAppointments() {
           </CardHeader>
           <CardContent>
             {processedAppointments.length > 0 ? (
-              <Table>
+              <div className="h-96 overflow-y-auto border rounded-md">
+                <Table>
                 <TableHeader>
                   <TableRow>
                     <TableHead>
@@ -1211,6 +1212,7 @@ export default function AdminAppointments() {
                   ))}
                 </TableBody>
               </Table>
+              </div>
             ) : (
               <div className="text-center py-12">
                 <Calendar className="w-16 h-16 text-muted-foreground mx-auto mb-4" />

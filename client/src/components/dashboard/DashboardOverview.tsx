@@ -279,10 +279,10 @@ export function DashboardOverview() {
                 <Link href="/dashboard/messages">View All</Link>
               </Button>
             </CardHeader>
-            <CardContent>
+            <CardContent className="h-80">
               {messages && messages.length > 0 ? (
-                <div className="space-y-4">
-                  {messages.slice(0, 3).map((message) => (
+                <div className="h-full overflow-y-auto space-y-4 pr-2">
+                  {messages.slice(0, 6).map((message) => (
                     <div key={message.id} className="flex items-start space-x-3 p-3 bg-gray-50 dark:bg-gray-800 rounded-lg">
                       <div className="w-8 h-8 bg-primary-100 dark:bg-primary-900/30 rounded-full flex items-center justify-center">
                         <MessageCircle className="w-4 h-4 text-primary-600 dark:text-primary-400" />
@@ -300,12 +300,14 @@ export function DashboardOverview() {
                   ))}
                 </div>
               ) : (
-                <div className="text-center py-8">
-                  <MessageCircle className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
-                  <p className="text-muted-foreground">No messages yet</p>
-                  <Button size="sm" className="mt-4" asChild>
-                    <Link href="/dashboard/messages">Start Conversation</Link>
-                  </Button>
+                <div className="flex items-center justify-center h-full text-center">
+                  <div>
+                    <MessageCircle className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
+                    <p className="text-muted-foreground">No messages yet</p>
+                    <Button size="sm" className="mt-4" asChild>
+                      <Link href="/dashboard/messages">Start Conversation</Link>
+                    </Button>
+                  </div>
                 </div>
               )}
             </CardContent>
@@ -318,8 +320,8 @@ export function DashboardOverview() {
             <CardHeader>
               <CardTitle>Quick Actions</CardTitle>
             </CardHeader>
-            <CardContent>
-              <div className="space-y-3">
+            <CardContent className="h-80">
+              <div className="h-full overflow-y-auto space-y-3 pr-2">
                 {quickActions.map((action, index) => {
                   const Icon = action.icon;
                   return (
