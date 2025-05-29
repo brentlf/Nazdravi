@@ -68,23 +68,18 @@ export default function Home() {
   return (
     <div className="min-h-screen">
       {/* Hero Section */}
-      <section className="relative overflow-hidden py-20 lg:py-32">
-        <div 
-          className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-100 z-0"
-          style={{ backgroundImage: `url(${heroImage})` }}
-        ></div>
-        <div className="absolute inset-0 bg-gradient-to-r from-white/40 via-white/30 to-white/40 dark:from-gray-900/40 dark:via-gray-900/30 dark:to-gray-900/40 z-10"></div>
-        <div className="container mx-auto px-4 relative z-20">
+      <section className="relative overflow-hidden py-20 lg:py-32 bg-background">
+        <div className="container mx-auto px-4">
           <div className="grid lg:grid-cols-2 gap-12 items-center">
             {/* Content */}
-            <div className="space-y-8 relative z-30">
+            <div className="space-y-8">
               <Badge variant="secondary" className="w-fit">
                 🌱 Transform Your Health Today
               </Badge>
               
-              <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 dark:text-white relative z-10">
+              <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-foreground">
                 Transform Your Health with 
-                <span className="block text-primary-600 dark:text-primary-400">Personalized Nutrition</span>
+                <span className="block text-primary">Personalized Nutrition</span>
               </h1>
               
               <p className="text-xl text-muted-foreground max-w-2xl">
@@ -122,6 +117,19 @@ export default function Home() {
               </div>
             </div>
 
+            {/* Clean Hero Image */}
+            <div className="relative">
+              <div className="relative rounded-2xl overflow-hidden shadow-2xl">
+                <img 
+                  src={heroImage} 
+                  alt="Healthy nutrition and lifestyle" 
+                  className="w-full h-96 lg:h-[500px] object-cover"
+                />
+              </div>
+              {/* Decorative elements */}
+              <div className="absolute -top-4 -right-4 w-20 h-20 bg-primary/20 rounded-full blur-xl"></div>
+              <div className="absolute -bottom-6 -left-6 w-32 h-32 bg-accent/30 rounded-full blur-2xl"></div>
+            </div>
 
           </div>
         </div>

@@ -10,12 +10,12 @@
   --primary-foreground: 0 0% 100%;
   
   /* Background Colors */
-  --background: 30 20% 96%; /* #F7F5F2 - natural cream */
-  --foreground: 30 15% 25%; /* #443F3A - warm brown */
+  --background: 30 20% 97%; /* #F9F7F4 - lighter natural cream */
+  --foreground: 30 25% 15%; /* #2D2822 - darker warm brown for better contrast */
   
   /* Natural UI Colors */
-  --muted: 30 15% 92%; /* #F0EDE8 - soft beige */
-  --muted-foreground: 30 10% 50%; /* #7A746E - muted brown */
+  --muted: 30 15% 93%; /* #F2EFEA - lighter soft beige */
+  --muted-foreground: 30 15% 40%; /* #6B6258 - darker muted brown for readability */
   --popover: 30 25% 97%; /* #F9F7F4 - warm white */
   --popover-foreground: 30 15% 25%;
   --card: 30 30% 98%; /* #FAFAF8 - soft white */
@@ -50,26 +50,26 @@
 }
 
 .dark {
-  /* Dark theme colors */
-  --background: 224 71% 4%; /* #121212 - dark background */
-  --foreground: 213 31% 91%;
-  --muted: 223 47% 11%;
-  --muted-foreground: 215.4 16.3% 70%; /* Improved contrast for dark mode */
-  --popover: 224 71% 4%;
-  --popover-foreground: 215 20.2% 65.1%;
-  --card: 224 71% 4%;
-  --card-foreground: 213 31% 91%;
-  --border: 216 34% 17%;
-  --input: 216 34% 17%;
-  --primary: 135 62% 70%; /* Keep primary brand color */
-  --primary-foreground: 222.2 47.4% 1.2%;
-  --secondary: 222.2 84% 4.9%;
-  --secondary-foreground: 210 40% 98%;
-  --accent: 216 34% 17%;
-  --accent-foreground: 210 40% 98%;
-  --destructive: 0 63% 31%;
-  --destructive-foreground: 210 40% 98%;
-  --ring: 216 34% 17%;
+  /* Dark theme with high contrast */
+  --background: 30 8% 8%; /* #1A1814 - warm dark background */
+  --foreground: 30 15% 92%; /* #EBE7E0 - high contrast text */
+  --muted: 30 12% 15%; /* #282520 - muted dark */
+  --muted-foreground: 30 8% 75%; /* #C2BDB6 - readable muted text */
+  --popover: 30 10% 10%; /* #1C1A16 - dark popover */
+  --popover-foreground: 30 15% 90%; /* #E5E1DA - bright popover text */
+  --card: 30 12% 12%; /* #211F1B - dark card */
+  --card-foreground: 30 15% 90%; /* #E5E1DA - bright card text */
+  --border: 30 15% 25%; /* #3D3A34 - visible border */
+  --input: 30 15% 20%; /* #36332E - dark input */
+  --primary: 150 25% 65%; /* Lighter sage for dark mode */
+  --primary-foreground: 30 15% 10%; /* Dark text on primary */
+  --secondary: 30 15% 20%; /* Dark secondary */
+  --secondary-foreground: 30 15% 85%; /* Bright secondary text */
+  --accent: 30 15% 25%; /* Dark accent */
+  --accent-foreground: 30 15% 85%; /* Bright accent text */
+  --destructive: 15 70% 65%; /* Brighter red for visibility */
+  --destructive-foreground: 30 15% 95%; /* Very bright text */
+  --ring: 150 25% 65%;
   
   /* Dark sidebar colors */
   --sidebar-background: 240 5.9% 10%;
