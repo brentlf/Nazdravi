@@ -158,7 +158,6 @@ export default function Home() {
           </div>
         </div>
       </section>
-
       {/* Services Section */}
       <section className="py-20 bg-white dark:bg-gray-800">
         <div className="container mx-auto px-4">
@@ -197,7 +196,6 @@ export default function Home() {
           </div>
         </div>
       </section>
-
       {/* Testimonials Section */}
       <section className="py-20 bg-primary-50 dark:bg-gray-900">
         <div className="container mx-auto px-4">
@@ -227,10 +225,9 @@ export default function Home() {
           </div>
         </div>
       </section>
-
       {/* CTA Section */}
       <section className="py-20 bg-primary-600 text-white">
-        <div className="container mx-auto px-4 text-center">
+        <div className="container mx-auto px-4 text-center bg-[#ffffff]">
           <h2 className="text-3xl md:text-4xl font-bold mb-4">
             Ready to Start Your Transformation?
           </h2>
@@ -245,7 +242,6 @@ export default function Home() {
           </Button>
         </div>
       </section>
-
       {/* Newsletter Section */}
       <section className="py-20 bg-white dark:bg-gray-800">
         <div className="container mx-auto px-4">
