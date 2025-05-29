@@ -51,44 +51,22 @@ const appointmentSchema = z.object({
   timeslot: z.string().min(1, "Please select a time slot"),
 });
 
-// Pre-evaluation form schema
+// Pre-evaluation form schema - matches main dashboard comprehensive version
 const preEvaluationSchema = z.object({
-  // Basic Information
-  age: z.number().min(16, "Must be at least 16 years old").max(120),
-  gender: z.enum(["male", "female", "other", "prefer-not-to-say"]),
-  height: z.number().min(100, "Height must be at least 100cm").max(250, "Height must be less than 250cm"),
-  weight: z.number().min(30, "Weight must be at least 30kg").max(300, "Weight must be less than 300kg"),
-  
-  // Health Goals
-  primaryGoal: z.enum([
-    "weight-loss", 
-    "weight-gain", 
-    "muscle-building", 
-    "general-health", 
-    "sports-performance", 
-    "medical-condition-support",
-    "other"
-  ]),
-  specificGoals: z.string().min(20, "Please describe your specific goals (minimum 20 characters)"),
-  
-  // Current Health Status
-  chronicConditions: z.array(z.string()).default([]),
-  currentMedications: z.string().optional(),
-  allergies: z.string().optional(),
-  
-  // Lifestyle
-  activityLevel: z.enum(["sedentary", "lightly-active", "moderately-active", "very-active", "extremely-active"]),
-  sleepHours: z.number().min(3).max(12),
-  stressLevel: z.number().min(1).max(10),
-  
-  // Dietary Information
-  currentDiet: z.enum(["omnivore", "vegetarian", "vegan", "keto", "paleo", "mediterranean", "other"]),
-  foodRestrictions: z.string().optional(),
-  waterIntake: z.number().min(0).max(10),
-  alcoholConsumption: z.enum(["never", "rarely", "weekly", "daily"]),
-  
-  // Additional Information
-  previousNutritionCoaching: z.boolean().default(false),
+  healthGoals: z.array(z.string()).min(1, "Please select at least one health goal"),
+  currentWeight: z.string().min(1, "Current weight is required"),
+  targetWeight: z.string().optional(),
+  heightCm: z.string().min(1, "Height is required"),
+  activityLevel: z.string().min(1, "Please select your activity level"),
+  dietaryRestrictions: z.array(z.string()).default([]),
+  medicalConditions: z.array(z.string()).default([]),
+  medications: z.array(z.string()).default([]),
+  allergies: z.array(z.string()).default([]),
+  previousDietExperience: z.string().min(1, "Please describe your diet experience"),
+  motivationLevel: z.string().min(1, "Please select your motivation level"),
+  availableTimeForCooking: z.string().min(1, "Please select time available for cooking"),
+  preferredMealTimes: z.array(z.string()).default([]),
+  budgetRange: z.string().min(1, "Please select your budget range"),
   additionalNotes: z.string().optional(),
 });
 
@@ -205,23 +183,20 @@ export default function DashboardAppointments() {
   const preEvaluationForm = useForm<PreEvaluationFormData>({
     resolver: zodResolver(preEvaluationSchema),
     defaultValues: {
-      age: 25,
-      gender: "prefer-not-to-say",
-      height: 170,
-      weight: 70,
-      primaryGoal: "general-health",
-      specificGoals: "",
-      chronicConditions: [],
-      currentMedications: "",
-      allergies: "",
-      activityLevel: "moderately-active",
-      sleepHours: 8,
-      stressLevel: 5,
-      currentDiet: "omnivore",
-      foodRestrictions: "",
-      waterIntake: 2,
-      alcoholConsumption: "rarely",
-      previousNutritionCoaching: false,
+      healthGoals: [],
+      currentWeight: "",
+      targetWeight: "",
+      heightCm: "",
+      activityLevel: "",
+      dietaryRestrictions: [],
+      medicalConditions: [],
+      medications: [],
+      allergies: [],
+      previousDietExperience: "",
+      motivationLevel: "",
+      availableTimeForCooking: "",
+      preferredMealTimes: [],
+      budgetRange: "",
       additionalNotes: "",
     },
   });
@@ -290,13 +265,33 @@ export default function DashboardAppointments() {
     if (!user) return;
 
     try {
+      // Save to preEvaluationForms collection
       await addPreEvaluation({
         ...data,
         userId: user.uid,
         userEmail: user.email,
         userName: user.name || "Unknown",
         status: "completed",
-        submittedAt: new Date().toISOString(),
+        submittedAt: new Date(),
+        completedAt: new Date(),
+      });
+
+      // Also update user's health profile in users collection
+      const { doc, updateDoc } = await import('firebase/firestore');
+      const { db } = await import('@/lib/firebase');
+      const userRef = doc(db, 'users', user.uid);
+      
+      await updateDoc(userRef, {
+        medicalConditions: data.medicalConditions,
+        medications: data.medications,
+        allergies: data.allergies,
+        currentWeight: data.currentWeight,
+        targetWeight: data.targetWeight,
+        height: data.heightCm,
+        activityLevel: data.activityLevel,
+        dietaryRestrictions: data.dietaryRestrictions,
+        healthGoals: data.healthGoals,
+        updatedAt: new Date(),
       });
 
       setIsPreEvaluationOpen(false);
@@ -305,9 +300,10 @@ export default function DashboardAppointments() {
       
       toast({
         title: "Pre-Evaluation Complete!",
-        description: "Your health information has been saved successfully.",
+        description: "Your health information has been saved and your profile updated.",
       });
     } catch (error) {
+      console.error('Pre-evaluation submission error:', error);
       toast({
         title: "Submission failed",
         description: "Please try again later.",
