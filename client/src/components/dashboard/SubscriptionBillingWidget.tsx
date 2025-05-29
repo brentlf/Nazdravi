@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { useToast } from '@/hooks/use-toast';
 import { Calendar, CreditCard, Clock, CheckCircle, AlertTriangle, Euro } from 'lucide-react';
-import { useAuth } from '@/lib/auth';
+import { useAuth } from '@/contexts/AuthContext';
 
 interface BillingCycle {
   billingCycle: number;

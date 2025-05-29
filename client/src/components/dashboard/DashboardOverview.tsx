@@ -19,6 +19,7 @@ import { useFirestoreCollection } from "@/hooks/useFirestore";
 import { Appointment, Message, Progress } from "@/types";
 import type { Invoice } from "@shared/firebase-schema";
 import ServicePlanStatusWidget from "./ServicePlanStatusWidget";
+import SubscriptionBillingWidget from "./SubscriptionBillingWidget";
 import { where, orderBy, limit } from "firebase/firestore";
 
 export function DashboardOverview() {
@@ -238,6 +239,9 @@ export function DashboardOverview() {
 
       {/* Service Plan Status Widget */}
       <ServicePlanStatusWidget user={user} />
+
+      {/* Subscription Billing Widget for Complete Program Users */}
+      <SubscriptionBillingWidget user={user} />
 
       {/* Quick Stats Grid */}
       <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-6">

@@ -1,367 +1,370 @@
-import { useState } from "react";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Calendar, Euro, Users, Plus } from "lucide-react";
-import { useToast } from "@/hooks/use-toast";
-import { useFirestoreCollection } from "@/hooks/useFirestore";
-import { where, orderBy } from "firebase/firestore";
-import type { User, Invoice } from "@/shared/firebase-schema";
+import { useState, useEffect } from 'react';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Alert, AlertDescription } from '@/components/ui/alert';
+import { useToast } from '@/hooks/use-toast';
+import { Calendar, CreditCard, Users, Euro, Clock, CheckCircle, AlertTriangle } from 'lucide-react';
+import { useFirestoreCollection } from '@/hooks/useFirestore';
+import { where } from 'firebase/firestore';
+
+interface User {
+  uid: string;
+  name: string;
+  email: string;
+  servicePlan?: string;
+  programStartDate?: any;
+  programEndDate?: any;
+}
 
 export default function AdminSubscriptions() {
+  const [selectedUser, setSelectedUser] = useState<User | null>(null);
+  const [monthlyAmount, setMonthlyAmount] = useState('150');
+  const [programStartDate, setProgramStartDate] = useState('');
+  const [loading, setLoading] = useState(false);
   const { toast } = useToast();
-  const [isCreatingInvoice, setIsCreatingInvoice] = useState(false);
-  const [selectedUser, setSelectedUser] = useState<string>("");
-  const [invoiceAmount, setInvoiceAmount] = useState<string>("300"); // Default monthly amount
-  const [selectedMonth, setSelectedMonth] = useState<number>(new Date().getMonth() + 1);
-  const [selectedYear, setSelectedYear] = useState<number>(new Date().getFullYear());
 
-  // Fetch complete program users
+  // Fetch all complete program users
   const { data: completeProgramUsers } = useFirestoreCollection<User>("users", [
-    where("servicePlan", "==", "complete-program"),
-    orderBy("name", "asc")
+    where("servicePlan", "==", "complete-program")
   ]);
 
-  // Fetch subscription invoices
-  const { data: subscriptionInvoices } = useFirestoreCollection<Invoice>("invoices", [
-    where("invoiceType", "==", "subscription"),
-    orderBy("createdAt", "desc")
-  ]);
+  const formatDate = (date: any) => {
+    if (!date) return 'Not set';
+    const dateObj = date.toDate ? date.toDate() : new Date(date);
+    return dateObj.toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric'
+    });
+  };
 
-  const monthNames = [
-    "January", "February", "March", "April", "May", "June",
-    "July", "August", "September", "October", "November", "December"
-  ];
-
-  const handleCreateSubscriptionInvoice = async () => {
-    if (!selectedUser || !invoiceAmount) {
+  const generateSubscriptionInvoices = async () => {
+    if (!selectedUser) {
       toast({
-        title: "Missing Information",
-        description: "Please select a user and enter an amount.",
+        title: "Error",
+        description: "Please select a user first",
         variant: "destructive",
       });
       return;
     }
 
-    const user = completeProgramUsers?.find(u => u.uid === selectedUser);
-    if (!user) {
+    if (!programStartDate) {
       toast({
-        title: "User Not Found",
-        description: "Selected user not found.",
+        title: "Error",
+        description: "Please set a program start date",
         variant: "destructive",
       });
       return;
     }
 
-    setIsCreatingInvoice(true);
-
+    setLoading(true);
     try {
-      const invoiceData = {
-        userId: user.uid,
-        clientName: user.name,
-        clientEmail: user.email,
-        amount: parseFloat(invoiceAmount),
-        month: selectedMonth,
-        year: selectedYear,
-      };
-
-      const response = await fetch('/api/subscription-invoices', {
+      const response = await fetch('/api/subscriptions/generate-complete-program', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(invoiceData),
+        body: JSON.stringify({
+          userId: selectedUser.uid,
+          clientName: selectedUser.name,
+          clientEmail: selectedUser.email,
+          programStartDate,
+          monthlyAmount: parseFloat(monthlyAmount)
+        }),
       });
 
-      if (response.ok) {
-        const result = await response.json();
+      const data = await response.json();
+      
+      if (data.success) {
         toast({
-          title: "Subscription Invoice Created",
-          description: `Monthly invoice for ${monthNames[selectedMonth - 1]} ${selectedYear} has been created successfully.`,
+          title: "Success",
+          description: `Generated ${data.invoices?.length || 3} invoices for ${selectedUser.name}`,
         });
-        setSelectedUser("");
-        setInvoiceAmount("300");
-      } else if (response.status === 409) {
+        setSelectedUser(null);
+        setProgramStartDate('');
+      } else {
         toast({
-          title: "Invoice Already Exists",
-          description: "A subscription invoice already exists for this month/year.",
+          title: "Error",
+          description: data.error || "Failed to generate invoices",
           variant: "destructive",
         });
-      } else {
-        throw new Error('Failed to create subscription invoice');
       }
     } catch (error) {
+      console.error('Error generating subscription invoices:', error);
       toast({
-        title: "Failed to Create Invoice",
-        description: "Please try again later.",
+        title: "Error",
+        description: "Failed to generate subscription invoices",
         variant: "destructive",
       });
     } finally {
-      setIsCreatingInvoice(false);
+      setLoading(false);
     }
   };
 
-  const getStatusBadge = (status: string) => {
-    switch (status) {
-      case "pending":
-        return <Badge variant="outline" className="text-orange-600">Pending</Badge>;
-      case "paid":
-        return <Badge variant="default" className="bg-green-600">Paid</Badge>;
-      case "overdue":
-        return <Badge variant="destructive">Overdue</Badge>;
-      default:
-        return <Badge variant="secondary">{status}</Badge>;
+  const checkBillingStatus = async (userId: string) => {
+    try {
+      const response = await fetch(`/api/subscriptions/billing-status/${userId}`);
+      const data = await response.json();
+      
+      if (data.success) {
+        return {
+          upcomingInvoices: data.upcomingInvoices || [],
+          overdueInvoices: data.overdueInvoices || []
+        };
+      }
+    } catch (error) {
+      console.error('Error checking billing status:', error);
     }
+    return { upcomingInvoices: [], overdueInvoices: [] };
   };
 
-  const getCurrentMonthStats = () => {
-    const currentMonth = new Date().getMonth() + 1;
-    const currentYear = new Date().getFullYear();
-    
-    const currentMonthInvoices = subscriptionInvoices?.filter(
-      invoice => invoice.subscriptionMonth === currentMonth && invoice.subscriptionYear === currentYear
-    ) || [];
+  const [billingStatuses, setBillingStatuses] = useState<{[key: string]: any}>({});
 
-    const totalAmount = currentMonthInvoices.reduce((sum, invoice) => sum + invoice.amount, 0);
-    const paidAmount = currentMonthInvoices
-      .filter(invoice => invoice.status === 'paid')
-      .reduce((sum, invoice) => sum + invoice.amount, 0);
-
-    return {
-      total: currentMonthInvoices.length,
-      totalAmount,
-      paidAmount,
-      pendingAmount: totalAmount - paidAmount,
-    };
-  };
-
-  const stats = getCurrentMonthStats();
+  useEffect(() => {
+    if (completeProgramUsers) {
+      // Check billing status for all users
+      completeProgramUsers.forEach(async (user) => {
+        const status = await checkBillingStatus(user.uid);
+        setBillingStatuses(prev => ({
+          ...prev,
+          [user.uid]: status
+        }));
+      });
+    }
+  }, [completeProgramUsers]);
 
   return (
-    <div className="space-y-8">
-      {/* Header */}
-      <div className="flex justify-between items-center">
+    <div className="space-y-6">
+      <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
-            Subscription Management
-          </h1>
-          <p className="text-gray-600 dark:text-gray-300 mt-1">
-            Manage monthly billing for Complete Program clients
+          <h1 className="text-2xl font-bold">Subscription Management</h1>
+          <p className="text-muted-foreground">
+            Manage complete program subscriptions and billing cycles
           </p>
+        </div>
+        <div className="flex items-center gap-2 text-sm text-muted-foreground">
+          <CreditCard className="w-4 h-4" />
+          3-Invoice Billing System
         </div>
       </div>
 
-      {/* Current Month Stats */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+      <div className="grid lg:grid-cols-2 gap-6">
+        {/* Generate New Subscription */}
         <Card>
-          <CardContent className="p-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm font-medium text-gray-600 dark:text-gray-400">
-                  This Month's Invoices
-                </p>
-                <p className="text-2xl font-bold text-gray-900 dark:text-white">
-                  {stats.total}
-                </p>
-              </div>
-              <Calendar className="w-8 h-8 text-blue-600" />
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardContent className="p-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm font-medium text-gray-600 dark:text-gray-400">
-                  Total Amount
-                </p>
-                <p className="text-2xl font-bold text-gray-900 dark:text-white">
-                  €{stats.totalAmount.toFixed(2)}
-                </p>
-              </div>
-              <Euro className="w-8 h-8 text-green-600" />
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardContent className="p-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm font-medium text-gray-600 dark:text-gray-400">
-                  Paid Amount
-                </p>
-                <p className="text-2xl font-bold text-green-600">
-                  €{stats.paidAmount.toFixed(2)}
-                </p>
-              </div>
-              <div className="w-8 h-8 bg-green-100 dark:bg-green-900/20 rounded-full flex items-center justify-center">
-                <span className="text-green-600 text-sm font-bold">✓</span>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardContent className="p-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm font-medium text-gray-600 dark:text-gray-400">
-                  Pending Amount
-                </p>
-                <p className="text-2xl font-bold text-orange-600">
-                  €{stats.pendingAmount.toFixed(2)}
-                </p>
-              </div>
-              <div className="w-8 h-8 bg-orange-100 dark:bg-orange-900/20 rounded-full flex items-center justify-center">
-                <span className="text-orange-600 text-sm font-bold">⏳</span>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-      </div>
-
-      {/* Create New Subscription Invoice */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Plus className="w-5 h-5" />
-            Create Monthly Subscription Invoice
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-            <div>
-              <Label htmlFor="user-select">Select Client</Label>
-              <Select value={selectedUser} onValueChange={setSelectedUser}>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <Users className="w-5 h-5" />
+              Generate Complete Program Billing
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="space-y-2">
+              <Label>Select User</Label>
+              <Select 
+                value={selectedUser?.uid || ""} 
+                onValueChange={(value) => {
+                  const user = completeProgramUsers?.find(u => u.uid === value);
+                  setSelectedUser(user || null);
+                  if (user?.programStartDate) {
+                    const startDate = user.programStartDate.toDate ? 
+                      user.programStartDate.toDate() : 
+                      new Date(user.programStartDate);
+                    setProgramStartDate(startDate.toISOString().split('T')[0]);
+                  }
+                }}
+              >
                 <SelectTrigger>
-                  <SelectValue placeholder="Choose a complete program client" />
+                  <SelectValue placeholder="Choose a complete program user" />
                 </SelectTrigger>
                 <SelectContent>
                   {completeProgramUsers?.map((user) => (
                     <SelectItem key={user.uid} value={user.uid}>
-                      {user.name} ({user.email})
+                      <div className="flex items-center justify-between w-full">
+                        <span>{user.name}</span>
+                        <span className="text-sm text-muted-foreground ml-2">
+                          {user.email}
+                        </span>
+                      </div>
                     </SelectItem>
                   ))}
                 </SelectContent>
               </Select>
             </div>
 
-            <div>
-              <Label htmlFor="month-select">Month</Label>
-              <Select value={selectedMonth.toString()} onValueChange={(value) => setSelectedMonth(parseInt(value))}>
-                <SelectTrigger>
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  {monthNames.map((month, index) => (
-                    <SelectItem key={index} value={(index + 1).toString()}>
-                      {month}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-
-            <div>
-              <Label htmlFor="year-select">Year</Label>
-              <Select value={selectedYear.toString()} onValueChange={(value) => setSelectedYear(parseInt(value))}>
-                <SelectTrigger>
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="2024">2024</SelectItem>
-                  <SelectItem value="2025">2025</SelectItem>
-                  <SelectItem value="2026">2026</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-
-            <div>
-              <Label htmlFor="amount">Amount (EUR)</Label>
-              <Input
-                id="amount"
-                type="number"
-                value={invoiceAmount}
-                onChange={(e) => setInvoiceAmount(e.target.value)}
-                placeholder="300.00"
-                min="0"
-                step="0.01"
-              />
-            </div>
-          </div>
-
-          <Button 
-            onClick={handleCreateSubscriptionInvoice}
-            disabled={isCreatingInvoice || !selectedUser || !invoiceAmount}
-            className="w-full md:w-auto"
-          >
-            {isCreatingInvoice ? "Creating Invoice..." : "Create Subscription Invoice"}
-          </Button>
-        </CardContent>
-      </Card>
-
-      {/* Recent Subscription Invoices */}
-      <Card>
-        <CardHeader>
-          <CardTitle>Recent Subscription Invoices</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="space-y-4">
-            {subscriptionInvoices && subscriptionInvoices.length > 0 ? (
-              <div className="grid gap-4">
-                {subscriptionInvoices.slice(0, 10).map((invoice) => (
-                  <div 
-                    key={invoice.id} 
-                    className="flex items-center justify-between p-4 border border-gray-200 dark:border-gray-700 rounded-lg"
-                  >
-                    <div className="flex-1">
-                      <h4 className="font-medium text-gray-900 dark:text-white">
-                        {invoice.clientName}
-                      </h4>
-                      <p className="text-sm text-gray-600 dark:text-gray-400">
-                        {invoice.description}
-                      </p>
-                      <p className="text-xs text-gray-500 dark:text-gray-500">
-                        Invoice: {invoice.invoiceNumber}
-                      </p>
-                    </div>
-
-                    <div className="text-right">
-                      <p className="font-semibold text-gray-900 dark:text-white">
-                        €{invoice.amount.toFixed(2)}
-                      </p>
-                      {getStatusBadge(invoice.status)}
-                    </div>
-
-                    {invoice.status === 'pending' && invoice.paymentUrl && (
-                      <Button 
-                        size="sm" 
-                        variant="outline"
-                        onClick={() => window.open(invoice.paymentUrl, '_blank')}
-                        className="ml-4"
-                      >
-                        View Payment
-                      </Button>
-                    )}
-                  </div>
-                ))}
+            <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label>Monthly Amount (€)</Label>
+                <Input
+                  type="number"
+                  value={monthlyAmount}
+                  onChange={(e) => setMonthlyAmount(e.target.value)}
+                  placeholder="150"
+                />
               </div>
-            ) : (
-              <div className="text-center py-8">
-                <Users className="w-12 h-12 text-gray-400 mx-auto mb-4" />
-                <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-2">
-                  No subscription invoices yet
-                </h3>
-                <p className="text-gray-600 dark:text-gray-400">
-                  Create your first monthly subscription invoice above.
-                </p>
+              <div className="space-y-2">
+                <Label>Program Start Date</Label>
+                <Input
+                  type="date"
+                  value={programStartDate}
+                  onChange={(e) => setProgramStartDate(e.target.value)}
+                />
+              </div>
+            </div>
+
+            {selectedUser && (
+              <div className="p-4 bg-gray-50 dark:bg-gray-800 rounded-lg">
+                <h4 className="font-medium mb-2">Billing Schedule Preview</h4>
+                <div className="space-y-2 text-sm">
+                  <div className="flex justify-between">
+                    <span>Invoice 1 (Day 1):</span>
+                    <span className="font-medium">€{monthlyAmount}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span>Invoice 2 (End of Month 1):</span>
+                    <span className="font-medium">€{monthlyAmount}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span>Invoice 3 (End of Month 2):</span>
+                    <span className="font-medium">€{monthlyAmount}</span>
+                  </div>
+                  <div className="border-t pt-2 flex justify-between font-medium">
+                    <span>Total Program Cost:</span>
+                    <span>€{(parseFloat(monthlyAmount) * 3).toFixed(2)}</span>
+                  </div>
+                </div>
               </div>
             )}
+
+            <Button 
+              onClick={generateSubscriptionInvoices}
+              disabled={loading || !selectedUser || !programStartDate}
+              className="w-full"
+            >
+              {loading ? "Generating Invoices..." : "Generate 3-Invoice Billing Cycle"}
+            </Button>
+          </CardContent>
+        </Card>
+
+        {/* Billing Overview */}
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <Calendar className="w-5 h-5" />
+              Complete Program Users Overview
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-4 max-h-96 overflow-y-auto">
+              {completeProgramUsers?.map((user) => {
+                const billingStatus = billingStatuses[user.uid];
+                const hasOverdue = billingStatus?.overdueInvoices?.length > 0;
+                const hasUpcoming = billingStatus?.upcomingInvoices?.length > 0;
+                
+                return (
+                  <div key={user.uid} className="p-4 border rounded-lg">
+                    <div className="flex items-start justify-between mb-2">
+                      <div>
+                        <h4 className="font-medium">{user.name}</h4>
+                        <p className="text-sm text-muted-foreground">{user.email}</p>
+                      </div>
+                      <div className="flex flex-col items-end gap-1">
+                        {hasOverdue && (
+                          <Badge variant="destructive" className="text-xs">
+                            {billingStatus.overdueInvoices.length} Overdue
+                          </Badge>
+                        )}
+                        {hasUpcoming && (
+                          <Badge variant="secondary" className="text-xs">
+                            {billingStatus.upcomingInvoices.length} Upcoming
+                          </Badge>
+                        )}
+                        {!hasOverdue && !hasUpcoming && (
+                          <Badge variant="outline" className="text-xs">
+                            Up to Date
+                          </Badge>
+                        )}
+                      </div>
+                    </div>
+                    
+                    <div className="grid grid-cols-2 gap-4 text-xs text-muted-foreground">
+                      <div>
+                        <span>Start Date:</span>
+                        <p className="font-medium text-foreground">
+                          {formatDate(user.programStartDate)}
+                        </p>
+                      </div>
+                      <div>
+                        <span>End Date:</span>
+                        <p className="font-medium text-foreground">
+                          {formatDate(user.programEndDate)}
+                        </p>
+                      </div>
+                    </div>
+
+                    {hasOverdue && (
+                      <Alert className="mt-3 border-red-200 bg-red-50 dark:border-red-800 dark:bg-red-900/20">
+                        <AlertTriangle className="h-4 w-4 text-red-600" />
+                        <AlertDescription className="text-sm">
+                          This user has overdue payments that require attention.
+                        </AlertDescription>
+                      </Alert>
+                    )}
+                  </div>
+                );
+              })}
+              
+              {!completeProgramUsers?.length && (
+                <div className="text-center py-8">
+                  <Users className="w-12 h-12 mx-auto text-muted-foreground mb-4" />
+                  <p className="text-muted-foreground">No complete program users found</p>
+                </div>
+              )}
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* Billing Statistics */}
+      <Card>
+        <CardHeader>
+          <CardTitle>Subscription Statistics</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+            <div className="text-center">
+              <div className="text-2xl font-bold text-blue-600">
+                {completeProgramUsers?.length || 0}
+              </div>
+              <div className="text-sm text-muted-foreground">Total Users</div>
+            </div>
+            <div className="text-center">
+              <div className="text-2xl font-bold text-green-600">
+                {Object.values(billingStatuses).filter(status => 
+                  status?.overdueInvoices?.length === 0 && status?.upcomingInvoices?.length === 0
+                ).length}
+              </div>
+              <div className="text-sm text-muted-foreground">Up to Date</div>
+            </div>
+            <div className="text-center">
+              <div className="text-2xl font-bold text-yellow-600">
+                {Object.values(billingStatuses).filter(status => 
+                  status?.upcomingInvoices?.length > 0
+                ).length}
+              </div>
+              <div className="text-sm text-muted-foreground">Upcoming Bills</div>
+            </div>
+            <div className="text-center">
+              <div className="text-2xl font-bold text-red-600">
+                {Object.values(billingStatuses).filter(status => 
+                  status?.overdueInvoices?.length > 0
+                ).length}
+              </div>
+              <div className="text-sm text-muted-foreground">Overdue</div>
+            </div>
           </div>
         </CardContent>
       </Card>
