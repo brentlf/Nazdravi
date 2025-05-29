@@ -627,6 +627,20 @@ export default function DashboardAppointments() {
                                 {appointment.status}
                               </Badge>
                               
+                              {/* Teams Meeting Link for confirmed appointments */}
+                              {appointment.status === 'confirmed' && appointment.teamsJoinUrl && (
+                                <Button
+                                  size="sm"
+                                  variant="outline"
+                                  onClick={() => window.open(appointment.teamsJoinUrl, '_blank')}
+                                  title="Join Teams Meeting"
+                                  className="text-green-600 hover:text-green-700 border-green-200 hover:border-green-300"
+                                >
+                                  <Video className="w-3 h-3 mr-1" />
+                                  Join Meeting
+                                </Button>
+                              )}
+                              
                               {/* Show edit options for appointments that can be modified */}
                               {canModifyAppointment(appointment) && (
                                 <div className="flex gap-1">
