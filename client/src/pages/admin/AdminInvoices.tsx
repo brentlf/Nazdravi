@@ -1130,6 +1130,165 @@ export default function AdminInvoices() {
             </CardContent>
           </Card>
         </TabsContent>
+
+        {/* Subscriptions Tab */}
+        <TabsContent value="subscriptions">
+          <div className="grid lg:grid-cols-2 gap-6">
+            {/* Generate New Subscription */}
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <Plus className="w-5 h-5" />
+                  Create Complete Program Subscription
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div>
+                  <Label htmlFor="user-select">Select Client</Label>
+                  <select
+                    id="user-select"
+                    value={selectedUser}
+                    onChange={(e) => setSelectedUser(e.target.value)}
+                    className="w-full p-2 border rounded-md mt-1"
+                  >
+                    <option value="">Choose a client...</option>
+                    {regularUsers.map((user: any) => (
+                      <option key={user.uid} value={user.uid}>
+                        {user.name} ({user.email})
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                <div>
+                  <Label htmlFor="start-date">Program Start Date</Label>
+                  <Input
+                    id="start-date"
+                    type="date"
+                    value={programStartDate}
+                    onChange={(e) => setProgramStartDate(e.target.value)}
+                    className="mt-1"
+                  />
+                </div>
+
+                <Button 
+                  onClick={handleGenerateSubscription}
+                  disabled={isGeneratingSubscription || !selectedUser || !programStartDate}
+                  className="w-full"
+                >
+                  {isGeneratingSubscription ? "Creating..." : "Create 3-Month Program"}
+                </Button>
+              </CardContent>
+            </Card>
+
+            {/* Subscription Statistics */}
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <Users className="w-5 h-5" />
+                  Subscription Overview
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="p-4 bg-green-50 rounded-lg">
+                    <div className="flex items-center gap-2">
+                      <CheckCircle className="w-5 h-5 text-green-600" />
+                      <span className="font-medium">Active Programs</span>
+                    </div>
+                    <p className="text-2xl font-bold text-green-700 mt-1">
+                      {completeProgramUsers.length}
+                    </p>
+                  </div>
+                  <div className="p-4 bg-blue-50 rounded-lg">
+                    <div className="flex items-center gap-2">
+                      <Euro className="w-5 h-5 text-blue-600" />
+                      <span className="font-medium">Monthly Revenue</span>
+                    </div>
+                    <p className="text-2xl font-bold text-blue-700 mt-1">
+                      €{(completeProgramUsers.length * 150).toFixed(0)}
+                    </p>
+                  </div>
+                </div>
+                
+                <div className="p-4 bg-purple-50 rounded-lg">
+                  <div className="flex items-center gap-2">
+                    <Calendar className="w-5 h-5 text-purple-600" />
+                    <span className="font-medium">3-Invoice Billing Cycle</span>
+                  </div>
+                  <p className="text-sm text-purple-700 mt-1">
+                    Automatic billing on day 1, end of month 1, and end of month 2
+                  </p>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+
+          {/* Active Subscriptions Table */}
+          <Card className="mt-6">
+            <CardHeader>
+              <CardTitle>Active Complete Program Subscriptions</CardTitle>
+            </CardHeader>
+            <CardContent>
+              {completeProgramUsers.length > 0 ? (
+                <div className="overflow-x-auto">
+                  <Table>
+                    <TableHeader>
+                      <TableRow>
+                        <TableHead>Client</TableHead>
+                        <TableHead>Program Period</TableHead>
+                        <TableHead>Billing Cycle</TableHead>
+                        <TableHead>Status</TableHead>
+                        <TableHead>Actions</TableHead>
+                      </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                      {completeProgramUsers.map((user: any) => {
+                        const startDate = user.programStartDate?.toDate?.() || new Date(user.programStartDate);
+                        const endDate = user.programEndDate?.toDate?.() || new Date(user.programEndDate);
+                        const currentCycle = user.billingCycle || 1;
+                        
+                        return (
+                          <TableRow key={user.uid}>
+                            <TableCell>
+                              <div>
+                                <p className="font-medium">{user.name}</p>
+                                <p className="text-sm text-muted-foreground">{user.email}</p>
+                              </div>
+                            </TableCell>
+                            <TableCell>
+                              <div className="text-sm">
+                                <p>{startDate.toLocaleDateString()} - {endDate.toLocaleDateString()}</p>
+                              </div>
+                            </TableCell>
+                            <TableCell>
+                              <Badge variant={currentCycle === 3 ? "default" : "secondary"}>
+                                Cycle {currentCycle}/3
+                              </Badge>
+                            </TableCell>
+                            <TableCell>
+                              <Badge variant="default">Active</Badge>
+                            </TableCell>
+                            <TableCell>
+                              <Button variant="outline" size="sm">
+                                View Details
+                              </Button>
+                            </TableCell>
+                          </TableRow>
+                        );
+                      })}
+                    </TableBody>
+                  </Table>
+                </div>
+              ) : (
+                <div className="p-8 text-center text-muted-foreground">
+                  <CreditCard className="w-12 h-12 mx-auto mb-4 opacity-50" />
+                  <p>No active subscriptions. Create the first complete program subscription to get started.</p>
+                </div>
+              )}
+            </CardContent>
+          </Card>
+        </TabsContent>
       </Tabs>
     </div>
   );

@@ -114,23 +114,14 @@ export default function AdminHome() {
       href: "/admin/messages"
     },
     {
-      title: "Invoice Management",
+      title: "Billing & Subscriptions",
       value: `${pendingInvoices} pending`,
-      subtitle: `${penaltyInvoices} penalty invoices`,
+      subtitle: `${completeProgramUsers} subscriptions • ${penaltyInvoices} penalties`,
       icon: Receipt,
       color: "text-orange-600",
       bgColor: "bg-orange-50 dark:bg-orange-900/20",
       href: "/admin/invoices",
       badge: pendingPenalties > 0 ? `${pendingPenalties} penalty` : null
-    },
-    {
-      title: "Subscription Billing",
-      value: completeProgramUsers.toString(),
-      subtitle: "Complete program users",
-      icon: CreditCard,
-      color: "text-purple-600",
-      bgColor: "bg-purple-50 dark:bg-purple-900/20",
-      href: "/admin/subscriptions"
     }
   ];
 
