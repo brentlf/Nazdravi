@@ -231,7 +231,7 @@ export default function Home() {
           <h2 className="text-3xl md:text-4xl font-bold mb-4">
             Ready to Start Your Transformation?
           </h2>
-          <p className="text-xl mb-8 opacity-90">
+          <p className="text-xl mb-8 opacity-90 text-[#050404]">
             Book your free consultation today and take the first step towards a healthier, happier you.
           </p>
           <Button size="lg" variant="secondary" asChild>
