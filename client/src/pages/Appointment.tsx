@@ -59,21 +59,21 @@ export default function Appointment() {
         {/* Booking Requirements & Form */}
         <div className="max-w-4xl mx-auto">
           {/* Requirements Status Card */}
-          <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 mb-8">
-            <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
+          <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-4 mb-8">
+            <h3 className="text-lg font-semibold mb-3 flex items-center gap-2">
               <Shield className="w-5 h-5" />
               Booking Requirements
             </h3>
             
-            <div className="space-y-3">
+            <div className="space-y-2">
               {/* Account Status */}
               {user ? (
-                <div className="flex items-center justify-between p-3 bg-green-50 dark:bg-green-900/20 rounded-lg border border-green-200 dark:border-green-800">
-                  <div className="flex items-center gap-3">
-                    <CheckCircle className="w-5 h-5 text-green-500" />
+                <div className="flex items-center justify-between p-2 bg-green-50 dark:bg-green-900/20 rounded border border-green-200 dark:border-green-800">
+                  <div className="flex items-center gap-2">
+                    <CheckCircle className="w-4 h-4 text-green-500" />
                     <div>
-                      <h4 className="font-medium text-green-800 dark:text-green-200">{t("account-verified", "appointment")}</h4>
-                      <p className="text-sm text-green-600 dark:text-green-300">{t("signed-in-as", "appointment")} {user.name}</p>
+                      <p className="font-medium text-green-800 dark:text-green-200 text-sm">{t("account-verified", "appointment")}</p>
+                      <p className="text-xs text-green-600 dark:text-green-300">{t("signed-in-as", "appointment")} {user.name}</p>
                     </div>
                   </div>
                   <span className="text-xs bg-green-100 text-green-800 dark:bg-green-900/50 dark:text-green-200 px-2 py-1 rounded">
@@ -81,22 +81,22 @@ export default function Appointment() {
                   </span>
                 </div>
               ) : (
-                <div className="flex items-center justify-between p-3 bg-amber-50 dark:bg-amber-900/20 rounded-lg border border-amber-200 dark:border-amber-800">
-                  <div className="flex items-center gap-3">
-                    <User className="w-5 h-5 text-amber-500" />
+                <div className="flex items-center justify-between p-2 bg-amber-50 dark:bg-amber-900/20 rounded border border-amber-200 dark:border-amber-800">
+                  <div className="flex items-center gap-2">
+                    <User className="w-4 h-4 text-amber-500" />
                     <div>
-                      <h4 className="font-medium text-amber-800 dark:text-amber-200">{t("account-required", "appointment")}</h4>
-                      <p className="text-sm text-amber-600 dark:text-amber-300">{t("create-account", "appointment")}</p>
+                      <p className="font-medium text-amber-800 dark:text-amber-200 text-sm">{t("account-required", "appointment")}</p>
+                      <p className="text-xs text-amber-600 dark:text-amber-300">{t("create-account", "appointment")}</p>
                     </div>
                   </div>
-                  <div className="flex gap-2">
+                  <div className="flex gap-1">
                     <Link href="/login">
-                      <Button size="sm" variant="outline" className="border-amber-300 text-amber-700 hover:bg-amber-50">
+                      <Button size="sm" variant="outline" className="border-amber-300 text-amber-700 hover:bg-amber-50 text-xs px-2 py-1">
                         {t("sign-in", "appointment")}
                       </Button>
                     </Link>
                     <Link href="/register">
-                      <Button size="sm" className="bg-amber-600 hover:bg-amber-700 text-white">
+                      <Button size="sm" className="bg-amber-600 hover:bg-amber-700 text-white text-xs px-2 py-1">
                         {t("register", "appointment")}
                       </Button>
                     </Link>
