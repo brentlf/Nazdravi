@@ -896,7 +896,7 @@ export default function AdminAppointments() {
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {filteredAppointments.map((appointment) => (
+                  {processedAppointments.map((appointment) => (
                     <TableRow key={appointment.id}>
                       <TableCell>
                         <div>
