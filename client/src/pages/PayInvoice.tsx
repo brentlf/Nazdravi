@@ -40,15 +40,19 @@ const PaymentForm = ({ invoice, clientSecret }: { invoice: Invoice; clientSecret
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    console.log('💳 Payment submission started');
 
     if (!stripe || !elements) {
+      console.error('❌ Stripe not initialized:', { stripe: !!stripe, elements: !!elements });
       return;
     }
 
     setIsProcessing(true);
+    console.log('💳 Processing payment for invoice:', invoice.invoiceNumber);
 
     try {
-      const { error } = await stripe.confirmPayment({
+      console.log('💳 Confirming payment with Stripe...');
+      const { error, paymentIntent } = await stripe.confirmPayment({
         elements,
         confirmParams: {
           return_url: `${window.location.origin}/payment-success`,
@@ -57,12 +61,14 @@ const PaymentForm = ({ invoice, clientSecret }: { invoice: Invoice; clientSecret
       });
 
       if (error) {
+        console.error('❌ Payment failed:', error);
         toast({
           title: "Payment Failed",
           description: error.message,
           variant: "destructive",
         });
       } else {
+        console.log('✅ Payment successful:', paymentIntent);
         setPaymentComplete(true);
         toast({
           title: "Payment Successful",
@@ -70,6 +76,7 @@ const PaymentForm = ({ invoice, clientSecret }: { invoice: Invoice; clientSecret
         });
       }
     } catch (error) {
+      console.error('❌ Payment error:', error);
       toast({
         title: "Payment Error",
         description: "An unexpected error occurred. Please try again.",
@@ -77,6 +84,7 @@ const PaymentForm = ({ invoice, clientSecret }: { invoice: Invoice; clientSecret
       });
     } finally {
       setIsProcessing(false);
+      console.log('💳 Payment processing completed');
     }
   };
 
@@ -219,6 +227,8 @@ export default function PayInvoice() {
 
         setInvoice(realInvoice);
 
+        console.log('💳 Creating payment intent for invoice:', realInvoice.invoiceNumber, 'Amount:', realInvoice.amount);
+
         // Create Stripe payment intent for this invoice
         const response = await fetch('/api/create-payment-intent', {
           method: 'POST',
@@ -234,6 +244,8 @@ export default function PayInvoice() {
             }
           }),
         });
+
+        console.log('💳 Payment intent response status:', response.status);
 
         if (response.ok) {
           const data = await response.json();

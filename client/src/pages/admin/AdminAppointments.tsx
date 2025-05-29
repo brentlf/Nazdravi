@@ -932,15 +932,40 @@ export default function AdminAppointments() {
                                     />
                                     <Button
                                       size="sm"
-                                      onClick={() => {
-                                        // Save Teams URL logic would go here
-                                        console.log('Save Teams URL:', selectedAppointment.teamsJoinUrl);
+                                      onClick={async () => {
+                                        if (!selectedAppointment.id) return;
+                                        setUpdateLoading(true);
+                                        try {
+                                          const response = await fetch(`/api/appointments/${selectedAppointment.id}/teams-url`, {
+                                            method: 'PATCH',
+                                            headers: { 'Content-Type': 'application/json' },
+                                            body: JSON.stringify({ 
+                                              teamsJoinUrl: selectedAppointment.teamsJoinUrl 
+                                            })
+                                          });
+                                          if (response.ok) {
+                                            toast({
+                                              title: "Success",
+                                              description: "Teams meeting URL saved successfully",
+                                            });
+                                          } else {
+                                            throw new Error('Failed to save Teams URL');
+                                          }
+                                        } catch (error) {
+                                          toast({
+                                            title: "Error",
+                                            description: "Failed to save Teams meeting URL",
+                                            variant: "destructive",
+                                          });
+                                        } finally {
+                                          setUpdateLoading(false);
+                                        }
                                       }}
                                       disabled={updateLoading}
                                       className="bg-blue-600 hover:bg-blue-700 text-white"
                                     >
                                       <Video className="w-3 h-3 mr-1" />
-                                      Save Meeting URL
+                                      {updateLoading ? "Saving..." : "Save Meeting URL"}
                                     </Button>
                                     {selectedAppointment.teamsJoinUrl && (
                                       <Button

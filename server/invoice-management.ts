@@ -106,9 +106,7 @@ export class InvoiceManagementService {
       const paymentIntent = await stripe.paymentIntents.create({
         amount: Math.round(totalAmount * 100), // Convert to cents
         currency: 'eur',
-        automatic_payment_methods: {
-          enabled: true,
-        },
+        payment_method_types: ['card', 'ideal'],
         metadata: {
           invoiceNumber,
           userId: data.userId,
@@ -184,9 +182,7 @@ export class InvoiceManagementService {
     const paymentIntent = await stripe.paymentIntents.create({
       amount: Math.round(data.subscriptionAmount * 100),
       currency: 'eur',
-      automatic_payment_methods: {
-        enabled: true,
-      },
+      payment_method_types: ['card', 'ideal'],
       metadata: {
         invoiceNumber,
         userId: data.userId,
