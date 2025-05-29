@@ -12,7 +12,8 @@ import {
   AlertTriangle,
   CalendarX,
   Mail,
-  Receipt
+  Receipt,
+  CreditCard
 } from "lucide-react";
 import { Link } from "wouter";
 import { useFirestoreCollection } from "@/hooks/useFirestore";
@@ -56,6 +57,7 @@ export default function AdminHome() {
   // Calculate stats
   const totalUsers = users?.length || 0;
   const clientUsers = users?.filter(user => user.role === "client").length || 0;
+  const completeProgramUsers = users?.filter(user => (user as any).servicePlan === "complete-program").length || 0;
   
   const pendingAppointments = appointments?.filter(apt => apt.status === "pending").length || 0;
   const thisMonthAppointments = appointments?.filter(apt => 
@@ -120,6 +122,15 @@ export default function AdminHome() {
       bgColor: "bg-orange-50 dark:bg-orange-900/20",
       href: "/admin/invoices",
       badge: pendingPenalties > 0 ? `${pendingPenalties} penalty` : null
+    },
+    {
+      title: "Subscription Billing",
+      value: completeProgramUsers.toString(),
+      subtitle: "Complete program users",
+      icon: CreditCard,
+      color: "text-purple-600",
+      bgColor: "bg-purple-50 dark:bg-purple-900/20",
+      href: "/admin/subscriptions"
     }
   ];
 
