@@ -159,7 +159,16 @@ export function AppointmentsCalendar({ appointments }: AppointmentsCalendarProps
                             {appointment.timeslot?.split('-')[0]} {appointment.name?.split(' ')[0]}
                           </span>
                           {appointment.status === 'confirmed' && (appointment as any).teamsJoinUrl && (
-                            <Video className="w-3 h-3 flex-shrink-0 ml-auto" />
+                            <button
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                handleJoinTeams(appointment);
+                              }}
+                              className="ml-auto bg-blue-500 hover:bg-blue-600 text-white rounded p-0.5 transition-colors"
+                              title="Join Teams Meeting"
+                            >
+                              <Video className="w-3 h-3" />
+                            </button>
                           )}
                         </div>
                       </div>
@@ -200,7 +209,16 @@ export function AppointmentsCalendar({ appointments }: AppointmentsCalendarProps
                                       <span className="font-medium">{appointment.name}</span>
                                     </div>
                                     {appointment.status === 'confirmed' && (appointment as any).teamsJoinUrl && (
-                                      <Video className="w-3 h-3" />
+                                      <button
+                                        onClick={(e) => {
+                                          e.stopPropagation();
+                                          handleJoinTeams(appointment);
+                                        }}
+                                        className="bg-blue-500 hover:bg-blue-600 text-white rounded p-1 transition-colors"
+                                        title="Join Teams Meeting"
+                                      >
+                                        <Video className="w-3 h-3" />
+                                      </button>
                                     )}
                                   </div>
                                   <div className="mt-1 text-muted-foreground">
