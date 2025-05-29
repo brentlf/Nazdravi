@@ -397,15 +397,15 @@ export default function DashboardAppointments() {
     return dateB.getTime() - dateA.getTime(); // Reverse sort - newest first
   }) || [];
 
-  // Get next upcoming appointment (future appointments only)
+  // Get next upcoming appointment (future confirmed/pending appointments only)
   const upcomingAppointments = sortedAppointments.filter(apt => {
     const appointmentDate = parseAppointmentDate(apt);
     const appointmentDateTime = new Date(`${appointmentDate.toISOString().split('T')[0]}T${apt.timeslot}`);
     const now = new Date();
     return appointmentDateTime > now && 
+           (apt.status === "confirmed" || apt.status === "pending") &&
            apt.status !== "cancelled" && 
-           apt.status !== "cancelled_reschedule" &&
-           apt.status !== "cancelled_client";
+           apt.status !== "cancelled_reschedule";
   });
 
   const nextAppointment = upcomingAppointments[0];
