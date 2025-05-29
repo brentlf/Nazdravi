@@ -961,82 +961,88 @@ export default function DashboardAppointments() {
 
             <Form {...preEvaluationForm}>
               <form onSubmit={preEvaluationForm.handleSubmit(onPreEvaluationSubmit)} className="space-y-6">
-                {/* Basic Information */}
+                
+                {/* Health Goals Section */}
                 <div className="space-y-4">
-                  <h3 className="text-lg font-semibold">Basic Information</h3>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <h3 className="text-lg font-semibold text-sage-dark">Health Goals</h3>
+                  <FormField
+                    control={preEvaluationForm.control}
+                    name="healthGoals"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>What are your primary health goals? (Select all that apply)</FormLabel>
+                        <div className="grid grid-cols-2 gap-2">
+                          {[
+                            { value: "weight-loss", label: "Weight Loss" },
+                            { value: "weight-gain", label: "Weight Gain" },
+                            { value: "muscle-building", label: "Muscle Building" },
+                            { value: "improve-energy", label: "Improve Energy" },
+                            { value: "better-digestion", label: "Better Digestion" },
+                            { value: "manage-condition", label: "Manage Medical Condition" },
+                            { value: "sports-performance", label: "Sports Performance" },
+                            { value: "general-wellness", label: "General Wellness" }
+                          ].map((goal) => (
+                            <div key={goal.value} className="flex items-center space-x-2">
+                              <Checkbox
+                                id={goal.value}
+                                checked={field.value?.includes(goal.value)}
+                                onCheckedChange={(checked) => {
+                                  const current = field.value || [];
+                                  if (checked) {
+                                    field.onChange([...current, goal.value]);
+                                  } else {
+                                    field.onChange(current.filter((item) => item !== goal.value));
+                                  }
+                                }}
+                              />
+                              <label htmlFor={goal.value} className="text-sm">{goal.label}</label>
+                            </div>
+                          ))}
+                        </div>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+
+                {/* Basic Measurements */}
+                <div className="space-y-4">
+                  <h3 className="text-lg font-semibold text-sage-dark">Basic Measurements</h3>
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                     <FormField
                       control={preEvaluationForm.control}
-                      name="age"
+                      name="currentWeight"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>Age</FormLabel>
+                          <FormLabel>Current Weight (kg)</FormLabel>
                           <FormControl>
-                            <Input 
-                              type="number" 
-                              {...field} 
-                              onChange={(e) => field.onChange(parseInt(e.target.value))}
-                            />
+                            <Input placeholder="e.g., 70" {...field} />
                           </FormControl>
                           <FormMessage />
                         </FormItem>
                       )}
                     />
-
                     <FormField
                       control={preEvaluationForm.control}
-                      name="gender"
+                      name="targetWeight"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>Gender</FormLabel>
-                          <Select onValueChange={field.onChange} defaultValue={field.value}>
-                            <FormControl>
-                              <SelectTrigger>
-                                <SelectValue placeholder="Select gender" />
-                              </SelectTrigger>
-                            </FormControl>
-                            <SelectContent>
-                              <SelectItem value="male">Male</SelectItem>
-                              <SelectItem value="female">Female</SelectItem>
-                              <SelectItem value="other">Other</SelectItem>
-                              <SelectItem value="prefer-not-to-say">Prefer not to say</SelectItem>
-                            </SelectContent>
-                          </Select>
+                          <FormLabel>Target Weight (kg)</FormLabel>
+                          <FormControl>
+                            <Input placeholder="e.g., 65 (optional)" {...field} />
+                          </FormControl>
                           <FormMessage />
                         </FormItem>
                       )}
                     />
-
                     <FormField
                       control={preEvaluationForm.control}
-                      name="height"
+                      name="heightCm"
                       render={({ field }) => (
                         <FormItem>
                           <FormLabel>Height (cm)</FormLabel>
                           <FormControl>
-                            <Input 
-                              type="number" 
-                              {...field} 
-                              onChange={(e) => field.onChange(parseInt(e.target.value))}
-                            />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-
-                    <FormField
-                      control={preEvaluationForm.control}
-                      name="weight"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Weight (kg)</FormLabel>
-                          <FormControl>
-                            <Input 
-                              type="number" 
-                              {...field} 
-                              onChange={(e) => field.onChange(parseInt(e.target.value))}
-                            />
+                            <Input placeholder="e.g., 170" {...field} />
                           </FormControl>
                           <FormMessage />
                         </FormItem>
@@ -1045,31 +1051,73 @@ export default function DashboardAppointments() {
                   </div>
                 </div>
 
-                {/* Health Goals */}
+                {/* Activity Level */}
                 <div className="space-y-4">
-                  <h3 className="text-lg font-semibold">Health Goals</h3>
+                  <h3 className="text-lg font-semibold text-sage-dark">Activity Level</h3>
                   <FormField
                     control={preEvaluationForm.control}
-                    name="primaryGoal"
+                    name="activityLevel"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Primary Goal</FormLabel>
+                        <FormLabel>How would you describe your current activity level?</FormLabel>
                         <Select onValueChange={field.onChange} defaultValue={field.value}>
                           <FormControl>
                             <SelectTrigger>
-                              <SelectValue placeholder="Select your primary goal" />
+                              <SelectValue placeholder="Select your activity level" />
                             </SelectTrigger>
                           </FormControl>
                           <SelectContent>
-                            <SelectItem value="weight-loss">Weight Loss</SelectItem>
-                            <SelectItem value="weight-gain">Weight Gain</SelectItem>
-                            <SelectItem value="muscle-building">Muscle Building</SelectItem>
-                            <SelectItem value="general-health">General Health</SelectItem>
-                            <SelectItem value="sports-performance">Sports Performance</SelectItem>
-                            <SelectItem value="medical-condition-support">Medical Condition Support</SelectItem>
-                            <SelectItem value="other">Other</SelectItem>
+                            <SelectItem value="sedentary">Sedentary (little to no exercise)</SelectItem>
+                            <SelectItem value="lightly-active">Lightly Active (light exercise 1-3 days/week)</SelectItem>
+                            <SelectItem value="moderately-active">Moderately Active (moderate exercise 3-5 days/week)</SelectItem>
+                            <SelectItem value="very-active">Very Active (hard exercise 6-7 days/week)</SelectItem>
+                            <SelectItem value="extremely-active">Extremely Active (very hard exercise, physical job)</SelectItem>
                           </SelectContent>
                         </Select>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+
+                {/* Health Information */}
+                <div className="space-y-4">
+                  <h3 className="text-lg font-semibold text-sage-dark">Health Information</h3>
+                  
+                  <FormField
+                    control={preEvaluationForm.control}
+                    name="medicalConditions"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Do you have any medical conditions? (Select all that apply)</FormLabel>
+                        <div className="grid grid-cols-2 gap-2">
+                          {[
+                            { value: "diabetes", label: "Diabetes" },
+                            { value: "hypertension", label: "High Blood Pressure" },
+                            { value: "heart-disease", label: "Heart Disease" },
+                            { value: "thyroid", label: "Thyroid Issues" },
+                            { value: "digestive", label: "Digestive Issues" },
+                            { value: "kidney-disease", label: "Kidney Disease" },
+                            { value: "other", label: "Other" },
+                            { value: "none", label: "None" }
+                          ].map((condition) => (
+                            <div key={condition.value} className="flex items-center space-x-2">
+                              <Checkbox
+                                id={condition.value}
+                                checked={field.value?.includes(condition.value)}
+                                onCheckedChange={(checked) => {
+                                  const current = field.value || [];
+                                  if (checked) {
+                                    field.onChange([...current, condition.value]);
+                                  } else {
+                                    field.onChange(current.filter((item) => item !== condition.value));
+                                  }
+                                }}
+                              />
+                              <label htmlFor={condition.value} className="text-sm">{condition.label}</label>
+                            </div>
+                          ))}
+                        </div>
                         <FormMessage />
                       </FormItem>
                     )}
@@ -1077,13 +1125,134 @@ export default function DashboardAppointments() {
 
                   <FormField
                     control={preEvaluationForm.control}
-                    name="specificGoals"
+                    name="medications"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Specific Goals & Expectations</FormLabel>
+                        <FormLabel>Are you currently taking any medications? (Select all that apply)</FormLabel>
+                        <div className="grid grid-cols-2 gap-2">
+                          {[
+                            { value: "blood-pressure", label: "Blood Pressure Medication" },
+                            { value: "diabetes", label: "Diabetes Medication" },
+                            { value: "cholesterol", label: "Cholesterol Medication" },
+                            { value: "thyroid", label: "Thyroid Medication" },
+                            { value: "supplements", label: "Vitamins/Supplements" },
+                            { value: "other", label: "Other Prescription Drugs" },
+                            { value: "none", label: "None" }
+                          ].map((medication) => (
+                            <div key={medication.value} className="flex items-center space-x-2">
+                              <Checkbox
+                                id={medication.value}
+                                checked={field.value?.includes(medication.value)}
+                                onCheckedChange={(checked) => {
+                                  const current = field.value || [];
+                                  if (checked) {
+                                    field.onChange([...current, medication.value]);
+                                  } else {
+                                    field.onChange(current.filter((item) => item !== medication.value));
+                                  }
+                                }}
+                              />
+                              <label htmlFor={medication.value} className="text-sm">{medication.label}</label>
+                            </div>
+                          ))}
+                        </div>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+
+                  <FormField
+                    control={preEvaluationForm.control}
+                    name="allergies"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Do you have any food allergies or intolerances? (Select all that apply)</FormLabel>
+                        <div className="grid grid-cols-2 gap-2">
+                          {[
+                            { value: "dairy", label: "Dairy/Lactose" },
+                            { value: "gluten", label: "Gluten" },
+                            { value: "nuts", label: "Nuts" },
+                            { value: "shellfish", label: "Shellfish" },
+                            { value: "eggs", label: "Eggs" },
+                            { value: "soy", label: "Soy" },
+                            { value: "other", label: "Other" },
+                            { value: "none", label: "None" }
+                          ].map((allergy) => (
+                            <div key={allergy.value} className="flex items-center space-x-2">
+                              <Checkbox
+                                id={allergy.value}
+                                checked={field.value?.includes(allergy.value)}
+                                onCheckedChange={(checked) => {
+                                  const current = field.value || [];
+                                  if (checked) {
+                                    field.onChange([...current, allergy.value]);
+                                  } else {
+                                    field.onChange(current.filter((item) => item !== allergy.value));
+                                  }
+                                }}
+                              />
+                              <label htmlFor={allergy.value} className="text-sm">{allergy.label}</label>
+                            </div>
+                          ))}
+                        </div>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+
+                {/* Dietary Information */}
+                <div className="space-y-4">
+                  <h3 className="text-lg font-semibold text-sage-dark">Dietary Information</h3>
+                  
+                  <FormField
+                    control={preEvaluationForm.control}
+                    name="dietaryRestrictions"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Do you follow any specific dietary patterns? (Select all that apply)</FormLabel>
+                        <div className="grid grid-cols-2 gap-2">
+                          {[
+                            { value: "vegetarian", label: "Vegetarian" },
+                            { value: "vegan", label: "Vegan" },
+                            { value: "keto", label: "Ketogenic" },
+                            { value: "paleo", label: "Paleo" },
+                            { value: "mediterranean", label: "Mediterranean" },
+                            { value: "intermittent-fasting", label: "Intermittent Fasting" },
+                            { value: "low-carb", label: "Low Carb" },
+                            { value: "none", label: "No specific diet" }
+                          ].map((diet) => (
+                            <div key={diet.value} className="flex items-center space-x-2">
+                              <Checkbox
+                                id={diet.value}
+                                checked={field.value?.includes(diet.value)}
+                                onCheckedChange={(checked) => {
+                                  const current = field.value || [];
+                                  if (checked) {
+                                    field.onChange([...current, diet.value]);
+                                  } else {
+                                    field.onChange(current.filter((item) => item !== diet.value));
+                                  }
+                                }}
+                              />
+                              <label htmlFor={diet.value} className="text-sm">{diet.label}</label>
+                            </div>
+                          ))}
+                        </div>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+
+                  <FormField
+                    control={preEvaluationForm.control}
+                    name="previousDietExperience"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Describe your previous diet and nutrition experience</FormLabel>
                         <FormControl>
                           <Textarea 
-                            placeholder="Describe your specific nutrition and health goals..."
+                            placeholder="Tell us about any previous diets you've tried, what worked, what didn't work, etc."
                             {...field}
                             rows={3}
                           />
@@ -1094,7 +1263,143 @@ export default function DashboardAppointments() {
                   />
                 </div>
 
-                {/* Additional form sections would continue here... */}
+                {/* Lifestyle Information */}
+                <div className="space-y-4">
+                  <h3 className="text-lg font-semibold text-sage-dark">Lifestyle Information</h3>
+                  
+                  <FormField
+                    control={preEvaluationForm.control}
+                    name="motivationLevel"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>How motivated are you to make dietary changes?</FormLabel>
+                        <Select onValueChange={field.onChange} defaultValue={field.value}>
+                          <FormControl>
+                            <SelectTrigger>
+                              <SelectValue placeholder="Select your motivation level" />
+                            </SelectTrigger>
+                          </FormControl>
+                          <SelectContent>
+                            <SelectItem value="very-high">Very High - Ready to make significant changes</SelectItem>
+                            <SelectItem value="high">High - Willing to make moderate changes</SelectItem>
+                            <SelectItem value="moderate">Moderate - Open to some changes</SelectItem>
+                            <SelectItem value="low">Low - Prefer minimal changes</SelectItem>
+                          </SelectContent>
+                        </Select>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+
+                  <FormField
+                    control={preEvaluationForm.control}
+                    name="availableTimeForCooking"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>How much time do you typically have available for meal preparation?</FormLabel>
+                        <Select onValueChange={field.onChange} defaultValue={field.value}>
+                          <FormControl>
+                            <SelectTrigger>
+                              <SelectValue placeholder="Select your available time" />
+                            </SelectTrigger>
+                          </FormControl>
+                          <SelectContent>
+                            <SelectItem value="minimal">Minimal (15-30 minutes/day)</SelectItem>
+                            <SelectItem value="moderate">Moderate (30-60 minutes/day)</SelectItem>
+                            <SelectItem value="substantial">Substantial (1-2 hours/day)</SelectItem>
+                            <SelectItem value="extensive">Extensive (2+ hours/day)</SelectItem>
+                          </SelectContent>
+                        </Select>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+
+                  <FormField
+                    control={preEvaluationForm.control}
+                    name="preferredMealTimes"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>What are your preferred meal times? (Select all that apply)</FormLabel>
+                        <div className="grid grid-cols-2 gap-2">
+                          {[
+                            { value: "early-breakfast", label: "Early Breakfast (6-7 AM)" },
+                            { value: "late-breakfast", label: "Late Breakfast (8-10 AM)" },
+                            { value: "mid-morning-snack", label: "Mid-Morning Snack" },
+                            { value: "early-lunch", label: "Early Lunch (11 AM-12 PM)" },
+                            { value: "late-lunch", label: "Late Lunch (1-2 PM)" },
+                            { value: "afternoon-snack", label: "Afternoon Snack" },
+                            { value: "early-dinner", label: "Early Dinner (5-6 PM)" },
+                            { value: "late-dinner", label: "Late Dinner (7-8 PM)" }
+                          ].map((time) => (
+                            <div key={time.value} className="flex items-center space-x-2">
+                              <Checkbox
+                                id={time.value}
+                                checked={field.value?.includes(time.value)}
+                                onCheckedChange={(checked) => {
+                                  const current = field.value || [];
+                                  if (checked) {
+                                    field.onChange([...current, time.value]);
+                                  } else {
+                                    field.onChange(current.filter((item) => item !== time.value));
+                                  }
+                                }}
+                              />
+                              <label htmlFor={time.value} className="text-sm">{time.label}</label>
+                            </div>
+                          ))}
+                        </div>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+
+                  <FormField
+                    control={preEvaluationForm.control}
+                    name="budgetRange"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>What is your weekly grocery budget range?</FormLabel>
+                        <Select onValueChange={field.onChange} defaultValue={field.value}>
+                          <FormControl>
+                            <SelectTrigger>
+                              <SelectValue placeholder="Select your budget range" />
+                            </SelectTrigger>
+                          </FormControl>
+                          <SelectContent>
+                            <SelectItem value="budget">Budget (€50-75/week)</SelectItem>
+                            <SelectItem value="moderate">Moderate (€75-100/week)</SelectItem>
+                            <SelectItem value="comfortable">Comfortable (€100-150/week)</SelectItem>
+                            <SelectItem value="premium">Premium (€150+/week)</SelectItem>
+                          </SelectContent>
+                        </Select>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+
+                {/* Additional Notes */}
+                <div className="space-y-4">
+                  <h3 className="text-lg font-semibold text-sage-dark">Additional Information</h3>
+                  <FormField
+                    control={preEvaluationForm.control}
+                    name="additionalNotes"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Is there anything else you'd like us to know?</FormLabel>
+                        <FormControl>
+                          <Textarea 
+                            placeholder="Share any additional information that might help us create a personalized nutrition plan for you..."
+                            {...field}
+                            rows={4}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
 
                 <div className="flex justify-end gap-4 pt-6">
                   <Button
