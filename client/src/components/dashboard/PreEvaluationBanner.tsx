@@ -121,14 +121,51 @@ export function PreEvaluationBanner() {
         completedAt: new Date()
       };
 
+      // Save to preEvaluationForms collection
       await setDoc(formDoc, submissionData);
+
+      // Also update user's health profile in users collection
+      const { updateDoc } = await import('firebase/firestore');
+      const userRef = doc(db, 'users', user.uid);
+      
+      await updateDoc(userRef, {
+        // Basic health information
+        healthGoals: formData.healthGoals,
+        currentWeight: formData.currentWeight,
+        targetWeight: formData.targetWeight,
+        height: formData.heightCm,
+        activityLevel: formData.activityLevel,
+        
+        // Medical information
+        medicalConditions: formData.medicalConditions,
+        medications: formData.medications,
+        allergies: formData.allergies,
+        
+        // Dietary information
+        dietaryRestrictions: formData.dietaryRestrictions,
+        previousDietExperience: formData.previousDietExperience,
+        
+        // Lifestyle information
+        motivationLevel: formData.motivationLevel,
+        availableTimeForCooking: formData.availableTimeForCooking,
+        preferredMealTimes: formData.preferredMealTimes,
+        budgetRange: formData.budgetRange,
+        
+        // Additional notes
+        additionalNotes: formData.additionalNotes,
+        
+        // Metadata
+        healthAssessmentCompleted: true,
+        healthAssessmentCompletedAt: new Date(),
+        updatedAt: new Date(),
+      });
       
       setHasCompletedForm(true);
       setShowForm(false);
       
       toast({
         title: "Form Submitted Successfully",
-        description: "Your pre-evaluation form has been submitted. We'll review it before your appointment.",
+        description: "Your health information has been saved and your profile updated.",
       });
     } catch (error) {
       console.error('Error submitting form:', error);

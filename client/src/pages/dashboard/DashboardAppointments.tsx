@@ -283,15 +283,34 @@ export default function DashboardAppointments() {
       const userRef = doc(db, 'users', user.uid);
       
       await updateDoc(userRef, {
-        medicalConditions: data.medicalConditions,
-        medications: data.medications,
-        allergies: data.allergies,
+        // Basic health information
+        healthGoals: data.healthGoals,
         currentWeight: data.currentWeight,
         targetWeight: data.targetWeight,
         height: data.heightCm,
         activityLevel: data.activityLevel,
+        
+        // Medical information
+        medicalConditions: data.medicalConditions,
+        medications: data.medications,
+        allergies: data.allergies,
+        
+        // Dietary information
         dietaryRestrictions: data.dietaryRestrictions,
-        healthGoals: data.healthGoals,
+        previousDietExperience: data.previousDietExperience,
+        
+        // Lifestyle information
+        motivationLevel: data.motivationLevel,
+        availableTimeForCooking: data.availableTimeForCooking,
+        preferredMealTimes: data.preferredMealTimes,
+        budgetRange: data.budgetRange,
+        
+        // Additional notes
+        additionalNotes: data.additionalNotes,
+        
+        // Metadata
+        healthAssessmentCompleted: true,
+        healthAssessmentCompletedAt: new Date(),
         updatedAt: new Date(),
       });
 
