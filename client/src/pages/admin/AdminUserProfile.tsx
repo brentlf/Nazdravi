@@ -50,13 +50,13 @@ function AdminUserProfile() {
 
   // Fetch related data after user profile is loaded
   useEffect(() => {
-    if (user && userId) {
+    if (user && userId && !preEvaluationForm) {
       console.log('User loaded, now fetching related data for:', user.email);
       fetchUserAppointments();
       fetchUserInvoices();
       fetchPreEvaluationForm();
     }
-  }, [user, userId]);
+  }, [user?.uid, userId]); // Only depend on user.uid to prevent infinite loop
 
   const fetchUserProfile = async () => {
     if (!userId) return;
@@ -306,19 +306,6 @@ function AdminUserProfile() {
           budgetRange: combinedHealthData.budgetRange
         });
         setPreEvaluationForm(combinedHealthData);
-        
-        // Update user object with health information from forms
-        setUser(prev => prev ? {
-          ...prev,
-          medicalConditions: combinedHealthData.medicalConditions || prev.medicalConditions || [],
-          medications: combinedHealthData.medications || prev.medications || [],
-          allergies: combinedHealthData.allergies || prev.allergies || [],
-          phone: combinedHealthData.phone || prev.phone,
-          address: combinedHealthData.address || prev.address,
-          emergencyContact: combinedHealthData.emergencyContact || prev.emergencyContact,
-          dateOfBirth: combinedHealthData.dateOfBirth || prev.dateOfBirth,
-          gpContact: combinedHealthData.gpContact || prev.gpContact
-        } : null);
       } else {
         console.log('No health data found in any collection');
         setPreEvaluationForm(null);
