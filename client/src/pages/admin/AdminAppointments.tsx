@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Search, Calendar, Clock, CheckCircle, XCircle, AlertCircle, Filter, ArrowLeft, CalendarX, RotateCcw, Edit, FileText, Mail, Euro, UserCheck, ClipboardList } from "lucide-react";
+import { Search, Calendar, Clock, CheckCircle, XCircle, AlertCircle, Filter, ArrowLeft, CalendarX, RotateCcw, Edit, FileText, Mail, Euro, UserCheck, ClipboardList, Video } from "lucide-react";
 import { Link } from "wouter";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -56,7 +56,31 @@ export default function AdminAppointments() {
 
   // Fetch appointments
   const { data: appointments, loading } = useFirestoreCollection<Appointment>("appointments");
-  const { update: updateAppointmentStatus } = useFirestoreActions("appointments");
+  const { update: updateAppointmentStatus, loading: updateLoading } = useFirestoreActions("appointments");
+
+  // Handle status change functionality
+  const handleStatusChange = async (appointmentId: string, newStatus: string) => {
+    try {
+      await updateAppointmentStatus(appointmentId, { 
+        status: newStatus,
+        lastModified: new Date().toISOString()
+      });
+      
+      toast({
+        title: "Status Updated",
+        description: `Appointment status changed to ${newStatus}`,
+      });
+      
+      setIsChangingStatus(false);
+      setSelectedAppointment(null);
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to update appointment status",
+        variant: "destructive",
+      });
+    }
+  };
 
   // Calculate status overview for action items
   const getStatusOverview = () => {
@@ -879,6 +903,79 @@ export default function AdminAppointments() {
                                           {selectedAppointment.status}
                                         </Badge>
                                       </p>
+                                      {(selectedAppointment as any).teamsJoinUrl && (
+                                        <p><strong>Teams Meeting:</strong> 
+                                          <Button
+                                            size="sm"
+                                            variant="outline"
+                                            onClick={() => window.open((selectedAppointment as any).teamsJoinUrl, '_blank')}
+                                            className="ml-2 text-green-600 hover:text-green-700 border-green-200 hover:border-green-300"
+                                          >
+                                            <Video className="w-3 h-3 mr-1" />
+                                            Join Meeting
+                                          </Button>
+                                        </p>
+                                      )}
+                                    </div>
+                                  </div>
+                                </div>
+
+                                {/* Status Management */}
+                                <div>
+                                  <h4 className="font-semibold mb-2">Status Management</h4>
+                                  <div className="p-4 bg-gray-50 dark:bg-gray-800 rounded-lg space-y-3">
+                                    <p className="text-sm">Change appointment status (can modify even completed appointments):</p>
+                                    <div className="flex gap-2 flex-wrap">
+                                      <Button
+                                        size="sm"
+                                        variant={selectedAppointment.status === "confirmed" ? "default" : "outline"}
+                                        onClick={() => handleStatusChange(selectedAppointment.id!, "confirmed")}
+                                        disabled={updateLoading}
+                                        className="bg-green-600 hover:bg-green-700 text-white"
+                                      >
+                                        <CheckCircle className="w-3 h-3 mr-1" />
+                                        Confirmed
+                                      </Button>
+                                      <Button
+                                        size="sm"
+                                        variant={selectedAppointment.status === "done" ? "default" : "outline"}
+                                        onClick={() => handleStatusChange(selectedAppointment.id!, "done")}
+                                        disabled={updateLoading}
+                                        className="bg-blue-600 hover:bg-blue-700 text-white"
+                                      >
+                                        <UserCheck className="w-3 h-3 mr-1" />
+                                        Completed
+                                      </Button>
+                                      <Button
+                                        size="sm"
+                                        variant={selectedAppointment.status === "pending" ? "default" : "outline"}
+                                        onClick={() => handleStatusChange(selectedAppointment.id!, "pending")}
+                                        disabled={updateLoading}
+                                        className="bg-yellow-600 hover:bg-yellow-700 text-white"
+                                      >
+                                        <Clock className="w-3 h-3 mr-1" />
+                                        Pending
+                                      </Button>
+                                      <Button
+                                        size="sm"
+                                        variant={selectedAppointment.status === "cancelled" ? "default" : "outline"}
+                                        onClick={() => handleStatusChange(selectedAppointment.id!, "cancelled")}
+                                        disabled={updateLoading}
+                                        className="bg-red-600 hover:bg-red-700 text-white"
+                                      >
+                                        <XCircle className="w-3 h-3 mr-1" />
+                                        Cancelled
+                                      </Button>
+                                      <Button
+                                        size="sm"
+                                        variant={selectedAppointment.status === "reschedule_requested" ? "default" : "outline"}
+                                        onClick={() => handleStatusChange(selectedAppointment.id!, "reschedule_requested")}
+                                        disabled={updateLoading}
+                                        className="bg-orange-600 hover:bg-orange-700 text-white"
+                                      >
+                                        <CalendarX className="w-3 h-3 mr-1" />
+                                        Reschedule Requested
+                                      </Button>
                                     </div>
                                   </div>
                                 </div>
