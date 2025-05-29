@@ -50,10 +50,13 @@ export default function AdminAppointments() {
   const [isEditingAppointment, setIsEditingAppointment] = useState(false);
   const [editDate, setEditDate] = useState("");
   const [editTimeslot, setEditTimeslot] = useState("");
+  const [isChangingStatus, setIsChangingStatus] = useState(false);
+  const [newStatus, setNewStatus] = useState("");
   const { toast } = useToast();
 
   // Fetch appointments
   const { data: appointments, loading } = useFirestoreCollection<Appointment>("appointments");
+  const { update: updateAppointmentStatus } = useFirestoreActions("appointments");
 
   // Calculate status overview for action items
   const getStatusOverview = () => {
@@ -107,7 +110,7 @@ export default function AdminAppointments() {
 
   const statusOverview = getStatusOverview();
 
-  const { update: updateAppointment, loading: actionLoading } = useFirestoreActions("appointments");
+
 
   // Helper function to get action item icons for each appointment
   const getActionItemIcons = (appointment: any) => {
@@ -291,10 +294,10 @@ export default function AdminAppointments() {
     return matchesSearch && matchesStatus;
   }) || [];
 
-  const handleStatusChange = async (appointmentId: string, newStatus: "confirmed" | "done" | "reschedule_requested" | "cancelled_reschedule") => {
+  const handleAppointmentStatusChange = async (appointmentId: string, newStatus: "confirmed" | "done" | "reschedule_requested" | "cancelled_reschedule") => {
     try {
       const appointment = appointments?.find(apt => apt.id === appointmentId);
-      await updateAppointment(appointmentId, { status: newStatus });
+      await updateAppointmentStatus(appointmentId, { status: newStatus });
       
       let title = "Appointment updated";
       let description = `Appointment status changed to ${newStatus}.`;
