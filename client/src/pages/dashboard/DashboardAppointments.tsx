@@ -448,54 +448,50 @@ export default function DashboardAppointments() {
           </Link>
         </div>
 
-        {/* Consent Form Alert - Show only if not completed */}
-        {!hasConsent && (
-          <Card className="mb-6 border-red-200 dark:border-red-800">
-            <CardContent className="p-6">
-              <div className="flex items-start gap-4">
-                <Shield className="w-6 h-6 text-red-500 mt-1 flex-shrink-0" />
-                <div className="flex-1">
-                  <h3 className="font-semibold text-red-800 dark:text-red-200 mb-2">
-                    Required: Complete Informed Consent Form
-                  </h3>
-                  <p className="text-red-700 dark:text-red-300 text-sm mb-4">
-                    You must complete the informed consent form before booking any appointments. This is required for all nutrition consultations.
-                  </p>
+        {/* Booking Requirements - Condensed */}
+        {(!hasConsent || (!hasPreEvaluation && hasConsent)) && (
+          <Card className="mb-6">
+            <CardHeader className="pb-3">
+              <CardTitle className="text-lg">Booking Requirements</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-3">
+              {!hasConsent && (
+                <div className="flex items-center justify-between p-3 bg-red-50 dark:bg-red-900/20 rounded-lg border border-red-200 dark:border-red-800">
+                  <div className="flex items-center gap-3">
+                    <Shield className="w-5 h-5 text-red-500" />
+                    <div>
+                      <p className="font-medium text-red-800 dark:text-red-200 text-sm">Informed Consent Required</p>
+                      <p className="text-red-600 dark:text-red-400 text-xs">Complete before booking appointments</p>
+                    </div>
+                  </div>
                   <Button 
+                    size="sm"
                     onClick={() => window.location.href = '/consent-form'}
                     className="bg-red-600 hover:bg-red-700 text-white"
                   >
-                    <Shield className="w-4 h-4 mr-2" />
-                    Complete Consent Form
+                    Complete
                   </Button>
                 </div>
-              </div>
-            </CardContent>
-          </Card>
-        )}
-
-        {/* Pre-Evaluation Alert - Show only if not completed */}
-        {!hasPreEvaluation && hasConsent && (
-          <Card className="mb-6 border-orange-200 dark:border-orange-800">
-            <CardContent className="p-6">
-              <div className="flex items-start gap-4">
-                <AlertCircle className="w-6 h-6 text-orange-500 mt-1 flex-shrink-0" />
-                <div className="flex-1">
-                  <h3 className="font-semibold text-orange-800 dark:text-orange-200 mb-2">
-                    Recommended: Complete Pre-Evaluation Form
-                  </h3>
-                  <p className="text-orange-700 dark:text-orange-300 text-sm mb-4">
-                    Please complete your health assessment before your first appointment. This helps us provide you with personalized nutrition guidance.
-                  </p>
+              )}
+              
+              {!hasPreEvaluation && hasConsent && (
+                <div className="flex items-center justify-between p-3 bg-orange-50 dark:bg-orange-900/20 rounded-lg border border-orange-200 dark:border-orange-800">
+                  <div className="flex items-center gap-3">
+                    <AlertCircle className="w-5 h-5 text-orange-500" />
+                    <div>
+                      <p className="font-medium text-orange-800 dark:text-orange-200 text-sm">Pre-Evaluation Recommended</p>
+                      <p className="text-orange-600 dark:text-orange-400 text-xs">Health assessment for personalized guidance</p>
+                    </div>
+                  </div>
                   <Button 
+                    size="sm"
                     onClick={() => setIsPreEvaluationOpen(true)}
                     className="bg-orange-600 hover:bg-orange-700 text-white"
                   >
-                    <FileText className="w-4 h-4 mr-2" />
-                    Complete Pre-Evaluation
+                    Complete
                   </Button>
                 </div>
-              </div>
+              )}
             </CardContent>
           </Card>
         )}
