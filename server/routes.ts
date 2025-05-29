@@ -603,6 +603,26 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Teams URL update endpoint for appointments
+  app.patch("/api/appointments/:id/teams-url", async (req, res) => {
+    try {
+      const { id } = req.params;
+      const { teamsJoinUrl } = req.body;
+      
+      // Update appointment in Firebase
+      const appointmentRef = db.collection('appointments').doc(id);
+      await appointmentRef.update({
+        teamsJoinUrl: teamsJoinUrl || null,
+        updatedAt: new Date()
+      });
+      
+      res.json({ success: true, message: "Teams URL updated successfully" });
+    } catch (error: any) {
+      console.error("Error updating Teams URL:", error);
+      res.status(500).json({ success: false, error: error.message });
+    }
+  });
+
   // Invoice lookup endpoint for payment page
   app.get("/api/invoices/:invoiceNumber", async (req, res) => {
     console.log(`🔍 INVOICE LOOKUP: ${req.params.invoiceNumber}`);
