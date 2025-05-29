@@ -299,11 +299,17 @@ function AdminUserProfile() {
           medications: combinedHealthData.medications,
           allergies: combinedHealthData.allergies,
           dietaryRestrictions: combinedHealthData.dietaryRestrictions,
-          previousDietExperience: combinedHealthData.previousDietExperience,
-          motivationLevel: combinedHealthData.motivationLevel,
-          availableTimeForCooking: combinedHealthData.availableTimeForCooking,
+          previousDietExperience: `"${combinedHealthData.previousDietExperience}"`,
+          motivationLevel: `"${combinedHealthData.motivationLevel}"`,
+          availableTimeForCooking: `"${combinedHealthData.availableTimeForCooking}"`,
           preferredMealTimes: combinedHealthData.preferredMealTimes,
-          budgetRange: combinedHealthData.budgetRange
+          budgetRange: `"${combinedHealthData.budgetRange}"`
+        });
+        console.log('EXACT VALUES CHECK:', {
+          motivationLevel: combinedHealthData.motivationLevel === '' ? 'EMPTY STRING' : combinedHealthData.motivationLevel === undefined ? 'UNDEFINED' : combinedHealthData.motivationLevel === null ? 'NULL' : combinedHealthData.motivationLevel,
+          previousDietExperience: combinedHealthData.previousDietExperience === '' ? 'EMPTY STRING' : combinedHealthData.previousDietExperience === undefined ? 'UNDEFINED' : combinedHealthData.previousDietExperience === null ? 'NULL' : combinedHealthData.previousDietExperience,
+          budgetRange: combinedHealthData.budgetRange === '' ? 'EMPTY STRING' : combinedHealthData.budgetRange === undefined ? 'UNDEFINED' : combinedHealthData.budgetRange === null ? 'NULL' : combinedHealthData.budgetRange,
+          availableTimeForCooking: combinedHealthData.availableTimeForCooking === '' ? 'EMPTY STRING' : combinedHealthData.availableTimeForCooking === undefined ? 'UNDEFINED' : combinedHealthData.availableTimeForCooking === null ? 'NULL' : combinedHealthData.availableTimeForCooking
         });
         setPreEvaluationForm(combinedHealthData);
       } else {
