@@ -256,6 +256,7 @@ export default function ConsentForm() {
                             <SelectContent>
                               <SelectItem value="english">🇺🇸 English (Primary)</SelectItem>
                               <SelectItem value="czech">🇨🇿 Czech (Upon Request)</SelectItem>
+                              <SelectItem value="afrikaans">🇿🇦 Afrikaans (Upon Request)</SelectItem>
                             </SelectContent>
                           </Select>
                           <FormMessage />
