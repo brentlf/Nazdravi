@@ -1,11 +1,19 @@
 import { Link } from "wouter";
-import { Leaf, Mail, Phone, MapPin, Facebook, Instagram, Twitter } from "lucide-react";
+import {
+  Leaf,
+  Mail,
+  Phone,
+  MapPin,
+  Facebook,
+  Instagram,
+  Twitter,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useLanguage } from "@/contexts/LanguageContext";
 
 export function Footer() {
   const { t } = useLanguage();
-  
+
   const currentYear = new Date().getFullYear();
 
   const quickLinks = [
@@ -34,19 +42,33 @@ export function Footer() {
               <div className="w-8 h-8 bg-primary-500 rounded-lg flex items-center justify-center">
                 <Leaf className="h-5 w-5 text-white" />
               </div>
-              <span className="font-bold text-xl text-primary-400">Vee Nutrition</span>
+              <span className="font-bold text-xl text-primary-400">
+                Vee Nutrition
+              </span>
             </div>
             <p className="text-gray-300 mb-6">
               {t("footer-description", "home")}
             </p>
             <div className="flex space-x-4">
-              <Button variant="ghost" size="sm" className="h-10 w-10 p-0 bg-gray-800 hover:bg-gray-700">
+              <Button
+                variant="ghost"
+                size="sm"
+                className="h-10 w-10 p-0 bg-gray-800 hover:bg-gray-700"
+              >
                 <Facebook className="h-5 w-5" />
               </Button>
-              <Button variant="ghost" size="sm" className="h-10 w-10 p-0 bg-gray-800 hover:bg-gray-700">
+              <Button
+                variant="ghost"
+                size="sm"
+                className="h-10 w-10 p-0 bg-gray-800 hover:bg-gray-700"
+              >
                 <Instagram className="h-5 w-5" />
               </Button>
-              <Button variant="ghost" size="sm" className="h-10 w-10 p-0 bg-gray-800 hover:bg-gray-700">
+              <Button
+                variant="ghost"
+                size="sm"
+                className="h-10 w-10 p-0 bg-gray-800 hover:bg-gray-700"
+              >
                 <Twitter className="h-5 w-5" />
               </Button>
             </div>
@@ -54,7 +76,9 @@ export function Footer() {
 
           {/* Quick Links */}
           <div>
-            <h3 className="font-semibold text-lg mb-6">{t("quick-links", "home")}</h3>
+            <h3 className="font-semibold text-lg mb-6">
+              {t("quick-links", "home")}
+            </h3>
             <ul className="space-y-3">
               {quickLinks.map((link) => (
                 <li key={link.href}>
@@ -92,11 +116,11 @@ export function Footer() {
             <div className="space-y-4">
               <div className="flex items-center space-x-3">
                 <Mail className="h-5 w-5 text-primary-400" />
-                <span className="text-gray-300">info@vee-nutrition.com</span>
+                <span className="text-gray-300">info@veenutrition.com</span>
               </div>
               <div className="flex items-center space-x-3">
                 <Phone className="h-5 w-5 text-primary-400" />
-                <span className="text-gray-300">+31 6 12345678</span>
+                <span className="text-gray-300">+31 (0)61 234 5678</span>
               </div>
               <div className="flex items-center space-x-3">
                 <MapPin className="h-5 w-5 text-primary-400" />

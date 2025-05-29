@@ -68,18 +68,31 @@ export default function Home() {
   return (
     <div className="min-h-screen">
       {/* Hero Section */}
-      <section className="relative overflow-hidden py-20 lg:py-32 bg-background">
-        <div className="container mx-auto px-4">
+      <section className="relative overflow-hidden py-20 lg:py-32 bg-gradient-to-br from-background via-background to-accent/10">
+        {/* Floating Organic Shapes */}
+        <div className="absolute inset-0 overflow-hidden pointer-events-none">
+          <div className="absolute top-20 left-10 w-32 h-32 bg-gradient-to-br from-primary/30 to-primary/10 rounded-full blur-xl animate-pulse"></div>
+          <div className="absolute top-40 right-20 w-24 h-24 bg-gradient-to-br from-accent/40 to-accent/20 rounded-full blur-lg animate-bounce delay-1000"></div>
+          <div className="absolute bottom-40 left-20 w-40 h-40 bg-gradient-to-br from-secondary/30 to-secondary/10 rounded-full blur-2xl animate-pulse delay-500"></div>
+          <div className="absolute top-60 left-1/3 w-16 h-16 bg-gradient-to-br from-primary/40 to-primary/20 rounded-full blur-md animate-bounce delay-2000"></div>
+          <div className="absolute bottom-20 right-10 w-28 h-28 bg-gradient-to-br from-accent/35 to-accent/15 rounded-full blur-xl animate-pulse delay-1500"></div>
+          
+          {/* Organic blob shapes */}
+          <div className="absolute top-32 right-1/4 w-20 h-32 bg-gradient-to-br from-primary/20 to-transparent rounded-full transform rotate-45 blur-lg"></div>
+          <div className="absolute bottom-32 left-1/4 w-36 h-20 bg-gradient-to-br from-secondary/25 to-transparent rounded-full transform -rotate-12 blur-lg"></div>
+        </div>
+
+        <div className="container mx-auto px-4 relative z-10">
           <div className="grid lg:grid-cols-2 gap-12 items-center">
             {/* Content */}
-            <div className="space-y-8">
-              <Badge variant="secondary" className="w-fit">
+            <div className="space-y-8 relative">
+              <Badge variant="secondary" className="w-fit shadow-lg border-0 bg-gradient-to-r from-primary/20 to-accent/20 backdrop-blur-sm">
                 🌱 Transform Your Health Today
               </Badge>
               
-              <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-foreground">
+              <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-foreground leading-tight">
                 Transform Your Health with 
-                <span className="block text-primary">Personalized Nutrition</span>
+                <span className="block text-primary bg-gradient-to-r from-primary to-primary/80 bg-clip-text text-transparent">Personalized Nutrition</span>
               </h1>
               
               <p className="text-xl text-muted-foreground max-w-2xl">
@@ -87,15 +100,15 @@ export default function Home() {
               </p>
               
               <div className="flex flex-col sm:flex-row gap-4">
-                <Button size="lg" asChild>
+                <Button size="lg" asChild className="bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70 shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition-all duration-300">
                   <Link href="/appointment">
                     <Calendar className="mr-2 h-5 w-5" />
-                    Book Free Consultation
+                    Book Free Consultation ✨
                   </Link>
                 </Button>
-                <Button variant="outline" size="lg" asChild>
+                <Button variant="outline" size="lg" asChild className="border-2 border-primary/30 hover:border-primary hover:bg-primary/10 backdrop-blur-sm shadow-md hover:shadow-lg transform hover:-translate-y-1 transition-all duration-300">
                   <Link href="/services">
-                    Learn More
+                    Learn More 🌿
                   </Link>
                 </Button>
               </div>
@@ -117,18 +130,29 @@ export default function Home() {
               </div>
             </div>
 
-            {/* Clean Hero Image */}
+            {/* Vibrant Hero Image with Floating Elements */}
             <div className="relative">
-              <div className="relative rounded-2xl overflow-hidden shadow-2xl">
+              {/* Main Image with Dynamic Border */}
+              <div className="relative rounded-3xl overflow-hidden shadow-2xl transform hover:scale-105 transition-transform duration-700">
                 <img 
                   src={heroImage} 
                   alt="Healthy nutrition and lifestyle" 
                   className="w-full h-96 lg:h-[500px] object-cover"
                 />
+                {/* Colorful overlay elements */}
+                <div className="absolute top-4 right-4 w-16 h-16 bg-gradient-to-br from-primary to-primary/60 rounded-full animate-bounce delay-700"></div>
+                <div className="absolute bottom-6 left-6 w-12 h-12 bg-gradient-to-br from-accent to-accent/60 rounded-full animate-pulse"></div>
               </div>
-              {/* Decorative elements */}
-              <div className="absolute -top-4 -right-4 w-20 h-20 bg-primary/20 rounded-full blur-xl"></div>
-              <div className="absolute -bottom-6 -left-6 w-32 h-32 bg-accent/30 rounded-full blur-2xl"></div>
+              
+              {/* Floating decorative shapes around image */}
+              <div className="absolute -top-6 -right-6 w-24 h-24 bg-gradient-to-br from-primary/40 to-primary/20 rounded-full blur-lg animate-pulse"></div>
+              <div className="absolute -bottom-8 -left-8 w-36 h-36 bg-gradient-to-br from-accent/30 to-accent/10 rounded-full blur-xl animate-bounce delay-1000"></div>
+              <div className="absolute top-1/3 -right-4 w-14 h-14 bg-gradient-to-br from-secondary/50 to-secondary/25 rounded-full blur-md animate-pulse delay-500"></div>
+              <div className="absolute bottom-1/4 -left-4 w-18 h-18 bg-gradient-to-br from-primary/35 to-primary/15 rounded-full blur-lg animate-bounce delay-1500"></div>
+              
+              {/* Organic blob decorations */}
+              <div className="absolute top-16 -left-3 w-8 h-20 bg-gradient-to-br from-accent/40 to-transparent rounded-full transform rotate-12 blur-sm"></div>
+              <div className="absolute bottom-16 -right-3 w-20 h-10 bg-gradient-to-br from-primary/30 to-transparent rounded-full transform -rotate-45 blur-sm"></div>
             </div>
 
           </div>
