@@ -127,7 +127,7 @@ export default function Services() {
             return (
               <Card 
                 key={service.id} 
-                className={`relative hover:shadow-xl transition-all duration-300 hover:-translate-y-2 ${
+                className={`relative hover:shadow-xl transition-all duration-300 hover:-translate-y-2 h-full flex flex-col ${
                   service.popular ? 'ring-2 ring-primary-500' : ''
                 }`}
               >
@@ -150,7 +150,7 @@ export default function Services() {
                   </div>
                 </CardHeader>
 
-                <CardContent className="space-y-6">
+                <CardContent className="space-y-6 flex flex-col flex-grow">
                   <div className="text-center">
                     <div className="text-3xl font-bold text-primary-600">{service.price}</div>
                     <p className="text-sm text-muted-foreground">One-time fee</p>
@@ -158,7 +158,7 @@ export default function Services() {
 
                   <p className="text-muted-foreground text-center">{service.description}</p>
 
-                  <ul className="space-y-3">
+                  <ul className="space-y-3 flex-grow">
                     {service.features.map((feature, index) => (
                       <li key={index} className="flex items-start gap-3">
                         <Check className="w-5 h-5 text-green-500 mt-0.5 flex-shrink-0" />
@@ -167,7 +167,7 @@ export default function Services() {
                     ))}
                   </ul>
 
-                  <Button className="w-full" asChild>
+                  <Button className="w-full mt-auto" asChild>
                     <Link href="/appointment">Book Now</Link>
                   </Button>
                 </CardContent>

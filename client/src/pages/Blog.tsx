@@ -119,8 +119,8 @@ export default function Blog() {
         {postsToShow.length > 0 ? (
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
             {postsToShow.map((post) => (
-              <article key={post.id} className="group">
-                <Card className="hover:shadow-xl transition-all duration-300 hover:-translate-y-2 overflow-hidden">
+              <article key={post.id} className="group h-full">
+                <Card className="hover:shadow-xl transition-all duration-300 hover:-translate-y-2 overflow-hidden h-full flex flex-col">
                   {/* Featured Image */}
                   <div className="relative overflow-hidden">
                     <img 
@@ -136,7 +136,7 @@ export default function Blog() {
                     </div>
                   </div>
 
-                  <CardContent className="p-6">
+                  <CardContent className="p-6 flex flex-col flex-grow">
                     {/* Meta information */}
                     <div className="flex items-center text-sm text-muted-foreground mb-3">
                       <Calendar className="w-4 h-4 mr-1" />
@@ -157,12 +157,12 @@ export default function Blog() {
                     </h2>
 
                     {/* Excerpt */}
-                    <p className="text-muted-foreground mb-4 line-clamp-3">
+                    <p className="text-muted-foreground mb-4 line-clamp-3 flex-grow">
                       {post.excerpt}
                     </p>
 
-                    {/* Category and Read More */}
-                    <div className="flex items-center justify-between">
+                    {/* Category and Read More - Pushed to bottom */}
+                    <div className="flex items-center justify-between mt-auto">
                       <div className="flex items-center gap-2">
                         {post.category && (
                           <Badge variant="outline" className="text-xs">
