@@ -46,6 +46,8 @@ import { db } from "@/lib/firebase";
 export default function AdminAppointments() {
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState<string>("all");
+  const [dateFilter, setDateFilter] = useState<string>("all");
+  const [sortBy, setSortBy] = useState<string>("date-desc");
   const [selectedAppointment, setSelectedAppointment] = useState<Appointment | null>(null);
   const [isEditingAppointment, setIsEditingAppointment] = useState(false);
   const [editDate, setEditDate] = useState("");
@@ -134,7 +136,80 @@ export default function AdminAppointments() {
 
   const statusOverview = getStatusOverview();
 
+  // Filter and sort appointments
+  const filteredAndSortedAppointments = () => {
+    if (!appointments) return [];
 
+    let filtered = appointments.filter(appointment => {
+      // Search filter
+      const searchMatch = 
+        appointment.clientName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        appointment.clientEmail?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        appointment.type?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        appointment.status?.toLowerCase().includes(searchTerm.toLowerCase());
+
+      // Status filter
+      const statusMatch = statusFilter === "all" || appointment.status === statusFilter;
+
+      // Date filter
+      let dateMatch = true;
+      if (dateFilter !== "all") {
+        const appointmentDate = appointment.date?.seconds 
+          ? new Date(appointment.date.seconds * 1000)
+          : new Date(appointment.date);
+        const today = new Date();
+        const tomorrow = new Date(today);
+        tomorrow.setDate(tomorrow.getDate() + 1);
+        const weekFromNow = new Date(today);
+        weekFromNow.setDate(weekFromNow.getDate() + 7);
+
+        switch (dateFilter) {
+          case "today":
+            dateMatch = appointmentDate.toDateString() === today.toDateString();
+            break;
+          case "tomorrow":
+            dateMatch = appointmentDate.toDateString() === tomorrow.toDateString();
+            break;
+          case "this-week":
+            dateMatch = appointmentDate >= today && appointmentDate <= weekFromNow;
+            break;
+          case "past":
+            dateMatch = appointmentDate < today;
+            break;
+          case "future":
+            dateMatch = appointmentDate >= today;
+            break;
+        }
+      }
+
+      return searchMatch && statusMatch && dateMatch;
+    });
+
+    // Sort appointments
+    filtered.sort((a, b) => {
+      const dateA = a.date?.seconds ? new Date(a.date.seconds * 1000) : new Date(a.date);
+      const dateB = b.date?.seconds ? new Date(b.date.seconds * 1000) : new Date(b.date);
+
+      switch (sortBy) {
+        case "date-asc":
+          return dateA.getTime() - dateB.getTime();
+        case "date-desc":
+          return dateB.getTime() - dateA.getTime();
+        case "client-name":
+          return (a.clientName || "").localeCompare(b.clientName || "");
+        case "status":
+          return (a.status || "").localeCompare(b.status || "");
+        case "type":
+          return (a.type || "").localeCompare(b.type || "");
+        default:
+          return dateB.getTime() - dateA.getTime();
+      }
+    });
+
+    return filtered;
+  };
+
+  const processedAppointments = filteredAndSortedAppointments();
 
   // Helper function to get action item icons for each appointment
   const getActionItemIcons = (appointment: any) => {
@@ -714,12 +789,12 @@ export default function AdminAppointments() {
           </div>
         )}
 
-        {/* Filters */}
+        {/* Enhanced Filters */}
         <Card className="mb-8">
           <CardContent className="p-6">
-            <div className="flex flex-col md:flex-row gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
               {/* Search */}
-              <div className="flex-1 relative">
+              <div className="lg:col-span-2 relative">
                 <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
                 <Input
                   placeholder="Search appointments by name, email, or type..."
@@ -731,18 +806,59 @@ export default function AdminAppointments() {
 
               {/* Status Filter */}
               <Select value={statusFilter} onValueChange={setStatusFilter}>
-                <SelectTrigger className="w-full md:w-48">
-                  <SelectValue placeholder="Filter by status" />
+                <SelectTrigger>
+                  <Filter className="w-4 h-4 mr-2" />
+                  <SelectValue placeholder="All Statuses" />
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="all">All Statuses</SelectItem>
                   <SelectItem value="pending">Pending</SelectItem>
                   <SelectItem value="confirmed">Confirmed</SelectItem>
                   <SelectItem value="done">Completed</SelectItem>
+                  <SelectItem value="cancelled">Cancelled</SelectItem>
                   <SelectItem value="reschedule_requested">Reschedule Requested</SelectItem>
                   <SelectItem value="cancelled_reschedule">Cancelled & Reschedule</SelectItem>
                 </SelectContent>
               </Select>
+
+              {/* Date Filter */}
+              <Select value={dateFilter} onValueChange={setDateFilter}>
+                <SelectTrigger>
+                  <Calendar className="w-4 h-4 mr-2" />
+                  <SelectValue placeholder="All Dates" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">All Dates</SelectItem>
+                  <SelectItem value="today">Today</SelectItem>
+                  <SelectItem value="tomorrow">Tomorrow</SelectItem>
+                  <SelectItem value="this-week">This Week</SelectItem>
+                  <SelectItem value="future">Future</SelectItem>
+                  <SelectItem value="past">Past</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+
+            {/* Sort Options Row */}
+            <div className="flex items-center justify-between mt-4 pt-4 border-t">
+              <div className="flex items-center gap-2">
+                <Label className="text-sm font-medium">Sort by:</Label>
+                <Select value={sortBy} onValueChange={setSortBy}>
+                  <SelectTrigger className="w-48">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="date-desc">Date (Newest First)</SelectItem>
+                    <SelectItem value="date-asc">Date (Oldest First)</SelectItem>
+                    <SelectItem value="client-name">Client Name</SelectItem>
+                    <SelectItem value="status">Status</SelectItem>
+                    <SelectItem value="type">Appointment Type</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              
+              <div className="text-sm text-muted-foreground">
+                Showing {processedAppointments.length} of {appointments?.length || 0} appointments
+              </div>
             </div>
           </CardContent>
         </Card>
@@ -751,21 +867,21 @@ export default function AdminAppointments() {
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center justify-between">
-              <span>Appointments ({filteredAppointments.length})</span>
+              <span>Appointments ({processedAppointments.length})</span>
               <div className="flex gap-2">
                 <Badge variant="outline" className="flex items-center gap-1">
                   <AlertCircle className="w-3 h-3 text-yellow-500" />
-                  {filteredAppointments.filter(a => a.status === "pending").length} Pending
+                  {processedAppointments.filter(a => a.status === "pending").length} Pending
                 </Badge>
                 <Badge variant="outline" className="flex items-center gap-1">
                   <CheckCircle className="w-3 h-3 text-green-500" />
-                  {filteredAppointments.filter(a => a.status === "confirmed").length} Confirmed
+                  {processedAppointments.filter(a => a.status === "confirmed").length} Confirmed
                 </Badge>
               </div>
             </CardTitle>
           </CardHeader>
           <CardContent>
-            {filteredAppointments.length > 0 ? (
+            {processedAppointments.length > 0 ? (
               <Table>
                 <TableHeader>
                   <TableRow>

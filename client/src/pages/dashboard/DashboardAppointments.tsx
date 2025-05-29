@@ -602,7 +602,12 @@ export default function DashboardAppointments() {
                   <Calendar className="w-5 h-5" />
                   My Appointments
                 </CardTitle>
-                <Button onClick={() => setIsBookingOpen(true)}>
+                <Button 
+                  onClick={() => setIsBookingOpen(true)}
+                  disabled={!hasConsent}
+                  className={!hasConsent ? "opacity-50 cursor-not-allowed" : ""}
+                  title={!hasConsent ? "Complete informed consent form to book appointments" : "Book a new appointment"}
+                >
                   <Plus className="w-4 h-4 mr-2" />
                   Book New
                 </Button>
@@ -615,7 +620,12 @@ export default function DashboardAppointments() {
                     <p className="text-muted-foreground text-sm mb-4">
                       Book your first consultation to get started
                     </p>
-                    <Button onClick={() => setIsBookingOpen(true)}>
+                    <Button 
+                      onClick={() => setIsBookingOpen(true)}
+                      disabled={!hasConsent}
+                      className={!hasConsent ? "opacity-50 cursor-not-allowed" : ""}
+                      title={!hasConsent ? "Complete informed consent form to book appointments" : "Book your first appointment"}
+                    >
                       <Plus className="w-4 h-4 mr-2" />
                       Book First Appointment
                     </Button>
