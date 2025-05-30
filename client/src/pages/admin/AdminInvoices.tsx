@@ -677,6 +677,14 @@ export default function AdminInvoices() {
             </CardHeader>
             <CardContent>
               {React.useMemo(() => {
+                // Debug: Log all appointments to understand their statuses
+                console.log('🔍 All appointments:', allAppointments?.map(apt => ({
+                  id: apt.id,
+                  status: apt.status,
+                  clientName: apt.clientName,
+                  date: apt.date
+                })));
+                
                 // Filter appointments that can be invoiced (completed appointments that haven't been invoiced yet)
                 const invoiceableAppointments = allAppointments?.filter(appointment => {
                   // Only include completed appointments (exclude pending and cancelled)
