@@ -1,6 +1,7 @@
 import { db } from './firebase';
 import Stripe from 'stripe';
 import { mailerLiteService } from './email';
+import { pdfService } from './pdf-service';
 
 if (!process.env.STRIPE_SECRET_KEY) {
   throw new Error('Missing required Stripe secret: STRIPE_SECRET_KEY');
@@ -116,6 +117,33 @@ export class InvoiceManagementService {
       updatedAt: new Date()
     });
 
+    // Generate and store PDF
+    try {
+      const pdfUrl = await pdfService.generateAndStorePDF({
+        invoiceNumber,
+        clientName: data.clientName,
+        clientEmail: data.clientEmail,
+        amount: totalAmount,
+        currency: 'EUR',
+        description: items.map(item => item.description).join(', '),
+        invoiceType: 'invoice',
+        createdAt: new Date(),
+        dueDate,
+        status: 'unpaid',
+        items: items.map(item => ({
+          description: item.description,
+          amount: item.amount
+        }))
+      });
+
+      // Update invoice with PDF URL
+      await invoiceRef.update({ pdfUrl });
+      console.log(`📄 PDF generated and stored for invoice: ${invoiceRef.id}`);
+    } catch (pdfError) {
+      console.error('Error generating PDF for session invoice:', pdfError);
+      // Continue without PDF - don't fail the invoice creation
+    }
+
     // Send email notification
     await mailerLiteService.sendInvoiceGenerated(
       data.clientEmail,
@@ -190,6 +218,33 @@ export class InvoiceManagementService {
       createdAt: new Date(),
       updatedAt: new Date()
     });
+
+    // Generate and store PDF
+    try {
+      const pdfUrl = await pdfService.generateAndStorePDF({
+        invoiceNumber,
+        clientName: data.clientName,
+        clientEmail: data.clientEmail,
+        amount: data.subscriptionAmount,
+        currency: 'EUR',
+        description: `Complete Nutrition Program - Month ${data.billingCycle} of 3`,
+        invoiceType: 'invoice',
+        createdAt: new Date(),
+        dueDate,
+        status: 'unpaid',
+        items: items.map(item => ({
+          description: item.description,
+          amount: item.amount
+        }))
+      });
+
+      // Update invoice with PDF URL
+      await invoiceRef.update({ pdfUrl });
+      console.log(`📄 PDF generated and stored for subscription invoice: ${invoiceRef.id}`);
+    } catch (pdfError) {
+      console.error('Error generating PDF for subscription invoice:', pdfError);
+      // Continue without PDF - don't fail the invoice creation
+    }
 
     // Send email notification
     await mailerLiteService.sendInvoiceGenerated(
