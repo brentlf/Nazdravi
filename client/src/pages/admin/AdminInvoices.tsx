@@ -50,6 +50,13 @@ export default function AdminInvoices() {
   const [isCreatingInvoice, setIsCreatingInvoice] = useState(false);
   const [showInvoiceDialog, setShowInvoiceDialog] = useState(false);
   
+  // Reissue invoice state
+  const [selectedInvoiceForReissue, setSelectedInvoiceForReissue] = useState<Invoice | null>(null);
+  const [showReissueDialog, setShowReissueDialog] = useState(false);
+  const [reissueAmount, setReissueAmount] = useState("");
+  const [reissueReason, setReissueReason] = useState("");
+  const [isReissuingInvoice, setIsReissuingInvoice] = useState(false);
+  
   const { toast } = useToast();
   const { user } = useAuth();
   const queryClient = useQueryClient();
@@ -292,16 +299,41 @@ export default function AdminInvoices() {
     }
   };
 
-  // Handle reissue invoice
-  const handleReissueInvoice = async (invoice: Invoice) => {
-    try {
-      await apiRequest("POST", "/api/invoices/reissue", {
-        invoiceId: invoice.id
+  // Handle reissue invoice with dialog
+  const handleReissueInvoice = (invoice: Invoice) => {
+    setSelectedInvoiceForReissue(invoice);
+    setReissueAmount(invoice.amount?.toString() || "0");
+    setReissueReason("");
+    setShowReissueDialog(true);
+  };
+
+  // Process reissue with new amount
+  const processReissueInvoice = async () => {
+    if (!selectedInvoiceForReissue || !reissueAmount || !reissueReason) {
+      toast({
+        title: "Error",
+        description: "Please provide both new amount and reason for reissue",
+        variant: "destructive",
       });
+      return;
+    }
+
+    setIsReissuingInvoice(true);
+    try {
+      await apiRequest("PUT", `/api/invoices/${selectedInvoiceForReissue.id}/reissue`, {
+        newAmount: parseFloat(reissueAmount),
+        reason: reissueReason
+      });
+      
       toast({
         title: "Success",
-        description: "Invoice reissued successfully",
+        description: "Invoice reissued successfully with new amount",
       });
+      
+      setShowReissueDialog(false);
+      setSelectedInvoiceForReissue(null);
+      setReissueAmount("");
+      setReissueReason("");
       queryClient.invalidateQueries({ queryKey: ['/api/invoices'] });
     } catch (error) {
       toast({
@@ -309,6 +341,8 @@ export default function AdminInvoices() {
         description: "Failed to reissue invoice",
         variant: "destructive",
       });
+    } finally {
+      setIsReissuingInvoice(false);
     }
   };
 
@@ -959,6 +993,75 @@ export default function AdminInvoices() {
                   disabled={isCreatingInvoice}
                 >
                   {isCreatingInvoice ? "Creating..." : "Create Invoice"}
+                </Button>
+              </div>
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
+
+      {/* Reissue Invoice Dialog */}
+      <Dialog open={showReissueDialog} onOpenChange={setShowReissueDialog}>
+        <DialogContent className="max-w-md">
+          <DialogHeader>
+            <DialogTitle>Reissue Invoice</DialogTitle>
+          </DialogHeader>
+          
+          {selectedInvoiceForReissue && (
+            <div className="space-y-4">
+              <div className="p-4 bg-gray-50 rounded-lg space-y-2">
+                <h4 className="font-medium">Invoice Details</h4>
+                <div className="text-sm space-y-1">
+                  <p><span className="font-medium">Invoice #:</span> {selectedInvoiceForReissue.invoiceNumber}</p>
+                  <p><span className="font-medium">Client:</span> {selectedInvoiceForReissue.clientName}</p>
+                  <p><span className="font-medium">Original Amount:</span> €{selectedInvoiceForReissue.amount?.toFixed(2) || '0.00'}</p>
+                </div>
+              </div>
+
+              <div className="space-y-3">
+                <div>
+                  <Label htmlFor="reissue-amount">New Amount (€)</Label>
+                  <Input
+                    id="reissue-amount"
+                    type="number"
+                    step="0.01"
+                    min="0"
+                    value={reissueAmount}
+                    onChange={(e) => setReissueAmount(e.target.value)}
+                    placeholder="Enter new amount"
+                  />
+                </div>
+
+                <div>
+                  <Label htmlFor="reissue-reason">Reason for Reissue</Label>
+                  <Input
+                    id="reissue-reason"
+                    value={reissueReason}
+                    onChange={(e) => setReissueReason(e.target.value)}
+                    placeholder="e.g., Pricing adjustment, Discount applied"
+                  />
+                </div>
+              </div>
+
+              <div className="p-3 bg-blue-50 rounded-lg">
+                <p className="text-sm text-blue-800">
+                  This will create a credit note for the difference and issue a new invoice for the adjusted amount.
+                </p>
+              </div>
+
+              <div className="flex justify-end gap-2">
+                <Button
+                  variant="outline"
+                  onClick={() => setShowReissueDialog(false)}
+                  disabled={isReissuingInvoice}
+                >
+                  Cancel
+                </Button>
+                <Button
+                  onClick={processReissueInvoice}
+                  disabled={isReissuingInvoice || !reissueAmount || !reissueReason}
+                >
+                  {isReissuingInvoice ? "Processing..." : "Reissue Invoice"}
                 </Button>
               </div>
             </div>
