@@ -3,6 +3,7 @@ import { createServer, type Server } from "http";
 import { db } from "./firebase";
 import { mailerLiteService } from "./email";
 import { InvoiceManagementService } from "./invoice-management";
+import { pdfService } from "./pdf-service";
 
 export async function registerRoutes(app: Express): Promise<Server> {
   
@@ -1155,29 +1156,55 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }
 
       const invoiceData = originalInvoice.data();
+      if (!invoiceData) {
+        return res.status(404).json({ error: "Invoice data not found" });
+      }
       
       // Create credit note
       const creditNoteNumber = `CN-${Date.now()}`;
       const creditNote = {
-        userId: invoiceData.userId,
-        clientName: invoiceData.clientName,
-        clientEmail: invoiceData.clientEmail,
+        userId: invoiceData.userId || '',
+        clientName: invoiceData.clientName || '',
+        clientEmail: invoiceData.clientEmail || '',
         invoiceNumber: creditNoteNumber,
         amount: -originalAmount, // Negative amount for credit
         currency: invoiceData.currency || 'EUR',
-        description: `Credit Note for Invoice ${invoiceData.invoiceNumber} - ${reason}`,
+        description: `Credit Note for Invoice ${invoiceData.invoiceNumber || 'Unknown'} - ${reason}`,
         invoiceType: 'credit',
         type: 'credit',
         status: 'processed',
         createdAt: new Date(),
         dueDate: new Date(),
         originalInvoiceId: invoiceId,
-        originalInvoiceNumber: invoiceData.invoiceNumber,
+        originalInvoiceNumber: invoiceData.invoiceNumber || '',
         cancelReason: reason
       };
 
       // Save credit note
-      await db.collection('invoices').add(creditNote);
+      const creditNoteRef = await db.collection('invoices').add(creditNote);
+
+      // Generate and store PDF for credit note
+      try {
+        const pdfUrl = await pdfService.generateAndStorePDF({
+          invoiceNumber: creditNoteNumber,
+          clientName: invoiceData.clientName || '',
+          clientEmail: invoiceData.clientEmail || '',
+          amount: Math.abs(originalAmount), // Use positive amount for display
+          currency: invoiceData.currency || 'EUR',
+          description: `Credit Note for Invoice ${invoiceData.invoiceNumber || 'Unknown'} - ${reason}`,
+          invoiceType: 'credit',
+          createdAt: new Date(),
+          dueDate: new Date(),
+          status: 'processed'
+        });
+
+        // Update credit note with PDF URL
+        await creditNoteRef.update({ pdfUrl });
+        console.log(`📄 PDF generated and stored for credit note: ${creditNoteRef.id}`);
+      } catch (pdfError) {
+        console.error('Error generating PDF for credit note:', pdfError);
+        // Continue without PDF - don't fail the credit note creation
+      }
 
       // Update original invoice status
       await db.collection('invoices').doc(invoiceId).update({
