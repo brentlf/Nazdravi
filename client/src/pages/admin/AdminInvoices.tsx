@@ -12,7 +12,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { useFirestoreCollection } from "@/hooks/useFirestore";
 import { orderBy, limit, where } from "firebase/firestore";
 import { useQueryClient } from "@tanstack/react-query";
-import { Receipt, Plus, Eye, Send, DollarSign, ArrowLeft, AlertTriangle, RefreshCw, Clock, Ban, CheckCircle, FileText, Edit, CreditCard, Calendar, Users, Euro, UserX, X } from "lucide-react";
+import { Receipt, Plus, Eye, Send, DollarSign, ArrowLeft, AlertTriangle, RefreshCw, Clock, Ban, CheckCircle, FileText, Edit, CreditCard, Calendar, Users, Euro, UserX, X, Download } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/contexts/AuthContext";
 import { Link } from "wouter";
@@ -340,6 +340,12 @@ export default function AdminInvoices() {
 
   // Handle viewing invoice
   const handleViewInvoice = (invoice: Invoice) => {
+    // Open invoice in new tab/window
+    window.open(`/invoice/${invoice.id}`, '_blank');
+  };
+
+  // Handle PDF download
+  const handleDownloadPDF = (invoice: any) => {
     if (invoice.pdfUrl) {
       // Open PDF directly from Firebase Storage
       window.open(invoice.pdfUrl, '_blank');
@@ -1063,9 +1069,17 @@ export default function AdminInvoices() {
                               variant="ghost"
                               size="sm"
                               onClick={() => handleViewInvoice(invoice)}
-                              title="View/Download PDF"
+                              title="View Invoice"
                             >
                               <Eye className="w-4 h-4" />
+                            </Button>
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              onClick={() => handleDownloadPDF(invoice)}
+                              title="Download PDF"
+                            >
+                              <Download className="w-4 h-4" />
                             </Button>
                             {invoice.status !== 'paid' && (
                               <>
