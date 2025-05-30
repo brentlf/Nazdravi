@@ -55,6 +55,7 @@ import AdminUserProfile from "@/pages/admin/AdminUserProfile";
 import AdminCleanupUsers from "@/pages/admin/AdminCleanupUsers";
 import PayInvoice from "@/pages/PayInvoice";
 import AdminEmailScheduler from "@/pages/admin/AdminEmailScheduler";
+import InvoiceView from "@/pages/invoice/InvoiceView";
 
 function Layout({ children }: { children: React.ReactNode }) {
   return (
@@ -209,6 +210,11 @@ function Router() {
       <Route path="/admin-client-view">
         <RouteGuard role="admin">
           <Layout><AdminClientView /></Layout>
+        </RouteGuard>
+      </Route>
+      <Route path="/invoice/:id">
+        <RouteGuard role="admin">
+          <Layout><InvoiceView /></Layout>
         </RouteGuard>
       </Route>
       
