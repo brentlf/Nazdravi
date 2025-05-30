@@ -234,10 +234,10 @@ export default function AdminInvoices() {
       const response = await apiRequest("POST", "/api/invoices/create-from-appointment", {
         appointmentId: selectedAppointment.id,
         userId: selectedAppointment.userId,
-        clientName: selectedAppointment.clientName,
-        clientEmail: selectedAppointment.clientEmail,
+        clientName: selectedAppointment.name,
+        clientEmail: selectedAppointment.email,
         amount: 75, // Default session rate
-        description: `Consultation - ${new Date(selectedAppointment.startTime.toDate()).toLocaleDateString()}`
+        description: `Consultation - ${selectedAppointment.date}`
       });
 
       toast({
@@ -260,7 +260,8 @@ export default function AdminInvoices() {
   };
 
   // Check if appointment already has an invoice
-  const hasInvoice = (appointmentId: string) => {
+  const hasInvoice = (appointmentId: string | undefined) => {
+    if (!appointmentId) return false;
     return allInvoices?.some(invoice => 
       invoice.appointmentId === appointmentId
     ) || false;

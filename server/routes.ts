@@ -869,6 +869,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }
 
       const invoice = invoiceDoc.data();
+      
+      if (!invoice) {
+        return res.status(404).json({ 
+          success: false, 
+          error: "Invoice data not found" 
+        });
+      }
 
       // Queue payment reminder email
       const docRef = await db.collection("mail").add({
@@ -924,6 +931,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }
 
       const originalInvoice = originalInvoiceDoc.data();
+      
+      if (!originalInvoice) {
+        return res.status(404).json({ 
+          success: false, 
+          error: "Invoice data not found" 
+        });
+      }
 
       // Create new payment intent with Stripe
       const Stripe = (await import('stripe')).default;
@@ -931,8 +945,17 @@ export async function registerRoutes(app: Express): Promise<Server> {
         apiVersion: '2025-04-30.basil',
       });
 
+      // Validate amount before sending to Stripe
+      const invoiceAmount = parseFloat(originalInvoice.amount) || 0;
+      if (invoiceAmount <= 0) {
+        return res.status(400).json({ 
+          success: false, 
+          error: "Invalid invoice amount" 
+        });
+      }
+
       const paymentIntent = await stripe.paymentIntents.create({
-        amount: Math.round(originalInvoice.amount * 100),
+        amount: Math.round(invoiceAmount * 100),
         currency: 'eur',
         metadata: {
           invoiceNumber: originalInvoice.invoiceNumber,
