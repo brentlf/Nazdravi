@@ -880,8 +880,20 @@ export default function AdminInvoices() {
                   }
                   
                   if (subscriptionInvoices.length > 0) {
-                    const firstSubscriptionDate = new Date(Math.min(...subscriptionInvoices.map(inv => new Date(inv.createdAt).getTime())));
+                    // Parse Firebase Timestamp properly
+                    const subscriptionDates = subscriptionInvoices.map(inv => {
+                      const timestamp = inv.createdAt as any;
+                      if (timestamp && timestamp.seconds) {
+                        return new Date(timestamp.seconds * 1000);
+                      } else if (inv.createdAt) {
+                        return new Date(inv.createdAt);
+                      }
+                      return new Date();
+                    });
+                    
+                    const firstSubscriptionDate = new Date(Math.min(...subscriptionDates.map(d => d.getTime())));
                     console.log(`Subscription check for ${appointment.email}: appointment ${appointmentDate} vs subscription ${firstSubscriptionDate}`);
+                    
                     // Only allow if appointment was before subscription started
                     if (appointmentDate >= firstSubscriptionDate) {
                       console.log(`Excluding appointment for ${appointment.email} - after subscription start`);
@@ -909,6 +921,7 @@ export default function AdminInvoices() {
                         <TableHead>Client</TableHead>
                         <TableHead>Status</TableHead>
                         <TableHead>Service</TableHead>
+                        <TableHead>Service Plan</TableHead>
                         <TableHead>Invoice Status</TableHead>
                         <TableHead>Actions</TableHead>
                       </TableRow>
@@ -940,6 +953,20 @@ export default function AdminInvoices() {
                               </Badge>
                             </TableCell>
                             <TableCell>{appointment.type || 'Consultation'}</TableCell>
+                            <TableCell>
+                              {(() => {
+                                const userSubscriptionInvoices = allInvoices?.filter(inv => 
+                                  inv.clientEmail === appointment.email && 
+                                  (inv.invoiceType === 'subscription' || inv.description?.includes('Complete Program'))
+                                ) || [];
+                                
+                                if (userSubscriptionInvoices.length > 0) {
+                                  return <Badge variant="secondary" className="bg-blue-100 text-blue-700">Complete Program</Badge>;
+                                } else {
+                                  return <Badge variant="outline" className="text-green-700 border-green-300">Pay-as-you-go</Badge>;
+                                }
+                              })()}
+                            </TableCell>
                             <TableCell>
                               {isInvoiced ? (
                                 <Badge variant="default" className="bg-green-100 text-green-700">
