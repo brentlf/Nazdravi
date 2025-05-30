@@ -340,8 +340,16 @@ export default function AdminInvoices() {
 
   // Handle viewing invoice
   const handleViewInvoice = (invoice: Invoice) => {
-    // Open invoice in new tab/window
-    window.open(`/invoice/${invoice.id}`, '_blank');
+    if (invoice.pdfUrl) {
+      // Open PDF directly from Firebase Storage
+      window.open(invoice.pdfUrl, '_blank');
+    } else {
+      toast({
+        title: "PDF Not Available",
+        description: "This invoice doesn't have a PDF file. It may have been created before PDF generation was enabled.",
+        variant: "destructive",
+      });
+    }
   };
 
   // Handle payment reminder
@@ -1055,7 +1063,7 @@ export default function AdminInvoices() {
                               variant="ghost"
                               size="sm"
                               onClick={() => handleViewInvoice(invoice)}
-                              title="View Invoice"
+                              title="View/Download PDF"
                             >
                               <Eye className="w-4 h-4" />
                             </Button>
