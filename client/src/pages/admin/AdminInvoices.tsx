@@ -1086,7 +1086,7 @@ export default function AdminInvoices() {
                               title="Cancel Invoice (Create Credit Note)"
                               className="text-red-600 hover:text-red-700"
                             >
-                              <RefreshCw className="w-4 h-4" />
+                              <X className="w-4 h-4" />
                             </Button>
                           </div>
                         </TableCell>
