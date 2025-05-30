@@ -32,6 +32,7 @@ export default function AdminInvoices() {
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
   const [programStartDate, setProgramStartDate] = useState("");
   const [isGeneratingSubscription, setIsGeneratingSubscription] = useState(false);
+  const [showConfirmDialog, setShowConfirmDialog] = useState(false);
   
   const { toast } = useToast();
   const { user } = useAuth();
@@ -97,8 +98,8 @@ export default function AdminInvoices() {
     }).format(amount);
   };
 
-  // Generate subscription billing function
-  const handleGenerateSubscription = async () => {
+  // Show confirmation dialog
+  const handleStartBilling = () => {
     if (!selectedUser || !programStartDate) {
       toast({
         title: "Missing Information",
@@ -107,12 +108,20 @@ export default function AdminInvoices() {
       });
       return;
     }
+    setShowConfirmDialog(true);
+  };
 
+  // Generate subscription billing function
+  const handleGenerateSubscription = async () => {
+    setShowConfirmDialog(false);
     setIsGeneratingSubscription(true);
     try {
       const response = await apiRequest("POST", "/api/subscriptions/generate-complete-program", {
-        userId: selectedUser.uid,
+        userId: selectedUser!.uid,
+        clientName: selectedUser!.name,
+        clientEmail: selectedUser!.email,
         programStartDate,
+        monthlyAmount: 150
       });
 
       toast({
@@ -225,7 +234,7 @@ export default function AdminInvoices() {
                 </div>
 
                 <Button 
-                  onClick={handleGenerateSubscription}
+                  onClick={handleStartBilling}
                   disabled={isGeneratingSubscription || !selectedUser || !programStartDate}
                   className="w-full"
                 >
@@ -318,6 +327,7 @@ export default function AdminInvoices() {
                                   user.programStartDate.toDate().toISOString().split('T')[0] : 
                                   new Date().toISOString().split('T')[0]
                                 );
+                                setShowConfirmDialog(true);
                               }}
                               className="text-xs"
                             >
@@ -454,6 +464,52 @@ export default function AdminInvoices() {
           </Card>
         </TabsContent>
       </Tabs>
+
+      {/* Confirmation Dialog */}
+      <Dialog open={showConfirmDialog} onOpenChange={setShowConfirmDialog}>
+        <DialogContent className="max-w-md">
+          <DialogHeader>
+            <DialogTitle>Confirm Monthly Billing Start</DialogTitle>
+          </DialogHeader>
+          
+          {selectedUser && (
+            <div className="space-y-4">
+              <div className="p-4 bg-gray-50 rounded-lg space-y-2">
+                <h4 className="font-medium">Billing Details</h4>
+                <div className="text-sm space-y-1">
+                  <p><span className="font-medium">Client:</span> {selectedUser.name}</p>
+                  <p><span className="font-medium">Email:</span> {selectedUser.email}</p>
+                  <p><span className="font-medium">Program Start:</span> {formatDate(programStartDate)}</p>
+                  <p><span className="font-medium">Monthly Amount:</span> €150.00</p>
+                  <p><span className="font-medium">Billing Cycle:</span> 3 months</p>
+                </div>
+              </div>
+              
+              <div className="p-3 bg-blue-50 rounded-lg">
+                <p className="text-sm text-blue-800">
+                  This will generate 3 monthly invoices of €150 each, starting from the program start date.
+                </p>
+              </div>
+
+              <div className="flex justify-end gap-2">
+                <Button
+                  variant="outline"
+                  onClick={() => setShowConfirmDialog(false)}
+                  disabled={isGeneratingSubscription}
+                >
+                  Cancel
+                </Button>
+                <Button
+                  onClick={handleGenerateSubscription}
+                  disabled={isGeneratingSubscription}
+                >
+                  {isGeneratingSubscription ? "Starting..." : "Confirm & Start Billing"}
+                </Button>
+              </div>
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
