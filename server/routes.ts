@@ -808,6 +808,162 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Create invoice from appointment
+  app.post("/api/invoices/create-from-appointment", async (req, res) => {
+    try {
+      const { appointmentId, userId, clientName, clientEmail, amount, description } = req.body;
+      
+      if (!appointmentId || !userId || !clientName || !clientEmail || !amount) {
+        return res.status(400).json({ 
+          success: false, 
+          error: "Missing required fields: appointmentId, userId, clientName, clientEmail, amount" 
+        });
+      }
+
+      const result = await invoiceService.createCustomInvoice({
+        userId,
+        clientName, 
+        clientEmail,
+        amount,
+        description: description || 'Consultation Session',
+        appointmentId,
+        invoiceType: 'session'
+      });
+
+      res.json({ 
+        success: true, 
+        message: "Invoice created from appointment successfully",
+        invoiceId: result.invoiceId,
+        paymentUrl: result.paymentUrl
+      });
+
+    } catch (error: any) {
+      console.error("Error creating invoice from appointment:", error);
+      res.status(500).json({ 
+        success: false, 
+        error: error.message || "Failed to create invoice from appointment" 
+      });
+    }
+  });
+
+  // Send payment reminder
+  app.post("/api/invoices/send-reminder", async (req, res) => {
+    try {
+      const { invoiceId } = req.body;
+      
+      if (!invoiceId) {
+        return res.status(400).json({ 
+          success: false, 
+          error: "Missing required field: invoiceId" 
+        });
+      }
+
+      // Get invoice details
+      const invoiceDoc = await db.collection("invoices").doc(invoiceId).get();
+      
+      if (!invoiceDoc.exists) {
+        return res.status(404).json({ 
+          success: false, 
+          error: "Invoice not found" 
+        });
+      }
+
+      const invoice = invoiceDoc.data();
+
+      // Queue payment reminder email
+      const docRef = await db.collection("mail").add({
+        to: invoice.clientEmail,
+        toName: invoice.clientName,
+        type: "payment-reminder",
+        status: "pending",
+        data: { 
+          invoiceNumber: invoice.invoiceNumber,
+          clientName: invoice.clientName,
+          amount: invoice.amount,
+          paymentUrl: invoice.paymentUrl,
+          dueDate: invoice.dueDate
+        },
+        createdAt: new Date()
+      });
+
+      res.json({ 
+        success: true, 
+        message: "Payment reminder sent successfully",
+        emailId: docRef.id
+      });
+
+    } catch (error: any) {
+      console.error("Error sending payment reminder:", error);
+      res.status(500).json({ 
+        success: false, 
+        error: error.message || "Failed to send payment reminder" 
+      });
+    }
+  });
+
+  // Reissue invoice endpoint  
+  app.post("/api/invoices/reissue", async (req, res) => {
+    try {
+      const { invoiceId } = req.body;
+      
+      if (!invoiceId) {
+        return res.status(400).json({ 
+          success: false, 
+          error: "Missing required field: invoiceId" 
+        });
+      }
+
+      // Get the original invoice
+      const originalInvoiceDoc = await db.collection("invoices").doc(invoiceId).get();
+      
+      if (!originalInvoiceDoc.exists) {
+        return res.status(404).json({ 
+          success: false, 
+          error: "Invoice not found" 
+        });
+      }
+
+      const originalInvoice = originalInvoiceDoc.data();
+
+      // Create new payment intent with Stripe
+      const Stripe = (await import('stripe')).default;
+      const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
+        apiVersion: '2025-04-30.basil',
+      });
+
+      const paymentIntent = await stripe.paymentIntents.create({
+        amount: Math.round(originalInvoice.amount * 100),
+        currency: 'eur',
+        metadata: {
+          invoiceNumber: originalInvoice.invoiceNumber,
+          userId: originalInvoice.userId,
+          type: 'reissued_invoice'
+        }
+      });
+
+      // Update invoice with new payment intent
+      await db.collection("invoices").doc(invoiceId).update({
+        stripePaymentIntentId: paymentIntent.id,
+        paymentUrl: `${process.env.FRONTEND_URL || 'http://localhost:5000'}/payment/${paymentIntent.id}`,
+        isReissued: true,
+        reissuedAt: new Date()
+      });
+
+      res.json({ 
+        success: true, 
+        message: "Invoice reissued successfully",
+        paymentUrl: `${process.env.FRONTEND_URL || 'http://localhost:5000'}/payment/${paymentIntent.id}`
+      });
+
+    } catch (error: any) {
+      console.error("Error reissuing invoice:", error);
+      res.status(500).json({ 
+        success: false, 
+        error: error.message || "Failed to reissue invoice" 
+      });
+    }
+  });
+
   // Invoice reissue endpoint using PUT method to avoid routing conflicts
   app.put("/api/invoices/:id/reissue", async (req, res) => {
     console.log('🚨 REISSUE ROUTE HIT - Processing reissue request');
