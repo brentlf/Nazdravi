@@ -118,7 +118,15 @@ export class InvoiceManagementService {
     });
 
     // Generate and store PDF
+    console.log('🚀 Attempting to generate PDF for invoice:', invoiceRef.id);
     try {
+      console.log('📋 PDF data prepared:', {
+        invoiceNumber,
+        clientName: data.clientName,
+        amount: totalAmount,
+        currency: 'EUR'
+      });
+      
       const pdfUrl = await pdfService.generateAndStorePDF({
         invoiceNumber,
         clientName: data.clientName,
@@ -138,9 +146,11 @@ export class InvoiceManagementService {
 
       // Update invoice with PDF URL
       await invoiceRef.update({ pdfUrl });
-      console.log(`📄 PDF generated and stored for invoice: ${invoiceRef.id}`);
+      console.log(`✅ PDF generated and stored for invoice: ${invoiceRef.id}`);
+      console.log(`🔗 PDF URL: ${pdfUrl}`);
     } catch (pdfError) {
-      console.error('Error generating PDF for session invoice:', pdfError);
+      console.error('❌ Error generating PDF for session invoice:', pdfError);
+      console.error('❌ PDF Error stack:', pdfError instanceof Error ? pdfError.stack : 'No stack trace');
       // Continue without PDF - don't fail the invoice creation
     }
 
