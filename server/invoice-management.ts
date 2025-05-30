@@ -176,6 +176,7 @@ export class InvoiceManagementService {
       servicePlan: 'complete-program',
       items,
       totalAmount: data.subscriptionAmount,
+      amount: data.subscriptionAmount, // Add explicit amount field
       currency: 'eur',
       dueDate,
       invoiceType: 'subscription',
@@ -183,6 +184,7 @@ export class InvoiceManagementService {
       subscriptionYear: data.year,
       billingCycle: data.billingCycle,
       invoiceNumber,
+      description: `Complete Nutrition Program - Month ${data.billingCycle} of 3`, // Add description field
       status: 'unpaid',
       stripePaymentIntentId: paymentIntent.id,
       createdAt: new Date(),
@@ -497,14 +499,12 @@ export class InvoiceManagementService {
 
     // Send email notification
     try {
-      await this.emailService.sendInvoiceNotification({
-        to: data.clientEmail,
-        clientName: data.clientName,
-        invoiceId: invoiceRef.id,
-        amount: data.amount,
-        description: data.description,
-        paymentUrl
-      });
+      await mailerLiteService.sendInvoiceGenerated(
+        data.clientEmail,
+        data.clientName,
+        data.amount,
+        invoiceRef.id
+      );
     } catch (emailError) {
       console.error('Failed to send custom invoice email notification:', emailError);
     }

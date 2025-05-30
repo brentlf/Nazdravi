@@ -432,7 +432,8 @@ export default function AdminInvoices() {
             <CardContent>
               <div className="space-y-3">
                 {completeProgramUsers?.map((user) => {
-                  const billingStatus = getUserBillingStatus(user.uid, user.email);
+                  const billingStatus = getUserBillingStatus(user.uid);
+                  const statusDetails = getBillingStatusDetails(user.uid);
                   const needsBillingSetup = billingStatus === 'none';
                   
                   return (
@@ -445,13 +446,24 @@ export default function AdminInvoices() {
                               <p className="text-xs text-muted-foreground">{user.email}</p>
                             </div>
                             <div className="flex items-center gap-2">
-                              {needsBillingSetup ? (
+                              {billingStatus === 'none' && (
                                 <Badge variant="outline" className="text-xs text-orange-600 border-orange-300">
                                   Setup Required
                                 </Badge>
-                              ) : (
-                                <Badge variant="default" className="text-xs">
-                                  Active
+                              )}
+                              {billingStatus === 'active' && (
+                                <Badge variant="default" className="text-xs bg-green-100 text-green-700 border-green-300">
+                                  Active - Month {statusDetails?.currentCycle || 1}/3
+                                </Badge>
+                              )}
+                              {billingStatus === 'completed' && (
+                                <Badge variant="outline" className="text-xs text-blue-600 border-blue-300">
+                                  Program Completed
+                                </Badge>
+                              )}
+                              {billingStatus === 'cancelled' && (
+                                <Badge variant="outline" className="text-xs text-red-600 border-red-300">
+                                  Cancelled
                                 </Badge>
                               )}
                             </div>
@@ -462,9 +474,12 @@ export default function AdminInvoices() {
                           <div className="text-xs text-muted-foreground text-right">
                             <div>Start: {formatDate(user.programStartDate)}</div>
                             <div>End: {formatDate(user.programEndDate)}</div>
+                            {statusDetails?.nextBillingDate && billingStatus === 'active' && (
+                              <div>Next billing: {formatDate(statusDetails.nextBillingDate)}</div>
+                            )}
                           </div>
                           
-                          {needsBillingSetup && (
+                          {billingStatus === 'none' && (
                             <Button
                               size="sm"
                               onClick={() => {
@@ -479,6 +494,25 @@ export default function AdminInvoices() {
                             >
                               Start Billing
                             </Button>
+                          )}
+                          {billingStatus === 'completed' && (
+                            <Button
+                              size="sm"
+                              variant="outline"
+                              onClick={() => {
+                                setSelectedUser(user);
+                                setProgramStartDate(new Date().toISOString().split('T')[0]);
+                                setShowConfirmDialog(true);
+                              }}
+                              className="text-xs"
+                            >
+                              Renew Program
+                            </Button>
+                          )}
+                          {billingStatus === 'active' && (
+                            <Badge variant="secondary" className="text-xs">
+                              Billing Active
+                            </Badge>
                           )}
                         </div>
                       </div>
