@@ -984,12 +984,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
         }
       });
 
-      // Update invoice with new payment intent
+      // Update invoice with new payment intent (do not mark as reissued - this is just creating a new payment link)
       await db.collection("invoices").doc(invoiceId).update({
         stripePaymentIntentId: paymentIntent.id,
         paymentUrl: `${process.env.FRONTEND_URL || 'http://localhost:5000'}/payment/${paymentIntent.id}`,
-        isReissued: true,
-        reissuedAt: new Date()
+        updatedAt: new Date()
       });
 
       res.json({ 
@@ -1220,6 +1219,47 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.status(500).json({ 
         success: false, 
         error: error.message || "Failed to create custom invoice" 
+      });
+    }
+  });
+
+  // One-time fix for incorrectly marked reissued invoices
+  app.post("/api/fix-reissued-invoices", async (req, res) => {
+    try {
+      const invoicesSnapshot = await db.collection('invoices').get();
+      let fixedCount = 0;
+      
+      const batch = db.batch();
+      
+      invoicesSnapshot.docs.forEach(doc => {
+        const data = doc.data();
+        
+        // If invoice is marked as reissued but has no reissue reason, it was incorrectly marked
+        if (data.isReissued === true && !data.reissueReason) {
+          batch.update(doc.ref, {
+            isReissued: false,
+            reissuedAt: null,
+            originalAmount: null
+          });
+          fixedCount++;
+          console.log(`Fixing invoice ${data.invoiceNumber}: removing incorrect reissued flag`);
+        }
+      });
+      
+      if (fixedCount > 0) {
+        await batch.commit();
+      }
+      
+      res.json({ 
+        success: true, 
+        message: `Fixed ${fixedCount} incorrectly marked invoices`,
+        fixedCount 
+      });
+    } catch (error: any) {
+      console.error("Error fixing invoices:", error);
+      res.status(500).json({ 
+        success: false, 
+        error: error.message 
       });
     }
   });
