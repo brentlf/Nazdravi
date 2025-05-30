@@ -9,13 +9,26 @@ import { Label } from "@/components/ui/label";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useFirestoreCollection } from "@/hooks/useFirestore";
-import { orderBy, limit } from "firebase/firestore";
+import { orderBy, limit, where } from "firebase/firestore";
 import { useQueryClient } from "@tanstack/react-query";
 import { Receipt, Plus, Eye, Send, DollarSign, ArrowLeft, AlertTriangle, RefreshCw, Clock, Ban, CheckCircle, FileText, Edit, CreditCard, Calendar, Users, Euro } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/contexts/AuthContext";
 import { Link } from "wouter";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { apiRequest } from "@/lib/queryClient";
 import type { Invoice, Appointment } from "@shared/firebase-schema";
+
+interface User {
+  uid: string;
+  name: string;
+  email: string;
+  servicePlan?: string;
+  programStartDate?: any;
+  programEndDate?: any;
+  role?: string;
+}
 
 export default function AdminInvoices() {
   const [selectedAppointment, setSelectedAppointment] = useState<Appointment | null>(null);
@@ -32,9 +45,10 @@ export default function AdminInvoices() {
   const [selectedInvoice, setSelectedInvoice] = useState<Invoice | null>(null);
   
   // Subscription management state
-  const [selectedUser, setSelectedUser] = useState("");
+  const [selectedUser, setSelectedUser] = useState<User | null>(null);
   const [programStartDate, setProgramStartDate] = useState("");
   const [isGeneratingSubscription, setIsGeneratingSubscription] = useState(false);
+  const [billingStatuses, setBillingStatuses] = useState<Record<string, any>>({});
   
   const { toast } = useToast();
   const { user } = useAuth();
@@ -45,6 +59,21 @@ export default function AdminInvoices() {
     orderBy("createdAt", "desc"),
     limit(100)
   ]);
+
+  // Fetch all complete program users (excluding admin users)
+  const { data: allCompleteProgramUsers } = useFirestoreCollection<User>("users", [
+    where("servicePlan", "==", "complete-program")
+  ]);
+
+  // Filter out admin users and get only client users for subscription management
+  const filteredCompleteProgramUsers = React.useMemo(() => {
+    if (!allCompleteProgramUsers) return [];
+    
+    return allCompleteProgramUsers.filter(user => {
+      // Only include users with 'client' role
+      return user.role === 'client';
+    });
+  }, [allCompleteProgramUsers]);
 
   // Group invoices by accounting flow - main invoices and their related credit notes/reissues
   const invoiceGroups = useMemo(() => {
@@ -121,10 +150,8 @@ export default function AdminInvoices() {
     isCompleteProgramUser(apt.userId, apt.email) // Only complete program users
   ) || [];
 
-  // Get complete program users for subscription management
-  const completeProgramUsers = users?.filter(user => 
-    (user as any)?.servicePlan === 'complete-program'
-  ) || [];
+  // Use filtered complete program users for subscription management
+  const completeProgramUsers = filteredCompleteProgramUsers;
 
   // Get regular users for subscription creation
   const regularUsers = users?.filter(user => 
@@ -159,7 +186,7 @@ export default function AdminInvoices() {
           title: "Success",
           description: "Complete program subscription created successfully",
         });
-        setSelectedUser("");
+        setSelectedUser(null);
         setProgramStartDate("");
         queryClient.invalidateQueries({ queryKey: ['/api/users'] });
       } else {
