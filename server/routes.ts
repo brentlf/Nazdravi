@@ -673,7 +673,17 @@ export async function registerRoutes(app: Express): Promise<Server> {
         const db = admin.firestore();
         
         const invoicesRef = db.collection('invoices');
-        const query = invoicesRef.where('invoiceNumber', '==', invoiceNumber);
+        
+        // Check if this looks like a Stripe payment intent ID
+        let query;
+        if (invoiceNumber.startsWith('pi_')) {
+          console.log('Searching by Stripe payment intent ID');
+          query = invoicesRef.where('stripePaymentIntentId', '==', invoiceNumber);
+        } else {
+          console.log('Searching by invoice number');
+          query = invoicesRef.where('invoiceNumber', '==', invoiceNumber);
+        }
+        
         const snapshot = await query.get();
         
         if (snapshot.empty) {
