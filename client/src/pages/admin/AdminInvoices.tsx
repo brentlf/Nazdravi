@@ -266,6 +266,51 @@ export default function AdminInvoices() {
     ) || false;
   };
 
+  // Handle viewing invoice
+  const handleViewInvoice = (invoice: Invoice) => {
+    // Open invoice in new tab/window
+    window.open(`/invoice/${invoice.id}`, '_blank');
+  };
+
+  // Handle payment reminder
+  const handleSendPaymentReminder = async (invoice: Invoice) => {
+    try {
+      await apiRequest("POST", "/api/invoices/send-reminder", {
+        invoiceId: invoice.id
+      });
+      toast({
+        title: "Success",
+        description: "Payment reminder sent successfully",
+      });
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to send payment reminder",
+        variant: "destructive",
+      });
+    }
+  };
+
+  // Handle reissue invoice
+  const handleReissueInvoice = async (invoice: Invoice) => {
+    try {
+      await apiRequest("POST", "/api/invoices/reissue", {
+        invoiceId: invoice.id
+      });
+      toast({
+        title: "Success",
+        description: "Invoice reissued successfully",
+      });
+      queryClient.invalidateQueries({ queryKey: ['/api/invoices'] });
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to reissue invoice",
+        variant: "destructive",
+      });
+    }
+  };
+
   const subscriptionInvoices = allInvoices?.filter(inv => 
     inv.invoiceType === 'subscription' || 
     inv.description?.includes('Complete Program') || 
@@ -586,50 +631,98 @@ export default function AdminInvoices() {
         <TabsContent value="invoices" className="space-y-4">
           <Card>
             <CardHeader>
-              <CardTitle>Pay-as-you-go Invoices</CardTitle>
+              <CardTitle>Pay-as-you-go Appointments</CardTitle>
+              <p className="text-sm text-muted-foreground">
+                All appointments that can be invoiced (excluding subscription users)
+              </p>
             </CardHeader>
             <CardContent>
-              {payAsYouGoInvoices.length > 0 ? (
+              {allAppointments && allAppointments.length > 0 ? (
                 <Table>
                   <TableHeader>
                     <TableRow>
-                      <TableHead>Invoice #</TableHead>
+                      <TableHead>Date & Time</TableHead>
                       <TableHead>Client</TableHead>
-                      <TableHead>Amount</TableHead>
                       <TableHead>Status</TableHead>
-                      <TableHead>Date</TableHead>
+                      <TableHead>Service</TableHead>
+                      <TableHead>Invoice Status</TableHead>
                       <TableHead>Actions</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
-                    {payAsYouGoInvoices.map((invoice) => (
-                      <TableRow key={invoice.id}>
-                        <TableCell className="font-mono text-sm">{invoice.invoiceNumber}</TableCell>
-                        <TableCell>{invoice.clientName}</TableCell>
-                        <TableCell>{formatCurrency(invoice.amount)}</TableCell>
-                        <TableCell>
-                          <Badge variant={
-                            invoice.status === 'paid' ? 'default' :
-                            invoice.status === 'pending' ? 'secondary' :
-                            invoice.status === 'overdue' ? 'destructive' : 'outline'
-                          }>
-                            {invoice.status}
-                          </Badge>
-                        </TableCell>
-                        <TableCell>{formatDate(invoice.createdAt)}</TableCell>
-                        <TableCell>
-                          <Button variant="outline" size="sm">
-                            <Eye className="w-4 h-4" />
-                          </Button>
-                        </TableCell>
-                      </TableRow>
-                    ))}
+                    {allAppointments.map((appointment) => {
+                      const isInvoiced = hasInvoice(appointment.id);
+                      return (
+                        <TableRow key={appointment.id}>
+                          <TableCell>
+                            <div className="text-sm">
+                              <div>{appointment.date}</div>
+                              <div className="text-muted-foreground">{appointment.timeslot}</div>
+                            </div>
+                          </TableCell>
+                          <TableCell>
+                            <div>
+                              <div className="font-medium">{appointment.name}</div>
+                              <div className="text-sm text-muted-foreground">{appointment.email}</div>
+                            </div>
+                          </TableCell>
+                          <TableCell>
+                            <Badge variant={
+                              appointment.status === 'done' ? 'default' :
+                              appointment.status === 'cancelled' ? 'destructive' :
+                              appointment.status === 'no-show' ? 'secondary' : 'outline'
+                            }>
+                              {appointment.status}
+                            </Badge>
+                          </TableCell>
+                          <TableCell>{appointment.type || 'Consultation'}</TableCell>
+                          <TableCell>
+                            {isInvoiced ? (
+                              <Badge variant="default" className="bg-green-100 text-green-700">
+                                Invoiced
+                              </Badge>
+                            ) : (
+                              <Badge variant="outline">
+                                Not Invoiced
+                              </Badge>
+                            )}
+                          </TableCell>
+                          <TableCell>
+                            <div className="flex gap-1">
+                              {!isInvoiced && (
+                                <Button
+                                  variant="ghost"
+                                  size="sm"
+                                  onClick={() => {
+                                    setSelectedAppointment(appointment);
+                                    setShowInvoiceDialog(true);
+                                  }}
+                                  title="Create Invoice"
+                                >
+                                  <Plus className="w-4 h-4" />
+                                </Button>
+                              )}
+                              {isInvoiced && (
+                                <Button
+                                  variant="ghost"
+                                  size="sm"
+                                  title="Invoice Already Created"
+                                  disabled
+                                >
+                                  <CheckCircle className="w-4 h-4 text-green-600" />
+                                </Button>
+                              )}
+                            </div>
+                          </TableCell>
+                        </TableRow>
+                      );
+                    })}
                   </TableBody>
                 </Table>
               ) : (
                 <div className="text-center py-8">
-                  <Receipt className="w-12 h-12 mx-auto text-muted-foreground mb-4" />
-                  <p className="text-muted-foreground">No pay-as-you-go invoices found</p>
+                  <Calendar className="w-12 h-12 mx-auto text-muted-foreground mb-4" />
+                  <p className="text-muted-foreground">No appointments found</p>
                 </div>
               )}
             </CardContent>
@@ -681,9 +774,36 @@ export default function AdminInvoices() {
                         </TableCell>
                         <TableCell>{formatDate(invoice.createdAt)}</TableCell>
                         <TableCell>
-                          <Button variant="outline" size="sm">
-                            <Eye className="w-4 h-4" />
-                          </Button>
+                          <div className="flex gap-1">
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              onClick={() => handleViewInvoice(invoice)}
+                              title="View Invoice"
+                            >
+                              <Eye className="w-4 h-4" />
+                            </Button>
+                            {invoice.status !== 'paid' && (
+                              <>
+                                <Button
+                                  variant="ghost"
+                                  size="sm"
+                                  onClick={() => handleSendPaymentReminder(invoice)}
+                                  title="Send Payment Reminder"
+                                >
+                                  <Send className="w-4 h-4" />
+                                </Button>
+                                <Button
+                                  variant="ghost"
+                                  size="sm"
+                                  onClick={() => handleReissueInvoice(invoice)}
+                                  title="Reissue Invoice"
+                                >
+                                  <RefreshCw className="w-4 h-4" />
+                                </Button>
+                              </>
+                            )}
+                          </div>
                         </TableCell>
                       </TableRow>
                     ))}
@@ -784,6 +904,47 @@ export default function AdminInvoices() {
                   disabled={isCreatingAdditionalInvoice}
                 >
                   {isCreatingAdditionalInvoice ? "Creating..." : "Create Invoice"}
+                </Button>
+              </div>
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
+
+      {/* Create Invoice from Appointment Dialog */}
+      <Dialog open={showInvoiceDialog} onOpenChange={setShowInvoiceDialog}>
+        <DialogContent className="max-w-md">
+          <DialogHeader>
+            <DialogTitle>Create Invoice from Appointment</DialogTitle>
+          </DialogHeader>
+          
+          {selectedAppointment && (
+            <div className="space-y-4">
+              <div className="p-4 bg-gray-50 rounded-lg space-y-2">
+                <h4 className="font-medium">Appointment Details</h4>
+                <div className="text-sm space-y-1">
+                  <p><span className="font-medium">Client:</span> {selectedAppointment.name}</p>
+                  <p><span className="font-medium">Email:</span> {selectedAppointment.email}</p>
+                  <p><span className="font-medium">Date:</span> {selectedAppointment.date}</p>
+                  <p><span className="font-medium">Time:</span> {selectedAppointment.timeslot}</p>
+                  <p><span className="font-medium">Status:</span> {selectedAppointment.status}</p>
+                  <p><span className="font-medium">Amount:</span> €75.00</p>
+                </div>
+              </div>
+
+              <div className="flex justify-end gap-2">
+                <Button
+                  variant="outline"
+                  onClick={() => setShowInvoiceDialog(false)}
+                  disabled={isCreatingInvoice}
+                >
+                  Cancel
+                </Button>
+                <Button
+                  onClick={handleCreateAppointmentInvoice}
+                  disabled={isCreatingInvoice}
+                >
+                  {isCreatingInvoice ? "Creating..." : "Create Invoice"}
                 </Button>
               </div>
             </div>
