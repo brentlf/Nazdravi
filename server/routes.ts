@@ -627,6 +627,26 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Update appointment status and billing information
+  app.patch("/api/appointments/:id", async (req, res) => {
+    try {
+      const { id } = req.params;
+      const updateData = req.body;
+      
+      // Update appointment in Firebase
+      const appointmentRef = db.collection('appointments').doc(id);
+      await appointmentRef.update({
+        ...updateData,
+        updatedAt: new Date()
+      });
+      
+      res.json({ success: true, message: "Appointment updated successfully" });
+    } catch (error: any) {
+      console.error("Error updating appointment:", error);
+      res.status(500).json({ success: false, error: error.message });
+    }
+  });
+
   // Invoice lookup endpoint for payment page
   app.get("/api/invoices/:invoiceNumber", async (req, res) => {
     console.log(`🔍 INVOICE LOOKUP: ${req.params.invoiceNumber}`);
@@ -829,6 +849,22 @@ export async function registerRoutes(app: Express): Promise<Server> {
         appointmentId,
         invoiceType: 'session'
       });
+
+      // Mark the appointment as invoiced
+      if (appointmentId) {
+        try {
+          const appointmentRef = db.collection('appointments').doc(appointmentId);
+          await appointmentRef.update({
+            billingStatus: 'invoiced',
+            invoiceId: result.invoiceId,
+            updatedAt: new Date()
+          });
+          console.log(`Appointment ${appointmentId} marked as invoiced`);
+        } catch (error) {
+          console.error("Error updating appointment billing status:", error);
+          // Don't fail the entire request if this update fails
+        }
+      }
 
       res.json({ 
         success: true, 

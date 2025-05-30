@@ -12,7 +12,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { useFirestoreCollection } from "@/hooks/useFirestore";
 import { orderBy, limit, where } from "firebase/firestore";
 import { useQueryClient } from "@tanstack/react-query";
-import { Receipt, Plus, Eye, Send, DollarSign, ArrowLeft, AlertTriangle, RefreshCw, Clock, Ban, CheckCircle, FileText, Edit, CreditCard, Calendar, Users, Euro } from "lucide-react";
+import { Receipt, Plus, Eye, Send, DollarSign, ArrowLeft, AlertTriangle, RefreshCw, Clock, Ban, CheckCircle, FileText, Edit, CreditCard, Calendar, Users, Euro, UserX, X } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/contexts/AuthContext";
 import { Link } from "wouter";
@@ -347,6 +347,53 @@ export default function AdminInvoices() {
       });
     } finally {
       setIsReissuingInvoice(false);
+    }
+  };
+
+  // Mark appointment as no-show (no charge)
+  const markAppointmentAsNoShow = async (appointment: Appointment) => {
+    try {
+      await apiRequest("PATCH", `/api/appointments/${appointment.id}`, {
+        status: 'no-show',
+        billingStatus: 'not-billable',
+        noShowReason: 'Client did not attend appointment'
+      });
+      
+      toast({
+        title: "Success",
+        description: "Appointment marked as no-show (no charge)",
+      });
+      
+      queryClient.invalidateQueries({ queryKey: ['/api/appointments'] });
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to update appointment status",
+        variant: "destructive",
+      });
+    }
+  };
+
+  // Mark appointment as not billable (various reasons)
+  const markAppointmentAsNotBillable = async (appointment: Appointment) => {
+    try {
+      await apiRequest("PATCH", `/api/appointments/${appointment.id}`, {
+        billingStatus: 'not-billable',
+        reason: 'Marked as not billable by admin'
+      });
+      
+      toast({
+        title: "Success",
+        description: "Appointment marked as not billable",
+      });
+      
+      queryClient.invalidateQueries({ queryKey: ['/api/appointments'] });
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to update appointment status",
+        variant: "destructive",
+      });
     }
   };
 
@@ -783,17 +830,37 @@ export default function AdminInvoices() {
                             <TableCell>
                               <div className="flex gap-1">
                                 {!isInvoiced && (
-                                  <Button
-                                    variant="ghost"
-                                    size="sm"
-                                    onClick={() => {
-                                      setSelectedAppointment(appointment);
-                                      setShowInvoiceDialog(true);
-                                    }}
-                                    title="Create Invoice"
-                                  >
-                                    <Plus className="w-4 h-4" />
-                                  </Button>
+                                  <>
+                                    <Button
+                                      variant="ghost"
+                                      size="sm"
+                                      onClick={() => {
+                                        setSelectedAppointment(appointment);
+                                        setShowInvoiceDialog(true);
+                                      }}
+                                      title="Create Invoice"
+                                    >
+                                      <Plus className="w-4 h-4" />
+                                    </Button>
+                                    <Button
+                                      variant="ghost"
+                                      size="sm"
+                                      onClick={() => markAppointmentAsNoShow(appointment)}
+                                      title="Mark as No-Show (No Charge)"
+                                      className="text-orange-600 hover:text-orange-700"
+                                    >
+                                      <UserX className="w-4 h-4" />
+                                    </Button>
+                                    <Button
+                                      variant="ghost"
+                                      size="sm"
+                                      onClick={() => markAppointmentAsNotBillable(appointment)}
+                                      title="Mark as Not Billable"
+                                      className="text-gray-600 hover:text-gray-700"
+                                    >
+                                      <X className="w-4 h-4" />
+                                    </Button>
+                                  </>
                                 )}
                                 {isInvoiced && (
                                   <Button
