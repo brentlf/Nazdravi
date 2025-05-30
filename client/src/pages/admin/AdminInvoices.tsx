@@ -45,6 +45,11 @@ export default function AdminInvoices() {
   // Billing status tracking
   const [billingStatuses, setBillingStatuses] = useState<{[key: string]: any}>({});
   
+  // Invoice creation state
+  const [selectedAppointment, setSelectedAppointment] = useState<Appointment | null>(null);
+  const [isCreatingInvoice, setIsCreatingInvoice] = useState(false);
+  const [showInvoiceDialog, setShowInvoiceDialog] = useState(false);
+  
   const { toast } = useToast();
   const { user } = useAuth();
   const queryClient = useQueryClient();
@@ -52,6 +57,12 @@ export default function AdminInvoices() {
   // Fetch all invoices
   const { data: allInvoices, loading: loadingInvoices } = useFirestoreCollection<Invoice>("invoices", [
     orderBy("createdAt", "desc"),
+    limit(100)
+  ]);
+
+  // Fetch all appointments for pay-as-you-go invoicing
+  const { data: allAppointments } = useFirestoreCollection<Appointment>("appointments", [
+    orderBy("startTime", "desc"),
     limit(100)
   ]);
 
@@ -212,6 +223,47 @@ export default function AdminInvoices() {
     } finally {
       setIsCreatingAdditionalInvoice(false);
     }
+  };
+
+  // Handle creating invoice from appointment
+  const handleCreateAppointmentInvoice = async () => {
+    if (!selectedAppointment) return;
+
+    setIsCreatingInvoice(true);
+    try {
+      const response = await apiRequest("POST", "/api/invoices/create-from-appointment", {
+        appointmentId: selectedAppointment.id,
+        userId: selectedAppointment.userId,
+        clientName: selectedAppointment.clientName,
+        clientEmail: selectedAppointment.clientEmail,
+        amount: 75, // Default session rate
+        description: `Consultation - ${new Date(selectedAppointment.startTime.toDate()).toLocaleDateString()}`
+      });
+
+      toast({
+        title: "Success",
+        description: "Invoice created successfully",
+      });
+      
+      setShowInvoiceDialog(false);
+      setSelectedAppointment(null);
+      queryClient.invalidateQueries({ queryKey: ['/api/invoices'] });
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to create invoice. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsCreatingInvoice(false);
+    }
+  };
+
+  // Check if appointment already has an invoice
+  const hasInvoice = (appointmentId: string) => {
+    return allInvoices?.some(invoice => 
+      invoice.appointmentId === appointmentId
+    ) || false;
   };
 
   const subscriptionInvoices = allInvoices?.filter(inv => 
@@ -613,8 +665,11 @@ export default function AdminInvoices() {
                       <TableRow key={invoice.id}>
                         <TableCell className="font-mono text-sm">{invoice.invoiceNumber}</TableCell>
                         <TableCell>{invoice.clientName}</TableCell>
-                        <TableCell className="max-w-xs truncate">{invoice.description}</TableCell>
-                        <TableCell>{formatCurrency(invoice.amount)}</TableCell>
+                        <TableCell className="max-w-xs truncate">
+                          {invoice.description || 
+                           (invoice.invoiceType === 'subscription' ? `Complete Nutrition Program - Month ${invoice.billingCycle || 1} of 3` : 'Consultation')}
+                        </TableCell>
+                        <TableCell>{formatCurrency(invoice.amount || invoice.totalAmount || 0)}</TableCell>
                         <TableCell>
                           <Badge variant={
                             invoice.status === 'paid' ? 'default' :
