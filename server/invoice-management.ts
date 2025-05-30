@@ -112,6 +112,7 @@ export class InvoiceManagementService {
       appointmentId: data.appointmentId,
       invoiceNumber,
       status: 'unpaid',
+      paymentUrl,
       stripePaymentIntentId: paymentIntent.id,
       createdAt: new Date(),
       updatedAt: new Date()
@@ -222,6 +223,7 @@ export class InvoiceManagementService {
       subscriptionYear: data.year,
       billingCycle: data.billingCycle,
       invoiceNumber,
+      paymentUrl,
       description: `Complete Nutrition Program - Month ${data.billingCycle} of 3`, // Add description field
       status: 'unpaid',
       stripePaymentIntentId: paymentIntent.id,
@@ -575,7 +577,8 @@ export class InvoiceManagementService {
       dueDate,
       invoiceType: data.invoiceType,
       invoiceNumber,
-      status: 'pending',
+      status: 'unpaid',
+      paymentUrl,
       stripePaymentIntentId: paymentIntent.id,
       description: data.description,
       appointmentId: data.appointmentId || null,

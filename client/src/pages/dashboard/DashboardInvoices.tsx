@@ -31,14 +31,7 @@ export default function DashboardInvoices() {
     index === self.findIndex(i => i.invoiceNumber === invoice.invoiceNumber)
   ).sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
 
-  // Debug log to check invoice data
-  console.log('Debug: Client invoices:', invoices.map(inv => ({
-    id: inv.id,
-    invoiceNumber: inv.invoiceNumber,
-    status: inv.status,
-    paymentUrl: inv.paymentUrl,
-    hasPaymentUrl: !!inv.paymentUrl
-  })));
+
 
   const loading = loadingById || loadingByEmail;
 
