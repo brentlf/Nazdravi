@@ -144,6 +144,45 @@ export class PDFService {
     try {
       console.log('📤 Uploading PDF to Firebase Storage:', fileName);
       const bucket = storage.bucket();
+      console.log('🪣 Using bucket:', bucket.name);
+      
+      // Try to check if bucket exists
+      try {
+        const [exists] = await bucket.exists();
+        console.log('🔍 Bucket exists check:', exists);
+        if (!exists) {
+          console.log('❌ Bucket does not exist, attempting to create...');
+          // Try alternative bucket name
+          const altBucketName = `${process.env.VITE_FIREBASE_PROJECT_ID}.firebasestorage.app`;
+          console.log('🔄 Trying alternative bucket name:', altBucketName);
+          const altBucket = storage.bucket(altBucketName);
+          const [altExists] = await altBucket.exists();
+          console.log('🔍 Alternative bucket exists:', altExists);
+          
+          if (altExists) {
+            console.log('✅ Using alternative bucket');
+            const file = altBucket.file(`${folder}/${fileName}`);
+            
+            await file.save(pdfBuffer, {
+              metadata: {
+                contentType: 'application/pdf',
+                cacheControl: 'public, max-age=31536000',
+              },
+            });
+            
+            const [downloadUrl] = await file.getSignedUrl({
+              action: 'read',
+              expires: '03-01-2500',
+            });
+            
+            console.log('✅ PDF uploaded successfully to alt bucket:', downloadUrl);
+            return downloadUrl;
+          }
+        }
+      } catch (bucketCheckError) {
+        console.log('🔍 Bucket check failed:', bucketCheckError);
+      }
+      
       const file = bucket.file(`${folder}/${fileName}`);
       
       await file.save(pdfBuffer, {
