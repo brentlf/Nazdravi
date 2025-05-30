@@ -1,0 +1,50 @@
+
+                
+          
+          
+          
+         Chrome is moving towards a new experience that allows users to choose to browse without third-party cookies.
+queryClient.ts:15 
+            
+            
+           POST https://e394ccd4-b3dd-43ba-8feb-deda267050d2-00-3v6n3vit95c2j.spock.replit.dev/api/invoices/reissue 400 (Bad Request)
+apiRequest @ queryClient.ts:15
+handleReissueInvoice @ AdminInvoices.tsx:298
+onClick @ AdminInvoices.tsx:800
+callCallback2 @ chunk-RPCDYKBN.js?v=1a8e8de5:3674
+invokeGuardedCallbackDev @ chunk-RPCDYKBN.js?v=1a8e8de5:3699
+invokeGuardedCallback @ chunk-RPCDYKBN.js?v=1a8e8de5:3733
+invokeGuardedCallbackAndCatchFirstError @ chunk-RPCDYKBN.js?v=1a8e8de5:3736
+executeDispatch @ chunk-RPCDYKBN.js?v=1a8e8de5:7014
+processDispatchQueueItemsInOrder @ chunk-RPCDYKBN.js?v=1a8e8de5:7034
+processDispatchQueue @ chunk-RPCDYKBN.js?v=1a8e8de5:7043
+dispatchEventsForPlugins @ chunk-RPCDYKBN.js?v=1a8e8de5:7051
+(anonymous) @ chunk-RPCDYKBN.js?v=1a8e8de5:7174
+batchedUpdates$1 @ chunk-RPCDYKBN.js?v=1a8e8de5:18913
+batchedUpdates @ chunk-RPCDYKBN.js?v=1a8e8de5:3579
+dispatchEventForPluginEventSystem @ chunk-RPCDYKBN.js?v=1a8e8de5:7173
+dispatchEventWithEnableCapturePhaseSelectiveHydrationWithoutDiscreteEventReplay @ chunk-RPCDYKBN.js?v=1a8e8de5:5478
+dispatchEvent @ chunk-RPCDYKBN.js?v=1a8e8de5:5472
+dispatchDiscreteEvent @ chunk-RPCDYKBN.js?v=1a8e8de5:5449
+queryClient.ts:15 
+            
+            
+           POST https://e394ccd4-b3dd-43ba-8feb-deda267050d2-00-3v6n3vit95c2j.spock.replit.dev/api/invoices/reissue 400 (Bad Request)
+apiRequest @ queryClient.ts:15
+handleReissueInvoice @ AdminInvoices.tsx:298
+onClick @ AdminInvoices.tsx:800
+callCallback2 @ chunk-RPCDYKBN.js?v=1a8e8de5:3674
+invokeGuardedCallbackDev @ chunk-RPCDYKBN.js?v=1a8e8de5:3699
+invokeGuardedCallback @ chunk-RPCDYKBN.js?v=1a8e8de5:3733
+invokeGuardedCallbackAndCatchFirstError @ chunk-RPCDYKBN.js?v=1a8e8de5:3736
+executeDispatch @ chunk-RPCDYKBN.js?v=1a8e8de5:7014
+processDispatchQueueItemsInOrder @ chunk-RPCDYKBN.js?v=1a8e8de5:7034
+processDispatchQueue @ chunk-RPCDYKBN.js?v=1a8e8de5:7043
+dispatchEventsForPlugins @ chunk-RPCDYKBN.js?v=1a8e8de5:7051
+(anonymous) @ chunk-RPCDYKBN.js?v=1a8e8de5:7174
+batchedUpdates$1 @ chunk-RPCDYKBN.js?v=1a8e8de5:18913
+batchedUpdates @ chunk-RPCDYKBN.js?v=1a8e8de5:3579
+dispatchEventForPluginEventSystem @ chunk-RPCDYKBN.js?v=1a8e8de5:7173
+dispatchEventWithEnableCapturePhaseSelectiveHydrationWithoutDiscreteEventReplay @ chunk-RPCDYKBN.js?v=1a8e8de5:5478
+dispatchEvent @ chunk-RPCDYKBN.js?v=1a8e8de5:5472
+dispatchDiscreteEvent @ chunk-RPCDYKBN.js?v=1a8e8de5:5449

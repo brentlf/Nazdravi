@@ -946,11 +946,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
       });
 
       // Validate amount before sending to Stripe
-      const invoiceAmount = parseFloat(originalInvoice.amount) || 0;
-      if (invoiceAmount <= 0) {
+      const invoiceAmount = typeof originalInvoice.amount === 'number' ? originalInvoice.amount : parseFloat(originalInvoice.amount) || 0;
+      if (invoiceAmount <= 0 || isNaN(invoiceAmount)) {
         return res.status(400).json({ 
           success: false, 
-          error: "Invalid invoice amount" 
+          error: `Invalid invoice amount: ${originalInvoice.amount}` 
         });
       }
 

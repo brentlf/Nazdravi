@@ -638,94 +638,107 @@ export default function AdminInvoices() {
               </p>
             </CardHeader>
             <CardContent>
-              {allAppointments && allAppointments.length > 0 ? (
-                <Table>
-                  <TableHeader>
-                    <TableRow>
-                      <TableHead>Date & Time</TableHead>
-                      <TableHead>Client</TableHead>
-                      <TableHead>Status</TableHead>
-                      <TableHead>Service</TableHead>
-                      <TableHead>Invoice Status</TableHead>
-                      <TableHead>Actions</TableHead>
-                    </TableRow>
-                  </TableHeader>
-                  <TableBody>
-                    {allAppointments.map((appointment) => {
-                      const isInvoiced = hasInvoice(appointment.id);
-                      return (
-                        <TableRow key={appointment.id}>
-                          <TableCell>
-                            <div className="text-sm">
-                              <div>{appointment.date}</div>
-                              <div className="text-muted-foreground">{appointment.timeslot}</div>
-                            </div>
-                          </TableCell>
-                          <TableCell>
-                            <div>
-                              <div className="font-medium">{appointment.name}</div>
-                              <div className="text-sm text-muted-foreground">{appointment.email}</div>
-                            </div>
-                          </TableCell>
-                          <TableCell>
-                            <Badge variant={
-                              appointment.status === 'done' ? 'default' :
-                              appointment.status === 'cancelled' ? 'destructive' :
-                              appointment.status === 'no-show' ? 'secondary' : 'outline'
-                            }>
-                              {appointment.status}
-                            </Badge>
-                          </TableCell>
-                          <TableCell>{appointment.type || 'Consultation'}</TableCell>
-                          <TableCell>
-                            {isInvoiced ? (
-                              <Badge variant="default" className="bg-green-100 text-green-700">
-                                Invoiced
+              {React.useMemo(() => {
+                // Filter appointments that can be invoiced (not pending, not cancelled, and not already invoiced)
+                const invoiceableAppointments = allAppointments?.filter(appointment => 
+                  appointment.status !== 'pending' && 
+                  appointment.status !== 'cancelled' &&
+                  appointment.status !== 'cancelled_reschedule'
+                ) || [];
+
+                if (invoiceableAppointments.length === 0) {
+                  return (
+                    <div className="text-center py-8">
+                      <Calendar className="w-12 h-12 mx-auto text-muted-foreground mb-4" />
+                      <p className="text-muted-foreground">No appointments available for invoicing</p>
+                    </div>
+                  );
+                }
+
+                return (
+                  <Table>
+                    <TableHeader>
+                      <TableRow>
+                        <TableHead>Date & Time</TableHead>
+                        <TableHead>Client</TableHead>
+                        <TableHead>Status</TableHead>
+                        <TableHead>Service</TableHead>
+                        <TableHead>Invoice Status</TableHead>
+                        <TableHead>Actions</TableHead>
+                      </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                      {invoiceableAppointments.map((appointment) => {
+                        const isInvoiced = hasInvoice(appointment.id);
+                        return (
+                          <TableRow key={appointment.id}>
+                            <TableCell>
+                              <div className="text-sm">
+                                <div>{appointment.date}</div>
+                                <div className="text-muted-foreground">{appointment.timeslot}</div>
+                              </div>
+                            </TableCell>
+                            <TableCell>
+                              <div>
+                                <div className="font-medium">{appointment.name}</div>
+                                <div className="text-sm text-muted-foreground">{appointment.email}</div>
+                              </div>
+                            </TableCell>
+                            <TableCell>
+                              <Badge variant={
+                                appointment.status === 'done' ? 'default' :
+                                appointment.status === 'confirmed' ? 'outline' :
+                                appointment.status === 'no-show' ? 'secondary' : 'outline'
+                              }>
+                                {appointment.status}
                               </Badge>
-                            ) : (
-                              <Badge variant="outline">
-                                Not Invoiced
-                              </Badge>
-                            )}
-                          </TableCell>
-                          <TableCell>
-                            <div className="flex gap-1">
-                              {!isInvoiced && (
-                                <Button
-                                  variant="ghost"
-                                  size="sm"
-                                  onClick={() => {
-                                    setSelectedAppointment(appointment);
-                                    setShowInvoiceDialog(true);
-                                  }}
-                                  title="Create Invoice"
-                                >
-                                  <Plus className="w-4 h-4" />
-                                </Button>
+                            </TableCell>
+                            <TableCell>{appointment.type || 'Consultation'}</TableCell>
+                            <TableCell>
+                              {isInvoiced ? (
+                                <Badge variant="default" className="bg-green-100 text-green-700">
+                                  Invoiced
+                                </Badge>
+                              ) : (
+                                <Badge variant="outline">
+                                  Not Invoiced
+                                </Badge>
                               )}
-                              {isInvoiced && (
-                                <Button
-                                  variant="ghost"
-                                  size="sm"
-                                  title="Invoice Already Created"
-                                  disabled
-                                >
-                                  <CheckCircle className="w-4 h-4 text-green-600" />
-                                </Button>
-                              )}
-                            </div>
-                          </TableCell>
-                        </TableRow>
-                      );
-                    })}
-                  </TableBody>
-                </Table>
-              ) : (
-                <div className="text-center py-8">
-                  <Calendar className="w-12 h-12 mx-auto text-muted-foreground mb-4" />
-                  <p className="text-muted-foreground">No appointments found</p>
-                </div>
-              )}
+                            </TableCell>
+                            <TableCell>
+                              <div className="flex gap-1">
+                                {!isInvoiced && (
+                                  <Button
+                                    variant="ghost"
+                                    size="sm"
+                                    onClick={() => {
+                                      setSelectedAppointment(appointment);
+                                      setShowInvoiceDialog(true);
+                                    }}
+                                    title="Create Invoice"
+                                  >
+                                    <Plus className="w-4 h-4" />
+                                  </Button>
+                                )}
+                                {isInvoiced && (
+                                  <Button
+                                    variant="ghost"
+                                    size="sm"
+                                    title="Invoice Already Created"
+                                    disabled
+                                  >
+                                    <CheckCircle className="w-4 h-4 text-green-600" />
+                                  </Button>
+                                )}
+                              </div>
+                            </TableCell>
+                          </TableRow>
+                        );
+                      })}
+                    </TableBody>
+                  </Table>
+                );
+              }, [allAppointments, allInvoices])}
             </CardContent>
           </Card>
         </TabsContent>
