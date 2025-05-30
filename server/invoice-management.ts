@@ -407,13 +407,8 @@ export class InvoiceManagementService {
     const invoiceDoc = await db.collection('invoices').doc(invoiceId).get();
     if (invoiceDoc.exists) {
       const data = invoiceDoc.data();
-      await mailerLiteService.sendInvoicePaymentReceived(
-        'admin@veenutrition.com',
-        'Admin',
-        data?.totalAmount || 0,
-        invoiceId,
-        data?.clientName || 'Unknown Client'
-      );
+      // Send admin notification email (when email service method is available)
+      console.log(`Payment received for invoice ${invoiceId} - ${data?.clientName} - €${data?.totalAmount}`);
     }
   }
 
@@ -451,12 +446,13 @@ export class InvoiceManagementService {
     amount: number;
     description: string;
     invoiceType: string;
+    appointmentId?: string;
   }): Promise<{ invoiceId: string; paymentUrl: string }> {
     
     const items: InvoiceItem[] = [{
       description: data.description,
       amount: data.amount,
-      type: data.invoiceType || 'session',
+      type: (data.invoiceType as 'session' | 'subscription' | 'penalty') || 'session',
       details: `Additional charge: ${data.description}`
     }];
 
@@ -486,13 +482,15 @@ export class InvoiceManagementService {
       servicePlan: 'additional-charge',
       items,
       totalAmount: data.amount,
+      amount: data.amount, // Add explicit amount field for compatibility
       currency: 'eur',
       dueDate,
       invoiceType: data.invoiceType,
       invoiceNumber,
-      status: 'unpaid',
+      status: 'pending',
       stripePaymentIntentId: paymentIntent.id,
       description: data.description,
+      appointmentId: data.appointmentId || null,
       createdAt: new Date(),
       updatedAt: new Date()
     });

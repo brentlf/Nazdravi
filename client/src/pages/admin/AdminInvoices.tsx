@@ -918,7 +918,7 @@ export default function AdminInvoices() {
                           <div className="space-y-1">
                             <div>
                               {invoice.description || 
-                               (invoice.invoiceType === 'subscription' ? `Complete Nutrition Program - Month ${invoice.billingCycle || 1} of 3` : 'Consultation')}
+                               (invoice.invoiceType === 'subscription' ? `Complete Nutrition Program - Month ${(invoice as any).billingCycle || 1} of 3` : 'Consultation')}
                             </div>
                             {invoice.isReissued && (
                               <div className="flex items-center gap-1">
@@ -940,7 +940,7 @@ export default function AdminInvoices() {
                             )}
                           </div>
                         </TableCell>
-                        <TableCell>{formatCurrency(invoice.amount || invoice.totalAmount || 0)}</TableCell>
+                        <TableCell>{formatCurrency(invoice.amount || (invoice as any).totalAmount || 0)}</TableCell>
                         <TableCell>
                           <Badge variant={
                             invoice.status === 'paid' ? 'default' :
