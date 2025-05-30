@@ -202,7 +202,7 @@ export class InvoiceManagementService {
       }
     });
 
-    const paymentUrl = `${process.env.REPLIT_DEV_DOMAIN || 'https://your-domain.com'}/pay-invoice/${paymentIntent.id}`;
+    const paymentUrl = `https://${process.env.REPLIT_DEV_DOMAIN || 'your-domain.com'}/pay-invoice/${paymentIntent.id}`;
     const dueDate = new Date();
     dueDate.setDate(dueDate.getDate() + 7); // 7 days for subscription payments
 
@@ -558,7 +558,7 @@ export class InvoiceManagementService {
       }
     });
 
-    const paymentUrl = `${process.env.REPLIT_DEV_DOMAIN || 'https://your-domain.com'}/pay-invoice/${paymentIntent.id}`;
+    const paymentUrl = `https://${process.env.REPLIT_DEV_DOMAIN || 'your-domain.com'}/pay-invoice/${paymentIntent.id}`;
     const dueDate = new Date();
     dueDate.setDate(dueDate.getDate() + 7); // 7 days to pay
 

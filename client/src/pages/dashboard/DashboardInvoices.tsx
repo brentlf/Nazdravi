@@ -184,14 +184,15 @@ export default function DashboardInvoices() {
                       <div className="flex items-center gap-2">
                         {getStatusBadge(invoice.status)}
                         
-                        {(invoice.status === "unpaid" || invoice.status === "pending") && invoice.paymentUrl && (
+                        {(invoice.status === "unpaid" || invoice.status === "pending") && (
                           <Button 
                             onClick={() => handlePayInvoice(invoice)}
                             size="sm"
                             className="bg-primary-600 hover:bg-primary-700"
+                            disabled={!invoice.paymentUrl}
                           >
                             <CreditCard className="w-4 h-4 mr-2" />
-                            Pay Now
+                            {invoice.paymentUrl ? 'Pay Now' : 'Payment Link Unavailable'}
                           </Button>
                         )}
                         
