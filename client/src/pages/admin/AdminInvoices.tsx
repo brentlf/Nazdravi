@@ -35,6 +35,13 @@ export default function AdminInvoices() {
   const [isGeneratingSubscription, setIsGeneratingSubscription] = useState(false);
   const [showConfirmDialog, setShowConfirmDialog] = useState(false);
   
+  // Additional invoice creation state
+  const [showAdditionalInvoiceDialog, setShowAdditionalInvoiceDialog] = useState(false);
+  const [additionalInvoiceUser, setAdditionalInvoiceUser] = useState<User | null>(null);
+  const [additionalInvoiceAmount, setAdditionalInvoiceAmount] = useState("");
+  const [additionalInvoiceReason, setAdditionalInvoiceReason] = useState("");
+  const [isCreatingAdditionalInvoice, setIsCreatingAdditionalInvoice] = useState(false);
+  
   const { toast } = useToast();
   const { user } = useAuth();
   const queryClient = useQueryClient();
@@ -132,6 +139,9 @@ export default function AdminInvoices() {
       setSelectedUser(null);
       setProgramStartDate("");
       queryClient.invalidateQueries({ queryKey: ['/api/users'] });
+      queryClient.invalidateQueries({ queryKey: ['/api/invoices'] });
+      // Refresh the page data
+      window.location.reload();
     } catch (error) {
       toast({
         title: "Error",
@@ -143,12 +153,59 @@ export default function AdminInvoices() {
     }
   };
 
+  // Handle creating additional invoice
+  const handleCreateAdditionalInvoice = async () => {
+    if (!additionalInvoiceUser || !additionalInvoiceAmount || !additionalInvoiceReason) {
+      toast({
+        title: "Missing Information",
+        description: "Please fill in all fields",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setIsCreatingAdditionalInvoice(true);
+    try {
+      const response = await apiRequest("POST", "/api/invoices/create-custom", {
+        userId: additionalInvoiceUser.uid,
+        clientName: additionalInvoiceUser.name,
+        clientEmail: additionalInvoiceUser.email,
+        amount: parseFloat(additionalInvoiceAmount),
+        description: `Additional charge: ${additionalInvoiceReason}`,
+        invoiceType: 'session'
+      });
+
+      toast({
+        title: "Success",
+        description: "Additional invoice created successfully",
+      });
+      
+      setShowAdditionalInvoiceDialog(false);
+      setAdditionalInvoiceUser(null);
+      setAdditionalInvoiceAmount("");
+      setAdditionalInvoiceReason("");
+      queryClient.invalidateQueries({ queryKey: ['/api/invoices'] });
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to create additional invoice. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsCreatingAdditionalInvoice(false);
+    }
+  };
+
   const subscriptionInvoices = allInvoices?.filter(inv => 
-    inv.description?.includes('Complete Program') || inv.description?.includes('Month ')
+    inv.invoiceType === 'subscription' || 
+    inv.description?.includes('Complete Program') || 
+    inv.description?.includes('Month ')
   ) || [];
 
   const payAsYouGoInvoices = allInvoices?.filter(inv => 
-    !inv.description?.includes('Complete Program') && !inv.description?.includes('Month ')
+    inv.invoiceType !== 'subscription' &&
+    !inv.description?.includes('Complete Program') && 
+    !inv.description?.includes('Month ')
   ) || [];
 
   return (
