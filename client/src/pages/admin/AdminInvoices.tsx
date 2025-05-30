@@ -56,6 +56,39 @@ export default function AdminInvoices() {
   const [reissueAmount, setReissueAmount] = useState("");
   const [reissueReason, setReissueReason] = useState("");
   const [isReissuingInvoice, setIsReissuingInvoice] = useState(false);
+
+  // Invoice services state
+  const [invoiceServices, setInvoiceServices] = useState({
+    standardFee: true,
+    lateReschedule: false,
+    noShowFee: false,
+    customAmount: false
+  });
+  const [customAmountValue, setCustomAmountValue] = useState("");
+  const [customDescription, setCustomDescription] = useState("");
+  
+  // Helper functions for invoice services
+  const calculateInvoiceTotal = () => {
+    let total = 0;
+    if (invoiceServices.standardFee) total += 75;
+    if (invoiceServices.lateReschedule) total += 37.5;
+    if (invoiceServices.noShowFee) total += 37.5;
+    if (invoiceServices.customAmount && customAmountValue) {
+      total += parseFloat(customAmountValue) || 0;
+    }
+    return total;
+  };
+
+  const resetInvoiceServices = () => {
+    setInvoiceServices({
+      standardFee: true,
+      lateReschedule: false,
+      noShowFee: false,
+      customAmount: false
+    });
+    setCustomAmountValue("");
+    setCustomDescription("");
+  };
   
   const { toast } = useToast();
   const { user } = useAuth();
@@ -240,25 +273,46 @@ export default function AdminInvoices() {
   const handleCreateAppointmentInvoice = async () => {
     if (!selectedAppointment) return;
 
+    const totalAmount = calculateInvoiceTotal();
+    if (totalAmount === 0) {
+      toast({
+        title: "Error",
+        description: "Please select at least one service or add a custom amount.",
+        variant: "destructive",
+      });
+      return;
+    }
+
     setIsCreatingInvoice(true);
     try {
+      // Build description based on selected services
+      const services = [];
+      if (invoiceServices.standardFee) services.push("Standard Consultation");
+      if (invoiceServices.lateReschedule) services.push("Late Reschedule Penalty");
+      if (invoiceServices.noShowFee) services.push("No Show Fee");
+      if (invoiceServices.customAmount && customDescription) services.push(customDescription);
+      
+      const description = services.length > 0 ? services.join(", ") : `Consultation - ${selectedAppointment.date}`;
+
       const response = await apiRequest("POST", "/api/invoices/create-from-appointment", {
         appointmentId: selectedAppointment.id,
         userId: selectedAppointment.userId,
         clientName: selectedAppointment.name,
         clientEmail: selectedAppointment.email,
-        amount: 75, // Default session rate
-        description: `Consultation - ${selectedAppointment.date}`
+        amount: totalAmount,
+        description: description
       });
 
       toast({
         title: "Success",
-        description: "Invoice created successfully",
+        description: `Invoice created successfully for €${totalAmount.toFixed(2)}`,
       });
       
       setShowInvoiceDialog(false);
       setSelectedAppointment(null);
+      resetInvoiceServices();
       queryClient.invalidateQueries({ queryKey: ['/api/invoices'] });
+      queryClient.invalidateQueries({ queryKey: ['/api/appointments'] });
     } catch (error) {
       toast({
         title: "Error",
@@ -1091,13 +1145,13 @@ export default function AdminInvoices() {
 
       {/* Create Invoice from Appointment Dialog */}
       <Dialog open={showInvoiceDialog} onOpenChange={setShowInvoiceDialog}>
-        <DialogContent className="max-w-md">
+        <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle>Create Invoice from Appointment</DialogTitle>
           </DialogHeader>
           
           {selectedAppointment && (
-            <div className="space-y-4">
+            <div className="space-y-6">
               <div className="p-4 bg-gray-50 rounded-lg space-y-2">
                 <h4 className="font-medium">Appointment Details</h4>
                 <div className="text-sm space-y-1">
@@ -1106,21 +1160,141 @@ export default function AdminInvoices() {
                   <p><span className="font-medium">Date:</span> {selectedAppointment.date}</p>
                   <p><span className="font-medium">Time:</span> {selectedAppointment.timeslot}</p>
                   <p><span className="font-medium">Status:</span> {selectedAppointment.status}</p>
-                  <p><span className="font-medium">Amount:</span> €75.00</p>
+                </div>
+              </div>
+
+              <div className="space-y-4">
+                <h4 className="font-medium">Invoice Services & Charges</h4>
+                
+                {/* Standard Session Fee */}
+                <div className="flex items-center justify-between p-4 border rounded-lg">
+                  <div className="flex items-center space-x-3">
+                    <input
+                      type="checkbox"
+                      id="standardFee"
+                      checked={invoiceServices.standardFee}
+                      onChange={(e) => setInvoiceServices(prev => ({
+                        ...prev,
+                        standardFee: e.target.checked
+                      }))}
+                      className="w-4 h-4"
+                    />
+                    <div>
+                      <Label htmlFor="standardFee" className="font-medium">Standard Consultation Fee</Label>
+                      <p className="text-sm text-muted-foreground">Regular session rate</p>
+                    </div>
+                  </div>
+                  <span className="font-medium">€75.00</span>
+                </div>
+
+                {/* Late Reschedule Penalty */}
+                <div className="flex items-center justify-between p-4 border rounded-lg">
+                  <div className="flex items-center space-x-3">
+                    <input
+                      type="checkbox"
+                      id="lateReschedule"
+                      checked={invoiceServices.lateReschedule}
+                      onChange={(e) => setInvoiceServices(prev => ({
+                        ...prev,
+                        lateReschedule: e.target.checked
+                      }))}
+                      className="w-4 h-4"
+                    />
+                    <div>
+                      <Label htmlFor="lateReschedule" className="font-medium">Late Reschedule Penalty</Label>
+                      <p className="text-sm text-muted-foreground">Less than 24h notice</p>
+                    </div>
+                  </div>
+                  <span className="font-medium">€37.50</span>
+                </div>
+
+                {/* No Show Fee */}
+                <div className="flex items-center justify-between p-4 border rounded-lg">
+                  <div className="flex items-center space-x-3">
+                    <input
+                      type="checkbox"
+                      id="noShowFee"
+                      checked={invoiceServices.noShowFee}
+                      onChange={(e) => setInvoiceServices(prev => ({
+                        ...prev,
+                        noShowFee: e.target.checked
+                      }))}
+                      className="w-4 h-4"
+                    />
+                    <div>
+                      <Label htmlFor="noShowFee" className="font-medium">No Show Fee</Label>
+                      <p className="text-sm text-muted-foreground">50% of standard rate</p>
+                    </div>
+                  </div>
+                  <span className="font-medium">€37.50</span>
+                </div>
+
+                {/* Custom Amount */}
+                <div className="p-4 border rounded-lg space-y-3">
+                  <div className="flex items-center space-x-3">
+                    <input
+                      type="checkbox"
+                      id="customAmount"
+                      checked={invoiceServices.customAmount}
+                      onChange={(e) => setInvoiceServices(prev => ({
+                        ...prev,
+                        customAmount: e.target.checked
+                      }))}
+                      className="w-4 h-4"
+                    />
+                    <Label htmlFor="customAmount" className="font-medium">Custom Amount</Label>
+                  </div>
+                  
+                  {invoiceServices.customAmount && (
+                    <div className="grid grid-cols-2 gap-3">
+                      <div>
+                        <Label htmlFor="customAmountValue">Amount (€)</Label>
+                        <Input
+                          id="customAmountValue"
+                          type="number"
+                          step="0.01"
+                          min="0"
+                          value={customAmountValue}
+                          onChange={(e) => setCustomAmountValue(e.target.value)}
+                          placeholder="0.00"
+                        />
+                      </div>
+                      <div>
+                        <Label htmlFor="customDescription">Description</Label>
+                        <Input
+                          id="customDescription"
+                          value={customDescription}
+                          onChange={(e) => setCustomDescription(e.target.value)}
+                          placeholder="Additional charge description"
+                        />
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              {/* Total Summary */}
+              <div className="p-4 bg-blue-50 rounded-lg">
+                <div className="flex justify-between items-center">
+                  <span className="font-medium">Total Amount:</span>
+                  <span className="text-lg font-bold text-blue-600">€{calculateInvoiceTotal().toFixed(2)}</span>
                 </div>
               </div>
 
               <div className="flex justify-end gap-2">
                 <Button
                   variant="outline"
-                  onClick={() => setShowInvoiceDialog(false)}
+                  onClick={() => {
+                    setShowInvoiceDialog(false);
+                    resetInvoiceServices();
+                  }}
                   disabled={isCreatingInvoice}
                 >
                   Cancel
                 </Button>
                 <Button
                   onClick={handleCreateAppointmentInvoice}
-                  disabled={isCreatingInvoice}
+                  disabled={isCreatingInvoice || calculateInvoiceTotal() === 0}
                 >
                   {isCreatingInvoice ? "Creating..." : "Create Invoice"}
                 </Button>
