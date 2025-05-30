@@ -1133,6 +1133,76 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Cancel invoice endpoint (creates credit note)
+  app.post("/api/invoices/cancel", async (req, res) => {
+    try {
+      const { invoiceId, reason, originalAmount } = req.body;
+      
+      if (!invoiceId || !reason || !originalAmount) {
+        return res.status(400).json({ 
+          success: false, 
+          error: "Missing required fields: invoiceId, reason, originalAmount" 
+        });
+      }
+
+      // Get the original invoice
+      const originalInvoice = await db.collection('invoices').doc(invoiceId).get();
+      if (!originalInvoice.exists) {
+        return res.status(404).json({ 
+          success: false, 
+          error: "Invoice not found" 
+        });
+      }
+
+      const invoiceData = originalInvoice.data();
+      
+      // Create credit note
+      const creditNoteNumber = `CN-${Date.now()}`;
+      const creditNote = {
+        userId: invoiceData.userId,
+        clientName: invoiceData.clientName,
+        clientEmail: invoiceData.clientEmail,
+        invoiceNumber: creditNoteNumber,
+        amount: -originalAmount, // Negative amount for credit
+        currency: invoiceData.currency || 'EUR',
+        description: `Credit Note for Invoice ${invoiceData.invoiceNumber} - ${reason}`,
+        invoiceType: 'credit',
+        type: 'credit',
+        status: 'processed',
+        createdAt: new Date(),
+        dueDate: new Date(),
+        originalInvoiceId: invoiceId,
+        originalInvoiceNumber: invoiceData.invoiceNumber,
+        cancelReason: reason
+      };
+
+      // Save credit note
+      await db.collection('invoices').add(creditNote);
+
+      // Update original invoice status
+      await db.collection('invoices').doc(invoiceId).update({
+        status: 'cancelled',
+        cancelledAt: new Date(),
+        cancelReason: reason,
+        creditNoteNumber: creditNoteNumber,
+        updatedAt: new Date()
+      });
+
+      res.json({ 
+        success: true, 
+        message: "Invoice cancelled and credit note created successfully",
+        creditNoteNumber: creditNoteNumber
+      });
+
+    } catch (error: any) {
+      console.error("Error cancelling invoice:", error);
+      res.status(500).json({ 
+        success: false, 
+        error: error.message || "Failed to cancel invoice" 
+      });
+    }
+  });
+
   // Cancel subscription
   app.post("/api/subscriptions/cancel", async (req, res) => {
     try {
