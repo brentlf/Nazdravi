@@ -336,6 +336,76 @@ export default function AdminInvoices() {
             </Card>
           </div>
 
+          {/* Create Additional Invoice */}
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <Plus className="w-5 h-5" />
+                Create Additional Invoice
+              </CardTitle>
+              <p className="text-sm text-muted-foreground">
+                Create extra charges for no-shows, late reschedules, or custom amounts
+              </p>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="space-y-2">
+                <Label>Select Client</Label>
+                <Select 
+                  value={additionalInvoiceUser?.uid || ""} 
+                  onValueChange={(value) => {
+                    const user = completeProgramUsers?.find(u => u.uid === value);
+                    setAdditionalInvoiceUser(user || null);
+                  }}
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Choose a subscription client" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {completeProgramUsers?.map((user) => (
+                      <SelectItem key={user.uid} value={user.uid}>
+                        {user.name} ({user.email})
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label>Amount (€)</Label>
+                  <Input
+                    type="number"
+                    placeholder="75.00"
+                    value={additionalInvoiceAmount}
+                    onChange={(e) => setAdditionalInvoiceAmount(e.target.value)}
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label>Reason</Label>
+                  <Select value={additionalInvoiceReason} onValueChange={setAdditionalInvoiceReason}>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select reason" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="No-show penalty">No-show penalty</SelectItem>
+                      <SelectItem value="Late reschedule fee">Late reschedule fee</SelectItem>
+                      <SelectItem value="Extra session">Extra session</SelectItem>
+                      <SelectItem value="Custom charge">Custom charge</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+              </div>
+
+              <Button 
+                onClick={() => setShowAdditionalInvoiceDialog(true)}
+                disabled={!additionalInvoiceUser || !additionalInvoiceAmount || !additionalInvoiceReason || isCreatingAdditionalInvoice}
+                className="w-full"
+              >
+                {isCreatingAdditionalInvoice ? "Creating Invoice..." : "Create Additional Invoice"}
+              </Button>
+            </CardContent>
+          </Card>
+
           {/* Subscription Management List */}
           <Card>
             <CardHeader>
@@ -562,6 +632,51 @@ export default function AdminInvoices() {
                   disabled={isGeneratingSubscription}
                 >
                   {isGeneratingSubscription ? "Starting..." : "Confirm & Start Billing"}
+                </Button>
+              </div>
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
+
+      {/* Additional Invoice Confirmation Dialog */}
+      <Dialog open={showAdditionalInvoiceDialog} onOpenChange={setShowAdditionalInvoiceDialog}>
+        <DialogContent className="max-w-md">
+          <DialogHeader>
+            <DialogTitle>Confirm Additional Invoice</DialogTitle>
+          </DialogHeader>
+          
+          {additionalInvoiceUser && (
+            <div className="space-y-4">
+              <div className="p-4 bg-gray-50 rounded-lg space-y-2">
+                <h4 className="font-medium">Invoice Details</h4>
+                <div className="text-sm space-y-1">
+                  <p><span className="font-medium">Client:</span> {additionalInvoiceUser.name}</p>
+                  <p><span className="font-medium">Email:</span> {additionalInvoiceUser.email}</p>
+                  <p><span className="font-medium">Amount:</span> €{parseFloat(additionalInvoiceAmount || '0').toFixed(2)}</p>
+                  <p><span className="font-medium">Reason:</span> {additionalInvoiceReason}</p>
+                </div>
+              </div>
+              
+              <div className="p-3 bg-orange-50 rounded-lg">
+                <p className="text-sm text-orange-800">
+                  This will create an additional invoice on top of their monthly subscription.
+                </p>
+              </div>
+
+              <div className="flex justify-end gap-2">
+                <Button
+                  variant="outline"
+                  onClick={() => setShowAdditionalInvoiceDialog(false)}
+                  disabled={isCreatingAdditionalInvoice}
+                >
+                  Cancel
+                </Button>
+                <Button
+                  onClick={handleCreateAdditionalInvoice}
+                  disabled={isCreatingAdditionalInvoice}
+                >
+                  {isCreatingAdditionalInvoice ? "Creating..." : "Create Invoice"}
                 </Button>
               </div>
             </div>

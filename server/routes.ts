@@ -988,6 +988,43 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Create custom invoice (for additional charges)
+  app.post("/api/invoices/create-custom", async (req, res) => {
+    try {
+      const { userId, clientName, clientEmail, amount, description, invoiceType } = req.body;
+      
+      if (!userId || !clientName || !clientEmail || !amount || !description) {
+        return res.status(400).json({ 
+          success: false, 
+          error: "Missing required fields: userId, clientName, clientEmail, amount, description" 
+        });
+      }
+
+      const result = await invoiceService.createCustomInvoice({
+        userId,
+        clientName,
+        clientEmail,
+        amount: parseFloat(amount),
+        description,
+        invoiceType: invoiceType || 'session'
+      });
+
+      res.json({ 
+        success: true, 
+        message: "Custom invoice created successfully",
+        invoiceId: result.invoiceId,
+        paymentUrl: result.paymentUrl
+      });
+
+    } catch (error: any) {
+      console.error("Error creating custom invoice:", error);
+      res.status(500).json({ 
+        success: false, 
+        error: error.message || "Failed to create custom invoice" 
+      });
+    }
+  });
+
   // Create individual subscription invoice with billing cycle support
   app.post("/api/subscriptions/create-invoice", async (req, res) => {
     try {

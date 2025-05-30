@@ -440,6 +440,80 @@ export class InvoiceManagementService {
       ...doc.data()
     }));
   }
+
+  // Create custom invoice for additional charges
+  async createCustomInvoice(data: {
+    userId: string;
+    clientName: string;
+    clientEmail: string;
+    amount: number;
+    description: string;
+    invoiceType: string;
+  }): Promise<{ invoiceId: string; paymentUrl: string }> {
+    
+    const items: InvoiceItem[] = [{
+      description: data.description,
+      amount: data.amount,
+      type: data.invoiceType || 'session',
+      details: `Additional charge: ${data.description}`
+    }];
+
+    // Create Stripe payment intent
+    const invoiceNumber = `CUSTOM-${Date.now()}`;
+    
+    const paymentIntent = await stripe.paymentIntents.create({
+      amount: Math.round(data.amount * 100),
+      currency: 'eur',
+      payment_method_types: ['card', 'ideal'],
+      metadata: {
+        invoiceNumber,
+        userId: data.userId,
+        servicePlan: 'additional-charge'
+      }
+    });
+
+    const paymentUrl = `${process.env.REPLIT_DEV_DOMAIN || 'https://your-domain.com'}/pay-invoice/${paymentIntent.id}`;
+    const dueDate = new Date();
+    dueDate.setDate(dueDate.getDate() + 7); // 7 days to pay
+
+    // Save to Firebase
+    const invoiceRef = await db.collection('invoices').add({
+      userId: data.userId,
+      clientName: data.clientName,
+      clientEmail: data.clientEmail,
+      servicePlan: 'additional-charge',
+      items,
+      totalAmount: data.amount,
+      currency: 'eur',
+      dueDate,
+      invoiceType: data.invoiceType,
+      invoiceNumber,
+      status: 'unpaid',
+      stripePaymentIntentId: paymentIntent.id,
+      description: data.description,
+      createdAt: new Date(),
+      updatedAt: new Date()
+    });
+
+    // Send email notification
+    try {
+      await this.emailService.sendInvoiceNotification({
+        to: data.clientEmail,
+        clientName: data.clientName,
+        invoiceId: invoiceRef.id,
+        amount: data.amount,
+        description: data.description,
+        paymentUrl
+      });
+    } catch (emailError) {
+      console.error('Failed to send custom invoice email notification:', emailError);
+    }
+
+    return {
+      invoiceId: invoiceRef.id,
+      paymentUrl
+    };
+  }
 }
 
 export const invoiceService = new InvoiceManagementService();
