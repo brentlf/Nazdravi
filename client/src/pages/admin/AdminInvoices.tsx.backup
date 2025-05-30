@@ -3,8 +3,10 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Alert, AlertDescription } from "@/components/ui/alert";
@@ -28,10 +30,25 @@ interface User {
   role?: string;
 }
 
-export default function AdminInvoices() {
+export default function AdminInvoicesNew() {
+  const [selectedAppointment, setSelectedAppointment] = useState<Appointment | null>(null);
+  const [isCreatingInvoice, setIsCreatingInvoice] = useState(false);
+  const [includeSessionRate, setIncludeSessionRate] = useState(false);
+  const [includeNoShowPenalty, setIncludeNoShowPenalty] = useState(false);
+  const [includeLateRescheduleFee, setIncludeLateRescheduleFee] = useState(false);
+  const [useCustomAmount, setUseCustomAmount] = useState(false);
+  const [customAmount, setCustomAmount] = useState("");
+  const [reissueInvoice, setReissueInvoice] = useState<Invoice | null>(null);
+  const [reissueAmount, setReissueAmount] = useState("");
+  const [isReissuing, setIsReissuing] = useState(false);
+  const [showReissueDialog, setShowReissueDialog] = useState(false);
+  const [selectedInvoice, setSelectedInvoice] = useState<Invoice | null>(null);
+  
+  // Subscription management state
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
   const [programStartDate, setProgramStartDate] = useState("");
   const [isGeneratingSubscription, setIsGeneratingSubscription] = useState(false);
+  const [billingStatuses, setBillingStatuses] = useState<Record<string, any>>({});
   
   const { toast } = useToast();
   const { user } = useAuth();
@@ -90,13 +107,6 @@ export default function AdminInvoices() {
     });
   };
 
-  const formatCurrency = (amount: number) => {
-    return new Intl.NumberFormat('en-US', {
-      style: 'currency',
-      currency: 'EUR'
-    }).format(amount);
-  };
-
   // Generate subscription billing function
   const handleGenerateSubscription = async () => {
     if (!selectedUser || !programStartDate) {
@@ -133,14 +143,6 @@ export default function AdminInvoices() {
     }
   };
 
-  const subscriptionInvoices = allInvoices?.filter(inv => 
-    inv.description?.includes('Complete Program') || inv.description?.includes('Month ')
-  ) || [];
-
-  const payAsYouGoInvoices = allInvoices?.filter(inv => 
-    !inv.description?.includes('Complete Program') && !inv.description?.includes('Month ')
-  ) || [];
-
   return (
     <div className="container mx-auto px-4 py-6 space-y-6 max-w-7xl">
       <div className="flex items-center justify-between">
@@ -166,17 +168,17 @@ export default function AdminInvoices() {
 
       <Tabs defaultValue="subscriptions" className="space-y-4">
         <TabsList className="grid w-full grid-cols-3">
-          <TabsTrigger value="invoices">Pay-as-you-go ({payAsYouGoInvoices.length})</TabsTrigger>
+          <TabsTrigger value="invoices">Pay-as-you-go ({allInvoices?.filter(inv => !inv.description?.includes('Complete Program')).length || 0})</TabsTrigger>
           <TabsTrigger value="subscriptions">Subscriptions</TabsTrigger>
           <TabsTrigger value="all">All Invoices ({allInvoices?.length || 0})</TabsTrigger>
         </TabsList>
 
-        <TabsContent value="subscriptions" className="space-y-4">
-          <div className="grid lg:grid-cols-2 gap-4">
+        <TabsContent value="subscriptions" className="space-y-6">
+          <div className="grid lg:grid-cols-2 gap-6">
             {/* Generate New Subscription */}
             <Card>
               <CardHeader>
-                <CardTitle className="flex items-center gap-2 text-lg">
+                <CardTitle className="flex items-center gap-2">
                   <Users className="w-5 h-5" />
                   Start Monthly Subscription
                 </CardTitle>
@@ -237,31 +239,31 @@ export default function AdminInvoices() {
             {/* Subscription Overview */}
             <Card>
               <CardHeader>
-                <CardTitle className="flex items-center gap-2 text-lg">
+                <CardTitle className="flex items-center gap-2">
                   <Calendar className="w-5 h-5" />
                   Subscription Overview
                 </CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="grid grid-cols-2 gap-4 mb-4">
-                  <div className="text-center p-3 bg-green-50 rounded-lg">
-                    <div className="text-xl font-bold text-green-600">
+                  <div className="text-center p-4 bg-green-50 rounded-lg">
+                    <div className="text-2xl font-bold text-green-600">
                       {completeProgramUsers?.length || 0}
                     </div>
-                    <div className="text-sm text-green-600">Total Programs</div>
+                    <div className="text-sm text-green-600">Active Programs</div>
                   </div>
-                  <div className="text-center p-3 bg-blue-50 rounded-lg">
-                    <div className="text-xl font-bold text-blue-600">€{completeProgramUsers?.length * 150 || 0}</div>
+                  <div className="text-center p-4 bg-blue-50 rounded-lg">
+                    <div className="text-2xl font-bold text-blue-600">€450</div>
                     <div className="text-sm text-blue-600">Monthly Revenue</div>
                   </div>
                 </div>
                 
-                <div className="p-3 bg-purple-50 rounded-lg">
+                <div className="p-4 bg-purple-50 rounded-lg">
                   <div className="flex items-center gap-2 mb-2">
-                    <Calendar className="w-4 h-4 text-purple-600" />
-                    <span className="font-medium text-sm">Monthly Billing Cycle</span>
+                    <Calendar className="w-5 h-5 text-purple-600" />
+                    <span className="font-medium">Monthly Billing Cycle</span>
                   </div>
-                  <p className="text-xs text-purple-700">
+                  <p className="text-sm text-purple-700">
                     Automatic billing monthly for 3 months
                   </p>
                 </div>
@@ -269,47 +271,75 @@ export default function AdminInvoices() {
             </Card>
           </div>
 
-          {/* Subscription Management List */}
+          {/* Monthly Subscription Management */}
           <Card>
             <CardHeader>
-              <CardTitle className="text-lg">Monthly Subscription Management</CardTitle>
+              <CardTitle className="flex items-center gap-2">
+                <Calendar className="w-5 h-5" />
+                Monthly Subscription Management
+              </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="space-y-3">
+              <div className="space-y-4 max-h-96 overflow-y-auto">
                 {completeProgramUsers?.map((user) => {
-                  const billingStatus = getUserBillingStatus(user.uid, user.email);
-                  const needsBillingSetup = billingStatus === 'none';
+                  const billingStatus = billingStatuses[user.uid];
+                  const subscriptionStatus = billingStatus?.subscriptionStatus || 'none';
+                  const needsBillingSetup = subscriptionStatus === 'none';
                   
                   return (
-                    <div key={user.uid} className="p-3 border rounded-lg bg-gray-50">
-                      <div className="flex items-center justify-between">
-                        <div className="flex-1">
-                          <div className="flex items-center gap-3">
-                            <div>
-                              <h4 className="font-medium text-sm">{user.name}</h4>
-                              <p className="text-xs text-muted-foreground">{user.email}</p>
-                            </div>
-                            <div className="flex items-center gap-2">
-                              {needsBillingSetup ? (
-                                <Badge variant="outline" className="text-xs text-orange-600 border-orange-300">
-                                  Setup Required
-                                </Badge>
-                              ) : (
-                                <Badge variant="default" className="text-xs">
-                                  Active
-                                </Badge>
-                              )}
-                            </div>
+                    <div key={user.uid} className="p-4 border rounded-lg">
+                      <div className="flex items-start justify-between mb-2">
+                        <div>
+                          <h4 className="font-medium">{user.name}</h4>
+                          <p className="text-sm text-muted-foreground">{user.email}</p>
+                          <div className="flex items-center gap-2 mt-1">
+                            {needsBillingSetup ? (
+                              <Badge variant="outline" className="text-xs text-orange-600 border-orange-300">
+                                Setup Required
+                              </Badge>
+                            ) : (
+                              <Badge 
+                                variant={
+                                  subscriptionStatus === 'active' ? 'default' :
+                                  subscriptionStatus === 'cancelled' ? 'destructive' :
+                                  subscriptionStatus === 'completed' ? 'secondary' : 'outline'
+                                }
+                                className="text-xs"
+                              >
+                                {subscriptionStatus}
+                              </Badge>
+                            )}
                           </div>
                         </div>
-                        
-                        <div className="flex items-center gap-2">
-                          <div className="text-xs text-muted-foreground text-right">
-                            <div>Start: {formatDate(user.programStartDate)}</div>
-                            <div>End: {formatDate(user.programEndDate)}</div>
-                          </div>
-                          
+                        <div className="flex flex-col items-end gap-1">
                           {needsBillingSetup && (
+                            <Badge variant="destructive" className="text-xs">
+                              Action Required
+                            </Badge>
+                          )}
+                        </div>
+                      </div>
+                      
+                      <div className="grid grid-cols-2 gap-4 text-xs text-muted-foreground">
+                        <div>
+                          <span>Start Date:</span>
+                          <p className="font-medium text-foreground">
+                            {formatDate(user.programStartDate)}
+                          </p>
+                        </div>
+                        <div>
+                          <span>End Date:</span>
+                          <p className="font-medium text-foreground">
+                            {formatDate(user.programEndDate)}
+                          </p>
+                        </div>
+                      </div>
+
+                      {needsBillingSetup && (
+                        <Alert className="mt-3 border-orange-200 bg-orange-50 dark:border-orange-800 dark:bg-orange-900/20">
+                          <AlertTriangle className="h-4 w-4 text-orange-600" />
+                          <AlertDescription className="text-sm flex items-center justify-between">
+                            <span>Monthly subscription billing needs to be initiated for this user.</span>
                             <Button
                               size="sm"
                               onClick={() => {
@@ -319,23 +349,58 @@ export default function AdminInvoices() {
                                   new Date().toISOString().split('T')[0]
                                 );
                               }}
-                              className="text-xs"
+                              className="ml-2"
                             >
                               Start Billing
                             </Button>
-                          )}
-                        </div>
-                      </div>
+                          </AlertDescription>
+                        </Alert>
+                      )}
                     </div>
                   );
                 })}
                 
                 {!completeProgramUsers?.length && (
-                  <div className="text-center py-6">
-                    <Users className="w-8 h-8 mx-auto text-muted-foreground mb-2" />
-                    <p className="text-sm text-muted-foreground">No complete program users found</p>
+                  <div className="text-center py-8">
+                    <Users className="w-12 h-12 mx-auto text-muted-foreground mb-4" />
+                    <p className="text-muted-foreground">No complete program users found</p>
                   </div>
                 )}
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Monthly Subscription Statistics */}
+          <Card>
+            <CardHeader>
+              <CardTitle>Monthly Subscription Statistics</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+                <div className="text-center">
+                  <div className="text-2xl font-bold text-blue-600">
+                    {completeProgramUsers?.length || 0}
+                  </div>
+                  <div className="text-sm text-muted-foreground">Total Users</div>
+                </div>
+                <div className="text-center">
+                  <div className="text-2xl font-bold text-green-600">
+                    {Object.values(billingStatuses).filter(status => status?.subscriptionStatus === 'active').length}
+                  </div>
+                  <div className="text-sm text-muted-foreground">Active Subscriptions</div>
+                </div>
+                <div className="text-center">
+                  <div className="text-2xl font-bold text-orange-600">
+                    {Object.values(billingStatuses).filter(status => status?.subscriptionStatus === 'none').length}
+                  </div>
+                  <div className="text-sm text-muted-foreground">Need Setup</div>
+                </div>
+                <div className="text-center">
+                  <div className="text-2xl font-bold text-purple-600">
+                    {Object.values(billingStatuses).filter(status => status?.subscriptionStatus === 'completed').length}
+                  </div>
+                  <div className="text-sm text-muted-foreground">Completed Programs</div>
+                </div>
               </div>
             </CardContent>
           </Card>
@@ -347,49 +412,10 @@ export default function AdminInvoices() {
               <CardTitle>Pay-as-you-go Invoices</CardTitle>
             </CardHeader>
             <CardContent>
-              {payAsYouGoInvoices.length > 0 ? (
-                <Table>
-                  <TableHeader>
-                    <TableRow>
-                      <TableHead>Invoice #</TableHead>
-                      <TableHead>Client</TableHead>
-                      <TableHead>Amount</TableHead>
-                      <TableHead>Status</TableHead>
-                      <TableHead>Date</TableHead>
-                      <TableHead>Actions</TableHead>
-                    </TableRow>
-                  </TableHeader>
-                  <TableBody>
-                    {payAsYouGoInvoices.map((invoice) => (
-                      <TableRow key={invoice.id}>
-                        <TableCell className="font-mono text-sm">{invoice.invoiceNumber}</TableCell>
-                        <TableCell>{invoice.clientName}</TableCell>
-                        <TableCell>{formatCurrency(invoice.amount)}</TableCell>
-                        <TableCell>
-                          <Badge variant={
-                            invoice.status === 'paid' ? 'default' :
-                            invoice.status === 'pending' ? 'secondary' :
-                            invoice.status === 'overdue' ? 'destructive' : 'outline'
-                          }>
-                            {invoice.status}
-                          </Badge>
-                        </TableCell>
-                        <TableCell>{formatDate(invoice.createdAt)}</TableCell>
-                        <TableCell>
-                          <Button variant="outline" size="sm">
-                            <Eye className="w-4 h-4" />
-                          </Button>
-                        </TableCell>
-                      </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
-              ) : (
-                <div className="text-center py-8">
-                  <Receipt className="w-12 h-12 mx-auto text-muted-foreground mb-4" />
-                  <p className="text-muted-foreground">No pay-as-you-go invoices found</p>
-                </div>
-              )}
+              <div className="text-center py-8">
+                <Receipt className="w-12 h-12 mx-auto text-muted-foreground mb-4" />
+                <p className="text-muted-foreground">No pay-as-you-go invoices found</p>
+              </div>
             </CardContent>
           </Card>
         </TabsContent>
@@ -400,56 +426,10 @@ export default function AdminInvoices() {
               <CardTitle>All Invoices</CardTitle>
             </CardHeader>
             <CardContent>
-              {loadingInvoices ? (
-                <div className="text-center py-8">
-                  <RefreshCw className="w-8 h-8 mx-auto text-muted-foreground mb-4 animate-spin" />
-                  <p className="text-muted-foreground">Loading invoices...</p>
-                </div>
-              ) : allInvoices && allInvoices.length > 0 ? (
-                <Table>
-                  <TableHeader>
-                    <TableRow>
-                      <TableHead>Invoice #</TableHead>
-                      <TableHead>Client</TableHead>
-                      <TableHead>Description</TableHead>
-                      <TableHead>Amount</TableHead>
-                      <TableHead>Status</TableHead>
-                      <TableHead>Date</TableHead>
-                      <TableHead>Actions</TableHead>
-                    </TableRow>
-                  </TableHeader>
-                  <TableBody>
-                    {allInvoices.map((invoice) => (
-                      <TableRow key={invoice.id}>
-                        <TableCell className="font-mono text-sm">{invoice.invoiceNumber}</TableCell>
-                        <TableCell>{invoice.clientName}</TableCell>
-                        <TableCell className="max-w-xs truncate">{invoice.description}</TableCell>
-                        <TableCell>{formatCurrency(invoice.amount)}</TableCell>
-                        <TableCell>
-                          <Badge variant={
-                            invoice.status === 'paid' ? 'default' :
-                            invoice.status === 'pending' ? 'secondary' :
-                            invoice.status === 'overdue' ? 'destructive' : 'outline'
-                          }>
-                            {invoice.status}
-                          </Badge>
-                        </TableCell>
-                        <TableCell>{formatDate(invoice.createdAt)}</TableCell>
-                        <TableCell>
-                          <Button variant="outline" size="sm">
-                            <Eye className="w-4 h-4" />
-                          </Button>
-                        </TableCell>
-                      </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
-              ) : (
-                <div className="text-center py-8">
-                  <Receipt className="w-12 h-12 mx-auto text-muted-foreground mb-4" />
-                  <p className="text-muted-foreground">No invoices found</p>
-                </div>
-              )}
+              <div className="text-center py-8">
+                <Receipt className="w-12 h-12 mx-auto text-muted-foreground mb-4" />
+                <p className="text-muted-foreground">Loading all invoices...</p>
+              </div>
             </CardContent>
           </Card>
         </TabsContent>
