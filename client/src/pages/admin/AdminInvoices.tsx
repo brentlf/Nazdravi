@@ -838,6 +838,11 @@ export default function AdminInvoices() {
               {React.useMemo(() => {
 
                 
+                // Debug: Log all subscription invoices
+                console.log('All subscription invoices:', allInvoices?.filter(inv => 
+                  inv.invoiceType === 'subscription' || inv.description?.includes('Complete Program')
+                ));
+                
                 // Filter appointments that can be invoiced (completed appointments that haven't been invoiced yet)
                 const invoiceableAppointments = allAppointments?.filter(appointment => {
                   // Only include completed appointments (exclude pending and cancelled)
@@ -865,10 +870,21 @@ export default function AdminInvoices() {
                     (inv.invoiceType === 'subscription' || inv.description?.includes('Complete Program'))
                   ) || [];
                   
+                  // Debug logging for subscription filtering
+                  if (appointment.email === 'craziesabroad@gmail.com') {
+                    console.log(`Debug appointment for ${appointment.email}:`, {
+                      appointmentDate: appointmentDate,
+                      subscriptionInvoices: subscriptionInvoices,
+                      hasSubscription: subscriptionInvoices.length > 0
+                    });
+                  }
+                  
                   if (subscriptionInvoices.length > 0) {
                     const firstSubscriptionDate = new Date(Math.min(...subscriptionInvoices.map(inv => new Date(inv.createdAt).getTime())));
+                    console.log(`Subscription check for ${appointment.email}: appointment ${appointmentDate} vs subscription ${firstSubscriptionDate}`);
                     // Only allow if appointment was before subscription started
                     if (appointmentDate >= firstSubscriptionDate) {
+                      console.log(`Excluding appointment for ${appointment.email} - after subscription start`);
                       return false;
                     }
                   }
