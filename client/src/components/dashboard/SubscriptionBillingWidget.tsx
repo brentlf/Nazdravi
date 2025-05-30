@@ -24,6 +24,10 @@ export default function SubscriptionBillingWidget({ user }: SubscriptionBillingW
   const [billingStatus, setBillingStatus] = useState<{
     upcomingInvoices: Array<{ dueDate: Date; amount: number; billingCycle: number }>;
     overdueInvoices: Array<{ invoiceId: string; dueDate: Date; amount: number; billingCycle: number }>;
+    subscriptionStatus?: string;
+    nextBillingDate?: Date;
+    currentCycle?: number;
+    maxCycles?: number;
   } | null>(null);
   const [loading, setLoading] = useState(false);
   const { toast } = useToast();
@@ -93,21 +97,63 @@ export default function SubscriptionBillingWidget({ user }: SubscriptionBillingW
       if (data.success) {
         toast({
           title: "Success",
-          description: "Complete program invoices generated successfully",
+          description: "Monthly subscription started successfully",
         });
         fetchBillingStatus(); // Refresh the billing status
       } else {
         toast({
           title: "Error",
-          description: data.error || "Failed to generate invoices",
+          description: data.error || "Failed to start subscription",
           variant: "destructive",
         });
       }
     } catch (error) {
-      console.error('Error generating complete program:', error);
+      console.error('Error starting subscription:', error);
       toast({
         title: "Error",
-        description: "Failed to generate complete program invoices",
+        description: "Failed to start monthly subscription",
+        variant: "destructive",
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const cancelSubscription = async () => {
+    if (!user?.uid) return;
+    
+    setLoading(true);
+    try {
+      const response = await fetch('/api/subscriptions/cancel', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          userId: user.uid
+        }),
+      });
+
+      const data = await response.json();
+      
+      if (data.success) {
+        toast({
+          title: "Success",
+          description: "Subscription cancelled successfully",
+        });
+        fetchBillingStatus(); // Refresh the billing status
+      } else {
+        toast({
+          title: "Error",
+          description: data.message || "Failed to cancel subscription",
+          variant: "destructive",
+        });
+      }
+    } catch (error) {
+      console.error('Error cancelling subscription:', error);
+      toast({
+        title: "Error",
+        description: "Failed to cancel subscription",
         variant: "destructive",
       });
     } finally {
@@ -237,16 +283,62 @@ export default function SubscriptionBillingWidget({ user }: SubscriptionBillingW
               </div>
             )}
 
-            {/* All Paid Status */}
-            {billingStatus.overdueInvoices.length === 0 && billingStatus.upcomingInvoices.length === 0 && (
+            {/* Subscription Status Display */}
+            {billingStatus.subscriptionStatus === 'active' && billingStatus.overdueInvoices.length === 0 && (
               <Alert className="border-green-200 bg-green-50 dark:border-green-800 dark:bg-green-900/20">
                 <CheckCircle className="h-4 w-4 text-green-600" />
                 <AlertDescription>
-                  <p className="font-medium text-green-800 dark:text-green-200">
-                    All program payments are up to date
+                  <div className="space-y-2">
+                    <p className="font-medium text-green-800 dark:text-green-200">
+                      Monthly subscription active
+                    </p>
+                    <p className="text-sm text-green-600 dark:text-green-300">
+                      Month {billingStatus.currentCycle || 1} of {billingStatus.maxCycles || 3}
+                    </p>
+                    {billingStatus.nextBillingDate && (
+                      <p className="text-xs text-green-600 dark:text-green-400">
+                        Next billing: {new Date(billingStatus.nextBillingDate).toLocaleDateString()}
+                      </p>
+                    )}
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={cancelSubscription}
+                      disabled={loading}
+                      className="mt-2 text-xs"
+                    >
+                      Cancel Subscription
+                    </Button>
+                  </div>
+                </AlertDescription>
+              </Alert>
+            )}
+
+            {/* Cancelled Status */}
+            {billingStatus.subscriptionStatus === 'cancelled' && (
+              <Alert className="border-orange-200 bg-orange-50 dark:border-orange-800 dark:bg-orange-900/20">
+                <AlertTriangle className="h-4 w-4 text-orange-600" />
+                <AlertDescription>
+                  <p className="font-medium text-orange-800 dark:text-orange-200">
+                    Subscription cancelled
                   </p>
-                  <p className="text-sm text-green-600 dark:text-green-300">
-                    Your complete program subscription is active
+                  <p className="text-sm text-orange-600 dark:text-orange-300">
+                    No future invoices will be generated
+                  </p>
+                </AlertDescription>
+              </Alert>
+            )}
+
+            {/* Completed Status */}
+            {billingStatus.subscriptionStatus === 'completed' && (
+              <Alert className="border-blue-200 bg-blue-50 dark:border-blue-800 dark:bg-blue-900/20">
+                <CheckCircle className="h-4 w-4 text-blue-600" />
+                <AlertDescription>
+                  <p className="font-medium text-blue-800 dark:text-blue-200">
+                    Program completed
+                  </p>
+                  <p className="text-sm text-blue-600 dark:text-blue-300">
+                    3-month nutrition program successfully finished
                   </p>
                 </AlertDescription>
               </Alert>
@@ -255,14 +347,14 @@ export default function SubscriptionBillingWidget({ user }: SubscriptionBillingW
         ) : (
           <div className="text-center space-y-3">
             <p className="text-sm text-muted-foreground">
-              Complete program billing not yet set up
+              Monthly subscription not yet set up
             </p>
             <Button 
               onClick={generateCompleteProgram}
               disabled={loading}
               className="bg-purple-600 hover:bg-purple-700"
             >
-              {loading ? "Generating..." : "Set Up Billing"}
+              {loading ? "Starting..." : "Start Monthly Subscription"}
             </Button>
           </div>
         )}
