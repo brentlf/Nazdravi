@@ -39,30 +39,30 @@ export class PDFService {
         doc.on('error', reject);
         
         // Header
-        doc.fontSize(24)
+        doc.fontSize(20)
            .fillColor('#A5CBA4')
-           .text('🌿 Vee Nutrition', 50, 50);
+           .text('Vee Nutrition', 50, 50);
         
-        doc.fontSize(12)
+        doc.fontSize(10)
            .fillColor('#000000')
-           .text('Transforming Lives Through Nutrition', 50, 80)
-           .text('Email: info@veenutrition.com', 50, 95);
+           .text('Transforming Lives Through Nutrition', 50, 75)
+           .text('Email: info@veenutrition.com', 50, 90);
         
         // Invoice title
         const title = data.invoiceType === 'credit' ? 'CREDIT NOTE' : 'INVOICE';
-        doc.fontSize(20)
+        doc.fontSize(18)
            .fillColor('#333333')
            .text(title, 400, 50);
         
-        // Invoice details
-        doc.fontSize(12)
+        // Invoice details with proper spacing
+        doc.fontSize(10)
            .fillColor('#000000')
-           .text(`${title} #: ${data.invoiceNumber}`, 400, 80)
-           .text(`Date: ${data.createdAt.toLocaleDateString()}`, 400, 95);
+           .text(`${title} #: ${data.invoiceNumber}`, 400, 75)
+           .text(`Date: ${data.createdAt.toLocaleDateString()}`, 400, 90);
         
         if (data.invoiceType !== 'credit') {
-          doc.text(`Due Date: ${data.dueDate.toLocaleDateString()}`, 400, 110)
-             .text(`Status: ${data.status.toUpperCase()}`, 400, 125);
+          doc.text(`Due Date: ${data.dueDate.toLocaleDateString()}`, 400, 105)
+             .text(`Status: ${data.status.toUpperCase()}`, 400, 120);
         }
         
         // Client information
