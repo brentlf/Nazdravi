@@ -35,8 +35,12 @@ export default function AdminSubscriptions() {
 
   // Filter out admin users and get only client users
   const completeProgramUsers = allCompleteProgramUsers?.filter(user => 
-    (user as any).role === 'client'
+    (user as any).role !== 'admin'
   ) || [];
+
+  console.log('All complete program users:', allCompleteProgramUsers?.length);
+  console.log('Filtered complete program users:', completeProgramUsers?.length);
+  console.log('User roles:', allCompleteProgramUsers?.map(u => ({ name: (u as any).name, role: (u as any).role })));
 
   const formatDate = (date: any) => {
     if (!date) return 'Not set';
@@ -165,7 +169,7 @@ export default function AdminSubscriptions() {
         <div className="flex items-center gap-4">
           <div className="flex items-center gap-2 text-sm text-muted-foreground">
             <CreditCard className="w-4 h-4" />
-            3-Invoice Billing System
+            Monthly Subscription Billing
           </div>
           <Button variant="outline" asChild size="sm">
             <Link href="/admin/invoices">
@@ -181,7 +185,7 @@ export default function AdminSubscriptions() {
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <Users className="w-5 h-5" />
-              Generate Complete Program Billing
+              Start Monthly Subscription
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
