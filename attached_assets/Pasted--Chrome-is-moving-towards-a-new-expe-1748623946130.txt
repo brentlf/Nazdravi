@@ -1,0 +1,44 @@
+
+                
+          
+          
+          
+         Chrome is moving towards a new experience that allows users to choose to browse without third-party cookies.
+RouteGuard.tsx:29 Warning: Cannot update a component (`RouteGuard`) while rendering a different component (`RouteGuard`). To locate the bad setState() call inside `RouteGuard`, follow the stack trace as described in https://reactjs.org/link/setstate-in-render Error Component Stack
+    at RouteGuard (RouteGuard.tsx:12:30)
+    at Route (wouter.js?v=e5fdb72b:323:16)
+    at Switch (wouter.js?v=e5fdb72b:379:17)
+    at Router (<anonymous>)
+    at Provider (chunk-E7IAXTU4.js?v=e5fdb72b:38:15)
+    at TooltipProvider (@radix-ui_react-tooltip.js?v=e5fdb72b:63:5)
+    at AuthProvider (AuthContext.tsx:46:32)
+    at LanguageProvider (LanguageContext.tsx:29:36)
+    at ThemeProvider (ThemeContext.tsx:24:33)
+    at QueryClientProvider (@tanstack_react-query.js?v=e5fdb72b:2805:3)
+    at App (<anonymous>)
+overrideMethod @ hook.js:608
+printWarning @ chunk-RPCDYKBN.js?v=e5fdb72b:521
+error @ chunk-RPCDYKBN.js?v=e5fdb72b:505
+warnAboutRenderPhaseUpdatesInDEV @ chunk-RPCDYKBN.js?v=e5fdb72b:19793
+scheduleUpdateOnFiber @ chunk-RPCDYKBN.js?v=e5fdb72b:18546
+forceStoreRerender @ chunk-RPCDYKBN.js?v=e5fdb72b:11999
+handleStoreChange @ chunk-RPCDYKBN.js?v=e5fdb72b:11981
+history.<computed> @ wouter.js?v=e5fdb72b:224
+navigate @ wouter.js?v=e5fdb72b:214
+(anonymous) @ wouter.js?v=e5fdb72b:265
+(anonymous) @ wouter.js?v=e5fdb72b:178
+RouteGuard @ RouteGuard.tsx:29
+renderWithHooks @ chunk-RPCDYKBN.js?v=e5fdb72b:11548
+updateFunctionComponent @ chunk-RPCDYKBN.js?v=e5fdb72b:14582
+beginWork @ chunk-RPCDYKBN.js?v=e5fdb72b:15924
+beginWork$1 @ chunk-RPCDYKBN.js?v=e5fdb72b:19753
+performUnitOfWork @ chunk-RPCDYKBN.js?v=e5fdb72b:19198
+workLoopSync @ chunk-RPCDYKBN.js?v=e5fdb72b:19137
+renderRootSync @ chunk-RPCDYKBN.js?v=e5fdb72b:19116
+performConcurrentWorkOnRoot @ chunk-RPCDYKBN.js?v=e5fdb72b:18678
+workLoop @ chunk-RPCDYKBN.js?v=e5fdb72b:197
+flushWork @ chunk-RPCDYKBN.js?v=e5fdb72b:176
+performWorkUntilDeadline @ chunk-RPCDYKBN.js?v=e5fdb72b:384
+DashboardOverview.tsx:86 Dashboard Appointments Debug: {userId: 's0cHDlZ7KfQUyBGhgGWUW30gK6v2', userEmail: 'ytp004.lf@gmail.com', appointmentsByUserId: 0, appointmentsByEmail: 0, appointmentsByUser: 0, …}appointmentsByEmail: 0appointmentsByUser: 0appointmentsByUserId: 0totalAppointments: 0userEmail: "ytp004.lf@gmail.com"userId: "s0cHDlZ7KfQUyBGhgGWUW30gK6v2"[[Prototype]]: Objectconstructor: ƒ Object()hasOwnProperty: ƒ hasOwnProperty()isPrototypeOf: ƒ isPrototypeOf()propertyIsEnumerable: ƒ propertyIsEnumerable()toLocaleString: ƒ toLocaleString()toString: ƒ toString()valueOf: ƒ valueOf()__defineGetter__: ƒ __defineGetter__()__defineSetter__: ƒ __defineSetter__()__lookupGetter__: ƒ __lookupGetter__()__lookupSetter__: ƒ __lookupSetter__()__proto__: (...)get __proto__: ƒ __proto__()set __proto__: ƒ __proto__()
+DashboardOverview.tsx:86 Dashboard Appointments Debug: {userId: 's0cHDlZ7KfQUyBGhgGWUW30gK6v2', userEmail: 'ytp004.lf@gmail.com', appointmentsByUserId: 2, appointmentsByEmail: 2, appointmentsByUser: 0, …}appointmentsByEmail: 2appointmentsByUser: 0appointmentsByUserId: 2totalAppointments: 2userEmail: "ytp004.lf@gmail.com"userId: "s0cHDlZ7KfQUyBGhgGWUW30gK6v2"[[Prototype]]: Objectconstructor: ƒ Object()hasOwnProperty: ƒ hasOwnProperty()isPrototypeOf: ƒ isPrototypeOf()propertyIsEnumerable: ƒ propertyIsEnumerable()toLocaleString: ƒ toLocaleString()toString: ƒ toString()valueOf: ƒ valueOf()__defineGetter__: ƒ __defineGetter__()__defineSetter__: ƒ __defineSetter__()__lookupGetter__: ƒ __lookupGetter__()__lookupSetter__: ƒ __lookupSetter__()__proto__: (...)get __proto__: ƒ __proto__()set __proto__: ƒ __proto__()
+DashboardOverview.tsx:86 Dashboard Appointments Debug: {userId: 's0cHDlZ7KfQUyBGhgGWUW30gK6v2', userEmail: 'ytp004.lf@gmail.com', appointmentsByUserId: 2, appointmentsByEmail: 2, appointmentsByUser: 0, …}appointmentsByEmail: 2appointmentsByUser: 0appointmentsByUserId: 2totalAppointments: 2userEmail: "ytp004.lf@gmail.com"userId: "s0cHDlZ7KfQUyBGhgGWUW30gK6v2"[[Prototype]]: Objectconstructor: ƒ Object()hasOwnProperty: ƒ hasOwnProperty()isPrototypeOf: ƒ isPrototypeOf()propertyIsEnumerable: ƒ propertyIsEnumerable()toLocaleString: ƒ toLocaleString()toString: ƒ toString()valueOf: ƒ valueOf()__defineGetter__: ƒ __defineGetter__()__defineSetter__: ƒ __defineSetter__()__lookupGetter__: ƒ __lookupGetter__()__lookupSetter__: ƒ __lookupSetter__()__proto__: (...)get __proto__: ƒ __proto__()set __proto__: ƒ __proto__()
