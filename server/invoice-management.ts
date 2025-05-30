@@ -560,6 +560,43 @@ export class InvoiceManagementService {
       updatedAt: new Date()
     });
 
+    // Generate and store PDF
+    console.log('🚀 Attempting to generate PDF for custom invoice:', invoiceRef.id);
+    try {
+      console.log('📋 PDF data prepared:', {
+        invoiceNumber,
+        clientName: data.clientName,
+        amount: data.amount,
+        currency: 'EUR'
+      });
+      
+      const pdfUrl = await pdfService.generateAndStorePDF({
+        invoiceNumber,
+        clientName: data.clientName,
+        clientEmail: data.clientEmail,
+        amount: data.amount,
+        currency: 'EUR',
+        description: data.description,
+        invoiceType: 'invoice',
+        createdAt: new Date(),
+        dueDate,
+        status: 'pending',
+        items: items.map(item => ({
+          description: item.description,
+          amount: item.amount
+        }))
+      });
+
+      // Update invoice with PDF URL
+      await invoiceRef.update({ pdfUrl });
+      console.log(`✅ PDF generated and stored for custom invoice: ${invoiceRef.id}`);
+      console.log(`🔗 PDF URL: ${pdfUrl}`);
+    } catch (pdfError) {
+      console.error('❌ Error generating PDF for custom invoice:', pdfError);
+      console.error('❌ PDF Error stack:', pdfError instanceof Error ? pdfError.stack : 'No stack trace');
+      // Continue without PDF - don't fail the invoice creation
+    }
+
     // Send email notification
     try {
       await mailerLiteService.sendInvoiceGenerated(
