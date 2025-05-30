@@ -66,12 +66,18 @@ export default function AdminInvoices() {
   });
   const [customAmountValue, setCustomAmountValue] = useState("");
   const [customDescription, setCustomDescription] = useState("");
+
+  // Cancel invoice state
+  const [selectedInvoiceForCancel, setSelectedInvoiceForCancel] = useState<Invoice | null>(null);
+  const [showCancelDialog, setShowCancelDialog] = useState(false);
+  const [cancelReason, setCancelReason] = useState("");
+  const [isCancellingInvoice, setIsCancellingInvoice] = useState(false);
   
   // Helper functions for invoice services
   const calculateInvoiceTotal = () => {
     let total = 0;
     if (invoiceServices.standardFee) total += 75;
-    if (invoiceServices.lateReschedule) total += 37.5;
+    if (invoiceServices.lateReschedule) total += 5;
     if (invoiceServices.noShowFee) total += 37.5;
     if (invoiceServices.customAmount && customAmountValue) {
       total += parseFloat(customAmountValue) || 0;
@@ -401,6 +407,44 @@ export default function AdminInvoices() {
       });
     } finally {
       setIsReissuingInvoice(false);
+    }
+  };
+
+  // Handle cancelling invoice (creates credit note)
+  const handleCancelInvoice = (invoice: Invoice) => {
+    setSelectedInvoiceForCancel(invoice);
+    setShowCancelDialog(true);
+  };
+
+  // Process invoice cancellation
+  const processCancelInvoice = async () => {
+    if (!selectedInvoiceForCancel || !cancelReason) return;
+
+    setIsCancellingInvoice(true);
+    try {
+      await apiRequest("POST", "/api/invoices/cancel", {
+        invoiceId: selectedInvoiceForCancel.id,
+        reason: cancelReason,
+        originalAmount: selectedInvoiceForCancel.amount
+      });
+
+      toast({
+        title: "Success",
+        description: "Invoice cancelled and credit note created",
+      });
+      
+      setShowCancelDialog(false);
+      setSelectedInvoiceForCancel(null);
+      setCancelReason("");
+      queryClient.invalidateQueries({ queryKey: ['/api/invoices'] });
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to cancel invoice",
+        variant: "destructive",
+      });
+    } finally {
+      setIsCancellingInvoice(false);
     }
   };
 
@@ -1035,6 +1079,15 @@ export default function AdminInvoices() {
                                 </Button>
                               </>
                             )}
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              onClick={() => handleCancelInvoice(invoice)}
+                              title="Cancel Invoice (Create Credit Note)"
+                              className="text-red-600 hover:text-red-700"
+                            >
+                              <RefreshCw className="w-4 h-4" />
+                            </Button>
                           </div>
                         </TableCell>
                       </TableRow>
@@ -1205,7 +1258,7 @@ export default function AdminInvoices() {
                       <p className="text-sm text-muted-foreground">Less than 24h notice</p>
                     </div>
                   </div>
-                  <span className="font-medium">€37.50</span>
+                  <span className="font-medium">€5.00</span>
                 </div>
 
                 {/* No Show Fee */}
@@ -1366,6 +1419,63 @@ export default function AdminInvoices() {
                   disabled={isReissuingInvoice || !reissueAmount || !reissueReason}
                 >
                   {isReissuingInvoice ? "Processing..." : "Reissue Invoice"}
+                </Button>
+              </div>
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
+
+      {/* Cancel Invoice Dialog */}
+      <Dialog open={showCancelDialog} onOpenChange={setShowCancelDialog}>
+        <DialogContent className="max-w-md">
+          <DialogHeader>
+            <DialogTitle>Cancel Invoice</DialogTitle>
+          </DialogHeader>
+          
+          {selectedInvoiceForCancel && (
+            <div className="space-y-4">
+              <div className="p-4 bg-gray-50 rounded-lg space-y-2">
+                <h4 className="font-medium">Invoice Details</h4>
+                <div className="text-sm space-y-1">
+                  <p><span className="font-medium">Invoice #:</span> {selectedInvoiceForCancel.invoiceNumber}</p>
+                  <p><span className="font-medium">Client:</span> {selectedInvoiceForCancel.clientName}</p>
+                  <p><span className="font-medium">Amount:</span> €{selectedInvoiceForCancel.amount?.toFixed(2) || '0.00'}</p>
+                </div>
+              </div>
+
+              <div className="space-y-3">
+                <div>
+                  <Label htmlFor="cancel-reason">Reason for Cancellation</Label>
+                  <Input
+                    id="cancel-reason"
+                    value={cancelReason}
+                    onChange={(e) => setCancelReason(e.target.value)}
+                    placeholder="e.g., Client request, Service not provided"
+                  />
+                </div>
+              </div>
+
+              <div className="p-3 bg-red-50 rounded-lg">
+                <p className="text-sm text-red-800">
+                  This will create a credit note for the full amount and mark the invoice as cancelled.
+                </p>
+              </div>
+
+              <div className="flex justify-end gap-2">
+                <Button
+                  variant="outline"
+                  onClick={() => setShowCancelDialog(false)}
+                  disabled={isCancellingInvoice}
+                >
+                  Cancel
+                </Button>
+                <Button
+                  onClick={processCancelInvoice}
+                  disabled={isCancellingInvoice || !cancelReason}
+                  variant="destructive"
+                >
+                  {isCancellingInvoice ? "Processing..." : "Cancel Invoice"}
                 </Button>
               </div>
             </div>
