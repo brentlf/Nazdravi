@@ -28,10 +28,15 @@ export default function AdminSubscriptions() {
   const [loading, setLoading] = useState(false);
   const { toast } = useToast();
 
-  // Fetch all complete program users
-  const { data: completeProgramUsers } = useFirestoreCollection<User>("users", [
+  // Fetch all complete program users (excluding admin users)
+  const { data: allCompleteProgramUsers } = useFirestoreCollection<User>("users", [
     where("servicePlan", "==", "complete-program")
   ]);
+
+  // Filter out admin users and get only client users
+  const completeProgramUsers = allCompleteProgramUsers?.filter(user => 
+    (user as any).role === 'client'
+  ) || [];
 
   const formatDate = (date: any) => {
     if (!date) return 'Not set';
@@ -114,13 +119,23 @@ export default function AdminSubscriptions() {
       if (data.success) {
         return {
           upcomingInvoices: data.upcomingInvoices || [],
-          overdueInvoices: data.overdueInvoices || []
+          overdueInvoices: data.overdueInvoices || [],
+          subscriptionStatus: data.subscriptionStatus || 'none',
+          currentCycle: data.currentCycle || 0,
+          maxCycles: data.maxCycles || 3,
+          nextBillingDate: data.nextBillingDate
         };
       }
     } catch (error) {
       console.error('Error checking billing status:', error);
     }
-    return { upcomingInvoices: [], overdueInvoices: [] };
+    return { 
+      upcomingInvoices: [], 
+      overdueInvoices: [],
+      subscriptionStatus: 'none',
+      currentCycle: 0,
+      maxCycles: 3
+    };
   };
 
   const [billingStatuses, setBillingStatuses] = useState<{[key: string]: any}>({});
@@ -267,7 +282,7 @@ export default function AdminSubscriptions() {
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <Calendar className="w-5 h-5" />
-              Complete Program Users Overview
+              Monthly Subscription Management
             </CardTitle>
           </CardHeader>
           <CardContent>
@@ -276,6 +291,10 @@ export default function AdminSubscriptions() {
                 const billingStatus = billingStatuses[user.uid];
                 const hasOverdue = billingStatus?.overdueInvoices?.length > 0;
                 const hasUpcoming = billingStatus?.upcomingInvoices?.length > 0;
+                const subscriptionStatus = billingStatus?.subscriptionStatus || 'none';
+                const needsBillingSetup = subscriptionStatus === 'none';
+                const currentCycle = billingStatus?.currentCycle || 0;
+                const maxCycles = billingStatus?.maxCycles || 3;
                 
                 return (
                   <div key={user.uid} className="p-4 border rounded-lg">
@@ -283,8 +302,38 @@ export default function AdminSubscriptions() {
                       <div>
                         <h4 className="font-medium">{user.name}</h4>
                         <p className="text-sm text-muted-foreground">{user.email}</p>
+                        <div className="flex items-center gap-2 mt-1">
+                          {needsBillingSetup ? (
+                            <Badge variant="outline" className="text-xs text-orange-600 border-orange-300">
+                              Setup Required
+                            </Badge>
+                          ) : (
+                            <>
+                              <Badge 
+                                variant={
+                                  subscriptionStatus === 'active' ? 'default' :
+                                  subscriptionStatus === 'cancelled' ? 'destructive' :
+                                  subscriptionStatus === 'completed' ? 'secondary' : 'outline'
+                                }
+                                className="text-xs"
+                              >
+                                {subscriptionStatus}
+                              </Badge>
+                              {subscriptionStatus === 'active' && (
+                                <span className="text-xs text-muted-foreground">
+                                  Month {currentCycle}/{maxCycles}
+                                </span>
+                              )}
+                            </>
+                          )}
+                        </div>
                       </div>
                       <div className="flex flex-col items-end gap-1">
+                        {needsBillingSetup && (
+                          <Badge variant="destructive" className="text-xs">
+                            Action Required
+                          </Badge>
+                        )}
                         {hasOverdue && (
                           <Badge variant="destructive" className="text-xs">
                             {billingStatus.overdueInvoices.length} Overdue
@@ -293,11 +342,6 @@ export default function AdminSubscriptions() {
                         {hasUpcoming && (
                           <Badge variant="secondary" className="text-xs">
                             {billingStatus.upcomingInvoices.length} Upcoming
-                          </Badge>
-                        )}
-                        {!hasOverdue && !hasUpcoming && (
-                          <Badge variant="outline" className="text-xs">
-                            Up to Date
                           </Badge>
                         )}
                       </div>
@@ -317,6 +361,28 @@ export default function AdminSubscriptions() {
                         </p>
                       </div>
                     </div>
+
+                    {needsBillingSetup && (
+                      <Alert className="mt-3 border-orange-200 bg-orange-50 dark:border-orange-800 dark:bg-orange-900/20">
+                        <AlertTriangle className="h-4 w-4 text-orange-600" />
+                        <AlertDescription className="text-sm flex items-center justify-between">
+                          <span>Monthly subscription billing needs to be initiated for this user.</span>
+                          <Button
+                            size="sm"
+                            onClick={() => {
+                              setSelectedUser(user);
+                              setProgramStartDate(user.programStartDate?.toDate ? 
+                                user.programStartDate.toDate().toISOString().split('T')[0] : 
+                                new Date().toISOString().split('T')[0]
+                              );
+                            }}
+                            className="ml-2"
+                          >
+                            Start Billing
+                          </Button>
+                        </AlertDescription>
+                      </Alert>
+                    )}
 
                     {hasOverdue && (
                       <Alert className="mt-3 border-red-200 bg-red-50 dark:border-red-800 dark:bg-red-900/20">
@@ -344,7 +410,7 @@ export default function AdminSubscriptions() {
       {/* Billing Statistics */}
       <Card>
         <CardHeader>
-          <CardTitle>Subscription Statistics</CardTitle>
+          <CardTitle>Monthly Subscription Statistics</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
@@ -353,6 +419,24 @@ export default function AdminSubscriptions() {
                 {completeProgramUsers?.length || 0}
               </div>
               <div className="text-sm text-muted-foreground">Total Users</div>
+            </div>
+            <div className="text-center">
+              <div className="text-2xl font-bold text-green-600">
+                {Object.values(billingStatuses).filter(status => status?.subscriptionStatus === 'active').length}
+              </div>
+              <div className="text-sm text-muted-foreground">Active Subscriptions</div>
+            </div>
+            <div className="text-center">
+              <div className="text-2xl font-bold text-orange-600">
+                {Object.values(billingStatuses).filter(status => status?.subscriptionStatus === 'none').length}
+              </div>
+              <div className="text-sm text-muted-foreground">Need Setup</div>
+            </div>
+            <div className="text-center">
+              <div className="text-2xl font-bold text-purple-600">
+                {Object.values(billingStatuses).filter(status => status?.subscriptionStatus === 'completed').length}
+              </div>
+              <div className="text-sm text-muted-foreground">Completed Programs</div>
             </div>
             <div className="text-center">
               <div className="text-2xl font-bold text-green-600">
