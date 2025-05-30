@@ -61,6 +61,8 @@ export default function AdminInvoices() {
   const { user } = useAuth();
   const queryClient = useQueryClient();
 
+
+
   // Fetch all invoices
   const { data: allInvoices, loading: loadingInvoices } = useFirestoreCollection<Invoice>("invoices", [
     orderBy("createdAt", "desc"),
@@ -675,12 +677,27 @@ export default function AdminInvoices() {
             </CardHeader>
             <CardContent>
               {React.useMemo(() => {
-                // Filter appointments that can be invoiced (not pending, not cancelled, and not already invoiced)
-                const invoiceableAppointments = allAppointments?.filter(appointment => 
-                  appointment.status !== 'pending' && 
-                  appointment.status !== 'cancelled' &&
-                  appointment.status !== 'cancelled_reschedule'
-                ) || [];
+                // Filter appointments that can be invoiced (completed appointments that haven't been invoiced yet)
+                const invoiceableAppointments = allAppointments?.filter(appointment => {
+                  // Only include completed appointments (exclude pending and cancelled)
+                  if (appointment.status === 'pending' || 
+                      appointment.status === 'cancelled' || 
+                      appointment.status === 'cancelled_reschedule') {
+                    return false;
+                  }
+                  
+                  // Check if this specific appointment has already been invoiced
+                  const isInvoiced = allInvoices?.some(invoice => {
+                    // Check for appointment ID in invoice metadata or description
+                    return invoice.appointmentId === appointment.id ||
+                           invoice.description?.includes(`Appointment ${appointment.id}`) ||
+                           (invoice.clientEmail === appointment.email && 
+                            invoice.description?.includes('Consultation') &&
+                            Math.abs(new Date(invoice.createdAt).getTime() - new Date(appointment.date).getTime()) < 7 * 24 * 60 * 60 * 1000); // Within 7 days
+                  });
+                  
+                  return !isInvoiced;
+                }) || [];
 
                 if (invoiceableAppointments.length === 0) {
                   return (
