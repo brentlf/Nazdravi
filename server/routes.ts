@@ -945,12 +945,32 @@ export async function registerRoutes(app: Express): Promise<Server> {
         apiVersion: '2025-04-30.basil',
       });
 
+      // Debug log the original invoice data
+      console.log('🔍 REISSUE DEBUG - Original invoice data:', {
+        id: invoiceId,
+        amount: originalInvoice.amount,
+        type: typeof originalInvoice.amount,
+        description: originalInvoice.description,
+        invoiceNumber: originalInvoice.invoiceNumber
+      });
+
       // Validate amount before sending to Stripe
-      const invoiceAmount = typeof originalInvoice.amount === 'number' ? originalInvoice.amount : parseFloat(originalInvoice.amount) || 0;
+      let invoiceAmount = 0;
+      if (typeof originalInvoice.amount === 'number') {
+        invoiceAmount = originalInvoice.amount;
+      } else if (typeof originalInvoice.amount === 'string') {
+        invoiceAmount = parseFloat(originalInvoice.amount);
+      } else {
+        // Try to find amount in other fields
+        invoiceAmount = originalInvoice.totalAmount || originalInvoice.price || 0;
+      }
+
+      console.log('🔍 REISSUE DEBUG - Processed amount:', invoiceAmount);
+
       if (invoiceAmount <= 0 || isNaN(invoiceAmount)) {
         return res.status(400).json({ 
           success: false, 
-          error: `Invalid invoice amount: ${originalInvoice.amount}` 
+          error: `Invalid invoice amount: ${originalInvoice.amount} (processed: ${invoiceAmount})` 
         });
       }
 
