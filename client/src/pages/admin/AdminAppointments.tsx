@@ -959,7 +959,7 @@ export default function AdminAppointments() {
                       <TableCell>
                         <TooltipProvider>
                           <div className="flex items-center space-x-1">
-                            {getActionItemIcons(appointment).length > 0 ? (
+                            {getActionItemIcons(appointment) ? (
                               getActionItemIcons(appointment)
                             ) : (
                               <span className="text-xs text-muted-foreground">-</span>
