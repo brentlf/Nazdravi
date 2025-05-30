@@ -1,0 +1,52 @@
+
+                
+          
+          
+          
+         Chrome is moving towards a new experience that allows users to choose to browse without third-party cookies.
+hook.js:608 Warning: Missing `Description` or `aria-describedby={undefined}` for {DialogContent}. Error Component Stack
+    at DescriptionWarning (chunk-QRW35OOH.js?v=05b83f20:331:29)
+    at chunk-QRW35OOH.js?v=05b83f20:235:13
+    at chunk-QRW35OOH.js?v=05b83f20:158:58
+    at Presence (chunk-7ZIEIKXH.js?v=05b83f20:24:11)
+    at chunk-QRW35OOH.js?v=05b83f20:149:64
+    at chunk-2K77HOHX.js?v=05b83f20:79:13
+    at chunk-2K77HOHX.js?v=05b83f20:56:13
+    at chunk-AXMZZQ2X.js?v=05b83f20:42:13
+    at chunk-7SWSU5HC.js?v=05b83f20:260:22
+    at Presence (chunk-7ZIEIKXH.js?v=05b83f20:24:11)
+    at Provider (chunk-E7IAXTU4.js?v=05b83f20:38:15)
+    at DialogPortal (chunk-QRW35OOH.js?v=05b83f20:111:11)
+    at _c3 (dialog.tsx:35:6)
+    at Provider (chunk-E7IAXTU4.js?v=05b83f20:38:15)
+    at Dialog (chunk-QRW35OOH.js?v=05b83f20:52:5)
+    at div (<anonymous>)
+    at AdminInvoices (AdminInvoices.tsx:33:43)
+    at main (<anonymous>)
+    at div (<anonymous>)
+    at Layout (App.tsx:59:19)
+    at RouteGuard (RouteGuard.tsx:12:30)
+    at Route (wouter.js?v=05b83f20:323:16)
+    at Switch (wouter.js?v=05b83f20:379:17)
+    at Router (<anonymous>)
+    at Provider (chunk-E7IAXTU4.js?v=05b83f20:38:15)
+    at TooltipProvider (@radix-ui_react-tooltip.js?v=05b83f20:63:5)
+    at AuthProvider (AuthContext.tsx:46:32)
+    at LanguageProvider (LanguageContext.tsx:29:36)
+    at ThemeProvider (ThemeContext.tsx:24:33)
+    at QueryClientProvider (@tanstack_react-query.js?v=05b83f20:2805:3)
+    at App (<anonymous>)
+overrideMethod @ hook.js:608
+(anonymous) @ chunk-QRW35OOH.js?v=05b83f20:339
+commitHookEffectListMount @ chunk-RPCDYKBN.js?v=05b83f20:16915
+commitPassiveMountOnFiber @ chunk-RPCDYKBN.js?v=05b83f20:18156
+commitPassiveMountEffects_complete @ chunk-RPCDYKBN.js?v=05b83f20:18129
+commitPassiveMountEffects_begin @ chunk-RPCDYKBN.js?v=05b83f20:18119
+commitPassiveMountEffects @ chunk-RPCDYKBN.js?v=05b83f20:18109
+flushPassiveEffectsImpl @ chunk-RPCDYKBN.js?v=05b83f20:19490
+flushPassiveEffects @ chunk-RPCDYKBN.js?v=05b83f20:19447
+commitRootImpl @ chunk-RPCDYKBN.js?v=05b83f20:19416
+commitRoot @ chunk-RPCDYKBN.js?v=05b83f20:19277
+performSyncWorkOnRoot @ chunk-RPCDYKBN.js?v=05b83f20:18895
+flushSyncCallbacks @ chunk-RPCDYKBN.js?v=05b83f20:9119
+(anonymous) @ chunk-RPCDYKBN.js?v=05b83f20:18627
