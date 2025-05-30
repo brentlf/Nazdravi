@@ -72,8 +72,8 @@ export default function AdminInvoices() {
 
 
   // Fetch all appointments for pay-as-you-go invoicing
-  const { data: allAppointments } = useFirestoreCollection<Appointment>("appointments", [
-    orderBy("startTime", "desc"),
+  const { data: allAppointments, loading: loadingAppointments } = useFirestoreCollection<Appointment>("appointments", [
+    orderBy("date", "desc"),
     limit(100)
   ]);
 
@@ -681,9 +681,11 @@ export default function AdminInvoices() {
                 console.log('🔍 All appointments:', allAppointments?.map(apt => ({
                   id: apt.id,
                   status: apt.status,
-                  clientName: apt.clientName,
+                  email: apt.email,
+                  name: apt.name,
                   date: apt.date
                 })));
+                console.log('🔍 Loading appointments:', loadingAppointments);
                 
                 // Filter appointments that can be invoiced (completed appointments that haven't been invoiced yet)
                 const invoiceableAppointments = allAppointments?.filter(appointment => {
