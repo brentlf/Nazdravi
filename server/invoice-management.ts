@@ -407,10 +407,16 @@ export class InvoiceManagementService {
     }
     
     const userData = userDoc.data();
-    const subscriptionStatus = userData?.subscriptionStatus || 'none';
+    const storedSubscriptionStatus = userData?.subscriptionStatus || 'none';
     const nextBillingDate = userData?.nextBillingDate?.toDate();
     const currentCycle = userData?.currentBillingCycle || 0;
     const maxCycles = userData?.maxBillingCycles || 3;
+    
+    // Get ALL subscription invoices (paid and unpaid) to validate actual subscription status
+    const allSubscriptionInvoices = await db.collection('invoices')
+      .where('userId', '==', userId)
+      .where('invoiceType', '==', 'subscription')
+      .get();
     
     // Get existing unpaid invoices
     const unpaidInvoices = await db.collection('invoices')
@@ -444,15 +450,32 @@ export class InvoiceManagementService {
       }
     });
     
+    // Determine actual subscription status based on invoices and user data
+    let actualSubscriptionStatus = 'none';
+    
+    if (allSubscriptionInvoices.docs.length > 0) {
+      // User has subscription invoices - determine status based on data
+      if (currentCycle >= maxCycles) {
+        actualSubscriptionStatus = 'completed';
+      } else if (storedSubscriptionStatus === 'cancelled') {
+        actualSubscriptionStatus = 'cancelled';
+      } else if (storedSubscriptionStatus === 'active' || unpaidInvoices.docs.length > 0) {
+        actualSubscriptionStatus = 'active';
+      }
+    } else {
+      // No invoices generated yet, but check if billing was set up
+      actualSubscriptionStatus = storedSubscriptionStatus === 'active' ? 'none' : storedSubscriptionStatus;
+    }
+    
     // Check if it's time to generate next month's invoice
-    if (subscriptionStatus === 'active' && nextBillingDate && nextBillingDate <= now && currentCycle < maxCycles) {
+    if (actualSubscriptionStatus === 'active' && nextBillingDate && nextBillingDate <= now && currentCycle < maxCycles) {
       await this.generateNextMonthlyInvoice(userId);
     }
     
     return { 
       upcomingInvoices, 
       overdueInvoices,
-      subscriptionStatus,
+      subscriptionStatus: actualSubscriptionStatus,
       nextBillingDate,
       currentCycle,
       maxCycles

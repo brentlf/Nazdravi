@@ -41,6 +41,7 @@ export default function DashboardInvoices() {
 
   const getStatusBadge = (status: string) => {
     switch (status) {
+      case "unpaid":
       case "pending":
         return <Badge variant="outline" className="text-orange-600">Pending Payment</Badge>;
       case "paid":
@@ -48,7 +49,7 @@ export default function DashboardInvoices() {
       case "overdue":
         return <Badge variant="destructive">Overdue</Badge>;
       default:
-        return <Badge variant="secondary">{status}</Badge>;
+        return <Badge variant="secondary">{status || 'Unknown'}</Badge>;
     }
   };
 
@@ -66,7 +67,7 @@ export default function DashboardInvoices() {
   }
 
   const pendingInvoices = invoices?.filter(invoice => invoice.status === "pending") || [];
-  const totalPending = pendingInvoices.reduce((sum, invoice) => sum + invoice.amount, 0);
+  const totalPending = pendingInvoices.reduce((sum, invoice) => sum + (invoice.amount || 0), 0);
 
   return (
     <div className="min-h-screen py-20 bg-gray-50 dark:bg-gray-900">
@@ -172,16 +173,16 @@ export default function DashboardInvoices() {
 
                     <div className="flex items-center gap-4">
                       <div className="text-right">
-                        <p className="font-bold text-lg">€{(invoice.amount || 0).toFixed(2)}</p>
+                        <p className="font-bold text-lg">€{(invoice.totalAmount || invoice.amount || 0).toFixed(2)}</p>
                         <p className="text-sm text-gray-500">
-                          Due: {invoice.dueDate ? new Date(invoice.dueDate).toLocaleDateString() : 'N/A'}
+                          Due: {invoice.dueDate ? new Date(invoice.dueDate.toDate ? invoice.dueDate.toDate() : invoice.dueDate).toLocaleDateString() : 'N/A'}
                         </p>
                       </div>
                       
                       <div className="flex items-center gap-2">
                         {getStatusBadge(invoice.status)}
                         
-                        {invoice.status === "pending" && (
+                        {(invoice.status === "unpaid" || invoice.status === "pending") && invoice.paymentUrl && (
                           <Button 
                             onClick={() => handlePayInvoice(invoice)}
                             size="sm"
@@ -193,10 +194,12 @@ export default function DashboardInvoices() {
                         )}
                         
                         {invoice.status === "paid" && (
-                          <Button variant="outline" size="sm">
-                            <Eye className="w-4 h-4 mr-2" />
-                            View Receipt
-                          </Button>
+                          <Link href={`/invoice/${invoice.id}`}>
+                            <Button variant="outline" size="sm">
+                              <Eye className="w-4 h-4 mr-2" />
+                              View Receipt
+                            </Button>
+                          </Link>
                         )}
                       </div>
                     </div>
