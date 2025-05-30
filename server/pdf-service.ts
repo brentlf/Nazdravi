@@ -57,12 +57,13 @@ export class PDFService {
         // Invoice details with proper spacing
         doc.fontSize(10)
            .fillColor('#000000')
-           .text(`${title} #: ${data.invoiceNumber}`, 400, 75)
-           .text(`Date: ${data.createdAt.toLocaleDateString()}`, 400, 90);
+           .text(`${title} #:`, 400, 75)
+           .text(`${data.invoiceNumber}`, 400, 90)
+           .text(`Date: ${data.createdAt.toLocaleDateString()}`, 400, 105);
         
         if (data.invoiceType !== 'credit') {
-          doc.text(`Due Date: ${data.dueDate.toLocaleDateString()}`, 400, 105)
-             .text(`Status: ${data.status.toUpperCase()}`, 400, 120);
+          doc.text(`Due Date: ${data.dueDate.toLocaleDateString()}`, 400, 120)
+             .text(`Status: ${data.status.toUpperCase()}`, 400, 135);
         }
         
         // Client information
