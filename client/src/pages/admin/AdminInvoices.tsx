@@ -67,6 +67,20 @@ export default function AdminInvoices() {
     limit(100)
   ]);
 
+  // Debug: Log invoice data to understand the isReissued flag
+  React.useEffect(() => {
+    if (allInvoices) {
+      console.log('🔍 Invoice Debug - All invoices:', allInvoices.map(inv => ({
+        id: inv.id,
+        invoiceNumber: inv.invoiceNumber,
+        isReissued: inv.isReissued,
+        reissueReason: inv.reissueReason,
+        originalAmount: inv.originalAmount,
+        amount: inv.amount
+      })));
+    }
+  }, [allInvoices]);
+
   // Fetch all appointments for pay-as-you-go invoicing
   const { data: allAppointments } = useFirestoreCollection<Appointment>("appointments", [
     orderBy("startTime", "desc"),
