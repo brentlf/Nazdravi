@@ -48,6 +48,8 @@ export default function DashboardInvoices() {
         return <Badge variant="default" className="bg-green-600">Paid</Badge>;
       case "overdue":
         return <Badge variant="destructive">Overdue</Badge>;
+      case "cancelled":
+        return <Badge variant="secondary">Cancelled</Badge>;
       default:
         return <Badge variant="secondary">{status || 'Unknown'}</Badge>;
     }
@@ -66,7 +68,7 @@ export default function DashboardInvoices() {
     );
   }
 
-  const pendingInvoices = invoices?.filter(invoice => invoice.status === "pending") || [];
+  const pendingInvoices = invoices?.filter(invoice => invoice.status === "unpaid" || invoice.status === "pending") || [];
   const totalPending = pendingInvoices.reduce((sum, invoice) => sum + (invoice.amount || 0), 0);
 
   return (
@@ -173,9 +175,9 @@ export default function DashboardInvoices() {
 
                     <div className="flex items-center gap-4">
                       <div className="text-right">
-                        <p className="font-bold text-lg">€{(invoice.totalAmount || invoice.amount || 0).toFixed(2)}</p>
+                        <p className="font-bold text-lg">€{(invoice.amount || 0).toFixed(2)}</p>
                         <p className="text-sm text-gray-500">
-                          Due: {invoice.dueDate ? new Date(invoice.dueDate.toDate ? invoice.dueDate.toDate() : invoice.dueDate).toLocaleDateString() : 'N/A'}
+                          Due: {invoice.dueDate ? new Date(invoice.dueDate).toLocaleDateString() : 'N/A'}
                         </p>
                       </div>
                       
