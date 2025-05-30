@@ -1,0 +1,60 @@
+DashboardInvoices.tsx:175 Uncaught TypeError: Cannot read properties of undefined (reading 'toFixed')
+    at DashboardInvoices.tsx:175:75
+    at Array.map (<anonymous>)
+    at DashboardInvoices (DashboardInvoices.tsx:149:27)
+    at renderWithHooks (chunk-RPCDYKBN.js?v=e5fdb72b:11548:26)
+    at updateFunctionComponent (chunk-RPCDYKBN.js?v=e5fdb72b:14582:28)
+    at beginWork (chunk-RPCDYKBN.js?v=e5fdb72b:15924:22)
+    at HTMLUnknownElement.callCallback2 (chunk-RPCDYKBN.js?v=e5fdb72b:3674:22)
+    at Object.invokeGuardedCallbackDev (chunk-RPCDYKBN.js?v=e5fdb72b:3699:24)
+    at invokeGuardedCallback (chunk-RPCDYKBN.js?v=e5fdb72b:3733:39)
+    at beginWork$1 (chunk-RPCDYKBN.js?v=e5fdb72b:19765:15)
+DashboardInvoices.tsx:175 Uncaught TypeError: Cannot read properties of undefined (reading 'toFixed')
+    at DashboardInvoices.tsx:175:75
+    at Array.map (<anonymous>)
+    at DashboardInvoices (DashboardInvoices.tsx:149:27)
+    at renderWithHooks (chunk-RPCDYKBN.js?v=e5fdb72b:11548:26)
+    at updateFunctionComponent (chunk-RPCDYKBN.js?v=e5fdb72b:14582:28)
+    at beginWork (chunk-RPCDYKBN.js?v=e5fdb72b:15924:22)
+    at HTMLUnknownElement.callCallback2 (chunk-RPCDYKBN.js?v=e5fdb72b:3674:22)
+    at Object.invokeGuardedCallbackDev (chunk-RPCDYKBN.js?v=e5fdb72b:3699:24)
+    at invokeGuardedCallback (chunk-RPCDYKBN.js?v=e5fdb72b:3733:39)
+    at beginWork$1 (chunk-RPCDYKBN.js?v=e5fdb72b:19765:15)
+hook.js:608 The above error occurred in the <DashboardInvoices> component:
+
+    at DashboardInvoices (https://e394ccd4-b3dd-43ba-8feb-deda267050d2-00-3v6n3vit95c2j.spock.replit.dev/src/pages/dashboard/DashboardInvoices.tsx:28:35)
+    at main
+    at div
+    at Layout (https://e394ccd4-b3dd-43ba-8feb-deda267050d2-00-3v6n3vit95c2j.spock.replit.dev/src/App.tsx?v=NEtpPJPIdEwdz8JyKoEdq:68:19)
+    at RouteGuard (https://e394ccd4-b3dd-43ba-8feb-deda267050d2-00-3v6n3vit95c2j.spock.replit.dev/src/components/common/RouteGuard.tsx:21:30)
+    at Route (https://e394ccd4-b3dd-43ba-8feb-deda267050d2-00-3v6n3vit95c2j.spock.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/wouter.js?v=e5fdb72b:323:16)
+    at Switch (https://e394ccd4-b3dd-43ba-8feb-deda267050d2-00-3v6n3vit95c2j.spock.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/wouter.js?v=e5fdb72b:379:17)
+    at Router
+    at Provider (https://e394ccd4-b3dd-43ba-8feb-deda267050d2-00-3v6n3vit95c2j.spock.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-E7IAXTU4.js?v=e5fdb72b:38:15)
+    at TooltipProvider (https://e394ccd4-b3dd-43ba-8feb-deda267050d2-00-3v6n3vit95c2j.spock.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/@radix-ui_react-tooltip.js?v=e5fdb72b:63:5)
+    at AuthProvider (https://e394ccd4-b3dd-43ba-8feb-deda267050d2-00-3v6n3vit95c2j.spock.replit.dev/src/contexts/AuthContext.tsx:40:32)
+    at LanguageProvider (https://e394ccd4-b3dd-43ba-8feb-deda267050d2-00-3v6n3vit95c2j.spock.replit.dev/src/contexts/LanguageContext.tsx:32:36)
+    at ThemeProvider (https://e394ccd4-b3dd-43ba-8feb-deda267050d2-00-3v6n3vit95c2j.spock.replit.dev/src/contexts/ThemeContext.tsx:29:33)
+    at QueryClientProvider (https://e394ccd4-b3dd-43ba-8feb-deda267050d2-00-3v6n3vit95c2j.spock.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/@tanstack_react-query.js?v=e5fdb72b:2805:3)
+    at App
+
+Consider adding an error boundary to your tree to customize error handling behavior.
+Visit https://reactjs.org/link/error-boundaries to learn more about error boundaries.
+overrideMethod @ hook.js:608
+chunk-RPCDYKBN.js?v=e5fdb72b:19413 Uncaught TypeError: Cannot read properties of undefined (reading 'toFixed')
+    at DashboardInvoices.tsx:175:75
+    at Array.map (<anonymous>)
+    at DashboardInvoices (DashboardInvoices.tsx:149:27)
+    at renderWithHooks (chunk-RPCDYKBN.js?v=e5fdb72b:11548:26)
+    at updateFunctionComponent (chunk-RPCDYKBN.js?v=e5fdb72b:14582:28)
+    at beginWork (chunk-RPCDYKBN.js?v=e5fdb72b:15924:22)
+    at beginWork$1 (chunk-RPCDYKBN.js?v=e5fdb72b:19753:22)
+    at performUnitOfWork (chunk-RPCDYKBN.js?v=e5fdb72b:19198:20)
+    at workLoopSync (chunk-RPCDYKBN.js?v=e5fdb72b:19137:13)
+    at renderRootSync (chunk-RPCDYKBN.js?v=e5fdb72b:19116:15)
+
+                
+          
+          
+          
+         Chrome is moving towards a new experience that allows users to choose to browse without third-party cookies.

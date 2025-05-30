@@ -163,7 +163,7 @@ export default function DashboardInvoices() {
                           <div className="flex items-center gap-2 mt-1">
                             <Calendar className="w-4 h-4 text-gray-400" />
                             <span className="text-sm text-gray-500">
-                              Session: {new Date(invoice.sessionDate).toLocaleDateString()}
+                              Session: {invoice.sessionDate ? new Date(invoice.sessionDate).toLocaleDateString() : 'N/A'}
                             </span>
                           </div>
                         </div>
@@ -172,9 +172,9 @@ export default function DashboardInvoices() {
 
                     <div className="flex items-center gap-4">
                       <div className="text-right">
-                        <p className="font-bold text-lg">€{invoice.amount.toFixed(2)}</p>
+                        <p className="font-bold text-lg">€{(invoice.amount || 0).toFixed(2)}</p>
                         <p className="text-sm text-gray-500">
-                          Due: {new Date(invoice.dueDate).toLocaleDateString()}
+                          Due: {invoice.dueDate ? new Date(invoice.dueDate).toLocaleDateString() : 'N/A'}
                         </p>
                       </div>
                       

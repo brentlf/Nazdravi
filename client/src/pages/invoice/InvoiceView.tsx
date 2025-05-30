@@ -15,7 +15,7 @@ const InvoiceView: React.FC = () => {
   const invoiceId = params?.id;
 
   const { data: invoice, loading, error } = useFirestoreDocument(
-    invoiceId ? doc(db, "invoices", invoiceId) : null,
+    invoiceId ? `invoices/${invoiceId}` : "",
     {}
   );
 
