@@ -857,23 +857,19 @@ export default function AdminInvoices() {
                             Math.abs(new Date(invoice.createdAt).getTime() - new Date(appointment.date).getTime()) < 7 * 24 * 60 * 60 * 1000); // Within 7 days
                   });
                   
-                  // Exclude users who currently have active complete program subscriptions
+                  // Exclude users who currently have active subscription invoices
                   // unless their appointment was before their subscription started
-                  const user = completeProgramUsers.find(u => u.email === appointment.email);
-                  if (user) {
-                    // If user has complete program, check if appointment was before subscription
-                    const appointmentDate = new Date(appointment.date);
-                    const subscriptionInvoices = allInvoices?.filter(inv => 
-                      inv.clientEmail === appointment.email && 
-                      (inv.invoiceType === 'subscription' || inv.description?.includes('Complete Program'))
-                    ) || [];
-                    
-                    if (subscriptionInvoices.length > 0) {
-                      const firstSubscriptionDate = new Date(Math.min(...subscriptionInvoices.map(inv => new Date(inv.createdAt).getTime())));
-                      // Only allow if appointment was before subscription started
-                      if (appointmentDate >= firstSubscriptionDate) {
-                        return false;
-                      }
+                  const appointmentDate = new Date(appointment.date);
+                  const subscriptionInvoices = allInvoices?.filter(inv => 
+                    inv.clientEmail === appointment.email && 
+                    (inv.invoiceType === 'subscription' || inv.description?.includes('Complete Program'))
+                  ) || [];
+                  
+                  if (subscriptionInvoices.length > 0) {
+                    const firstSubscriptionDate = new Date(Math.min(...subscriptionInvoices.map(inv => new Date(inv.createdAt).getTime())));
+                    // Only allow if appointment was before subscription started
+                    if (appointmentDate >= firstSubscriptionDate) {
+                      return false;
                     }
                   }
                   

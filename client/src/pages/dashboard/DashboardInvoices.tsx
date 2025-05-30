@@ -190,7 +190,7 @@ export default function DashboardInvoices() {
                           <Button 
                             onClick={() => handlePayInvoice(invoice)}
                             size="sm"
-                            className="bg-primary-600 hover:bg-primary-700"
+                            className="bg-green-600 hover:bg-green-700 text-white font-medium shadow-sm"
                             disabled={!invoice.paymentUrl}
                           >
                             <CreditCard className="w-4 h-4 mr-2" />
