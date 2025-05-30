@@ -42,6 +42,9 @@ export default function AdminInvoices() {
   const [additionalInvoiceReason, setAdditionalInvoiceReason] = useState("");
   const [isCreatingAdditionalInvoice, setIsCreatingAdditionalInvoice] = useState(false);
   
+  // Billing status tracking
+  const [billingStatuses, setBillingStatuses] = useState<{[key: string]: any}>({});
+  
   const { toast } = useToast();
   const { user } = useAuth();
   const queryClient = useQueryClient();
@@ -66,27 +69,42 @@ export default function AdminInvoices() {
     });
   }, [allCompleteProgramUsers]);
 
-  // Check if user has existing subscription invoices
-  const getUserBillingStatus = (userId: string, userEmail: string) => {
-    if (!allInvoices) return 'none';
-    
-    const userInvoices = allInvoices.filter(invoice => 
-      invoice.userId === userId || 
-      invoice.clientEmail === userEmail
-    );
-    
-    if (userInvoices.length > 0) {
-      const hasSubscriptionInvoices = userInvoices.some(inv => 
-        inv.description?.includes('Complete Program') ||
-        inv.description?.includes('Month ')
-      );
+  // Fetch billing statuses for all users when component loads
+  React.useEffect(() => {
+    const fetchBillingStatuses = async () => {
+      if (!completeProgramUsers?.length) return;
       
-      if (hasSubscriptionInvoices) {
-        return 'active';
+      const statuses: {[key: string]: any} = {};
+      
+      for (const user of completeProgramUsers) {
+        try {
+          const response = await fetch(`/api/subscriptions/billing-status/${user.uid}`);
+          const data = await response.json();
+          if (data.success) {
+            statuses[user.uid] = data;
+          }
+        } catch (error) {
+          console.error(`Error fetching billing status for ${user.uid}:`, error);
+        }
       }
-    }
+      
+      setBillingStatuses(statuses);
+    };
+
+    fetchBillingStatuses();
+  }, [completeProgramUsers]);
+
+  // Get proper billing status from API data
+  const getUserBillingStatus = (userId: string) => {
+    const billingStatus = billingStatuses[userId];
+    if (!billingStatus) return 'none';
     
-    return 'none';
+    return billingStatus.subscriptionStatus || 'none';
+  };
+
+  // Get billing status details for display
+  const getBillingStatusDetails = (userId: string) => {
+    return billingStatuses[userId] || null;
   };
 
   const formatDate = (date: any) => {
