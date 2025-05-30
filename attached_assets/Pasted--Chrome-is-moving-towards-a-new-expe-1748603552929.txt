@@ -1,0 +1,119 @@
+
+                
+          
+          
+          
+         Chrome is moving towards a new experience that allows users to choose to browse without third-party cookies.
+AdminInvoices.tsx:469 Uncaught ReferenceError: Dialog is not defined
+    at AdminInvoices (AdminInvoices.tsx:469:8)
+    at renderWithHooks (chunk-RPCDYKBN.js?v=1a8e8de5:11548:26)
+    at mountIndeterminateComponent (chunk-RPCDYKBN.js?v=1a8e8de5:14926:21)
+    at beginWork (chunk-RPCDYKBN.js?v=1a8e8de5:15914:22)
+    at HTMLUnknownElement.callCallback2 (chunk-RPCDYKBN.js?v=1a8e8de5:3674:22)
+    at Object.invokeGuardedCallbackDev (chunk-RPCDYKBN.js?v=1a8e8de5:3699:24)
+    at invokeGuardedCallback (chunk-RPCDYKBN.js?v=1a8e8de5:3733:39)
+    at beginWork$1 (chunk-RPCDYKBN.js?v=1a8e8de5:19765:15)
+    at performUnitOfWork (chunk-RPCDYKBN.js?v=1a8e8de5:19198:20)
+    at workLoopSync (chunk-RPCDYKBN.js?v=1a8e8de5:19137:13)
+AdminInvoices @ AdminInvoices.tsx:469
+renderWithHooks @ chunk-RPCDYKBN.js?v=1a8e8de5:11548
+mountIndeterminateComponent @ chunk-RPCDYKBN.js?v=1a8e8de5:14926
+beginWork @ chunk-RPCDYKBN.js?v=1a8e8de5:15914
+callCallback2 @ chunk-RPCDYKBN.js?v=1a8e8de5:3674
+invokeGuardedCallbackDev @ chunk-RPCDYKBN.js?v=1a8e8de5:3699
+invokeGuardedCallback @ chunk-RPCDYKBN.js?v=1a8e8de5:3733
+beginWork$1 @ chunk-RPCDYKBN.js?v=1a8e8de5:19765
+performUnitOfWork @ chunk-RPCDYKBN.js?v=1a8e8de5:19198
+workLoopSync @ chunk-RPCDYKBN.js?v=1a8e8de5:19137
+renderRootSync @ chunk-RPCDYKBN.js?v=1a8e8de5:19116
+performConcurrentWorkOnRoot @ chunk-RPCDYKBN.js?v=1a8e8de5:18678
+workLoop @ chunk-RPCDYKBN.js?v=1a8e8de5:197
+flushWork @ chunk-RPCDYKBN.js?v=1a8e8de5:176
+performWorkUntilDeadline @ chunk-RPCDYKBN.js?v=1a8e8de5:384
+AdminInvoices.tsx:469 Uncaught ReferenceError: Dialog is not defined
+    at AdminInvoices (AdminInvoices.tsx:469:8)
+    at renderWithHooks (chunk-RPCDYKBN.js?v=1a8e8de5:11548:26)
+    at mountIndeterminateComponent (chunk-RPCDYKBN.js?v=1a8e8de5:14926:21)
+    at beginWork (chunk-RPCDYKBN.js?v=1a8e8de5:15914:22)
+    at HTMLUnknownElement.callCallback2 (chunk-RPCDYKBN.js?v=1a8e8de5:3674:22)
+    at Object.invokeGuardedCallbackDev (chunk-RPCDYKBN.js?v=1a8e8de5:3699:24)
+    at invokeGuardedCallback (chunk-RPCDYKBN.js?v=1a8e8de5:3733:39)
+    at beginWork$1 (chunk-RPCDYKBN.js?v=1a8e8de5:19765:15)
+    at performUnitOfWork (chunk-RPCDYKBN.js?v=1a8e8de5:19198:20)
+    at workLoopSync (chunk-RPCDYKBN.js?v=1a8e8de5:19137:13)
+AdminInvoices @ AdminInvoices.tsx:469
+renderWithHooks @ chunk-RPCDYKBN.js?v=1a8e8de5:11548
+mountIndeterminateComponent @ chunk-RPCDYKBN.js?v=1a8e8de5:14926
+beginWork @ chunk-RPCDYKBN.js?v=1a8e8de5:15914
+callCallback2 @ chunk-RPCDYKBN.js?v=1a8e8de5:3674
+invokeGuardedCallbackDev @ chunk-RPCDYKBN.js?v=1a8e8de5:3699
+invokeGuardedCallback @ chunk-RPCDYKBN.js?v=1a8e8de5:3733
+beginWork$1 @ chunk-RPCDYKBN.js?v=1a8e8de5:19765
+performUnitOfWork @ chunk-RPCDYKBN.js?v=1a8e8de5:19198
+workLoopSync @ chunk-RPCDYKBN.js?v=1a8e8de5:19137
+renderRootSync @ chunk-RPCDYKBN.js?v=1a8e8de5:19116
+recoverFromConcurrentError @ chunk-RPCDYKBN.js?v=1a8e8de5:18736
+performConcurrentWorkOnRoot @ chunk-RPCDYKBN.js?v=1a8e8de5:18684
+workLoop @ chunk-RPCDYKBN.js?v=1a8e8de5:197
+flushWork @ chunk-RPCDYKBN.js?v=1a8e8de5:176
+performWorkUntilDeadline @ chunk-RPCDYKBN.js?v=1a8e8de5:384
+hook.js:608 The above error occurred in the <AdminInvoices> component:
+
+    at AdminInvoices (https://e394ccd4-b3dd-43ba-8feb-deda267050d2-00-3v6n3vit95c2j.spock.replit.dev/src/pages/admin/AdminInvoices.tsx:37:43)
+    at main
+    at div
+    at Layout (https://e394ccd4-b3dd-43ba-8feb-deda267050d2-00-3v6n3vit95c2j.spock.replit.dev/src/App.tsx?v=cf8fRuZs3ZBKEic8c5fGt:67:19)
+    at RouteGuard (https://e394ccd4-b3dd-43ba-8feb-deda267050d2-00-3v6n3vit95c2j.spock.replit.dev/src/components/common/RouteGuard.tsx:21:30)
+    at Route (https://e394ccd4-b3dd-43ba-8feb-deda267050d2-00-3v6n3vit95c2j.spock.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/wouter.js?v=1a8e8de5:323:16)
+    at Switch (https://e394ccd4-b3dd-43ba-8feb-deda267050d2-00-3v6n3vit95c2j.spock.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/wouter.js?v=1a8e8de5:379:17)
+    at Router
+    at Provider (https://e394ccd4-b3dd-43ba-8feb-deda267050d2-00-3v6n3vit95c2j.spock.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-5AJU3CG7.js?v=1a8e8de5:38:15)
+    at TooltipProvider (https://e394ccd4-b3dd-43ba-8feb-deda267050d2-00-3v6n3vit95c2j.spock.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/@radix-ui_react-tooltip.js?v=1a8e8de5:63:5)
+    at AuthProvider (https://e394ccd4-b3dd-43ba-8feb-deda267050d2-00-3v6n3vit95c2j.spock.replit.dev/src/contexts/AuthContext.tsx:40:32)
+    at LanguageProvider (https://e394ccd4-b3dd-43ba-8feb-deda267050d2-00-3v6n3vit95c2j.spock.replit.dev/src/contexts/LanguageContext.tsx:32:36)
+    at ThemeProvider (https://e394ccd4-b3dd-43ba-8feb-deda267050d2-00-3v6n3vit95c2j.spock.replit.dev/src/contexts/ThemeContext.tsx:29:33)
+    at QueryClientProvider (https://e394ccd4-b3dd-43ba-8feb-deda267050d2-00-3v6n3vit95c2j.spock.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/@tanstack_react-query.js?v=1a8e8de5:2805:3)
+    at App
+
+Consider adding an error boundary to your tree to customize error handling behavior.
+Visit https://reactjs.org/link/error-boundaries to learn more about error boundaries.
+overrideMethod @ hook.js:608
+logCapturedError @ chunk-RPCDYKBN.js?v=1a8e8de5:14032
+update.callback @ chunk-RPCDYKBN.js?v=1a8e8de5:14052
+callCallback @ chunk-RPCDYKBN.js?v=1a8e8de5:11248
+commitUpdateQueue @ chunk-RPCDYKBN.js?v=1a8e8de5:11265
+commitLayoutEffectOnFiber @ chunk-RPCDYKBN.js?v=1a8e8de5:17093
+commitLayoutMountEffects_complete @ chunk-RPCDYKBN.js?v=1a8e8de5:17980
+commitLayoutEffects_begin @ chunk-RPCDYKBN.js?v=1a8e8de5:17969
+commitLayoutEffects @ chunk-RPCDYKBN.js?v=1a8e8de5:17920
+commitRootImpl @ chunk-RPCDYKBN.js?v=1a8e8de5:19353
+commitRoot @ chunk-RPCDYKBN.js?v=1a8e8de5:19277
+finishConcurrentRender @ chunk-RPCDYKBN.js?v=1a8e8de5:18760
+performConcurrentWorkOnRoot @ chunk-RPCDYKBN.js?v=1a8e8de5:18718
+workLoop @ chunk-RPCDYKBN.js?v=1a8e8de5:197
+flushWork @ chunk-RPCDYKBN.js?v=1a8e8de5:176
+performWorkUntilDeadline @ chunk-RPCDYKBN.js?v=1a8e8de5:384
+chunk-RPCDYKBN.js?v=1a8e8de5:19413 Uncaught ReferenceError: Dialog is not defined
+    at AdminInvoices (AdminInvoices.tsx:469:8)
+    at renderWithHooks (chunk-RPCDYKBN.js?v=1a8e8de5:11548:26)
+    at mountIndeterminateComponent (chunk-RPCDYKBN.js?v=1a8e8de5:14926:21)
+    at beginWork (chunk-RPCDYKBN.js?v=1a8e8de5:15914:22)
+    at beginWork$1 (chunk-RPCDYKBN.js?v=1a8e8de5:19753:22)
+    at performUnitOfWork (chunk-RPCDYKBN.js?v=1a8e8de5:19198:20)
+    at workLoopSync (chunk-RPCDYKBN.js?v=1a8e8de5:19137:13)
+    at renderRootSync (chunk-RPCDYKBN.js?v=1a8e8de5:19116:15)
+    at recoverFromConcurrentError (chunk-RPCDYKBN.js?v=1a8e8de5:18736:28)
+    at performConcurrentWorkOnRoot (chunk-RPCDYKBN.js?v=1a8e8de5:18684:30)
+AdminInvoices @ AdminInvoices.tsx:469
+renderWithHooks @ chunk-RPCDYKBN.js?v=1a8e8de5:11548
+mountIndeterminateComponent @ chunk-RPCDYKBN.js?v=1a8e8de5:14926
+beginWork @ chunk-RPCDYKBN.js?v=1a8e8de5:15914
+beginWork$1 @ chunk-RPCDYKBN.js?v=1a8e8de5:19753
+performUnitOfWork @ chunk-RPCDYKBN.js?v=1a8e8de5:19198
+workLoopSync @ chunk-RPCDYKBN.js?v=1a8e8de5:19137
+renderRootSync @ chunk-RPCDYKBN.js?v=1a8e8de5:19116
+recoverFromConcurrentError @ chunk-RPCDYKBN.js?v=1a8e8de5:18736
+performConcurrentWorkOnRoot @ chunk-RPCDYKBN.js?v=1a8e8de5:18684
+workLoop @ chunk-RPCDYKBN.js?v=1a8e8de5:197
+flushWork @ chunk-RPCDYKBN.js?v=1a8e8de5:176
+performWorkUntilDeadline @ chunk-RPCDYKBN.js?v=1a8e8de5:384
