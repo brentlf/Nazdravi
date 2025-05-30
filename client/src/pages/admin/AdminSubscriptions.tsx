@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -34,15 +34,15 @@ export default function AdminSubscriptions() {
   ]);
 
   // Filter out admin users and get only client users
-  const completeProgramUsers = allCompleteProgramUsers?.filter(user => {
-    const userData = user as any;
-    console.log('Checking user:', userData.name, 'role:', userData.role, 'email:', userData.email);
-    // Filter out admin users - check both role field and email pattern
-    return userData.role !== 'admin' && !userData.email?.includes('admin') && userData.name !== 'Admin';
-  }) || [];
-
-  console.log('All complete program users:', allCompleteProgramUsers?.length);
-  console.log('Filtered complete program users:', completeProgramUsers?.length);
+  const completeProgramUsers = React.useMemo(() => {
+    if (!allCompleteProgramUsers) return [];
+    
+    return allCompleteProgramUsers.filter(user => {
+      const userData = user as any;
+      // Only include users with 'client' role
+      return userData.role === 'client';
+    });
+  }, [allCompleteProgramUsers]);
 
   const formatDate = (date: any) => {
     if (!date) return 'Not set';
