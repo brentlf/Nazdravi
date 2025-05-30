@@ -48,46 +48,57 @@ export class InvoiceManagementService {
     let totalAmount = 0;
 
     // Base session fee based on service plan
-    const sessionFee = data.servicePlan === 'complete-program' ? 0 : 75; // €75 for pay-as-you-go
-    
-    if (sessionFee > 0) {
+    if (data.servicePlan === 'pay-as-you-go') {
+      const sessionAmount = 85; // Pay-as-you-go rate
       items.push({
-        description: `${data.sessionType} Consultation`,
-        amount: sessionFee,
-        type: 'session',
-        details: 'Nutrition consultation session'
+        description: `Nutrition consultation session (${data.sessionType})`,
+        amount: sessionAmount,
+        type: 'session'
       });
-      totalAmount += sessionFee;
+      totalAmount += sessionAmount;
     }
 
-    // Add penalties if applicable
+    // Add penalty fees if applicable
     if (data.penalties?.lateReschedule) {
+      const penaltyAmount = 25;
       items.push({
-        description: 'Late Reschedule Fee',
-        amount: 5,
-        type: 'penalty',
-        details: 'Reschedule request made within 4 working hours of appointment'
+        description: 'Late reschedule fee (less than 24h notice)',
+        amount: penaltyAmount,
+        type: 'penalty'
       });
-      totalAmount += 5;
+      totalAmount += penaltyAmount;
     }
 
     if (data.penalties?.noShow) {
-      const noShowPenalty = sessionFee * 0.5; // 50% of session fee
+      const penaltyAmount = 50;
       items.push({
-        description: 'No-Show Penalty',
-        amount: noShowPenalty,
-        type: 'penalty',
-        details: '50% penalty for missed appointment'
+        description: 'No-show fee',
+        amount: penaltyAmount,
+        type: 'penalty'
       });
-      totalAmount += noShowPenalty;
+      totalAmount += penaltyAmount;
     }
 
-    // Create invoice in Firebase
-    const invoiceNumber = `INV-${Date.now()}-${data.userId.slice(-6)}`;
+    // Create Stripe payment intent
+    const invoiceNumber = `INV-${Date.now()}`;
+    const paymentIntent = await stripe.paymentIntents.create({
+      amount: Math.round(totalAmount * 100), // Convert to cents
+      currency: 'eur',
+      payment_method_types: ['card', 'ideal'],
+      metadata: {
+        invoiceNumber,
+        userId: data.userId,
+        appointmentId: data.appointmentId,
+        servicePlan: data.servicePlan
+      }
+    });
+
+    const paymentUrl = `${process.env.REPLIT_DEV_DOMAIN || 'https://your-domain.com'}/pay-invoice/${paymentIntent.id}`;
     const dueDate = new Date();
     dueDate.setDate(dueDate.getDate() + 14); // 14 days payment term
 
-    const invoiceData: InvoiceData = {
+    // Save invoice to Firebase
+    const invoiceRef = await db.collection('invoices').add({
       userId: data.userId,
       clientName: data.clientName,
       clientEmail: data.clientEmail,
@@ -96,47 +107,22 @@ export class InvoiceManagementService {
       totalAmount,
       currency: 'eur',
       dueDate,
+      invoiceType: 'session',
       appointmentId: data.appointmentId,
-      invoiceType: 'session'
-    };
-
-    // Only create Stripe payment if amount > 0
-    let paymentUrl = '';
-    if (totalAmount > 0) {
-      const paymentIntent = await stripe.paymentIntents.create({
-        amount: Math.round(totalAmount * 100), // Convert to cents
-        currency: 'eur',
-        payment_method_types: ['card', 'ideal'],
-        metadata: {
-          invoiceNumber,
-          userId: data.userId,
-          appointmentId: data.appointmentId,
-          servicePlan: data.servicePlan
-        }
-      });
-
-      paymentUrl = `${process.env.REPLIT_DEV_DOMAIN || 'https://your-domain.com'}/pay-invoice/${paymentIntent.id}`;
-    }
-
-    // Save to Firebase
-    const invoiceRef = await db.collection('invoices').add({
-      ...invoiceData,
       invoiceNumber,
-      status: totalAmount > 0 ? 'unpaid' : 'not_applicable',
-      stripePaymentIntentId: totalAmount > 0 ? paymentUrl : null,
+      status: 'unpaid',
+      stripePaymentIntentId: paymentIntent.id,
       createdAt: new Date(),
       updatedAt: new Date()
     });
 
-    // Send email notification to client (only if amount > 0)
-    if (totalAmount > 0) {
-      await mailerLiteService.sendInvoiceGenerated(
-        data.clientEmail,
-        data.clientName,
-        totalAmount,
-        invoiceRef.id
-      );
-    }
+    // Send email notification
+    await mailerLiteService.sendInvoiceGenerated(
+      data.clientEmail,
+      data.clientName,
+      totalAmount,
+      invoiceRef.id
+    );
 
     return {
       invoiceId: invoiceRef.id,
@@ -151,37 +137,18 @@ export class InvoiceManagementService {
     month: number;
     year: number;
     subscriptionAmount: number;
-    billingCycle?: number; // 1, 2, or 3 for the three billing cycles
+    billingCycle: number;
   }): Promise<{ invoiceId: string; paymentUrl: string }> {
     
-    const billingCycle = data.billingCycle || 1;
-    
-    // Check if invoice already exists for this month/year/cycle
-    const existingInvoiceSnapshot = await db.collection("invoices")
-      .where("userId", "==", data.userId)
-      .where("subscriptionMonth", "==", data.month)
-      .where("subscriptionYear", "==", data.year)
-      .where("invoiceType", "==", "subscription")
-      .where("billingCycle", "==", billingCycle)
-      .get();
-    
-    if (!existingInvoiceSnapshot.empty) {
-      const existingInvoice = existingInvoiceSnapshot.docs[0];
-      return {
-        invoiceId: existingInvoice.id,
-        paymentUrl: existingInvoice.data().stripePaymentIntentId || ''
-      };
-    }
-
     const items: InvoiceItem[] = [{
-      description: `Complete Program - Month ${billingCycle} of 3 (${this.getMonthName(data.month)} ${data.year})`,
+      description: `Complete Nutrition Program - Month ${data.billingCycle}`,
       amount: data.subscriptionAmount,
       type: 'subscription',
       details: '3-month complete nutrition program with unlimited consultations'
     }];
 
     // Create Stripe payment intent
-    const invoiceNumber = `SUB-${data.year}-${data.month.toString().padStart(2, '0')}-${billingCycle}-${Date.now()}`;
+    const invoiceNumber = `SUB-${data.year}-${data.month.toString().padStart(2, '0')}-${data.billingCycle}-${Date.now()}`;
     
     const paymentIntent = await stripe.paymentIntents.create({
       amount: Math.round(data.subscriptionAmount * 100),
@@ -192,7 +159,7 @@ export class InvoiceManagementService {
         userId: data.userId,
         subscriptionMonth: data.month.toString(),
         subscriptionYear: data.year.toString(),
-        billingCycle: billingCycle.toString(),
+        billingCycle: data.billingCycle.toString(),
         servicePlan: 'complete-program'
       }
     });
@@ -214,7 +181,7 @@ export class InvoiceManagementService {
       invoiceType: 'subscription',
       subscriptionMonth: data.month,
       subscriptionYear: data.year,
-      billingCycle,
+      billingCycle: data.billingCycle,
       invoiceNumber,
       status: 'unpaid',
       stripePaymentIntentId: paymentIntent.id,
@@ -345,12 +312,6 @@ export class InvoiceManagementService {
         updatedAt: new Date()
       });
       
-      // Send cancellation email
-      await mailerLiteService.sendSubscriptionCancelled(
-        userData.email,
-        userData.name
-      );
-      
       return { success: true, message: 'Subscription cancelled successfully' };
     } catch (error) {
       console.error('Error cancelling subscription:', error);
@@ -391,8 +352,8 @@ export class InvoiceManagementService {
       .where('status', '==', 'unpaid')
       .get();
     
-    const upcomingInvoices = [];
-    const overdueInvoices = [];
+    const upcomingInvoices: Array<{ dueDate: Date; amount: number; billingCycle: number }> = [];
+    const overdueInvoices: Array<{ invoiceId: string; dueDate: Date; amount: number; billingCycle: number }> = [];
     const now = new Date();
     
     // Check for overdue invoices
@@ -433,7 +394,6 @@ export class InvoiceManagementService {
 
   // Mark invoice as paid when payment is completed
   async markInvoiceAsPaid(invoiceId: string, paymentIntentId: string): Promise<void> {
-    // Update invoice status
     await db.collection('invoices').doc(invoiceId).update({
       status: 'paid',
       paidAt: new Date(),
@@ -444,137 +404,41 @@ export class InvoiceManagementService {
     // Get invoice details for admin notification
     const invoiceDoc = await db.collection('invoices').doc(invoiceId).get();
     if (invoiceDoc.exists) {
-      const invoiceData = invoiceDoc.data();
-      
-      // Send admin notification
-      await mailerLiteService.sendAdminInvoicePaid(
-        invoiceData?.clientName || 'Unknown Client',
-        invoiceData?.totalAmount || 0,
-        invoiceId
+      const data = invoiceDoc.data();
+      await mailerLiteService.sendInvoicePaymentReceived(
+        'admin@veenutrition.com',
+        'Admin',
+        data?.totalAmount || 0,
+        invoiceId,
+        data?.clientName || 'Unknown Client'
       );
     }
   }
 
+  // Get all invoices for a specific user
   async getInvoicesByUser(userId: string): Promise<any[]> {
     const invoicesSnapshot = await db.collection('invoices')
       .where('userId', '==', userId)
       .orderBy('createdAt', 'desc')
       .get();
-
+    
     return invoicesSnapshot.docs.map(doc => ({
       id: doc.id,
       ...doc.data()
     }));
   }
 
+  // Get all unpaid invoices
   async getUnpaidInvoices(): Promise<any[]> {
     const invoicesSnapshot = await db.collection('invoices')
       .where('status', '==', 'unpaid')
       .orderBy('dueDate', 'asc')
       .get();
-
+    
     return invoicesSnapshot.docs.map(doc => ({
       id: doc.id,
       ...doc.data()
     }));
-  }
-
-  private getMonthName(monthNumber: number): string {
-    const months = [
-      'January', 'February', 'March', 'April', 'May', 'June',
-      'July', 'August', 'September', 'October', 'November', 'December'
-    ];
-    return months[monthNumber - 1] || 'Unknown';
-  }
-
-  async applyPenaltyToUser(
-    userId: string,
-    clientName: string,
-    clientEmail: string,
-    penaltyType: 'late_reschedule' | 'no_show',
-    appointmentId: string,
-    sessionAmount: number
-  ): Promise<string> {
-    
-    const items: InvoiceItem[] = [];
-    let totalAmount = 0;
-
-    if (penaltyType === 'late_reschedule') {
-      items.push({
-        description: 'Late Reschedule Administrative Fee',
-        amount: 5,
-        type: 'penalty',
-        details: 'Fee applied for reschedule requests made within 4 working hours'
-      });
-      totalAmount = 5;
-    } else if (penaltyType === 'no_show') {
-      const penaltyAmount = sessionAmount * 0.5;
-      items.push({
-        description: 'No-Show Penalty Fee',
-        amount: penaltyAmount,
-        type: 'penalty',
-        details: '50% penalty for missed appointment without notice'
-      });
-      totalAmount = penaltyAmount;
-    }
-
-    // Create penalty invoice
-    const invoiceNumber = `PEN-${Date.now()}-${userId.slice(-6)}`;
-    const dueDate = new Date();
-    dueDate.setDate(dueDate.getDate() + 7); // 7 days for penalty payments
-
-    const paymentIntent = await stripe.paymentIntents.create({
-      amount: Math.round(totalAmount * 100),
-      currency: 'eur',
-      automatic_payment_methods: {
-        enabled: true,
-      },
-      metadata: {
-        invoiceNumber,
-        userId,
-        appointmentId,
-        penaltyType
-      }
-    });
-
-    // Save to Firebase
-    const invoiceRef = await db.collection('invoices').add({
-      userId,
-      clientName,
-      clientEmail,
-      servicePlan: 'pay-as-you-go', // Penalties apply regardless of plan
-      items,
-      totalAmount,
-      currency: 'eur',
-      dueDate,
-      appointmentId,
-      invoiceType: 'penalty',
-      invoiceNumber,
-      status: 'unpaid',
-      stripePaymentIntentId: paymentIntent.id,
-      createdAt: new Date(),
-      updatedAt: new Date()
-    });
-
-    // Send appropriate email notification
-    if (penaltyType === 'late_reschedule') {
-      await mailerLiteService.sendLateRescheduleNotice(
-        clientEmail,
-        clientName,
-        'appointment date',
-        'appointment time'
-      );
-    } else if (penaltyType === 'no_show') {
-      await mailerLiteService.sendNoShowNotice(
-        clientEmail,
-        clientName,
-        'appointment date',
-        'appointment time',
-        totalAmount
-      );
-    }
-
-    return invoiceRef.id;
   }
 }
 

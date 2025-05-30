@@ -224,24 +224,29 @@ export default function AdminSubscriptions() {
             </div>
 
             {selectedUser && (
-              <div className="p-4 bg-gray-50 dark:bg-gray-800 rounded-lg">
-                <h4 className="font-medium mb-2">Billing Schedule Preview</h4>
+              <div className="p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
+                <h4 className="font-medium mb-2">Monthly Billing Preview</h4>
                 <div className="space-y-2 text-sm">
                   <div className="flex justify-between">
-                    <span>Invoice 1 (Day 1):</span>
+                    <span>Month 1 (Start Date):</span>
                     <span className="font-medium">€{monthlyAmount}</span>
                   </div>
-                  <div className="flex justify-between">
-                    <span>Invoice 2 (End of Month 1):</span>
-                    <span className="font-medium">€{monthlyAmount}</span>
+                  <div className="flex justify-between text-muted-foreground">
+                    <span>Month 2:</span>
+                    <span>€{monthlyAmount} (auto-generated)</span>
                   </div>
-                  <div className="flex justify-between">
-                    <span>Invoice 3 (End of Month 2):</span>
-                    <span className="font-medium">€{monthlyAmount}</span>
+                  <div className="flex justify-between text-muted-foreground">
+                    <span>Month 3:</span>
+                    <span>€{monthlyAmount} (auto-generated)</span>
                   </div>
-                  <div className="border-t pt-2 flex justify-between font-medium">
-                    <span>Total Program Cost:</span>
-                    <span>€{(parseFloat(monthlyAmount) * 3).toFixed(2)}</span>
+                  <div className="border-t pt-2 space-y-1">
+                    <div className="flex justify-between font-medium">
+                      <span>Total Program Cost:</span>
+                      <span>€{(parseFloat(monthlyAmount) * 3).toFixed(2)}</span>
+                    </div>
+                    <p className="text-xs text-muted-foreground">
+                      Invoices generated monthly. Customer can cancel anytime.
+                    </p>
                   </div>
                 </div>
               </div>
@@ -252,7 +257,7 @@ export default function AdminSubscriptions() {
               disabled={loading || !selectedUser || !programStartDate}
               className="w-full"
             >
-              {loading ? "Generating Invoices..." : "Generate 3-Invoice Billing Cycle"}
+              {loading ? "Starting Subscription..." : "Start Monthly Subscription"}
             </Button>
           </CardContent>
         </Card>

@@ -864,7 +864,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Generate Complete Program invoices (3 invoices billed in advance)
+  // Generate Complete Program subscription (monthly billing)
   app.post("/api/subscriptions/generate-complete-program", async (req, res) => {
     try {
       const { userId, clientName, clientEmail, programStartDate, monthlyAmount } = req.body;
@@ -886,15 +886,76 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       res.json({ 
         success: true, 
-        message: "Complete program invoices generated successfully",
+        message: "Monthly subscription started - first invoice generated",
         invoices: result.invoices
       });
 
     } catch (error: any) {
-      console.error("Error generating complete program invoices:", error);
+      console.error("Error generating subscription:", error);
       res.status(500).json({ 
         success: false, 
-        error: error.message || "Failed to generate complete program invoices" 
+        error: error.message || "Failed to start subscription" 
+      });
+    }
+  });
+
+  // Cancel subscription
+  app.post("/api/subscriptions/cancel", async (req, res) => {
+    try {
+      const { userId } = req.body;
+      
+      if (!userId) {
+        return res.status(400).json({ 
+          success: false, 
+          error: "Missing required field: userId" 
+        });
+      }
+
+      const result = await invoiceService.cancelSubscription(userId);
+
+      res.json(result);
+
+    } catch (error: any) {
+      console.error("Error cancelling subscription:", error);
+      res.status(500).json({ 
+        success: false, 
+        error: error.message || "Failed to cancel subscription" 
+      });
+    }
+  });
+
+  // Generate next monthly invoice manually
+  app.post("/api/subscriptions/generate-next-invoice", async (req, res) => {
+    try {
+      const { userId } = req.body;
+      
+      if (!userId) {
+        return res.status(400).json({ 
+          success: false, 
+          error: "Missing required field: userId" 
+        });
+      }
+
+      const result = await invoiceService.generateNextMonthlyInvoice(userId);
+
+      if (result) {
+        res.json({ 
+          success: true, 
+          message: "Next monthly invoice generated",
+          invoice: result
+        });
+      } else {
+        res.json({ 
+          success: false, 
+          message: "No invoice generated - subscription may be completed or inactive"
+        });
+      }
+
+    } catch (error: any) {
+      console.error("Error generating next invoice:", error);
+      res.status(500).json({ 
+        success: false, 
+        error: error.message || "Failed to generate next invoice" 
       });
     }
   });
