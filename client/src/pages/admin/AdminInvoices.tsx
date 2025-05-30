@@ -807,8 +807,30 @@ export default function AdminInvoices() {
                         <TableCell className="font-mono text-sm">{invoice.invoiceNumber}</TableCell>
                         <TableCell>{invoice.clientName}</TableCell>
                         <TableCell className="max-w-xs truncate">
-                          {invoice.description || 
-                           (invoice.invoiceType === 'subscription' ? `Complete Nutrition Program - Month ${invoice.billingCycle || 1} of 3` : 'Consultation')}
+                          <div className="space-y-1">
+                            <div>
+                              {invoice.description || 
+                               (invoice.invoiceType === 'subscription' ? `Complete Nutrition Program - Month ${invoice.billingCycle || 1} of 3` : 'Consultation')}
+                            </div>
+                            {invoice.isReissued && (
+                              <div className="flex items-center gap-1">
+                                <Badge variant="outline" className="text-xs bg-yellow-50 text-yellow-700 border-yellow-200">
+                                  <RefreshCw className="w-3 h-3 mr-1" />
+                                  Reissued
+                                </Badge>
+                                {invoice.reissueReason && (
+                                  <span className="text-xs text-muted-foreground">
+                                    • {invoice.reissueReason}
+                                  </span>
+                                )}
+                              </div>
+                            )}
+                            {invoice.originalAmount && invoice.originalAmount !== invoice.amount && (
+                              <div className="text-xs text-muted-foreground">
+                                Original: €{invoice.originalAmount.toFixed(2)}
+                              </div>
+                            )}
+                          </div>
                         </TableCell>
                         <TableCell>{formatCurrency(invoice.amount || invoice.totalAmount || 0)}</TableCell>
                         <TableCell>
