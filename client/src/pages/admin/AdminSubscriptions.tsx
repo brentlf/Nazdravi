@@ -34,13 +34,15 @@ export default function AdminSubscriptions() {
   ]);
 
   // Filter out admin users and get only client users
-  const completeProgramUsers = allCompleteProgramUsers?.filter(user => 
-    (user as any).role !== 'admin'
-  ) || [];
+  const completeProgramUsers = allCompleteProgramUsers?.filter(user => {
+    const userData = user as any;
+    console.log('Checking user:', userData.name, 'role:', userData.role, 'email:', userData.email);
+    // Filter out admin users - check both role field and email pattern
+    return userData.role !== 'admin' && !userData.email?.includes('admin') && userData.name !== 'Admin';
+  }) || [];
 
   console.log('All complete program users:', allCompleteProgramUsers?.length);
   console.log('Filtered complete program users:', completeProgramUsers?.length);
-  console.log('User roles:', allCompleteProgramUsers?.map(u => ({ name: (u as any).name, role: (u as any).role })));
 
   const formatDate = (date: any) => {
     if (!date) return 'Not set';
