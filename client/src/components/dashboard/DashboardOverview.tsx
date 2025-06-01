@@ -1,20 +1,23 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { 
-  Calendar, 
-  MessageCircle, 
-  TrendingDown, 
-  Droplets, 
+import {
+  Calendar,
+  MessageCircle,
+  TrendingDown,
+  Droplets,
   FileText,
   Target,
   Clock,
   Users,
   Receipt,
-  User
+  User,
 } from "lucide-react";
 import { Link } from "wouter";
-import { FloatingOrganic, DoodleConnector } from "@/components/ui/PageTransition";
+import {
+  FloatingOrganic,
+  DoodleConnector,
+} from "@/components/ui/PageTransition";
 import { useAuth } from "@/contexts/AuthContext";
 import { useFirestoreCollection } from "@/hooks/useFirestore";
 import { Appointment, Message, Progress } from "@/types";
@@ -26,63 +29,70 @@ import { where, orderBy, limit } from "firebase/firestore";
 export function DashboardOverview() {
   const { effectiveUser: user, isAdminViewingClient } = useAuth();
 
-
-
   // Try multiple approaches to find appointments - remove status filter first
-  const { data: appointmentsByUserId } = useFirestoreCollection<Appointment>("appointments", 
-    user?.uid ? [where("userId", "==", user.uid)] : []
+  const { data: appointmentsByUserId } = useFirestoreCollection<Appointment>(
+    "appointments",
+    user?.uid ? [where("userId", "==", user.uid)] : [],
   );
-  
-  const { data: appointmentsByEmail } = useFirestoreCollection<Appointment>("appointments", 
-    user?.email ? [where("email", "==", user.email)] : []
+
+  const { data: appointmentsByEmail } = useFirestoreCollection<Appointment>(
+    "appointments",
+    user?.email ? [where("email", "==", user.email)] : [],
   );
-  
+
   // Also try searching by user field (some might use this instead)
-  const { data: appointmentsByUser } = useFirestoreCollection<Appointment>("appointments", 
-    user?.uid ? [where("user", "==", user.uid)] : []
+  const { data: appointmentsByUser } = useFirestoreCollection<Appointment>(
+    "appointments",
+    user?.uid ? [where("user", "==", user.uid)] : [],
   );
 
   // Fetch messages from the user's chat room (remove orderBy temporarily)
   const chatRoom = user ? `${user.uid}_admin` : "";
-  const { data: messages } = useFirestoreCollection<Message>("messages", 
-    chatRoom ? [where("chatRoom", "==", chatRoom)] : []
+  const { data: messages } = useFirestoreCollection<Message>(
+    "messages",
+    chatRoom ? [where("chatRoom", "==", chatRoom)] : [],
   );
 
-  const { data: progressEntries } = useFirestoreCollection<Progress>("progress", 
-    user?.uid ? [where("userId", "==", user.uid)] : []
+  const { data: progressEntries } = useFirestoreCollection<Progress>(
+    "progress",
+    user?.uid ? [where("userId", "==", user.uid)] : [],
   );
 
   // Fetch client's invoices by multiple identifiers
-  const { data: invoicesByUserId } = useFirestoreCollection<Invoice>("invoices", 
-    user?.uid ? [where("userId", "==", user.uid)] : []
+  const { data: invoicesByUserId } = useFirestoreCollection<Invoice>(
+    "invoices",
+    user?.uid ? [where("userId", "==", user.uid)] : [],
   );
-  
-  const { data: invoicesByEmail } = useFirestoreCollection<Invoice>("invoices", 
-    user?.email ? [where("clientEmail", "==", user.email)] : []
+
+  const { data: invoicesByEmail } = useFirestoreCollection<Invoice>(
+    "invoices",
+    user?.email ? [where("clientEmail", "==", user.email)] : [],
   );
 
   // Combine and deduplicate invoices
   const allUserInvoices = [
     ...(invoicesByUserId || []),
-    ...(invoicesByEmail || [])
+    ...(invoicesByEmail || []),
   ];
-  
-  const invoices = allUserInvoices.filter((invoice, index, self) => 
-    index === self.findIndex(i => i.invoiceNumber === invoice.invoiceNumber)
+
+  const invoices = allUserInvoices.filter(
+    (invoice, index, self) =>
+      index ===
+      self.findIndex((i) => i.invoiceNumber === invoice.invoiceNumber),
   );
 
   // Combine all appointment sources
   const allAppointments = [
     ...(appointmentsByUserId || []),
     ...(appointmentsByEmail || []),
-    ...(appointmentsByUser || [])
+    ...(appointmentsByUser || []),
   ];
-  
+
   // Remove duplicates and get effective appointments
-  const effectiveAppointments = allAppointments.filter((apt, index, self) => 
-    index === self.findIndex(a => a.id === apt.id)
+  const effectiveAppointments = allAppointments.filter(
+    (apt, index, self) => index === self.findIndex((a) => a.id === apt.id),
   );
-  
+
   // Debug logging for appointments
   console.log("Dashboard Appointments Debug:", {
     userId: user?.uid,
@@ -90,69 +100,82 @@ export function DashboardOverview() {
     appointmentsByUserId: appointmentsByUserId?.length || 0,
     appointmentsByEmail: appointmentsByEmail?.length || 0,
     appointmentsByUser: appointmentsByUser?.length || 0,
-    totalAppointments: effectiveAppointments?.length || 0
+    totalAppointments: effectiveAppointments?.length || 0,
   });
 
   // Handle both date formats (Timestamp and string) and time field variations
-  const processedAppointments = effectiveAppointments?.map(apt => ({
+  const processedAppointments = effectiveAppointments?.map((apt) => ({
     ...apt,
-    date: (apt.date as any)?.seconds ? 
-      new Date((apt.date as any).seconds * 1000).toISOString().split('T')[0] : 
-      apt.date,
-    timeslot: apt.timeslot || (apt as any).time || "Time TBD"
+    date: (apt.date as any)?.seconds
+      ? new Date((apt.date as any).seconds * 1000).toISOString().split("T")[0]
+      : apt.date,
+    timeslot: apt.timeslot || (apt as any).time || "Time TBD",
   }));
 
   const nextAppointment = processedAppointments?.[0];
-  const unreadMessages = messages?.filter(msg => 
-    msg.toUser === user?.uid && (msg.read === false || msg.read === undefined)
-  ).length || 0;
+  const unreadMessages =
+    messages?.filter(
+      (msg) =>
+        msg.toUser === user?.uid &&
+        (msg.read === false || msg.read === undefined),
+    ).length || 0;
   const latestProgress = progressEntries?.[0];
-  const pendingInvoices = invoices?.filter(invoice => invoice.status === "pending").length || 0;
+  const pendingInvoices =
+    invoices?.filter((invoice) => invoice.status === "pending").length || 0;
 
-
-  
   // Calculate weight change this month
   const currentMonth = new Date().toISOString().slice(0, 7);
-  const thisMonthEntries = progressEntries?.filter(entry => 
-    entry.date.startsWith(currentMonth) && entry.weightKg
-  ) || [];
-  
-  const weightChange = thisMonthEntries.length >= 2 
-    ? (thisMonthEntries[0].weightKg || 0) - (thisMonthEntries[thisMonthEntries.length - 1].weightKg || 0)
-    : 0;
+  const thisMonthEntries =
+    progressEntries?.filter(
+      (entry) => entry.date.startsWith(currentMonth) && entry.weightKg,
+    ) || [];
+
+  const weightChange =
+    thisMonthEntries.length >= 2
+      ? (thisMonthEntries[0].weightKg || 0) -
+        (thisMonthEntries[thisMonthEntries.length - 1].weightKg || 0)
+      : 0;
 
   const quickStats = [
     {
       title: "Next Appointment",
-      value: nextAppointment ? 
-        new Date(nextAppointment.date).toLocaleDateString() : 
-        "None scheduled",
+      value: nextAppointment
+        ? new Date(nextAppointment.date).toLocaleDateString()
+        : "None scheduled",
       subtitle: nextAppointment?.timeslot || "",
       icon: Calendar,
       color: "text-blue-600",
       bgColor: "bg-blue-50 dark:bg-blue-900/20",
       action: nextAppointment ? "View Details" : "Book Now",
-      href: "/dashboard/appointments"
+      href: "/dashboard/appointments",
     },
     {
       title: "Weight Progress",
-      value: weightChange !== 0 ? `${weightChange > 0 ? '+' : ''}${weightChange.toFixed(1)}kg` : "No data",
+      value:
+        weightChange !== 0
+          ? `${weightChange > 0 ? "+" : ""}${weightChange.toFixed(1)}kg`
+          : "No data",
       subtitle: "This month",
       icon: TrendingDown,
       color: weightChange < 0 ? "text-green-600" : "text-gray-600",
-      bgColor: weightChange < 0 ? "bg-green-50 dark:bg-green-900/20" : "bg-gray-50 dark:bg-gray-800",
+      bgColor:
+        weightChange < 0
+          ? "bg-green-50 dark:bg-green-900/20"
+          : "bg-gray-50 dark:bg-gray-800",
       action: "View Progress",
-      href: "/dashboard/progress"
+      href: "/dashboard/progress",
     },
     {
       title: "Water Today",
-      value: latestProgress?.waterLitres ? `${latestProgress.waterLitres}L` : "0L",
+      value: latestProgress?.waterLitres
+        ? `${latestProgress.waterLitres}L`
+        : "0L",
       subtitle: "Goal: 2.5L",
       icon: Droplets,
       color: "text-blue-500",
       bgColor: "bg-blue-50 dark:bg-blue-900/20",
       action: "Update",
-      href: "/dashboard/progress"
+      href: "/dashboard/progress",
     },
     {
       title: "Messages",
@@ -162,7 +185,7 @@ export function DashboardOverview() {
       color: "text-primary-600",
       bgColor: "bg-primary-50 dark:bg-primary-900/20",
       action: "View All",
-      href: "/dashboard/messages"
+      href: "/dashboard/messages",
     },
     {
       title: "Invoices",
@@ -172,53 +195,53 @@ export function DashboardOverview() {
       color: "text-orange-600",
       bgColor: "bg-orange-50 dark:bg-orange-900/20",
       action: "Pay Now",
-      href: "/dashboard/invoices"
-    }
+      href: "/dashboard/invoices",
+    },
   ];
 
   const quickActions = [
-    {
+    /*{
       title: "Log Progress",
       description: "Update your weight and water intake",
       icon: Target,
       href: "/dashboard/progress",
       color: "bg-green-500 hover:bg-green-600"
-    },
+    },*/
     {
       title: "Book Appointment",
       description: "Schedule your next consultation",
       icon: Calendar,
       href: "/dashboard/appointments",
-      color: "bg-blue-500 hover:bg-blue-600"
+      color: "bg-blue-500 hover:bg-blue-600",
     },
     {
       title: "Send Message",
       description: "Ask your nutritionist a question",
       icon: MessageCircle,
       href: "/dashboard/messages",
-      color: "bg-primary-500 hover:bg-primary-600"
+      color: "bg-primary-500 hover:bg-primary-600",
     },
     {
       title: "View Plan",
       description: "Access your nutrition plan",
       icon: FileText,
       href: "/dashboard/plan",
-      color: "bg-purple-500 hover:bg-purple-600"
+      color: "bg-purple-500 hover:bg-purple-600",
     },
-    {
+    /*{
       title: "Pay Invoices",
       description: "View and pay outstanding invoices",
       icon: Receipt,
       href: "/dashboard/invoices",
       color: "bg-orange-500 hover:bg-orange-600"
-    },
+    },*/
     {
       title: "Profile Settings",
       description: "Manage your account and health info",
       icon: User,
       href: "/dashboard/profile",
-      color: "bg-gray-500 hover:bg-gray-600"
-    }
+      color: "bg-gray-500 hover:bg-gray-600",
+    },
   ];
 
   return (
@@ -232,20 +255,28 @@ export function DashboardOverview() {
             </p>
           </div>
         )}
-        
+
         <div className="relative z-10">
           <div className="doodle-arrow mb-2">
-            <h1 className="font-display text-3xl font-bold mb-2 handwritten-accent">Welcome back, {user?.name}!</h1>
+            <h1 className="font-display text-3xl font-bold mb-2 handwritten-accent">
+              Welcome back, {user?.name}!
+            </h1>
           </div>
-          <p className="serif-body text-xl text-primary-100 leading-relaxed">Here's your nutrition journey overview</p>
+          <p className="serif-body text-xl text-primary-100 leading-relaxed">
+            Here's your nutrition journey overview
+          </p>
         </div>
-        
+
         {/* Organic background decorations */}
         <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-white/10 to-transparent blob-shape"></div>
         <div className="absolute bottom-0 left-0 w-24 h-24 bg-gradient-to-br from-accent/20 to-transparent blob-shape"></div>
-        
+
         {/* Floating elements */}
-        <FloatingOrganic className="absolute -top-4 -right-4 opacity-20" size="medium" delay={1} />
+        <FloatingOrganic
+          className="absolute -top-4 -right-4 opacity-20"
+          size="medium"
+          delay={1}
+        />
       </div>
 
       {/* Service Plan Status Widget */}
@@ -259,18 +290,32 @@ export function DashboardOverview() {
         {quickStats.map((stat, index) => {
           const Icon = stat.icon;
           return (
-            <Card key={index} className="hover:shadow-lg transition-shadow duration-200">
+            <Card
+              key={index}
+              className="hover:shadow-lg transition-shadow duration-200"
+            >
               <CardContent className="p-6">
                 <div className="flex items-center justify-between mb-4">
-                  <h3 className="font-semibold text-sm text-muted-foreground">{stat.title}</h3>
-                  <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${stat.bgColor}`}>
+                  <h3 className="font-semibold text-sm text-muted-foreground">
+                    {stat.title}
+                  </h3>
+                  <div
+                    className={`w-10 h-10 rounded-lg flex items-center justify-center ${stat.bgColor}`}
+                  >
                     <Icon className={`w-5 h-5 ${stat.color}`} />
                   </div>
                 </div>
                 <div className="space-y-2">
                   <p className="text-2xl font-bold">{stat.value}</p>
-                  <p className="text-sm text-muted-foreground">{stat.subtitle}</p>
-                  <Button size="sm" variant="outline" asChild className="w-full">
+                  <p className="text-sm text-muted-foreground">
+                    {stat.subtitle}
+                  </p>
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    asChild
+                    className="w-full"
+                  >
                     <Link href={stat.href}>{stat.action}</Link>
                   </Button>
                 </div>
@@ -298,15 +343,22 @@ export function DashboardOverview() {
               {messages && messages.length > 0 ? (
                 <div className="h-full overflow-y-auto space-y-4 pr-2">
                   {messages.slice(0, 6).map((message) => (
-                    <div key={message.id} className="flex items-start space-x-3 p-3 bg-gray-50 dark:bg-gray-800 rounded-lg">
+                    <div
+                      key={message.id}
+                      className="flex items-start space-x-3 p-3 bg-gray-50 dark:bg-gray-800 rounded-lg"
+                    >
                       <div className="w-8 h-8 bg-primary-100 dark:bg-primary-900/30 rounded-full flex items-center justify-center">
                         <MessageCircle className="w-4 h-4 text-primary-600 dark:text-primary-400" />
                       </div>
                       <div className="flex-1 min-w-0">
                         <p className="text-sm font-medium">
-                          {message.fromUser === user?.uid ? "You" : "Nutritionist"}
+                          {message.fromUser === user?.uid
+                            ? "You"
+                            : "Nutritionist"}
                         </p>
-                        <p className="text-sm text-muted-foreground truncate">{message.text}</p>
+                        <p className="text-sm text-muted-foreground truncate">
+                          {message.text}
+                        </p>
                         <p className="text-xs text-muted-foreground mt-1">
                           {new Date(message.createdAt).toLocaleDateString()}
                         </p>
@@ -336,7 +388,7 @@ export function DashboardOverview() {
               <CardTitle>Quick Actions</CardTitle>
             </CardHeader>
             <CardContent className="h-80">
-              <div className="h-full overflow-y-auto space-y-3 pr-2">
+              <div className="h-full overflow-y-auto space-y-1 pr-1">
                 {quickActions.map((action, index) => {
                   const Icon = action.icon;
                   return (
@@ -347,12 +399,16 @@ export function DashboardOverview() {
                       asChild
                     >
                       <Link href={action.href}>
-                        <div className={`w-8 h-8 rounded-lg flex items-center justify-center mr-3 ${action.color}`}>
+                        <div
+                          className={`w-8 h-8 rounded-lg flex items-center justify-center mr-3 ${action.color}`}
+                        >
                           <Icon className="w-4 h-4 text-white" />
                         </div>
                         <div className="text-left">
                           <p className="font-medium">{action.title}</p>
-                          <p className="text-xs text-muted-foreground">{action.description}</p>
+                          <p className="text-xs text-muted-foreground">
+                            {action.description}
+                          </p>
                         </div>
                       </Link>
                     </Button>
@@ -375,28 +431,49 @@ export function DashboardOverview() {
         <CardContent>
           <div className="grid md:grid-cols-3 gap-4">
             <div className="p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
-              <h4 className="font-semibold text-blue-800 dark:text-blue-200 mb-2">Hydration</h4>
-              <p className="text-sm text-blue-600 dark:text-blue-300">Aim for 2.5L daily</p>
+              <h4 className="font-semibold text-blue-800 dark:text-blue-200 mb-2">
+                Hydration
+              </h4>
+              <p className="text-sm text-blue-600 dark:text-blue-300">
+                Aim for 2.5L daily
+              </p>
               <div className="mt-2">
-                <Badge variant="outline" className="border-blue-200 text-blue-700">
+                <Badge
+                  variant="outline"
+                  className="border-blue-200 text-blue-700"
+                >
                   Daily Goal
                 </Badge>
               </div>
             </div>
             <div className="p-4 bg-green-50 dark:bg-green-900/20 rounded-lg">
-              <h4 className="font-semibold text-green-800 dark:text-green-200 mb-2">Exercise</h4>
-              <p className="text-sm text-green-600 dark:text-green-300">30 min walks 3x week</p>
+              <h4 className="font-semibold text-green-800 dark:text-green-200 mb-2">
+                Exercise
+              </h4>
+              <p className="text-sm text-green-600 dark:text-green-300">
+                30 min walks 3x week
+              </p>
               <div className="mt-2">
-                <Badge variant="outline" className="border-green-200 text-green-700">
+                <Badge
+                  variant="outline"
+                  className="border-green-200 text-green-700"
+                >
                   Weekly Goal
                 </Badge>
               </div>
             </div>
             <div className="p-4 bg-purple-50 dark:bg-purple-900/20 rounded-lg">
-              <h4 className="font-semibold text-purple-800 dark:text-purple-200 mb-2">Meal Prep</h4>
-              <p className="text-sm text-purple-600 dark:text-purple-300">Prep Sunday meals</p>
+              <h4 className="font-semibold text-purple-800 dark:text-purple-200 mb-2">
+                Meal Prep
+              </h4>
+              <p className="text-sm text-purple-600 dark:text-purple-300">
+                Prep Sunday meals
+              </p>
               <div className="mt-2">
-                <Badge variant="outline" className="border-purple-200 text-purple-700">
+                <Badge
+                  variant="outline"
+                  className="border-purple-200 text-purple-700"
+                >
                   Weekly Task
                 </Badge>
               </div>

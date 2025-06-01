@@ -122,7 +122,7 @@ export default function Home() {
                   variant="outline"
                   size="lg"
                   asChild
-                  className="border-2 border-primary/30 hover:border-primary hover:bg-blue-500/40 bg-blue-200/70 font-serif-elegant warm-glow"
+                  className="border-2 border-primary/30 hover:border-primary hover:bg-blue-500/30 bg-blue-200/70 font-serif-elegant warm-glow"
                 >
                   <Link href="/about">More about Vee</Link>
                 </Button>
@@ -130,7 +130,7 @@ export default function Home() {
                   variant="outline"
                   size="lg"
                   asChild
-                  className="border-2 border-primary/30 hover:border-primary hover:bg-primary/30 font-serif-elegant warm-glow"
+                  className="border-2 border-primary/30 hover:border-primary hover:bg-blue-500/30 bg-blue-200/70 font-serif-elegant warm-glow"
                 >
                   <Link href="/services">Explore Services</Link>
                 </Button>

@@ -8,38 +8,45 @@ import { Badge } from "@/components/ui/badge";
 import { useFirestoreCollection } from "@/hooks/useFirestore";
 import { BlogPost } from "@/types";
 import { where, orderBy } from "firebase/firestore";
-import { FloatingOrganic, DoodleConnector } from "@/components/ui/PageTransition";
+import {
+  FloatingOrganic,
+  DoodleConnector,
+} from "@/components/ui/PageTransition";
 export default function Blog() {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState<string>("");
 
   // Fetch from the correct "blogs" collection
   const { data: blogPosts, loading } = useFirestoreCollection<any>("blogs");
-  
+
   // Debug: Log the blog data
   console.log("Blog posts from 'blogs' collection:", blogPosts);
 
   // Extract categories from blog posts (using 'category' field from Firebase)
-  const allCategories = blogPosts?.map(post => post.category).filter(Boolean) || [];
+  const allCategories =
+    blogPosts?.map((post) => post.category).filter(Boolean) || [];
   const uniqueCategories = Array.from(new Set(allCategories));
 
   // Filter blog posts based on search and category
-  const filteredPosts = blogPosts?.filter(post => {
-    const matchesSearch = !searchTerm || 
-      post.title?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      post.excerpt?.toLowerCase().includes(searchTerm.toLowerCase());
-    
-    const matchesCategory = !selectedCategory || post.category === selectedCategory;
-    
-    return matchesSearch && matchesCategory;
-  }) || [];
+  const filteredPosts =
+    blogPosts?.filter((post) => {
+      const matchesSearch =
+        !searchTerm ||
+        post.title?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        post.excerpt?.toLowerCase().includes(searchTerm.toLowerCase());
+
+      const matchesCategory =
+        !selectedCategory || post.category === selectedCategory;
+
+      return matchesSearch && matchesCategory;
+    }) || [];
 
   // Use only authentic data from Firebase
   const postsToShow = filteredPosts;
 
   function calculateReadTime(content: string): number {
     const wordsPerMinute = 200;
-    const wordCount = content.split(' ').length;
+    const wordCount = content.split(" ").length;
     return Math.ceil(wordCount / wordsPerMinute) || 5; // Default to 5 min for excerpts
   }
 
@@ -69,7 +76,10 @@ export default function Blog() {
       {/* Hero Section */}
       <section className="container mx-auto px-4 mb-16 relative">
         <div className="text-center max-w-4xl mx-auto">
-          <Badge variant="secondary" className="mb-4 text-base px-4 py-2 floating-element">
+          <Badge
+            variant="secondary"
+            className="mb-4 text-base px-4 py-2 floating-element"
+          >
             Evidence-Based Nutrition Insights
           </Badge>
           <div className="doodle-arrow mb-6">
@@ -78,11 +88,10 @@ export default function Blog() {
             </h1>
           </div>
           <p className="serif-body text-xl text-muted-foreground mb-8 leading-relaxed max-w-3xl mx-auto">
-            Expert insights, practical tips, and evidence-based guidance to support your nutrition journey with Mediterranean wisdom and modern science.
+            Expert insights, practical tips, and evidence-based guidance to
+            support your nutrition journey with Mediterranean wisdom and modern
+            science.
           </p>
-          
-          {/* Connecting doodle */}
-          <DoodleConnector direction="down" className="absolute -bottom-8 left-1/2 transform -translate-x-1/2 w-32" />
         </div>
       </section>
 
@@ -132,8 +141,12 @@ export default function Blog() {
                 <Card className="hover:shadow-xl transition-all duration-300 hover:-translate-y-2 overflow-hidden h-full flex flex-col">
                   {/* Featured Image */}
                   <div className="relative overflow-hidden">
-                    <img 
-                      src={post.featuredImage || post.image || "https://images.unsplash.com/photo-1498837167922-ddd27525d352?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=400"} 
+                    <img
+                      src={
+                        post.featuredImage ||
+                        post.image ||
+                        "https://images.unsplash.com/photo-1498837167922-ddd27525d352?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=400"
+                      }
                       alt={post.title}
                       className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300"
                     />
@@ -149,15 +162,17 @@ export default function Blog() {
                     {/* Meta information */}
                     <div className="flex items-center text-sm text-muted-foreground mb-3">
                       <Calendar className="w-4 h-4 mr-1" />
-                      <span>{post.date || 'Recent'}</span>
+                      <span>{post.date || "Recent"}</span>
                       <span className="mx-2">•</span>
                       <Clock className="w-4 h-4 mr-1" />
-                      <span>{calculateReadTime(post.excerpt || '')} min read</span>
+                      <span>
+                        {calculateReadTime(post.excerpt || "")} min read
+                      </span>
                     </div>
 
                     {/* Title */}
                     <h2 className="text-xl font-semibold mb-3 group-hover:text-primary-600 transition-colors line-clamp-2">
-                      <Link 
+                      <Link
                         href={`/blog/post?id=${post.id}`}
                         className="hover:text-primary-600 transition-colors"
                       >
@@ -180,7 +195,7 @@ export default function Blog() {
                         )}
                       </div>
                       <Button variant="ghost" size="sm" asChild>
-                        <Link 
+                        <Link
                           href={`/blog/post?id=${post.id}`}
                           className="group/btn flex items-center"
                         >
@@ -204,7 +219,12 @@ export default function Blog() {
             <p className="text-muted-foreground mb-6">
               Try adjusting your search terms or clearing the filters
             </p>
-            <Button onClick={() => { setSearchTerm(""); setSelectedCategory(""); }}>
+            <Button
+              onClick={() => {
+                setSearchTerm("");
+                setSelectedCategory("");
+              }}
+            >
               Clear Filters
             </Button>
           </div>
@@ -215,9 +235,7 @@ export default function Blog() {
       <section className="container mx-auto px-4 mt-20">
         <Card className="bg-primary text-white">
           <CardContent className="p-12 text-center">
-            <h2 className="text-3xl font-bold mb-4">
-              Never miss an article
-            </h2>
+            <h2 className="text-3xl font-bold mb-4">Never miss an article</h2>
             <p className="text-primary-100 mb-8 max-w-2xl mx-auto">
               Stay updated with the latest nutrition tips and health insights
             </p>
@@ -227,12 +245,28 @@ export default function Blog() {
           </CardContent>
         </Card>
       </section>
-      
+
       {/* Floating background elements */}
-      <FloatingOrganic className="absolute top-20 -right-20 opacity-15" size="large" delay={1} />
-      <FloatingOrganic className="absolute bottom-20 -left-20 opacity-15" size="large" delay={3} />
-      <FloatingOrganic className="absolute top-1/2 right-10 opacity-10" size="medium" delay={2} />
-      <FloatingOrganic className="absolute bottom-1/3 left-10 opacity-10" size="medium" delay={4} />
+      <FloatingOrganic
+        className="absolute top-20 -right-20 opacity-15"
+        size="large"
+        delay={1}
+      />
+      <FloatingOrganic
+        className="absolute bottom-20 -left-20 opacity-15"
+        size="large"
+        delay={3}
+      />
+      <FloatingOrganic
+        className="absolute top-1/2 right-10 opacity-10"
+        size="medium"
+        delay={2}
+      />
+      <FloatingOrganic
+        className="absolute bottom-1/3 left-10 opacity-10"
+        size="medium"
+        delay={4}
+      />
     </div>
   );
 }

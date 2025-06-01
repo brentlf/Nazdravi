@@ -217,21 +217,10 @@ export default function Services() {
                 </div>
               );
             })}
-
-            {/* Connecting doodle lines between cards */}
-            <DoodleConnector
-              direction="right"
-              className="absolute top-1/2 left-1/3 transform -translate-y-1/2 w-16 hidden md:block"
-            />
-            <DoodleConnector
-              direction="right"
-              className="absolute top-1/2 left-2/3 transform -translate-y-1/2 w-16 hidden md:block"
-            />
           </div>
         </section>
 
-        {/*
-        Additional Services 
+        {/*Additional Services 
         <section className="mb-6">
           <h2 className="font-display text-xl text-center mb-4">Additional Options</h2>
           
@@ -250,9 +239,9 @@ export default function Services() {
               );
             })}
           </div>
-        </section>
-*/}
-        {/* CTA Section */}
+        </section>*/}
+
+        {/* CTA Section 
         <section className="text-center">
           <div className="max-w-lg mx-auto">
             <h2 className="font-display text-2xl font-bold mb-4">
@@ -265,7 +254,7 @@ export default function Services() {
               <Link href="/appointment">Book Consultation</Link>
             </Button>
           </div>
-        </section>
+        </section>*/}
       </div>
 
       {/* Floating background elements */}

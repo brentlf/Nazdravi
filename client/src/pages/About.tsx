@@ -58,103 +58,115 @@ export default function About() {
   ];
 
   return (
-    <div className="min-h-screen py-10 bg-background relative overflow-hidden page-content">
-      <div className="container mx-auto px-4 relative z-10">
-        {/* Hero Section */}
-        <section className="mb-10 relative">
-          <div className="max-w-3xl mx-auto text-center">
-            <h1 className="font-display text-3xl md:text-4xl font-bold mb-4">
-              Hi, I'm Vee!
-            </h1>
-            <p className="text-lg text-muted-foreground mb-6 max-w-2xl mx-auto">
-              Your dedicated nutrition partner. Let's transform your relationship with food together.
-            </p>
-          </div>
-        </section>
+    <div className="min-h-screen bg-background page-content">
+      {/* Hero Section with Background Image */}
+      <section className="relative h-[70vh] flex items-center justify-center">
+        {/* Background Image */}
+        <div
+          className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+          style={{
+            backgroundImage: `url('https://images.unsplash.com/photo-1542838132-92c53300491e?ixlib=rb-4.0.3&auto=format&fit=crop&w=2074&q=80')`,
+          }}
+        >
+          {/* Overlay */}
+          <div className="absolute inset-0 bg-black/30"></div>
+        </div>
+        
+        {/* Hero Content */}
+        <div className="relative z-10 text-center text-white max-w-4xl mx-auto px-6">
+          <h1 className="text-5xl md:text-7xl font-bold mb-6 tracking-wide">
+            REGISTERED DIETITIAN
+          </h1>
+          <p className="text-xl md:text-2xl font-light">
+            Hi! I'm Vee, a Registered Dietitian with the HPCSA and HCPC
+          </p>
+        </div>
+      </section>
 
-        {/* About Section */}
-        <section className="mb-8">
-          <div className="grid md:grid-cols-2 gap-6 items-center max-w-4xl mx-auto">
-            <div className="order-2 md:order-1">
-              <img 
-                src={aboutMeImage} 
-                alt="Vee - Your nutrition partner"
-                className="w-full h-64 object-cover rounded-lg shadow-lg"
-              />
+      {/* Main Content Grid */}
+      <section className="py-16">
+        <div className="max-w-7xl mx-auto px-6">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
+            {/* Left Image */}
+            <div className="h-96 bg-cover bg-center rounded-lg shadow-lg"
+                 style={{
+                   backgroundImage: `url('https://images.unsplash.com/photo-1586201375761-83865001e31c?ixlib=rb-4.0.3&auto=format&fit=crop&w=987&q=80')`,
+                 }}>
             </div>
 
-            <div className="space-y-4 order-1 md:order-2">
-              <h2 className="font-display text-2xl font-bold">Your Wellness Partner</h2>
+            {/* Center Content */}
+            <div className="flex flex-col justify-center space-y-6">
+              <h2 className="text-3xl font-bold text-center">Mother and Baby Health</h2>
               
-              <p className="text-muted-foreground">
-                Evidence-based nutrition science with real-world practicality. Let's create sustainable habits that fit your life.
-              </p>
-
-              <div className="grid grid-cols-2 gap-2">
-                {credentials.map((credential, index) => (
-                  <div key={index} className="flex items-center gap-2">
-                    <CheckCircle className="w-4 h-4 text-green-500" />
-                    <span className="text-sm">{credential}</span>
-                  </div>
-                ))}
+              <div className="space-y-4 text-center">
+                <div className="space-y-2">
+                  <h3 className="font-semibold text-lg">MSc Clinical Nutrition</h3>
+                  <p className="text-muted-foreground">Advanced expertise in clinical nutrition science</p>
+                </div>
+                
+                <div className="space-y-2">
+                  <h3 className="font-semibold text-lg">Registered Dietitian</h3>
+                  <p className="text-muted-foreground">HPCSA and HCPC certified professional</p>
+                </div>
+                
+                <div className="space-y-2">
+                  <h3 className="font-semibold text-lg">Specialized Care</h3>
+                  <p className="text-muted-foreground">Focus on maternal and infant nutrition</p>
+                </div>
               </div>
             </div>
-          </div>
-        </section>
 
-        {/* Values Section */}
-        <section className="mb-8">
-          <h2 className="font-display text-2xl text-center mb-6">My Approach</h2>
+            {/* Right Image */}
+            <div className="h-96 bg-cover bg-center rounded-lg shadow-lg"
+                 style={{
+                   backgroundImage: `url('https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80')`,
+                 }}>
+            </div>
+          </div>
+
+          {/* Bottom Images Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            {/* Left Image */}
+            <div className="h-80 bg-cover bg-center rounded-lg shadow-lg"
+                 style={{
+                   backgroundImage: `url('https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80')`,
+                 }}>
+            </div>
+
+            {/* Right Image */}
+            <div className="h-80 bg-cover bg-center rounded-lg shadow-lg"
+                 style={{
+                   backgroundImage: `url('https://images.unsplash.com/photo-1559181567-c3190ca9959b?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80')`,
+                 }}>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Personal Story Section */}
+      <section className="py-16 bg-muted/20">
+        <div className="max-w-4xl mx-auto px-6 text-center">
+          <h2 className="text-3xl font-bold mb-8">My Journey</h2>
+          <div className="space-y-6 text-lg leading-relaxed">
+            <p>
+              My passion for nutrition began with my own journey to understanding how food impacts our bodies, 
+              minds, and overall wellbeing. With advanced training in clinical nutrition and years of practice, 
+              I've dedicated my career to helping individuals and families build sustainable, healthy relationships with food.
+            </p>
+            <p>
+              I specialize in mother and baby health, understanding the unique nutritional needs during pregnancy, 
+              breastfeeding, and early childhood development. Every client receives personalized care based on 
+              evidence-based nutrition science combined with practical, real-world solutions.
+            </p>
+          </div>
           
-          <div className="grid md:grid-cols-4 gap-4 max-w-4xl mx-auto">
-            {values.map((value, index) => {
-              const Icon = value.icon;
-              return (
-                <Card key={index} className="mediterranean-card floating-element">
-                  <CardContent className="p-4 text-center">
-                    <Icon className="w-6 h-6 text-primary mx-auto mb-2" />
-                    <h3 className="font-display text-sm font-bold mb-1">{value.title}</h3>
-                    <p className="text-xs text-muted-foreground">{value.description}</p>
-                  </CardContent>
-                </Card>
-              );
-            })}
-          </div>
-        </section>
-
-        {/* CTA Section */}
-        <section className="text-center">
-          <div className="max-w-lg mx-auto">
-            <h2 className="font-display text-2xl font-bold mb-4">Ready to Start?</h2>
-            <p className="text-muted-foreground mb-6">Let's create a nutrition plan that works for you.</p>
-            <Button asChild className="w-full">
-              <Link href="/appointment">Book Consultation</Link>
+          <div className="mt-12">
+            <Button asChild size="lg" className="px-8 py-4">
+              <Link href="/appointment">Start Your Journey</Link>
             </Button>
           </div>
-        </section>
-      </div>
-
-      {/* Floating background elements */}
-      <FloatingOrganic
-        className="absolute top-20 -right-20 opacity-15"
-        size="large"
-        delay={1}
-      />
-      <FloatingOrganic
-        className="absolute bottom-20 -left-20 opacity-15"
-        size="large"
-        delay={3}
-      />
-      <FloatingOrganic
-        className="absolute top-1/2 right-10 opacity-10"
-        size="medium"
-        delay={2}
-      />
-      <FloatingOrganic
-        className="absolute bottom-1/3 left-10 opacity-10"
-        size="medium"
-        delay={4}
-      />
+        </div>
+      </section>
     </div>
   );
 }
