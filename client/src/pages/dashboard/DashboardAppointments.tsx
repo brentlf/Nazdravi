@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { Calendar, Clock, Plus, CheckCircle, XCircle, AlertCircle, Shield, ArrowLeft, Edit, Trash2, FileText, ChevronDown, ChevronUp, ExternalLink, Video } from "lucide-react";
+import { Calendar, Clock, Plus, CheckCircle, XCircle, AlertCircle, Shield, ArrowLeft, Edit, Trash2, FileText, ChevronDown, ChevronUp, ExternalLink, Video, Crown, CreditCard, DollarSign } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -36,7 +36,10 @@ import {
 } from "@/components/ui/dialog";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/contexts/AuthContext";
-import { useFirestoreCollection, useFirestoreActions } from "@/hooks/useFirestore";
+import { useFirestoreCollection, useFirestoreActions, useFirestoreDocument } from "@/hooks/useFirestore";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { doc, updateDoc } from "firebase/firestore";
+import { db } from "@/lib/firebase";
 import { Appointment } from "@/types";
 import { where, orderBy } from "firebase/firestore";
 import { useAvailableSlots } from "@/hooks/useAvailableSlots";
@@ -51,6 +54,9 @@ const appointmentSchema = z.object({
   goals: z.string().min(10, "Please describe your goals (minimum 10 characters)"),
   date: z.string().min(1, "Please select a preferred date"),
   timeslot: z.string().min(1, "Please select a time slot"),
+  servicePlan: z.enum(["pay-as-you-go", "complete-program"], {
+    required_error: "Please select a service plan",
+  }),
 });
 
 // Pre-evaluation form schema - matches main dashboard comprehensive version
@@ -172,6 +178,9 @@ export default function DashboardAppointments() {
   // Use userId data if available, otherwise fall back to email data
   const effectiveAppointments = appointments?.length ? appointments : appointmentsByEmail;
 
+  // Fetch user data for service plan information
+  const { data: userData } = useFirestoreDocument("users", user?.uid || "");
+
   const form = useForm<AppointmentFormData>({
     resolver: zodResolver(appointmentSchema),
     defaultValues: {
@@ -179,8 +188,21 @@ export default function DashboardAppointments() {
       goals: "",
       date: "",
       timeslot: "",
+      servicePlan: userData?.servicePlan || "pay-as-you-go",
     },
   });
+
+  // Update form values when user data loads
+  useEffect(() => {
+    if (userData) {
+      // If user has complete program, always set it to complete-program
+      if (userData.servicePlan === "complete-program") {
+        form.setValue("servicePlan", "complete-program");
+      } else {
+        form.setValue("servicePlan", userData.servicePlan || "pay-as-you-go");
+      }
+    }
+  }, [userData, form]);
 
   const preEvaluationForm = useForm<PreEvaluationFormData>({
     resolver: zodResolver(preEvaluationSchema),
@@ -1486,6 +1508,126 @@ export default function DashboardAppointments() {
                           <SelectItem value="Follow-up">Follow-up Consultation</SelectItem>
                         </SelectContent>
                       </Select>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                {/* Service Plan Selection */}
+                <FormField
+                  control={form.control}
+                  name="servicePlan"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Service Plan *</FormLabel>
+                      <div className="space-y-3">
+                        {/* Complete Program Option */}
+                        <div className="relative">
+                          <div 
+                            className={`
+                              border-2 rounded-lg p-4 cursor-pointer transition-all duration-200
+                              ${field.value === "complete-program" 
+                                ? "border-green-500 bg-green-50 dark:bg-green-900/20" 
+                                : "border-gray-200 dark:border-gray-600 hover:border-gray-300"
+                              }
+                              ${userData?.servicePlan === "complete-program" 
+                                ? "ring-2 ring-green-500/30" 
+                                : ""
+                              }
+                            `}
+                            onClick={() => {
+                              if (userData?.servicePlan === "complete-program") {
+                                field.onChange("complete-program");
+                              }
+                            }}
+                          >
+                            <div className="flex items-center justify-between">
+                              <div className="flex items-center space-x-3">
+                                <div className={`
+                                  w-4 h-4 rounded-full border-2 flex items-center justify-center
+                                  ${field.value === "complete-program" 
+                                    ? "border-green-500 bg-green-500" 
+                                    : "border-gray-300"
+                                  }
+                                `}>
+                                  {field.value === "complete-program" && (
+                                    <div className="w-2 h-2 bg-white rounded-full"></div>
+                                  )}
+                                </div>
+                                <div>
+                                  <p className="font-medium text-gray-900 dark:text-gray-100">Complete Program</p>
+                                  <p className="text-sm text-gray-600 dark:text-gray-400">
+                                    {userData?.servicePlan === "complete-program" 
+                                      ? "Active - No additional billing"
+                                      : "Upgrade required - €299/month"
+                                    }
+                                  </p>
+                                </div>
+                              </div>
+                              {userData?.servicePlan === "complete-program" && (
+                                <div className="bg-green-500 text-white px-2 py-1 rounded text-xs font-medium">
+                                  Active
+                                </div>
+                              )}
+                            </div>
+                            
+                            {userData?.servicePlan !== "complete-program" && (
+                              <Alert className="mt-3 border-blue-200 bg-blue-50 dark:bg-blue-900/20">
+                                <AlertDescription className="text-sm text-blue-800 dark:text-blue-200">
+                                  Upgrade to Complete Program for unlimited consultations, personalized meal plans, and priority support.
+                                </AlertDescription>
+                              </Alert>
+                            )}
+                          </div>
+                        </div>
+
+                        {/* Pay-as-you-go Option */}
+                        <div className="relative">
+                          <div 
+                            className={`
+                              border-2 rounded-lg p-4 cursor-pointer transition-all duration-200
+                              ${field.value === "pay-as-you-go" 
+                                ? "border-blue-500 bg-blue-50 dark:bg-blue-900/20" 
+                                : "border-gray-200 dark:border-gray-600 hover:border-gray-300"
+                              }
+                              ${userData?.servicePlan === "complete-program" 
+                                ? "opacity-50 cursor-not-allowed" 
+                                : ""
+                              }
+                            `}
+                            onClick={() => {
+                              if (userData?.servicePlan !== "complete-program") {
+                                field.onChange("pay-as-you-go");
+                              }
+                            }}
+                          >
+                            <div className="flex items-center justify-between">
+                              <div className="flex items-center space-x-3">
+                                <div className={`
+                                  w-4 h-4 rounded-full border-2 flex items-center justify-center
+                                  ${field.value === "pay-as-you-go" 
+                                    ? "border-blue-500 bg-blue-500" 
+                                    : "border-gray-300"
+                                  }
+                                `}>
+                                  {field.value === "pay-as-you-go" && (
+                                    <div className="w-2 h-2 bg-white rounded-full"></div>
+                                  )}
+                                </div>
+                                <div>
+                                  <p className="font-medium text-gray-900 dark:text-gray-100">Pay-as-you-go</p>
+                                  <p className="text-sm text-gray-600 dark:text-gray-400">
+                                    {userData?.servicePlan === "complete-program" 
+                                      ? "Not available with Complete Program"
+                                      : "Per consultation billing - €89/session"
+                                    }
+                                  </p>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
                       <FormMessage />
                     </FormItem>
                   )}
