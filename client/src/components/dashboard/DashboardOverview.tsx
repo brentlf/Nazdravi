@@ -14,6 +14,7 @@ import {
   User
 } from "lucide-react";
 import { Link } from "wouter";
+import { FloatingOrganic, DoodleConnector } from "@/components/ui/PageTransition";
 import { useAuth } from "@/contexts/AuthContext";
 import { useFirestoreCollection } from "@/hooks/useFirestore";
 import { Appointment, Message, Progress } from "@/types";
@@ -221,20 +222,30 @@ export function DashboardOverview() {
   ];
 
   return (
-    <div className="space-y-8">
-
-
-      {/* Welcome Section */}
-      <div className="bg-gradient-to-r from-primary-500 to-primary-600 rounded-2xl p-8 text-white">
+    <div className="space-y-8 relative">
+      {/* Welcome Section with Organic Design */}
+      <div className="relative overflow-hidden mediterranean-card p-8 text-white bg-gradient-to-br from-primary to-accent warm-glow">
         {isAdminViewingClient && (
-          <div className="mb-4 bg-yellow-500/20 border border-yellow-400/30 rounded-lg p-3">
+          <div className="mb-4 bg-yellow-500/20 border border-yellow-400/30 rounded-lg p-3 floating-element">
             <p className="text-sm text-yellow-100">
-              👁️ Admin View: You are viewing {user?.name}'s dashboard
+              Admin View: You are viewing {user?.name}'s dashboard
             </p>
           </div>
         )}
-        <h1 className="text-3xl font-bold mb-2">Welcome back, {user?.name}!</h1>
-        <p className="text-primary-100">Here's your nutrition journey overview</p>
+        
+        <div className="relative z-10">
+          <div className="doodle-arrow mb-2">
+            <h1 className="font-display text-3xl font-bold mb-2 handwritten-accent">Welcome back, {user?.name}!</h1>
+          </div>
+          <p className="serif-body text-xl text-primary-100 leading-relaxed">Here's your nutrition journey overview</p>
+        </div>
+        
+        {/* Organic background decorations */}
+        <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-white/10 to-transparent blob-shape"></div>
+        <div className="absolute bottom-0 left-0 w-24 h-24 bg-gradient-to-br from-accent/20 to-transparent blob-shape"></div>
+        
+        {/* Floating elements */}
+        <FloatingOrganic className="absolute -top-4 -right-4 opacity-20" size="medium" delay={1} />
       </div>
 
       {/* Service Plan Status Widget */}

@@ -196,7 +196,7 @@ export default function AdminHome() {
         </div>
 
         {/* Quick Stats */}
-        <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-6 mb-8">
+        <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-6 mb-8 items-stretch">
           {quickStats.map((stat, index) => {
             const Icon = stat.icon;
             
@@ -212,9 +212,9 @@ export default function AdminHome() {
               }) || [];
 
               return (
-                <div key={index} className="relative">
-                  <Card className="mediterranean-card hover:shadow-xl transition-all duration-500 border-0 floating-element">
-                    <CardContent className="p-4 flex flex-col h-full relative">
+                <div key={index} className="relative h-full">
+                  <Card className="mediterranean-card hover:shadow-xl transition-all duration-500 border-0 floating-element h-full">
+                    <CardContent className="p-4 flex flex-col h-full relative min-h-[180px]">
                       <div className="flex items-center justify-between mb-3">
                         <h3 className="font-display text-sm text-muted-foreground">{stat.title}</h3>
                         <div className={`w-8 h-8 blob-shape flex items-center justify-center ${stat.bgColor} floating-element`}>
@@ -250,9 +250,9 @@ export default function AdminHome() {
             
             // Regular stat tiles
             return (
-              <div key={index} className="relative">
-                <Card className="mediterranean-card hover:shadow-xl transition-all duration-500 border-0 floating-element">
-                  <CardContent className="p-4 flex flex-col h-full relative">
+              <div key={index} className="relative h-full">
+                <Card className="mediterranean-card hover:shadow-xl transition-all duration-500 border-0 floating-element h-full">
+                  <CardContent className="p-4 flex flex-col h-full relative min-h-[180px]">
                     <div className="flex items-center justify-between mb-3">
                       <h3 className="font-display text-sm text-muted-foreground">{stat.title}</h3>
                       <div className={`w-8 h-8 blob-shape flex items-center justify-center ${stat.bgColor} floating-element`}>

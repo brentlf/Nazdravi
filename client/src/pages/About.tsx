@@ -3,6 +3,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Link } from "wouter";
+import { FloatingOrganic, DoodleConnector, OrganicImage } from "@/components/ui/PageTransition";
 import aboutMeImage from "@assets/AboutMe.jpg";
 
 export default function About() {
@@ -63,12 +64,23 @@ export default function About() {
       {/* Personal Story Section */}
       <section className="container mx-auto px-4 mb-20">
         <div className="grid lg:grid-cols-2 gap-12 items-center">
-          <div className="order-2 lg:order-1">
-            <img 
-              src={aboutMeImage} 
+          <div className="order-2 lg:order-1 relative">
+            <OrganicImage 
+              src={aboutMeImage}
               alt="Vee - Your dedicated nutrition therapist"
-              className="rounded-2xl shadow-lg w-full h-[500px] object-cover"
+              shape="blob"
+              size="hero"
+              className="shadow-2xl warm-glow floating-element"
             />
+            
+            {/* Floating organic decorations */}
+            <FloatingOrganic className="absolute -top-8 -right-8 opacity-30" size="medium" delay={1} />
+            <FloatingOrganic className="absolute -bottom-8 -left-8 opacity-20" size="small" delay={2} />
+            
+            {/* Handwritten accent */}
+            <div className="absolute top-8 left-8 bg-white/90 backdrop-blur-sm p-3 rounded-full shadow-lg floating-element">
+              <span className="font-display text-primary italic text-sm">Your Wellness Partner</span>
+            </div>
           </div>
           
           <div className="space-y-6 order-1 lg:order-2">
