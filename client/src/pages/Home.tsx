@@ -227,7 +227,7 @@ export default function Home() {
         </div>
       </section>
       {/* Testimonials Section */}
-      <section className="py-20 bg-gradient-to-br from-accent/10 to-secondary/10 country-texture relative overflow-hidden">
+      <section className="py-20 bg-muted/10 country-texture relative overflow-hidden">
         <div className="container mx-auto px-4">
           <div className="text-center mb-16 relative">
             <div className="doodle-arrow mb-4">
@@ -249,7 +249,7 @@ export default function Home() {
                 <Card className="mediterranean-card border-0 warm-glow floating-element overflow-hidden">
                   <CardContent className="p-8 relative">
                     {/* Organic background pattern */}
-                    <div className="absolute top-0 right-0 w-24 h-24 bg-gradient-to-br from-primary/5 to-accent/5 blob-shape opacity-50"></div>
+                    <div className="absolute top-0 right-0 w-24 h-24 bg-primary/5 blob-shape opacity-50"></div>
                     
                     <div className="flex justify-center mb-6">
                       {[...Array(testimonial.rating)].map((_, i) => (
@@ -286,7 +286,7 @@ export default function Home() {
         <FloatingOrganic className="absolute bottom-20 -left-20 opacity-20" size="large" delay={3} />
       </section>
       {/* CTA Section */}
-      <section className="py-20 bg-gradient-to-br from-primary/15 to-accent/15 country-texture">
+      <section className="py-20 bg-primary/10 country-texture">
         <div className="container mx-auto px-4 text-center">
           <h2 className="font-display text-3xl md:text-4xl mb-6 text-foreground">
             Ready to Embrace Your Wellness Journey?

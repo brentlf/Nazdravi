@@ -213,7 +213,7 @@ export default function Blog() {
 
       {/* Newsletter CTA */}
       <section className="container mx-auto px-4 mt-20">
-        <Card className="bg-gradient-to-r from-primary-500 to-primary-600 text-white">
+        <Card className="bg-primary text-white">
           <CardContent className="p-12 text-center">
             <h2 className="text-3xl font-bold mb-4">
               Never miss an article

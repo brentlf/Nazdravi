@@ -119,7 +119,7 @@ export default function Services() {
                         </div>
                       )}
                       
-                      <div className="w-16 h-16 bg-gradient-to-br from-primary/20 to-accent/20 blob-shape flex items-center justify-center mx-auto mb-6 warm-glow floating-element">
+                      <div className="w-16 h-16 bg-primary/20 blob-shape flex items-center justify-center mx-auto mb-6 warm-glow floating-element">
                         <Icon className="w-8 h-8 text-primary" />
                       </div>
                       
@@ -143,7 +143,7 @@ export default function Services() {
                       </div>
                       
                       {/* Organic background decoration */}
-                      <div className="absolute top-0 right-0 w-24 h-24 bg-gradient-to-br from-primary/5 to-accent/5 blob-shape opacity-50"></div>
+                      <div className="absolute top-0 right-0 w-24 h-24 bg-primary/5 blob-shape opacity-50"></div>
                     </CardContent>
                   </Card>
                   
@@ -182,7 +182,7 @@ export default function Services() {
                 <div key={index} className="relative">
                   <Card className="mediterranean-card h-full floating-element">
                     <CardContent className="p-6 text-center relative">
-                      <div className="w-12 h-12 bg-gradient-to-br from-accent/20 to-secondary/20 blob-shape flex items-center justify-center mx-auto mb-4 floating-element">
+                      <div className="w-12 h-12 bg-accent/20 blob-shape flex items-center justify-center mx-auto mb-4 floating-element">
                         <Icon className="w-6 h-6 text-accent" />
                       </div>
                       
@@ -195,7 +195,7 @@ export default function Services() {
                       </div>
                       
                       {/* Organic background decoration */}
-                      <div className="absolute top-0 right-0 w-16 h-16 bg-gradient-to-br from-accent/5 to-secondary/5 blob-shape opacity-50"></div>
+                      <div className="absolute top-0 right-0 w-16 h-16 bg-accent/5 blob-shape opacity-50"></div>
                     </CardContent>
                   </Card>
                   
@@ -260,8 +260,8 @@ export default function Services() {
               </div>
               
               {/* Organic background decorations */}
-              <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-primary/10 to-accent/10 blob-shape"></div>
-              <div className="absolute bottom-0 left-0 w-24 h-24 bg-gradient-to-br from-accent/10 to-secondary/10 blob-shape"></div>
+              <div className="absolute top-0 right-0 w-32 h-32 bg-primary/10 blob-shape"></div>
+              <div className="absolute bottom-0 left-0 w-24 h-24 bg-accent/10 blob-shape"></div>
             </div>
             
             {/* Handwritten flourish */}
