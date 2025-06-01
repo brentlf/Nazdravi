@@ -261,6 +261,18 @@ export default function DashboardAppointments() {
         return;
       }
 
+      // Update user's service plan if it has changed
+      if (userData && data.servicePlan !== userData.servicePlan) {
+        const userDocRef = doc(db, "users", user.uid);
+        await updateDoc(userDocRef, {
+          servicePlan: data.servicePlan,
+          ...(data.servicePlan === "complete-program" && {
+            programStartDate: new Date().toISOString(),
+            programEndDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString() // 30 days from now
+          })
+        });
+      }
+
       await addAppointment({
         ...data,
         userId: user.uid,
