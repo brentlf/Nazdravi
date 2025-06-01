@@ -147,13 +147,13 @@ export default function Home() {
                   const Icon = stat.icon;
                   return (
                     <div key={index} className="text-center">
-                      <div className="w-10 h-10 bg-primary-100 dark:bg-primary-900/30 rounded-full flex items-center justify-center mx-auto mb-2">
-                        <Icon className="w-5 h-5 text-primary-600" />
+                      <div className="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center mx-auto mb-2">
+                        <Icon className="w-5 h-5 text-white" />
                       </div>
-                      <div className="text-2xl font-bold text-primary-600">
+                      <div className="text-2xl font-bold text-white">
                         {stat.number}
                       </div>
-                      <div className="text-xs text-muted-foreground">
+                      <div className="text-xs text-gray-200">
                         {stat.label}
                       </div>
                     </div>
