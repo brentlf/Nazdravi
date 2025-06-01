@@ -42,6 +42,7 @@ import { where, orderBy } from "firebase/firestore";
 import { useAvailableSlots } from "@/hooks/useAvailableSlots";
 import { useCancellationPolicy } from "@/hooks/useCancellationPolicy";
 import { Link } from "wouter";
+import { FloatingOrganic, DoodleConnector } from "@/components/ui/PageTransition";
 
 const appointmentSchema = z.object({
   type: z.enum(["Initial", "Follow-up"], {

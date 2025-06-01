@@ -21,6 +21,7 @@ import { User, Appointment, Message } from "@/types";
 import type { Invoice } from "@shared/firebase-schema";
 import { where, orderBy, limit } from "firebase/firestore";
 import { AppointmentsCalendar } from "@/components/admin/AppointmentsCalendar";
+import { FloatingOrganic, DoodleConnector } from "@/components/ui/PageTransition";
 
 export default function AdminHome() {
   // Fetch dashboard data
@@ -157,24 +158,41 @@ export default function AdminHome() {
   ];
 
   return (
-    <div className="min-h-screen py-20 bg-gray-50 dark:bg-gray-900">
-      <div className="container mx-auto px-4">
-        {/* Header with Navigation */}
-        <div className="mb-8">
+    <div className="min-h-screen py-20 bg-gradient-to-br from-background to-muted/30 country-texture relative overflow-hidden">
+      <div className="container mx-auto px-4 relative z-10">
+        {/* Header with Navigation and Organic Design */}
+        <div className="mb-12 relative">
           <div className="flex items-center justify-between">
-            <div>
-              <h1 className="text-3xl font-bold mb-2">Admin Dashboard</h1>
-              <p className="text-muted-foreground">
+            <div className="relative">
+              <div className="doodle-arrow mb-2">
+                <h1 className="font-display text-3xl md:text-4xl mb-2 text-foreground handwritten-accent">
+                  Admin Dashboard
+                </h1>
+              </div>
+              <p className="serif-body text-xl text-muted-foreground leading-relaxed">
                 Overview of your nutrition practice and client management
               </p>
+              
+              {/* Handwritten flourish */}
+              <div className="absolute -bottom-4 -right-8">
+                <span className="text-accent text-lg transform rotate-12 inline-block">✨</span>
+              </div>
             </div>
-            <Button variant="outline" asChild>
-              <Link href="/admin-client-view">
-                <Users className="mr-2 h-4 w-4" />
-                View Client Dashboard
-              </Link>
-            </Button>
+            <div className="relative">
+              <Button variant="outline" asChild className="mediterranean-card floating-element">
+                <Link href="/admin-client-view">
+                  <Users className="mr-2 h-4 w-4" />
+                  View Client Dashboard
+                </Link>
+              </Button>
+              
+              {/* Organic decoration */}
+              <FloatingOrganic className="absolute -top-4 -right-4 opacity-30" size="small" delay={0.5} />
+            </div>
           </div>
+          
+          {/* Connecting doodle to stats section */}
+          <DoodleConnector direction="down" className="absolute -bottom-6 left-1/2 transform -translate-x-1/2 w-32" />
         </div>
 
         {/* Quick Stats */}
@@ -194,60 +212,77 @@ export default function AdminHome() {
               }) || [];
 
               return (
-                <Card key={index} className="hover:shadow-lg transition-shadow duration-200">
-                  <CardContent className="p-4 flex flex-col h-full">
-                    <div className="flex items-center justify-between mb-3">
-                      <h3 className="font-medium text-sm text-muted-foreground">{stat.title}</h3>
-                      <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${stat.bgColor}`}>
-                        <Icon className={`w-4 h-4 ${stat.color}`} />
+                <div key={index} className="relative">
+                  <Card className="mediterranean-card hover:shadow-xl transition-all duration-500 border-0 floating-element">
+                    <CardContent className="p-4 flex flex-col h-full relative">
+                      <div className="flex items-center justify-between mb-3">
+                        <h3 className="font-display text-sm text-muted-foreground">{stat.title}</h3>
+                        <div className={`w-8 h-8 blob-shape flex items-center justify-center ${stat.bgColor} floating-element`}>
+                          <Icon className={`w-4 h-4 ${stat.color}`} />
+                        </div>
                       </div>
-                    </div>
-                    <div className="flex-grow mb-3">
-                      <p className="text-2xl font-bold mb-1">{tomorrowAppointments.length}</p>
-                      <p className="text-xs text-muted-foreground">
-                        clients with appointments tomorrow
-                      </p>
-                      <Badge variant="secondary" className="text-xs mt-1">
-                        Ready to send
-                      </Badge>
-                    </div>
-                    <Button size="sm" variant="outline" asChild className="w-full mt-auto">
-                      <Link href={stat.href}>
-                        <Mail className="w-3 h-3 mr-1" />
-                        Send Reminders
-                      </Link>
-                    </Button>
-                  </CardContent>
-                </Card>
+                      <div className="flex-grow mb-3">
+                        <p className="font-display text-2xl font-bold mb-1">{tomorrowAppointments.length}</p>
+                        <p className="serif-body text-xs text-muted-foreground">
+                          clients with appointments tomorrow
+                        </p>
+                        <Badge variant="secondary" className="text-xs mt-1 handwritten-accent">
+                          Ready to send
+                        </Badge>
+                      </div>
+                      <Button size="sm" variant="outline" asChild className="w-full mt-auto mediterranean-card">
+                        <Link href={stat.href}>
+                          <Mail className="w-3 h-3 mr-1" />
+                          Send Reminders
+                        </Link>
+                      </Button>
+                      
+                      {/* Organic background decoration */}
+                      <div className="absolute top-0 right-0 w-16 h-16 bg-gradient-to-br from-primary/5 to-accent/5 blob-shape opacity-50"></div>
+                    </CardContent>
+                  </Card>
+                  
+                  {/* Floating organic decoration */}
+                  {index === 2 && <FloatingOrganic className="absolute -top-4 -right-4 opacity-20" size="small" delay={1.5} />}
+                </div>
               );
             }
             
             // Regular stat tiles
             return (
-              <Card key={index} className="hover:shadow-lg transition-shadow duration-200">
-                <CardContent className="p-4 flex flex-col h-full">
-                  <div className="flex items-center justify-between mb-3">
-                    <h3 className="font-medium text-sm text-muted-foreground">{stat.title}</h3>
-                    <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${stat.bgColor}`}>
-                      <Icon className={`w-4 h-4 ${stat.color}`} />
+              <div key={index} className="relative">
+                <Card className="mediterranean-card hover:shadow-xl transition-all duration-500 border-0 floating-element">
+                  <CardContent className="p-4 flex flex-col h-full relative">
+                    <div className="flex items-center justify-between mb-3">
+                      <h3 className="font-display text-sm text-muted-foreground">{stat.title}</h3>
+                      <div className={`w-8 h-8 blob-shape flex items-center justify-center ${stat.bgColor} floating-element`}>
+                        <Icon className={`w-4 h-4 ${stat.color}`} />
+                      </div>
                     </div>
-                  </div>
-                  <div className="flex-grow mb-3">
-                    <p className="text-2xl font-bold mb-1">{stat.value}</p>
-                    {stat.subtitle && (
-                      <p className="text-xs text-muted-foreground">{stat.subtitle}</p>
-                    )}
-                    {stat.badge && (
-                      <Badge variant="outline" className="text-xs text-red-600 border-red-600 mt-1">
-                        {stat.badge}
-                      </Badge>
-                    )}
-                  </div>
-                  <Button size="sm" variant="outline" asChild className="w-full mt-auto">
-                    <Link href={stat.href}>View Details</Link>
-                  </Button>
-                </CardContent>
-              </Card>
+                    <div className="flex-grow mb-3">
+                      <p className="font-display text-2xl font-bold mb-1">{stat.value}</p>
+                      {stat.subtitle && (
+                        <p className="serif-body text-xs text-muted-foreground">{stat.subtitle}</p>
+                      )}
+                      {stat.badge && (
+                        <Badge variant="outline" className="text-xs text-red-600 border-red-600 mt-1 handwritten-accent">
+                          {stat.badge}
+                        </Badge>
+                      )}
+                    </div>
+                    <Button size="sm" variant="outline" asChild className="w-full mt-auto mediterranean-card">
+                      <Link href={stat.href}>View Details</Link>
+                    </Button>
+                    
+                    {/* Organic background decoration */}
+                    <div className="absolute top-0 right-0 w-16 h-16 bg-gradient-to-br from-primary/5 to-accent/5 blob-shape opacity-50"></div>
+                  </CardContent>
+                </Card>
+                
+                {/* Floating organic decorations */}
+                {index === 0 && <FloatingOrganic className="absolute -top-4 -left-4 opacity-20" size="small" delay={0.5} />}
+                {index === 4 && <FloatingOrganic className="absolute -bottom-4 -right-4 opacity-20" size="small" delay={2.5} />}
+              </div>
             );
           })}
         </div>
@@ -410,6 +445,12 @@ export default function AdminHome() {
           </div>
         </div>
       </div>
+      
+      {/* Floating background elements */}
+      <FloatingOrganic className="absolute top-20 -right-24 opacity-15" size="large" delay={1} />
+      <FloatingOrganic className="absolute bottom-20 -left-24 opacity-15" size="large" delay={3} />
+      <FloatingOrganic className="absolute top-1/2 right-10 opacity-10" size="medium" delay={2} />
+      <FloatingOrganic className="absolute bottom-1/3 left-10 opacity-10" size="medium" delay={4} />
     </div>
   );
 }
