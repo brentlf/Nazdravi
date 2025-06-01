@@ -24,11 +24,14 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
-import { useFirestoreActions, useFirestoreCollection } from "@/hooks/useFirestore";
+import { useFirestoreActions, useFirestoreCollection, useFirestoreDocument } from "@/hooks/useFirestore";
 import { useAvailableSlots } from "@/hooks/useAvailableSlots";
-import { collection, query, where, getDocs } from "firebase/firestore";
+import { collection, query, where, getDocs, doc, updateDoc } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 import { useAuth } from "@/contexts/AuthContext";
+import { Badge } from "@/components/ui/badge";
+import { Card, CardContent } from "@/components/ui/card";
+import { Alert, AlertDescription } from "@/components/ui/alert";
 
 const appointmentSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters"),
@@ -51,8 +54,13 @@ export function AppointmentForm() {
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [selectedDate, setSelectedDate] = useState("");
   const { toast } = useToast();
-  const { add, loading } = useFirestoreActions("appointments");
   const { user } = useAuth();
+  const { data: userData } = useFirestoreDocument("users", user?.uid || "");
+  
+  // Get URL parameters to check if service plan was pre-selected
+  const urlParams = new URLSearchParams(window.location.search);
+  const preSelectedPlan = urlParams.get('plan') as "pay-as-you-go" | "complete-program" | null;
+  const { add, loading } = useFirestoreActions("appointments");
   
   // Get available time slots for selected date
   const { availableSlots, loading: slotsLoading } = useAvailableSlots(selectedDate);
@@ -67,8 +75,19 @@ export function AppointmentForm() {
       goals: "",
       date: "",
       timeslot: "",
+      servicePlan: preSelectedPlan || userData?.servicePlan || "pay-as-you-go",
     },
   });
+
+  // Update form values when user data loads
+  useEffect(() => {
+    if (userData) {
+      form.setValue("servicePlan", userData.servicePlan || "pay-as-you-go");
+    }
+    if (preSelectedPlan) {
+      form.setValue("servicePlan", preSelectedPlan);
+    }
+  }, [userData, preSelectedPlan, form]);
 
   const timeSlots = [
     "09:00 - 10:00",
@@ -129,6 +148,21 @@ export function AppointmentForm() {
         createdAt: new Date(),
         requestId: `${data.date}-${data.timeslot}-${Date.now()}`, // Unique identifier
       });
+
+      // Update user's service plan if they selected complete program and don't already have it
+      if (data.servicePlan === "complete-program" && userData?.servicePlan !== "complete-program" && user?.uid) {
+        const userRef = doc(db, "users", user.uid);
+        const startDate = new Date();
+        const endDate = new Date();
+        endDate.setMonth(endDate.getMonth() + 3); // 3 months program
+
+        await updateDoc(userRef, {
+          servicePlan: "complete-program",
+          programStartDate: startDate,
+          programEndDate: endDate,
+          updatedAt: new Date(),
+        });
+      }
 
       setIsSubmitted(true);
       toast({
@@ -278,6 +312,92 @@ export function AppointmentForm() {
                       </div>
                     </RadioGroup>
                   </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            {/* Service Plan Selection */}
+            <FormField
+              control={form.control}
+              name="servicePlan"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="flex items-center gap-2">
+                    <CreditCard className="h-4 w-4" />
+                    Service Plan *
+                  </FormLabel>
+                  <FormControl>
+                    <RadioGroup
+                      onValueChange={field.onChange}
+                      defaultValue={field.value}
+                      className="grid gap-4 mt-3"
+                    >
+                      <div>
+                        <RadioGroupItem value="pay-as-you-go" id="payasyougo" className="peer sr-only" />
+                        <Label
+                          htmlFor="payasyougo"
+                          className="flex items-center justify-between p-4 border-2 border-gray-200 dark:border-gray-600 rounded-lg cursor-pointer peer-checked:border-primary-500 peer-checked:bg-primary-50 dark:peer-checked:bg-primary-900/20 transition-all duration-200"
+                        >
+                          <div className="flex items-center space-x-3">
+                            <DollarSign className="h-5 w-5 text-blue-500" />
+                            <div>
+                              <p className="font-medium">Pay As You Go</p>
+                              <p className="text-sm text-muted-foreground">Individual session billing</p>
+                            </div>
+                          </div>
+                          <Badge variant="outline">Per Session</Badge>
+                        </Label>
+                      </div>
+                      <div>
+                        <RadioGroupItem value="complete-program" id="completeprogram" className="peer sr-only" />
+                        <Label
+                          htmlFor="completeprogram"
+                          className="flex items-center justify-between p-4 border-2 border-gray-200 dark:border-gray-600 rounded-lg cursor-pointer peer-checked:border-primary-500 peer-checked:bg-primary-50 dark:peer-checked:bg-primary-900/20 transition-all duration-200"
+                        >
+                          <div className="flex items-center space-x-3">
+                            <Crown className="h-5 w-5 text-purple-500" />
+                            <div>
+                              <p className="font-medium">Complete Program (3 Months)</p>
+                              <p className="text-sm text-muted-foreground">Monthly billing with unlimited consultations</p>
+                            </div>
+                          </div>
+                          <Badge className="bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-300">
+                            Monthly
+                          </Badge>
+                        </Label>
+                      </div>
+                    </RadioGroup>
+                  </FormControl>
+                  
+                  {/* Billing Information */}
+                  {userData?.servicePlan === "complete-program" && (
+                    <Alert className="mt-3 bg-green-50 dark:bg-green-900/20 border-green-200 dark:border-green-800">
+                      <Crown className="h-4 w-4 text-green-600" />
+                      <AlertDescription className="text-green-700 dark:text-green-300">
+                        <strong>Complete Program Active:</strong> You won't be billed for this appointment. Your program includes unlimited consultations until {userData.programEndDate ? new Date(userData.programEndDate.toDate()).toLocaleDateString() : "program end"}.
+                      </AlertDescription>
+                    </Alert>
+                  )}
+                  
+                  {form.watch("servicePlan") === "complete-program" && userData?.servicePlan !== "complete-program" && (
+                    <Alert className="mt-3 bg-purple-50 dark:bg-purple-900/20 border-purple-200 dark:border-purple-800">
+                      <AlertCircle className="h-4 w-4 text-purple-600" />
+                      <AlertDescription className="text-purple-700 dark:text-purple-300">
+                        <strong>Upgrade to Complete Program:</strong> You'll be billed monthly (€250/month) starting after this appointment. Includes unlimited consultations for 3 months.
+                      </AlertDescription>
+                    </Alert>
+                  )}
+                  
+                  {form.watch("servicePlan") === "pay-as-you-go" && (
+                    <Alert className="mt-3 bg-blue-50 dark:bg-blue-900/20 border-blue-200 dark:border-blue-800">
+                      <DollarSign className="h-4 w-4 text-blue-600" />
+                      <AlertDescription className="text-blue-700 dark:text-blue-300">
+                        <strong>Pay As You Go:</strong> You'll be billed per session. Initial consultation: €89, Follow-up sessions: €49.
+                      </AlertDescription>
+                    </Alert>
+                  )}
+                  
                   <FormMessage />
                 </FormItem>
               )}
