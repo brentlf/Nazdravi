@@ -30,6 +30,7 @@ import {
   Dialog,
   DialogContent,
   DialogDescription,
+  DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
@@ -1611,59 +1612,62 @@ export default function DashboardAppointments() {
                   name="servicePlan"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Service Plan *</FormLabel>
+                      <FormLabel className="flex items-center gap-2">
+                        <CreditCard className="h-4 w-4" />
+                        Service Plan *
+                      </FormLabel>
                       <div className="space-y-3">
                         {/* Complete Program Option */}
                         <div className="relative">
                           <div 
                             className={`
                               border-2 rounded-lg p-4 cursor-pointer transition-all duration-200
-                              ${field.value === "complete-program" 
-                                ? "border-green-500 bg-green-50 dark:bg-green-900/20" 
-                                : "border-gray-200 dark:border-gray-600 hover:border-gray-300"
-                              }
-                              ${userData?.servicePlan === "complete-program" 
-                                ? "ring-2 ring-green-500/30" 
-                                : ""
+                              ${userData?.servicePlan === "complete-program"
+                                ? "border-green-500 bg-green-50 dark:bg-green-900/20 ring-2 ring-green-500/20"
+                                : field.value === "complete-program"
+                                  ? "border-green-500 bg-green-50 dark:bg-green-900/20 ring-2 ring-green-500/20"
+                                  : "border-gray-200 dark:border-gray-600 hover:border-gray-300"
                               }
                             `}
                             onClick={() => {
-                              if (userData?.servicePlan === "complete-program") {
-                                field.onChange("complete-program");
-                              }
+                              field.onChange("complete-program");
                             }}
                           >
                             <div className="flex items-center justify-between">
                               <div className="flex items-center space-x-3">
-                                <div className={`
-                                  w-4 h-4 rounded-full border-2 flex items-center justify-center
-                                  ${field.value === "complete-program" 
-                                    ? "border-green-500 bg-green-500" 
-                                    : "border-gray-300"
-                                  }
-                                `}>
-                                  {field.value === "complete-program" && (
-                                    <div className="w-2 h-2 bg-white rounded-full"></div>
-                                  )}
-                                </div>
+                                <Crown className={`h-5 w-5 ${userData?.servicePlan === "complete-program" || field.value === "complete-program" ? "text-green-600" : "text-purple-500"}`} />
                                 <div>
-                                  <p className="font-medium text-gray-900 dark:text-gray-100">Complete Program</p>
-                                  <p className="text-sm text-gray-600 dark:text-gray-400">
+                                  <p className={`font-medium ${userData?.servicePlan === "complete-program" || field.value === "complete-program" ? "text-green-800 dark:text-green-200" : "text-gray-900 dark:text-gray-100"}`}>
+                                    Complete Program
+                                    {userData?.servicePlan === "complete-program" && (
+                                      <span className="ml-2 text-green-600 font-semibold">✓ ACTIVE</span>
+                                    )}
+                                  </p>
+                                  <p className={`text-sm ${userData?.servicePlan === "complete-program" || field.value === "complete-program" ? "text-green-700 dark:text-green-300" : "text-gray-600 dark:text-gray-400"}`}>
                                     {userData?.servicePlan === "complete-program" 
-                                      ? "Active - No additional billing"
-                                      : "Upgrade required - €299/month"
+                                      ? "Currently enrolled - unlimited consultations"
+                                      : "Monthly billing - €299/month unlimited consultations"
                                     }
                                   </p>
                                 </div>
                               </div>
-                              {userData?.servicePlan === "complete-program" && (
-                                <div className="bg-green-500 text-white px-2 py-1 rounded text-xs font-medium">
-                                  Active
-                                </div>
-                              )}
+                              <div className="flex items-center gap-2">
+                                {(field.value === "complete-program" || userData?.servicePlan === "complete-program") && (
+                                  <div className="w-5 h-5 bg-green-500 rounded-full flex items-center justify-center">
+                                    <div className="w-2 h-2 bg-white rounded-full"></div>
+                                  </div>
+                                )}
+                                <Badge className={
+                                  userData?.servicePlan === "complete-program" || field.value === "complete-program"
+                                    ? "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300"
+                                    : "bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-300"
+                                }>
+                                  {userData?.servicePlan === "complete-program" ? "Active" : field.value === "complete-program" ? "Selected" : "Monthly"}
+                                </Badge>
+                              </div>
                             </div>
                             
-                            {userData?.servicePlan !== "complete-program" && (
+                            {userData?.servicePlan !== "complete-program" && field.value === "complete-program" && (
                               <Alert className="mt-3 border-blue-200 bg-blue-50 dark:bg-blue-900/20">
                                 <AlertDescription className="text-sm text-blue-800 dark:text-blue-200">
                                   Upgrade to Complete Program for unlimited consultations, personalized meal plans, and priority support.
@@ -1678,13 +1682,11 @@ export default function DashboardAppointments() {
                           <div 
                             className={`
                               border-2 rounded-lg p-4 cursor-pointer transition-all duration-200
-                              ${field.value === "pay-as-you-go" 
-                                ? "border-blue-500 bg-blue-50 dark:bg-blue-900/20" 
-                                : "border-gray-200 dark:border-gray-600 hover:border-gray-300"
-                              }
                               ${userData?.servicePlan === "complete-program" 
-                                ? "opacity-50 cursor-not-allowed" 
-                                : ""
+                                ? "border-gray-300 dark:border-gray-700 bg-gray-100 dark:bg-gray-800 cursor-not-allowed opacity-60" 
+                                : field.value === "pay-as-you-go"
+                                  ? "border-blue-500 bg-blue-50 dark:bg-blue-900/20 ring-2 ring-blue-500/20"
+                                  : "border-gray-200 dark:border-gray-600 hover:border-gray-300"
                               }
                             `}
                             onClick={() => {
@@ -1695,26 +1697,28 @@ export default function DashboardAppointments() {
                           >
                             <div className="flex items-center justify-between">
                               <div className="flex items-center space-x-3">
-                                <div className={`
-                                  w-4 h-4 rounded-full border-2 flex items-center justify-center
-                                  ${field.value === "pay-as-you-go" 
-                                    ? "border-blue-500 bg-blue-500" 
-                                    : "border-gray-300"
-                                  }
-                                `}>
-                                  {field.value === "pay-as-you-go" && (
-                                    <div className="w-2 h-2 bg-white rounded-full"></div>
-                                  )}
-                                </div>
+                                <DollarSign className={`h-5 w-5 ${userData?.servicePlan === "complete-program" ? "text-gray-400" : "text-blue-500"}`} />
                                 <div>
-                                  <p className="font-medium text-gray-900 dark:text-gray-100">Pay-as-you-go</p>
-                                  <p className="text-sm text-gray-600 dark:text-gray-400">
+                                  <p className={`font-medium ${userData?.servicePlan === "complete-program" ? "text-gray-500 dark:text-gray-400" : "text-gray-900 dark:text-gray-100"}`}>
+                                    Pay-as-you-go
+                                  </p>
+                                  <p className="text-sm text-muted-foreground">
                                     {userData?.servicePlan === "complete-program" 
                                       ? "Not available with Complete Program"
-                                      : "Per consultation billing - €89/session"
+                                      : "Individual session billing - €89/session"
                                     }
                                   </p>
                                 </div>
+                              </div>
+                              <div className="flex items-center gap-2">
+                                {field.value === "pay-as-you-go" && userData?.servicePlan !== "complete-program" && (
+                                  <div className="w-5 h-5 bg-blue-500 rounded-full flex items-center justify-center">
+                                    <div className="w-2 h-2 bg-white rounded-full"></div>
+                                  </div>
+                                )}
+                                <Badge variant={userData?.servicePlan === "complete-program" ? "secondary" : "outline"}>
+                                  {userData?.servicePlan === "complete-program" ? "Disabled" : field.value === "pay-as-you-go" ? "Selected" : "Per Session"}
+                                </Badge>
                               </div>
                             </div>
                           </div>

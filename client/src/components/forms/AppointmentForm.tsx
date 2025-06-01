@@ -402,7 +402,7 @@ export function AppointmentForm() {
                       defaultValue={field.value}
                       className="grid gap-4 mt-3"
                     >
-                      <div>
+                      <div className="relative">
                         <RadioGroupItem 
                           value="pay-as-you-go" 
                           id="payasyougo" 
@@ -411,11 +411,15 @@ export function AppointmentForm() {
                         />
                         <Label
                           htmlFor="payasyougo"
-                          className={`flex items-center justify-between p-4 border-2 rounded-lg transition-all duration-200 ${
-                            userData?.servicePlan === "complete-program" 
+                          className={`
+                            flex items-center justify-between p-4 border-2 rounded-lg transition-all duration-200
+                            ${userData?.servicePlan === "complete-program" 
                               ? "border-gray-300 dark:border-gray-700 bg-gray-100 dark:bg-gray-800 cursor-not-allowed opacity-60" 
-                              : "border-gray-200 dark:border-gray-600 cursor-pointer peer-checked:border-primary-500 peer-checked:bg-primary-50 dark:peer-checked:bg-primary-900/20"
-                          }`}
+                              : field.value === "pay-as-you-go"
+                                ? "border-blue-500 bg-blue-50 dark:bg-blue-900/20 ring-2 ring-blue-500/20"
+                                : "border-gray-200 dark:border-gray-600 hover:border-gray-300 cursor-pointer"
+                            }
+                          `}
                         >
                           <div className="flex items-center space-x-3">
                             <DollarSign className={`h-5 w-5 ${userData?.servicePlan === "complete-program" ? "text-gray-400" : "text-blue-500"}`} />
@@ -424,49 +428,67 @@ export function AppointmentForm() {
                                 Pay As You Go
                               </p>
                               <p className="text-sm text-muted-foreground">
-                                {userData?.servicePlan === "complete-program" ? "Not available - Complete Program active" : "Individual session billing"}
+                                {userData?.servicePlan === "complete-program" ? "Not available - Complete Program active" : "Individual session billing - €89/session"}
                               </p>
                             </div>
                           </div>
-                          <Badge variant={userData?.servicePlan === "complete-program" ? "secondary" : "outline"}>
-                            {userData?.servicePlan === "complete-program" ? "Disabled" : "Per Session"}
-                          </Badge>
+                          <div className="flex items-center gap-2">
+                            {field.value === "pay-as-you-go" && userData?.servicePlan !== "complete-program" && (
+                              <div className="w-5 h-5 bg-blue-500 rounded-full flex items-center justify-center">
+                                <div className="w-2 h-2 bg-white rounded-full"></div>
+                              </div>
+                            )}
+                            <Badge variant={userData?.servicePlan === "complete-program" ? "secondary" : "outline"}>
+                              {userData?.servicePlan === "complete-program" ? "Disabled" : "Per Session"}
+                            </Badge>
+                          </div>
                         </Label>
                       </div>
-                      <div>
+                      <div className="relative">
                         <RadioGroupItem value="complete-program" id="completeprogram" className="peer sr-only" />
                         <Label
                           htmlFor="completeprogram"
-                          className={`flex items-center justify-between p-4 border-2 rounded-lg cursor-pointer transition-all duration-200 ${
-                            userData?.servicePlan === "complete-program"
-                              ? "border-green-500 bg-green-50 dark:bg-green-900/20 border-2"
-                              : "border-gray-200 dark:border-gray-600 peer-checked:border-primary-500 peer-checked:bg-primary-50 dark:peer-checked:bg-primary-900/20"
-                          }`}
+                          className={`
+                            flex items-center justify-between p-4 border-2 rounded-lg cursor-pointer transition-all duration-200
+                            ${userData?.servicePlan === "complete-program"
+                              ? "border-green-500 bg-green-50 dark:bg-green-900/20 ring-2 ring-green-500/20"
+                              : field.value === "complete-program"
+                                ? "border-green-500 bg-green-50 dark:bg-green-900/20 ring-2 ring-green-500/20"
+                                : "border-gray-200 dark:border-gray-600 hover:border-gray-300"
+                            }
+                          `}
                         >
                           <div className="flex items-center space-x-3">
-                            <Crown className={`h-5 w-5 ${userData?.servicePlan === "complete-program" ? "text-green-600" : "text-purple-500"}`} />
+                            <Crown className={`h-5 w-5 ${userData?.servicePlan === "complete-program" || field.value === "complete-program" ? "text-green-600" : "text-purple-500"}`} />
                             <div>
-                              <p className={`font-medium ${userData?.servicePlan === "complete-program" ? "text-green-800 dark:text-green-200" : ""}`}>
-                                Complete Program (3 Months)
+                              <p className={`font-medium ${userData?.servicePlan === "complete-program" || field.value === "complete-program" ? "text-green-800 dark:text-green-200" : ""}`}>
+                                Complete Program
                                 {userData?.servicePlan === "complete-program" && (
                                   <span className="ml-2 text-green-600 font-semibold">✓ ACTIVE</span>
                                 )}
                               </p>
-                              <p className={`text-sm ${userData?.servicePlan === "complete-program" ? "text-green-700 dark:text-green-300" : "text-muted-foreground"}`}>
+                              <p className={`text-sm ${userData?.servicePlan === "complete-program" || field.value === "complete-program" ? "text-green-700 dark:text-green-300" : "text-muted-foreground"}`}>
                                 {userData?.servicePlan === "complete-program" 
                                   ? "Currently enrolled - unlimited consultations" 
-                                  : "Monthly billing with unlimited consultations"
+                                  : "Monthly billing - €299/month unlimited consultations"
                                 }
                               </p>
                             </div>
                           </div>
-                          <Badge className={
-                            userData?.servicePlan === "complete-program"
-                              ? "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300"
-                              : "bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-300"
-                          }>
-                            {userData?.servicePlan === "complete-program" ? "Active" : "Monthly"}
-                          </Badge>
+                          <div className="flex items-center gap-2">
+                            {(field.value === "complete-program" || userData?.servicePlan === "complete-program") && (
+                              <div className="w-5 h-5 bg-green-500 rounded-full flex items-center justify-center">
+                                <div className="w-2 h-2 bg-white rounded-full"></div>
+                              </div>
+                            )}
+                            <Badge className={
+                              userData?.servicePlan === "complete-program" || field.value === "complete-program"
+                                ? "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300"
+                                : "bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-300"
+                            }>
+                              {userData?.servicePlan === "complete-program" ? "Active" : field.value === "complete-program" ? "Selected" : "Monthly"}
+                            </Badge>
+                          </div>
                         </Label>
                       </div>
                     </RadioGroup>
