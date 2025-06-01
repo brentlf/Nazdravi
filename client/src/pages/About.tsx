@@ -1,4 +1,4 @@
-import { CheckCircle, Heart, Target, Smile, Star, Award, Users, Clock, GraduationCap, Stethoscope, Shield, BookOpen, Calendar } from "lucide-react";
+import { CheckCircle, Heart, Target, Smile, Star, Award, Users, Clock, GraduationCap, Stethoscope, Shield, BookOpen } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Link } from "wouter";
@@ -72,7 +72,7 @@ export default function About() {
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-white dark:from-gray-900 dark:to-gray-800 page-content">
+    <div className="min-h-screen bg-background page-content">
       {/* Full-Width Hero Section */}
       <section className="relative h-screen flex items-center justify-center w-full"
                style={{
@@ -102,25 +102,25 @@ export default function About() {
         </div>
       </section>
 
-      {/* 3-Column Layout Container */}
-      <div className="grid grid-cols-12">
+      {/* 3-Column Layout Section */}
+      <div className="grid grid-cols-12 min-h-screen">
         
         {/* Left Column - Images */}
-        <div className="col-span-3 relative">
+        <div className="col-span-3 bg-gray-50 dark:bg-gray-800">
           <div className="sticky top-0 h-screen flex flex-col gap-6 p-6">
-            <div className="relative group">
+            <div className="relative group flex-1">
               <img 
                 src="https://images.unsplash.com/photo-1586201375761-83865001e31c?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" 
                 alt="Woven basket with fresh produce"
-                className="flex-1 object-cover rounded-xl shadow-xl group-hover:shadow-2xl transition-shadow duration-300" 
+                className="w-full h-full object-cover rounded-xl shadow-xl group-hover:shadow-2xl transition-shadow duration-300" 
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent rounded-xl"></div>
             </div>
-            <div className="relative group">
+            <div className="relative group flex-1">
               <img 
                 src="https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" 
                 alt="Healthy lifestyle"
-                className="flex-1 object-cover rounded-xl shadow-xl group-hover:shadow-2xl transition-shadow duration-300" 
+                className="w-full h-full object-cover rounded-xl shadow-xl group-hover:shadow-2xl transition-shadow duration-300" 
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent rounded-xl"></div>
             </div>
@@ -128,9 +128,8 @@ export default function About() {
         </div>
 
         {/* Middle Column - Content */}
-        <div className="col-span-6 relative">
-          {/* Content Sections */}
-          <section className="bg-white dark:bg-gray-900 px-8 py-20">
+        <div className="col-span-6 bg-white dark:bg-gray-900">
+          <section className="px-8 py-20">
             {/* About Section */}
             <div className="mb-20">
               <div className="text-center mb-12">
@@ -257,21 +256,21 @@ export default function About() {
         </div>
 
         {/* Right Column - Images */}
-        <div className="col-span-3 relative">
+        <div className="col-span-3 bg-gray-50 dark:bg-gray-800">
           <div className="sticky top-0 h-screen flex flex-col gap-6 p-6">
-            <div className="relative group">
+            <div className="relative group flex-1">
               <img 
                 src="https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" 
                 alt="Fresh figs"
-                className="flex-1 object-cover rounded-xl shadow-xl group-hover:shadow-2xl transition-shadow duration-300" 
+                className="w-full h-full object-cover rounded-xl shadow-xl group-hover:shadow-2xl transition-shadow duration-300" 
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent rounded-xl"></div>
             </div>
-            <div className="relative group">
+            <div className="relative group flex-1">
               <img 
                 src="https://images.unsplash.com/photo-1559181567-c3190ca9959b?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" 
                 alt="Nutrition and wellness"
-                className="flex-1 object-cover rounded-xl shadow-xl group-hover:shadow-2xl transition-shadow duration-300" 
+                className="w-full h-full object-cover rounded-xl shadow-xl group-hover:shadow-2xl transition-shadow duration-300" 
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent rounded-xl"></div>
             </div>
