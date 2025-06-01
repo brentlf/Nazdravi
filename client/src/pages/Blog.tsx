@@ -8,6 +8,7 @@ import { Badge } from "@/components/ui/badge";
 import { useFirestoreCollection } from "@/hooks/useFirestore";
 import { BlogPost } from "@/types";
 import { where, orderBy } from "firebase/firestore";
+import { FloatingOrganic, DoodleConnector } from "@/components/ui/PageTransition";
 export default function Blog() {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState<string>("");
@@ -64,16 +65,24 @@ export default function Blog() {
   }
 
   return (
-    <div className="min-h-screen py-20">
+    <div className="min-h-screen py-20 bg-gradient-to-br from-background to-muted/30 country-texture relative overflow-hidden page-content">
       {/* Hero Section */}
-      <section className="container mx-auto px-4 mb-16">
+      <section className="container mx-auto px-4 mb-16 relative">
         <div className="text-center max-w-4xl mx-auto">
-          <h1 className="text-4xl md:text-5xl font-bold mb-6">
-            Nutrition Blog & Resources
-          </h1>
-          <p className="text-xl text-muted-foreground mb-8">
-            Expert insights, practical tips, and evidence-based guidance to support your nutrition journey
+          <Badge variant="secondary" className="mb-4 text-base px-4 py-2 floating-element">
+            Evidence-Based Nutrition Insights
+          </Badge>
+          <div className="doodle-arrow mb-6">
+            <h1 className="font-display text-4xl md:text-5xl font-bold mb-6 handwritten-accent">
+              Nutrition Blog & Resources
+            </h1>
+          </div>
+          <p className="serif-body text-xl text-muted-foreground mb-8 leading-relaxed max-w-3xl mx-auto">
+            Expert insights, practical tips, and evidence-based guidance to support your nutrition journey with Mediterranean wisdom and modern science.
           </p>
+          
+          {/* Connecting doodle */}
+          <DoodleConnector direction="down" className="absolute -bottom-8 left-1/2 transform -translate-x-1/2 w-32" />
         </div>
       </section>
 
@@ -218,6 +227,12 @@ export default function Blog() {
           </CardContent>
         </Card>
       </section>
+      
+      {/* Floating background elements */}
+      <FloatingOrganic className="absolute top-20 -right-20 opacity-15" size="large" delay={1} />
+      <FloatingOrganic className="absolute bottom-20 -left-20 opacity-15" size="large" delay={3} />
+      <FloatingOrganic className="absolute top-1/2 right-10 opacity-10" size="medium" delay={2} />
+      <FloatingOrganic className="absolute bottom-1/3 left-10 opacity-10" size="medium" delay={4} />
     </div>
   );
 }

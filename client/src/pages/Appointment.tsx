@@ -8,6 +8,8 @@ import { useAuth } from "@/contexts/AuthContext";
 import { useFirestoreCollection } from "@/hooks/useFirestore";
 import { where } from "firebase/firestore";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { FloatingOrganic, DoodleConnector } from "@/components/ui/PageTransition";
+import { Badge } from "@/components/ui/badge";
 
 export default function Appointment() {
   const [hasConsent, setHasConsent] = useState(false);
@@ -32,28 +34,38 @@ export default function Appointment() {
   }, [consentRecords, user?.uid]);
 
   return (
-    <div className="min-h-screen py-20 bg-primary-50 dark:bg-gray-800">
-      <div className="container mx-auto px-4">
+    <div className="min-h-screen py-20 bg-gradient-to-br from-background to-muted/30 country-texture relative overflow-hidden page-content">
+      <div className="container mx-auto px-4 relative z-10">
         {/* Page Header */}
-        <div className="text-center mb-12">
-          <h1 className="text-3xl sm:text-4xl font-bold mb-4">
-            Book Consultation
-          </h1>
-          <p className="text-xl text-muted-foreground">
-            Professional nutrition counseling in English and Czech
+        <div className="text-center mb-12 relative">
+          <Badge variant="secondary" className="mb-4 text-base px-4 py-2 floating-element">
+            Professional Nutrition Counseling
+          </Badge>
+          <div className="doodle-arrow mb-6">
+            <h1 className="font-display text-3xl sm:text-4xl font-bold mb-4 handwritten-accent">
+              Book Your Consultation
+            </h1>
+          </div>
+          <p className="serif-body text-xl text-muted-foreground leading-relaxed max-w-2xl mx-auto">
+            Begin your personalized nutrition journey with expert guidance in English and Czech
           </p>
+          
+          {/* Connecting doodle */}
+          <DoodleConnector direction="down" className="absolute -bottom-6 left-1/2 transform -translate-x-1/2 w-24" />
         </div>
 
         {/* Language Service Notice */}
-        <div className="max-w-4xl mx-auto mb-8">
-          <Alert className="border-blue-200 bg-blue-50 dark:bg-blue-900/20">
-            <Globe className="h-4 w-4 text-blue-600" />
+        <div className="max-w-4xl mx-auto mb-8 relative">
+          <Alert className="mediterranean-card border-primary/20 bg-primary/5 floating-element">
+            <Globe className="h-4 w-4 text-primary" />
             <AlertDescription>
-              <p className="text-sm text-blue-800 dark:text-blue-200">
+              <p className="serif-body text-sm text-foreground">
                 <strong>Language Services:</strong> All consultations are conducted in English. Czech language support available upon request with advance notice.
               </p>
             </AlertDescription>
           </Alert>
+          
+          <FloatingOrganic className="absolute -top-4 -right-4 opacity-20" size="small" delay={1} />
         </div>
 
         {/* Booking Requirements & Form */}
