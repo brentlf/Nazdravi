@@ -76,10 +76,7 @@ export default function Home() {
           style={{
             backgroundImage: `url(${heroImage})`,
           }}
-        >
-          {/* Overlay for text readability */}
-          <div className="absolute inset-0 bg-white/80 dark:bg-black/60"></div>
-        </div>
+        ></div>
 
         <div className="container mx-auto px-4 relative z-10">
           <div className="grid lg:grid-cols-2 gap-12 items-center">
