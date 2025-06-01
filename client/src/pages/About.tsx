@@ -2,7 +2,7 @@ import { CheckCircle, Heart, Target, Smile, Star, Award, Users, Clock, Graduatio
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Link } from "wouter";
-import aboutPageBG from "@assets/AboutPageBG.jpg";
+import aboutPageBG from "@assets/Untitled design (1).jpg";
 
 export default function About() {
   const credentials = [
