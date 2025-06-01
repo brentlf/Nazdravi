@@ -107,7 +107,7 @@ export default function Home() {
                 Nourish Your Best Life
               </Badge>
 
-              <h1 className="font-display text-4xl md:text-5xl lg:text-6xl leading-tight text-foreground">
+              <h1 className="font-display text-5xl md:text-7xl lg:text-8xl xl:text-9xl leading-tight text-foreground">
                 Discover the Art of
                 <span className="block text-primary font-display italic">
                   Holistic Nutrition
