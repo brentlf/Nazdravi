@@ -1,8 +1,8 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { Calendar, Clock, User, Mail, Phone, Target, AlertCircle } from "lucide-react";
+import { Calendar, Clock, User, Mail, Phone, Target, AlertCircle, Crown, CreditCard, DollarSign } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -40,6 +40,9 @@ const appointmentSchema = z.object({
   goals: z.string().min(10, "Please describe your goals (minimum 10 characters)"),
   date: z.string().min(1, "Please select a preferred date"),
   timeslot: z.string().min(1, "Please select a time slot"),
+  servicePlan: z.enum(["pay-as-you-go", "complete-program"], {
+    required_error: "Please select a service plan",
+  }),
 });
 
 type AppointmentFormData = z.infer<typeof appointmentSchema>;

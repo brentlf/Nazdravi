@@ -13,7 +13,12 @@ import {
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Link } from "wouter";
+import { Link, useLocation } from "wouter";
+import { useAuth } from "@/contexts/AuthContext";
+import { useFirestoreDocument } from "@/hooks/useFirestore";
+import { doc, updateDoc } from "firebase/firestore";
+import { db } from "@/lib/firebase";
+import { useToast } from "@/hooks/use-toast";
 import {
   FloatingOrganic,
   DoodleConnector,
@@ -21,6 +26,58 @@ import {
 } from "@/components/ui/PageTransition";
 
 export default function Services() {
+  const { user } = useAuth();
+  const [, setLocation] = useLocation();
+  const { toast } = useToast();
+  const { data: userData } = useFirestoreDocument("users", user?.uid || "");
+
+  const handleServicePlanSelection = async (planType: "pay-as-you-go" | "complete-program") => {
+    if (!user) {
+      toast({
+        title: "Authentication Required",
+        description: "Please sign in to select a service plan.",
+        variant: "destructive",
+      });
+      setLocation("/login");
+      return;
+    }
+
+    try {
+      const userRef = doc(db, "users", user.uid);
+      const updateData: any = {
+        servicePlan: planType,
+        updatedAt: new Date(),
+      };
+
+      // If selecting complete program, add program dates
+      if (planType === "complete-program") {
+        const startDate = new Date();
+        const endDate = new Date();
+        endDate.setMonth(endDate.getMonth() + 3); // 3 months program
+
+        updateData.programStartDate = startDate;
+        updateData.programEndDate = endDate;
+      }
+
+      await updateDoc(userRef, updateData);
+
+      toast({
+        title: "Service Plan Updated",
+        description: `You've selected the ${planType === "complete-program" ? "Complete Program" : "Pay As You Go"} plan.`,
+      });
+
+      // Redirect to appointment booking with selected plan
+      setLocation(`/appointment?plan=${planType}`);
+    } catch (error) {
+      console.error("Error updating service plan:", error);
+      toast({
+        title: "Error",
+        description: "Failed to update service plan. Please try again.",
+        variant: "destructive",
+      });
+    }
+  };
+
   const mainServices = [
     {
       icon: ClipboardList,
@@ -162,8 +219,13 @@ export default function Services() {
                     ))}
                   </ul>
 
-                  <Button asChild className="w-full">
-                    <Link href="/appointment">Get Started</Link>
+                  <Button 
+                    className="w-full" 
+                    onClick={() => handleServicePlanSelection(
+                      pkg.title === "Complete Program" ? "complete-program" : "pay-as-you-go"
+                    )}
+                  >
+                    Get Started
                   </Button>
                 </CardContent>
               </Card>
