@@ -45,141 +45,160 @@ export default function About() {
   ];
 
   return (
-    <div className="min-h-screen py-20">
-      {/* Hero Section */}
-      <section className="container mx-auto px-4 mb-20">
-        <div className="max-w-4xl mx-auto text-center">
-          <Badge variant="secondary" className="mb-4 text-base px-4 py-2">
-            💚 Meet Your Nutrition Partner
-          </Badge>
-          <h1 className="text-4xl md:text-5xl font-bold mb-6">
-            Hi, I'm Vee!
-          </h1>
-          <p className="text-xl text-muted-foreground mb-8 leading-relaxed">
-            I'm here to help you discover that healthy eating can be delicious, sustainable, and perfectly tailored to your life. Let's transform your relationship with food together.
-          </p>
-        </div>
-      </section>
-
-      {/* Personal Story Section */}
-      <section className="container mx-auto px-4 mb-20">
-        <div className="grid lg:grid-cols-2 gap-12 items-center">
-          <div className="order-2 lg:order-1 relative">
-            <OrganicImage 
-              src={aboutMeImage}
-              alt="Vee - Your dedicated nutrition therapist"
-              shape="blob"
-              size="hero"
-              className="shadow-2xl warm-glow floating-element"
-            />
-            
-            {/* Floating organic decorations */}
-            <FloatingOrganic className="absolute -top-8 -right-8 opacity-30" size="medium" delay={1} />
-            <FloatingOrganic className="absolute -bottom-8 -left-8 opacity-20" size="small" delay={2} />
-            
-            {/* Handwritten accent */}
-            <div className="absolute top-8 left-8 bg-white/90 backdrop-blur-sm p-3 rounded-full shadow-lg floating-element">
-              <span className="font-display text-primary italic text-sm">Your Wellness Partner</span>
+    <div className="min-h-screen py-20 bg-gradient-to-br from-background to-muted/30 country-texture relative overflow-hidden">
+      <div className="container mx-auto px-4 relative z-10">
+        {/* Hero Section */}
+        <section className="mb-20 relative">
+          <div className="max-w-4xl mx-auto text-center">
+            <Badge variant="secondary" className="mb-4 text-base px-4 py-2 floating-element">
+              Meet Your Nutrition Partner
+            </Badge>
+            <div className="doodle-arrow mb-6">
+              <h1 className="font-display text-4xl md:text-5xl font-bold mb-6 handwritten-accent">
+                Hi, I'm Vee!
+              </h1>
             </div>
+            <p className="serif-body text-xl text-muted-foreground mb-8 leading-relaxed max-w-3xl mx-auto">
+              I'm here to help you discover that healthy eating can be delicious, sustainable, and perfectly tailored to your life. Let's transform your relationship with food together.
+            </p>
+            
+            {/* Connecting doodle */}
+            <DoodleConnector direction="down" className="absolute -bottom-8 left-1/2 transform -translate-x-1/2 w-32" />
           </div>
-          
-          <div className="space-y-6 order-1 lg:order-2">
-            <div className="space-y-4">
-              <h2 className="text-3xl font-bold">
-                Your Partner in Wellness
-              </h2>
+        </section>
+
+        {/* Personal Story Section */}
+        <section className="mb-20">
+          <div className="grid lg:grid-cols-2 gap-12 items-center">
+            <div className="order-2 lg:order-1 relative">
+              <OrganicImage 
+                src={aboutMeImage}
+                alt="Vee - Your dedicated nutrition therapist"
+                shape="blob"
+                size="hero"
+                className="shadow-2xl warm-glow floating-element"
+              />
+              
+              {/* Floating organic decorations */}
+              <FloatingOrganic className="absolute -top-8 -right-8 opacity-30" size="medium" delay={1} />
+              <FloatingOrganic className="absolute -bottom-8 -left-8 opacity-20" size="small" delay={2} />
+              
+              {/* Handwritten accent */}
+              <div className="absolute top-8 left-8 bg-white/90 backdrop-blur-sm p-3 rounded-full shadow-lg floating-element">
+                <span className="font-display text-primary italic text-sm">Your Wellness Partner</span>
+              </div>
             </div>
             
-            <p className="text-lg text-muted-foreground leading-relaxed">
-              I believe that healthy eating shouldn't feel like a punishment—it should be enjoyable, nourishing, and perfectly tailored to your unique lifestyle. My approach combines evidence-based nutrition science with real-world practicality, because I know how challenging it can be to maintain healthy habits in our busy lives.
-            </p>
-            
-            <p className="text-lg text-muted-foreground leading-relaxed">
-              My own journey with nutrition started when I realized that small, sustainable changes could create profound transformations. After experiencing the life-changing benefits of proper nutrition firsthand, I knew I wanted to help others discover this same sense of vitality and confidence. That's what drives me every day—seeing my clients not just reach their goals, but truly thrive.
-            </p>
-            
-            <p className="text-lg text-muted-foreground leading-relaxed">
-              When I'm not working with clients, you'll find me experimenting with new healthy recipes, staying up-to-date with the latest nutrition research, or enjoying outdoor activities. I believe in practicing what I preach—living a balanced, joyful life that includes delicious food and meaningful connections.
-            </p>
+            <div className="space-y-6 order-1 lg:order-2">
+              <div className="space-y-4">
+                <h2 className="font-display text-3xl font-bold handwritten-accent">
+                  Your Partner in Wellness
+                </h2>
+              </div>
+              
+              <p className="serif-body text-lg text-muted-foreground leading-relaxed">
+                I believe that healthy eating shouldn't feel like a punishment—it should be enjoyable, nourishing, and perfectly tailored to your unique lifestyle. My approach combines evidence-based nutrition science with real-world practicality, because I know how challenging it can be to maintain healthy habits in our busy lives.
+              </p>
+              
+              <p className="serif-body text-lg text-muted-foreground leading-relaxed">
+                Whether you're looking to improve your energy levels, manage a health condition, or simply feel more confident in your food choices, I'm here to guide you every step of the way. Together, we'll create a sustainable path to wellness that fits seamlessly into your life.
+              </p>
 
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-8">
-              {stats.map((stat, index) => (
-                <div key={index} className="text-center p-4 bg-primary-50 dark:bg-gray-800 rounded-lg">
-                  <div className="text-2xl font-bold text-primary-600">{stat.number}</div>
-                  <div className="text-sm text-muted-foreground">{stat.label}</div>
-                </div>
-              ))}
-            </div>
-
-            <div className="space-y-3">
-              <h3 className="text-lg font-semibold">Professional Credentials</h3>
-              <ul className="space-y-2">
+              <div className="space-y-2">
                 {credentials.map((credential, index) => (
-                  <li key={index} className="flex items-center gap-3 text-muted-foreground">
-                    <CheckCircle className="w-4 h-4 text-green-500 flex-shrink-0" />
-                    {credential}
-                  </li>
+                  <div key={index} className="flex items-center gap-2">
+                    <CheckCircle className="w-4 h-4 text-primary" />
+                    <span className="serif-body text-sm">{credential}</span>
+                  </div>
                 ))}
-              </ul>
+              </div>
             </div>
           </div>
-        </div>
-      </section>
+        </section>
 
-      {/* Values Section */}
-      <section className="bg-primary-50 dark:bg-gray-800 py-20">
-        <div className="container mx-auto px-4">
-          <div className="max-w-4xl mx-auto text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold mb-6">
-              What Guides My Practice
-            </h2>
-            <p className="text-xl text-muted-foreground">
-              These values shape every interaction and ensure you receive the most supportive, effective care possible.
-            </p>
-          </div>
-
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
-            {values.map((value, index) => (
-              <Card key={index} className="text-center hover:shadow-lg transition-shadow duration-300">
-                <CardContent className="p-6">
-                  <div className="w-12 h-12 bg-primary-100 dark:bg-primary-900 rounded-full flex items-center justify-center mx-auto mb-4">
-                    <value.icon className="w-6 h-6 text-primary-600" />
-                  </div>
-                  <h3 className="text-lg font-semibold mb-3">{value.title}</h3>
-                  <p className="text-muted-foreground leading-relaxed">{value.description}</p>
-                </CardContent>
-              </Card>
+        {/* Stats Section */}
+        <section className="mb-20">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
+            {stats.map((stat, index) => (
+              <div key={index} className="text-center relative">
+                <Card className="mediterranean-card p-6 floating-element">
+                  <CardContent className="p-0 relative">
+                    <div className="absolute top-0 right-0 w-16 h-16 bg-gradient-to-br from-primary/5 to-accent/5 blob-shape opacity-50"></div>
+                    <h3 className="font-display text-3xl font-bold text-primary mb-2">{stat.number}</h3>
+                    <p className="serif-body text-sm text-muted-foreground">{stat.label}</p>
+                  </CardContent>
+                </Card>
+                {index === 1 && <FloatingOrganic className="absolute -top-4 -right-4 opacity-20" size="small" delay={1.5} />}
+              </div>
             ))}
           </div>
-        </div>
-      </section>
+        </section>
 
-      {/* Call to Action */}
-      <section className="container mx-auto px-4 py-20">
-        <div className="max-w-4xl mx-auto text-center">
-          <h2 className="text-3xl md:text-4xl font-bold mb-6">
-            Ready to Start Your Journey?
-          </h2>
-          <p className="text-xl text-muted-foreground mb-8 leading-relaxed">
-            I'm excited to work with you and help you create lasting, positive changes in your life. Your transformation starts with a single conversation.
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link href="/appointment">
-              <Button size="lg" className="px-8 py-3 text-lg">
-                Book Your Consultation
-              </Button>
-            </Link>
-            <Link href="/contact">
-              <Button variant="outline" size="lg" className="px-8 py-3 text-lg">
-                Get in Touch
-              </Button>
-            </Link>
+        {/* Values Section */}
+        <section className="mb-20">
+          <div className="text-center mb-12 relative">
+            <div className="doodle-arrow mb-4">
+              <h2 className="font-display text-3xl md:text-4xl mb-6 text-foreground handwritten-accent">
+                My Core Values
+              </h2>
+            </div>
+            <p className="serif-body text-xl text-muted-foreground max-w-2xl mx-auto leading-relaxed">
+              These principles guide everything I do in my practice
+            </p>
+            
+            <DoodleConnector direction="down" className="absolute -bottom-6 left-1/2 transform -translate-x-1/2 w-24" />
           </div>
-          <p className="text-sm text-muted-foreground mt-6">
-            No pressure, no judgment—just genuine support for your wellness goals.
-          </p>
-        </div>
-      </section>
+
+          <div className="grid md:grid-cols-2 gap-8">
+            {values.map((value, index) => {
+              const Icon = value.icon;
+              return (
+                <div key={index} className="relative">
+                  <Card className="mediterranean-card p-6 h-full floating-element">
+                    <CardContent className="p-0 relative">
+                      <div className="w-12 h-12 bg-gradient-to-br from-primary/20 to-accent/20 blob-shape flex items-center justify-center mb-4 floating-element">
+                        <Icon className="w-6 h-6 text-primary" />
+                      </div>
+                      <h3 className="font-display text-xl mb-3 handwritten-accent">{value.title}</h3>
+                      <p className="serif-body text-muted-foreground leading-relaxed">{value.description}</p>
+                      
+                      {/* Organic background decoration */}
+                      <div className="absolute top-0 right-0 w-16 h-16 bg-gradient-to-br from-primary/5 to-accent/5 blob-shape opacity-50"></div>
+                    </CardContent>
+                  </Card>
+                  
+                  {index === 0 && <FloatingOrganic className="absolute -top-6 -left-6 opacity-20" size="small" delay={0.5} />}
+                  {index === 3 && <FloatingOrganic className="absolute -bottom-6 -right-6 opacity-20" size="small" delay={3} />}
+                </div>
+              );
+            })}
+          </div>
+        </section>
+
+        {/* CTA Section */}
+        <section className="text-center">
+          <div className="max-w-2xl mx-auto">
+            <h2 className="font-display text-3xl font-bold mb-4 handwritten-accent">Ready to Start Your Journey?</h2>
+            <p className="serif-body text-lg text-muted-foreground mb-8">
+              Let's work together to create a nutrition plan that works for you.
+            </p>
+            <Button size="lg" asChild className="mediterranean-card">
+              <Link href="/register">
+                Start Your Transformation
+              </Link>
+            </Button>
+            <p className="serif-body text-sm text-muted-foreground mt-6">
+              No pressure, no judgment—just genuine support for your wellness goals.
+            </p>
+          </div>
+        </section>
+      </div>
+      
+      {/* Floating background elements */}
+      <FloatingOrganic className="absolute top-20 -right-20 opacity-15" size="large" delay={1} />
+      <FloatingOrganic className="absolute bottom-20 -left-20 opacity-15" size="large" delay={3} />
+      <FloatingOrganic className="absolute top-1/2 right-10 opacity-10" size="medium" delay={2} />
+      <FloatingOrganic className="absolute bottom-1/3 left-10 opacity-10" size="medium" delay={4} />
     </div>
   );
 }
