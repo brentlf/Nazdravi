@@ -149,125 +149,67 @@ export default function Home() {
         </div>
       </section>
       {/* Services Section */}
-      <section className="py-20 bg-muted/20">
+      <section className="py-10 bg-muted/20">
         <div className="container mx-auto px-4">
-          <div className="text-center mb-16 relative">
-            <div className="doodle-arrow mb-4">
-              <h2 className="font-display text-3xl md:text-4xl mb-6 text-foreground handwritten-accent">
-                Nurturing Wellness Through Ancient Wisdom
-              </h2>
-            </div>
-            <p className="serif-body text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
-              As a certified nutritional therapist, I blend Mediterranean
-              traditions with modern science to help you transform your
-              relationship with food. Together, we'll discover sustainable
-              practices that honor both your heritage and your health goals.
+          <div className="text-center mb-8">
+            <h2 className="font-display text-2xl md:text-3xl mb-4">How I Support You</h2>
+            <p className="text-muted-foreground max-w-2xl mx-auto">
+              Mediterranean traditions with modern science for sustainable wellness
             </p>
           </div>
 
-          <div className="grid md:grid-cols-3 gap-8 relative">
+          <div className="grid md:grid-cols-3 gap-4 max-w-4xl mx-auto">
             {services.map((service, index) => {
               const Icon = service.icon;
               return (
-                <div key={index} className="relative">
-                  <Card className="mediterranean-card text-center hover:shadow-xl transition-all duration-500 border-0 floating-element">
-                    <CardContent className="p-8">
-                      {/* Handwritten doodle accent for middle card */}
-                      {index === 1 && (
-                        <div className="absolute -top-4 -right-4">
-                          <span className="font-display text-accent italic text-sm transform rotate-12 inline-block">
-                            Popular!
-                          </span>
-                        </div>
-                      )}
-
-                      <div className="w-16 h-16 bg-green-500/20 blob-shape flex items-center justify-center mx-auto mb-6 warm-glow floating-element">
-                        <Icon className="w-8 h-8 text-green-500" />
-                      </div>
-
-                      <h3 className="font-display text-xl mb-4 text-foreground handwritten-accent">
-                        {service.title}
-                      </h3>
-                      <p className="serif-body text-muted-foreground mb-6 leading-relaxed">
-                        {service.description}
-                      </p>
-
-                      <ul className="space-y-3">
-                        {service.features.map((feature, featureIndex) => (
-                          <li
-                            key={featureIndex}
-                            className="flex items-center justify-center gap-2 serif-body text-sm"
-                          >
-                            <CheckCircle className="w-4 h-4 text-green-500" />
-                            {feature}
-                          </li>
-                        ))}
-                      </ul>
-                    </CardContent>
-                  </Card>
-                </div>
+                <Card key={index} className="mediterranean-card floating-element">
+                  <CardContent className="p-4 text-center">
+                    <Icon className="w-8 h-8 text-primary mx-auto mb-2" />
+                    <h3 className="font-display text-lg font-bold mb-2">{service.title}</h3>
+                    <p className="text-sm text-muted-foreground mb-3">{service.description}</p>
+                    
+                    <ul className="space-y-1">
+                      {service.features.map((feature, featureIndex) => (
+                        <li key={featureIndex} className="flex items-center gap-2 text-xs">
+                          <CheckCircle className="w-3 h-3 text-green-500" />
+                          {feature}
+                        </li>
+                      ))}
+                    </ul>
+                  </CardContent>
+                </Card>
               );
             })}
           </div>
         </div>
       </section>
       {/* Testimonials Section */}
-      <section className="py-20 bg-muted/10 country-texture relative overflow-hidden">
+      <section className="py-10 bg-muted/10">
         <div className="container mx-auto px-4">
-          <div className="text-center mb-16 relative">
-            <div className="doodle-arrow mb-4">
-              <h2 className="font-display text-3xl md:text-4xl mb-6 text-foreground handwritten-accent">
-                Stories of Transformation
-              </h2>
-            </div>
-            <p className="serif-body text-xl text-muted-foreground leading-relaxed max-w-2xl mx-auto">
-              Real journeys from clients who discovered the joy of nourishing
-              themselves
+          <div className="text-center mb-8">
+            <h2 className="font-display text-2xl md:text-3xl mb-4">Client Success</h2>
+            <p className="text-muted-foreground max-w-xl mx-auto">
+              Real transformation stories
             </p>
           </div>
 
-          <div className="grid md:grid-cols-3 gap-8 relative">
+          <div className="grid md:grid-cols-3 gap-4 max-w-4xl mx-auto">
             {testimonials.map((testimonial, index) => (
-              <div key={index} className="relative">
-                <Card className="mediterranean-card border-0 warm-glow floating-element overflow-hidden">
-                  <CardContent className="p-8 relative">
-                    {/* Organic background pattern */}
-                    <div className="absolute top-0 right-0 w-24 h-24 bg-primary/5 blob-shape opacity-50"></div>
-
-                    <div className="flex justify-center mb-6">
-                      {[...Array(testimonial.rating)].map((_, i) => (
-                        <Star
-                          key={i}
-                          className="w-5 h-5 fill-yellow-500/20 text-yellow-500"
-                        />
-                      ))}
-                    </div>
-
-                    <p className="serif-body text-muted-foreground mb-6 italic leading-relaxed text-center relative z-10">
-                      "{testimonial.quote}"
-                    </p>
-                    <p className="font-display text-center text-foreground handwritten-accent">
-                      — {testimonial.name}
-                    </p>
-                  </CardContent>
-                </Card>
-
-                {/* Floating organic decorations */}
-                {index === 0 && (
-                  <FloatingOrganic
-                    className="absolute -top-6 -right-6 opacity-30"
-                    size="small"
-                    delay={0.5}
-                  />
-                )}
-                {index === 2 && (
-                  <FloatingOrganic
-                    className="absolute -bottom-6 -left-6 opacity-30"
-                    size="small"
-                    delay={2.5}
-                  />
-                )}
-              </div>
+              <Card key={index} className="mediterranean-card floating-element">
+                <CardContent className="p-4 text-center">
+                  <div className="flex justify-center mb-3">
+                    {[...Array(testimonial.rating)].map((_, i) => (
+                      <Star key={i} className="w-4 h-4 fill-yellow-500 text-yellow-500" />
+                    ))}
+                  </div>
+                  <p className="text-sm text-muted-foreground mb-3 italic">
+                    "{testimonial.quote}"
+                  </p>
+                  <p className="font-display text-sm font-bold">
+                    — {testimonial.name}
+                  </p>
+                </CardContent>
+              </Card>
             ))}
           </div>
         </div>
@@ -285,38 +227,19 @@ export default function Home() {
         />
       </section>
       {/* CTA Section */}
-      <section className="py-20 bg-primary/10 country-texture">
+      <section className="py-10 bg-primary/10">
         <div className="container mx-auto px-4 text-center">
-          <h2 className="font-display text-3xl md:text-4xl mb-6 text-foreground">
-            Ready to Embrace Your Wellness Journey?
-          </h2>
-          <p className="serif-body text-xl mb-8 text-muted-foreground leading-relaxed max-w-2xl mx-auto">
-            Begin your personalized nutrition transformation with a
-            complimentary consultation. Let's explore how Mediterranean-inspired
-            wellness can nourish your life.
-          </p>
-          <Button
-            size="lg"
-            asChild
-            className="mediterranean-button font-serif-elegant"
-          >
-            <Link href="/appointment">
-              <Calendar className="mr-2 h-5 w-5" />
-              Schedule Your Consultation
-            </Link>
-          </Button>
-        </div>
-      </section>
-      {/* Newsletter Section */}
-      <section className="py-20 bg-white dark:bg-gray-800">
-        <div className="container mx-auto px-4">
-          <div className="max-w-2xl mx-auto text-center">
-            <h2 className="text-3xl font-bold mb-4">Stay Updated</h2>
-            <p className="text-muted-foreground mb-8">
-              Get weekly nutrition tips, healthy recipes, and exclusive content
-              delivered to your inbox.
+          <div className="max-w-lg mx-auto">
+            <h2 className="font-display text-2xl md:text-3xl mb-4">Ready to Start?</h2>
+            <p className="text-muted-foreground mb-6">
+              Begin your personalized nutrition transformation with a complimentary consultation.
             </p>
-            <NewsletterForm />
+            <Button asChild className="w-full">
+              <Link href="/appointment">
+                <Calendar className="mr-2 h-4 w-4" />
+                Book Free Consultation
+              </Link>
+            </Button>
           </div>
         </div>
       </section>
