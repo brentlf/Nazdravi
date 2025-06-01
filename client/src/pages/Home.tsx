@@ -86,7 +86,7 @@ export default function Home() {
                 Nourish Your Best Life
               </Badge>
               
-              <h1 className="font-display text-4xl md:text-5xl lg:text-6xl leading-tight text-foreground">
+              <h1 className="font-display text-4xl md:text-5xl lg:text-6xl leading-tight text-foreground floating-element">
                 Discover the Art of 
                 <span className="block text-primary font-display italic">Holistic Nutrition</span>
               </h1>
@@ -126,40 +126,7 @@ export default function Home() {
               </div>
             </div>
 
-            {/* Organic Hero Image with Seamless Integration */}
-            <div className="relative">
-              {/* Main Image with Organic Shape */}
-              <OrganicImage 
-                src={heroImage}
-                alt="Mediterranean nutrition lifestyle"
-                shape="blob"
-                size="hero"
-                className="shadow-2xl warm-glow floating-element"
-              />
-              
-              {/* Handwritten accent overlay */}
-              <div className="absolute top-8 right-8 bg-white/90 backdrop-blur-sm p-4 rounded-full shadow-lg floating-element">
-                <div className="doodle-arrow">
-                  <span className="font-display text-primary italic text-sm">Wholesome Living</span>
-                </div>
-              </div>
-              
-              {/* Stats bubble integrated into image */}
-              <div className="absolute bottom-8 left-8 bg-primary/90 backdrop-blur-sm p-4 rounded-full text-white shadow-lg floating-element">
-                <div className="text-center">
-                  <div className="font-display text-lg">500+</div>
-                  <div className="serif-body text-xs opacity-90">Clients</div>
-                </div>
-              </div>
-              
-              {/* Organic floating decorations */}
-              <FloatingOrganic className="absolute -top-12 -right-12" size="large" delay={0} />
-              <FloatingOrganic className="absolute -bottom-16 -left-16 opacity-70" size="large" delay={2} />
-              
-              {/* Handwritten doodle connectors */}
-              <DoodleConnector direction="right" className="absolute top-1/4 -right-8 w-16" />
-              <DoodleConnector direction="left" className="absolute bottom-1/3 -left-8 w-12" />
-            </div>
+
 
           </div>
         </div>
