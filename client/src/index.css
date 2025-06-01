@@ -5,31 +5,31 @@
 @tailwind utilities;
 
 :root {
-  /* Natural Mediterranean Palette - Inspired by your examples */
-  --primary: 150 30% 60%; /* #7BA688 - soft sage green */
+  /* Mediterranean Country Palette - From reference images */
+  --primary: 155 28% 52%; /* #6B9A7A - Deep olive green from lemons & countryside */
   --primary-foreground: 0 0% 100%;
   
-  /* Background Colors */
-  --background: 30 20% 97%; /* #F9F7F4 - lighter natural cream */
-  --foreground: 30 25% 15%; /* #2D2822 - darker warm brown for better contrast */
+  /* Background Colors - Warm stone and linen tones */
+  --background: 42 35% 97%; /* #FAFAF6 - warm linen white */
+  --foreground: 25 20% 18%; /* #2F2B26 - rich charcoal brown */
   
   /* Natural UI Colors */
-  --muted: 30 15% 93%; /* #F2EFEA - lighter soft beige */
-  --muted-foreground: 30 15% 40%; /* #6B6258 - darker muted brown for readability */
-  --popover: 30 25% 97%; /* #F9F7F4 - warm white */
-  --popover-foreground: 30 15% 25%;
-  --card: 30 30% 98%; /* #FAFAF8 - soft white */
-  --card-foreground: 30 15% 25%;
-  --border: 30 15% 88%; /* #E4E0DB - gentle border */
-  --input: 30 15% 93%; /* #F2F0EB - soft input */
-  --secondary: 160 20% 88%; /* #D4DDD7 - pale sage */
-  --secondary-foreground: 30 15% 25%;
-  --accent: 150 25% 85%; /* #D1E0D5 - light sage */
-  --accent-foreground: 30 15% 25%;
-  --destructive: 15 65% 60%; /* Warm red */
+  --muted: 40 25% 92%; /* #F1EDEA - warm stone beige */
+  --muted-foreground: 28 15% 42%; /* #6A645B - muted earth brown */
+  --popover: 42 35% 98%; /* Warm linen white */
+  --popover-foreground: 25 20% 22%;
+  --card: 43 40% 96%; /* #F7F5F0 - soft cream card */
+  --card-foreground: 25 20% 22%;
+  --border: 38 18% 86%; /* #E0DCD6 - gentle stone border */
+  --input: 40 25% 93%; /* Soft warm input */
+  --secondary: 15 35% 80%; /* #D4B89A - warm sand tone */
+  --secondary-foreground: 25 20% 22%;
+  --accent: 20 45% 72%; /* #CFA882 - golden terracotta */
+  --accent-foreground: 25 20% 22%;
+  --destructive: 12 55% 58%; /* Terra cotta red */
   --destructive-foreground: 0 0% 98%;
-  --ring: 150 30% 60%;
-  --radius: 1.25rem;
+  --ring: 155 28% 52%;
+  --radius: 0.75rem;
   
   /* Natural Chart Colors */
   --chart-1: 150 30% 60%; /* Sage green */
@@ -50,26 +50,26 @@
 }
 
 .dark {
-  /* Dark theme with high contrast */
-  --background: 30 8% 8%; /* #1A1814 - warm dark background */
-  --foreground: 30 15% 92%; /* #EBE7E0 - high contrast text */
-  --muted: 30 12% 15%; /* #282520 - muted dark */
-  --muted-foreground: 30 8% 75%; /* #C2BDB6 - readable muted text */
-  --popover: 30 10% 10%; /* #1C1A16 - dark popover */
-  --popover-foreground: 30 15% 90%; /* #E5E1DA - bright popover text */
-  --card: 30 12% 12%; /* #211F1B - dark card */
-  --card-foreground: 30 15% 90%; /* #E5E1DA - bright card text */
-  --border: 30 15% 25%; /* #3D3A34 - visible border */
-  --input: 30 15% 20%; /* #36332E - dark input */
-  --primary: 150 25% 65%; /* Lighter sage for dark mode */
-  --primary-foreground: 30 15% 10%; /* Dark text on primary */
-  --secondary: 30 15% 20%; /* Dark secondary */
-  --secondary-foreground: 30 15% 85%; /* Bright secondary text */
-  --accent: 30 15% 25%; /* Dark accent */
-  --accent-foreground: 30 15% 85%; /* Bright accent text */
-  --destructive: 15 70% 65%; /* Brighter red for visibility */
-  --destructive-foreground: 30 15% 95%; /* Very bright text */
-  --ring: 150 25% 65%;
+  /* Dark Mediterranean theme - Rich evening tones */
+  --background: 25 15% 8%; /* #16140F - deep charcoal with warm undertones */
+  --foreground: 42 25% 90%; /* #E8E4DC - warm light cream */
+  --muted: 25 12% 16%; /* #2A2622 - muted warm dark */
+  --muted-foreground: 38 15% 70%; /* #B8B0A6 - readable warm gray */
+  --popover: 25 18% 10%; /* #1A1814 - deep warm popover */
+  --popover-foreground: 42 25% 88%; /* Bright warm text */
+  --card: 25 15% 12%; /* #1F1D18 - warm dark card */
+  --card-foreground: 42 25% 88%; /* Bright warm card text */
+  --border: 25 12% 28%; /* #484139 - visible warm border */
+  --input: 25 15% 18%; /* #302D26 - warm dark input */
+  --primary: 155 35% 58%; /* Brighter olive for dark mode visibility */
+  --primary-foreground: 25 15% 8%; /* Deep text on primary */
+  --secondary: 15 25% 25%; /* #443A32 - warm dark secondary */
+  --secondary-foreground: 42 25% 85%; /* Bright warm text */
+  --accent: 20 35% 35%; /* #5E4F3F - warm earth accent */
+  --accent-foreground: 42 25% 85%; /* Bright warm accent text */
+  --destructive: 12 65% 62%; /* Terra cotta for dark mode */
+  --destructive-foreground: 42 25% 95%; /* Very bright warm text */
+  --ring: 155 35% 58%;
   
   /* Dark sidebar colors */
   --sidebar-background: 240 5.9% 10%;
@@ -94,24 +94,32 @@
     line-height: 1.6;
   }
   
-  /* Natural, Homey Typography with Mediterranean Feel */
+  /* Elegant Mediterranean Typography */
   h1, h2, h3, h4, h5, h6 {
-    font-family: 'Caveat', cursive;
-    font-weight: 600;
-    line-height: 1.2;
-    color: hsl(var(--foreground));
-    letter-spacing: 0.02em;
-  }
-  
-  /* Special handwritten style for decorative headings */
-  .heading-script {
-    font-family: 'Dancing Script', cursive;
+    font-family: 'Playfair Display', serif;
     font-weight: 500;
+    line-height: 1.3;
+    color: hsl(var(--foreground));
+    letter-spacing: -0.02em;
   }
   
-  /* Clean modern body text */
-  .body-text {
-    font-family: 'Poppins', -apple-system, BlinkMacSystemFont, sans-serif;
+  /* Sophisticated serif for body text */
+  .serif-body {
+    font-family: 'Source Serif Pro', serif;
+    font-weight: 400;
+    line-height: 1.7;
+  }
+  
+  /* Elegant heading alternative */
+  .heading-crimson {
+    font-family: 'Crimson Text', serif;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+  }
+  
+  /* Clean sans-serif for UI elements */
+  .sans-clean {
+    font-family: 'Inter', sans-serif;
     font-weight: 400;
   }
   

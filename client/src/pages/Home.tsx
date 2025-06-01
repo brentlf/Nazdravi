@@ -68,18 +68,12 @@ export default function Home() {
   return (
     <div className="min-h-screen">
       {/* Hero Section */}
-      <section className="relative overflow-hidden py-20 lg:py-32 bg-gradient-to-br from-background via-background to-accent/10">
-        {/* Floating Organic Shapes */}
-        <div className="absolute inset-0 overflow-hidden pointer-events-none">
-          <div className="absolute top-20 left-10 w-32 h-32 bg-gradient-to-br from-primary/30 to-primary/10 rounded-full blur-xl animate-pulse"></div>
-          <div className="absolute top-40 right-20 w-24 h-24 bg-gradient-to-br from-accent/40 to-accent/20 rounded-full blur-lg animate-bounce delay-1000"></div>
-          <div className="absolute bottom-40 left-20 w-40 h-40 bg-gradient-to-br from-secondary/30 to-secondary/10 rounded-full blur-2xl animate-pulse delay-500"></div>
-          <div className="absolute top-60 left-1/3 w-16 h-16 bg-gradient-to-br from-primary/40 to-primary/20 rounded-full blur-md animate-bounce delay-2000"></div>
-          <div className="absolute bottom-20 right-10 w-28 h-28 bg-gradient-to-br from-accent/35 to-accent/15 rounded-full blur-xl animate-pulse delay-1500"></div>
-          
-          {/* Organic blob shapes */}
-          <div className="absolute top-32 right-1/4 w-20 h-32 bg-gradient-to-br from-primary/20 to-transparent rounded-full transform rotate-45 blur-lg"></div>
-          <div className="absolute bottom-32 left-1/4 w-36 h-20 bg-gradient-to-br from-secondary/25 to-transparent rounded-full transform -rotate-12 blur-lg"></div>
+      <section className="relative overflow-hidden py-20 lg:py-32 country-texture mediterranean-header">
+        {/* Subtle Mediterranean Elements */}
+        <div className="absolute inset-0 overflow-hidden pointer-events-none opacity-60">
+          <div className="absolute top-20 left-10 w-24 h-24 bg-gradient-to-br from-primary/20 to-primary/5 rounded-full blur-2xl"></div>
+          <div className="absolute top-60 right-16 w-32 h-32 bg-gradient-to-br from-accent/15 to-accent/5 rounded-full blur-3xl"></div>
+          <div className="absolute bottom-40 left-20 w-28 h-28 bg-gradient-to-br from-secondary/20 to-secondary/5 rounded-full blur-2xl"></div>
         </div>
 
         <div className="container mx-auto px-4 relative z-10">
