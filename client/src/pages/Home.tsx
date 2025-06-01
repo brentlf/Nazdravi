@@ -69,12 +69,16 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-background page-content">
       {/* Hero Section */}
-      <section className="relative overflow-hidden py-20 lg:py-32 country-texture mediterranean-header">
-        {/* Clean background elements */}
-        <div className="absolute inset-0 overflow-hidden pointer-events-none opacity-30">
-          <div className="absolute top-20 left-10 w-24 h-24 bg-primary/10 rounded-full blur-2xl"></div>
-          <div className="absolute top-60 right-16 w-32 h-32 bg-accent/8 rounded-full blur-3xl"></div>
-          <div className="absolute bottom-40 left-20 w-28 h-28 bg-secondary/10 rounded-full blur-2xl"></div>
+      <section className="relative overflow-hidden py-20 lg:py-32 min-h-screen flex items-center">
+        {/* Full background image */}
+        <div 
+          className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+          style={{
+            backgroundImage: `url(${heroImage})`,
+          }}
+        >
+          {/* Overlay for text readability */}
+          <div className="absolute inset-0 bg-white/80 dark:bg-black/60"></div>
         </div>
 
         <div className="container mx-auto px-4 relative z-10">
