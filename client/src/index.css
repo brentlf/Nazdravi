@@ -280,7 +280,7 @@
   }
 
   .animate-float {
-    animation: float 6s ease-in-out infinite;
+    /* Removed float animation */
   }
 
   .animate-page-enter {
@@ -319,17 +319,6 @@
   }
 }
 
-@keyframes float {
-  0%, 100% { 
-    transform: translateY(0px) rotate(0deg); 
-  }
-  33% { 
-    transform: translateY(-10px) rotate(1deg); 
-  }
-  66% { 
-    transform: translateY(-5px) rotate(-1deg); 
-  }
-}
 
 @keyframes bounce {
   0%, 20%, 50%, 80%, 100% {
@@ -383,7 +372,6 @@
   width: 200%;
   height: 200%;
   background: hsl(var(--muted) / 0.3);
-  animation: float 6s ease-in-out infinite;
 }
 
 /* Handwritten Doodle Elements */
@@ -427,19 +415,16 @@
   background-size: 100px 10px;
 }
 
-/* Floating Elements */
+/* Elevated Elements - Pop out effect without motion */
 .floating-element {
-  animation: float 4s ease-in-out infinite;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px -8px rgba(0, 0, 0, 0.15);
+  transition: all 0.3s ease;
 }
 
-.floating-element:nth-child(2n) {
-  animation-delay: -2s;
-  animation-duration: 6s;
-}
-
-.floating-element:nth-child(3n) {
-  animation-delay: -4s;
-  animation-duration: 5s;
+.floating-element:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 35px -10px rgba(0, 0, 0, 0.2);
 }
 
 /* Seamless Image Integration */
@@ -480,17 +465,6 @@
   transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-@keyframes float {
-  0%, 100% { 
-    transform: translateY(0px) rotate(0deg); 
-  }
-  33% { 
-    transform: translateY(-10px) rotate(1deg); 
-  }
-  66% { 
-    transform: translateY(-5px) rotate(-1deg); 
-  }
-}
 
 @keyframes pageEnter {
   from {
