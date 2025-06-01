@@ -626,6 +626,65 @@ export function AppointmentForm() {
           </form>
         </Form>
       </div>
+
+      {/* Billing Confirmation Dialog */}
+      <Dialog open={showBillingConfirmation} onOpenChange={setShowBillingConfirmation}>
+        <DialogContent className="max-w-md">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <Crown className="h-5 w-5 text-yellow-600" />
+              Complete Program Billing Confirmation
+            </DialogTitle>
+            <DialogDescription>
+              You are about to upgrade to our Complete Program
+            </DialogDescription>
+          </DialogHeader>
+          
+          <div className="space-y-4">
+            <div className="bg-blue-50 dark:bg-blue-900/20 p-4 rounded-lg border border-blue-200 dark:border-blue-800">
+              <h4 className="font-semibold text-blue-900 dark:text-blue-100 mb-2">Complete Program Benefits</h4>
+              <ul className="text-sm text-blue-800 dark:text-blue-200 space-y-1">
+                <li>• Unlimited nutrition consultations</li>
+                <li>• Personalized meal planning</li>
+                <li>• Priority support and booking</li>
+                <li>• Comprehensive health tracking</li>
+              </ul>
+            </div>
+            
+            <div className="bg-yellow-50 dark:bg-yellow-900/20 p-4 rounded-lg border border-yellow-200 dark:border-yellow-800">
+              <div className="flex items-center gap-2 mb-2">
+                <CreditCard className="h-4 w-4 text-yellow-600" />
+                <span className="font-semibold text-yellow-900 dark:text-yellow-100">Billing Information</span>
+              </div>
+              <p className="text-sm text-yellow-800 dark:text-yellow-200">
+                By confirming, you will be charged <strong>€299 for the first month</strong> of the Complete Program. 
+                Your subscription will automatically renew monthly unless cancelled.
+              </p>
+            </div>
+            
+            <p className="text-xs text-muted-foreground">
+              You can cancel your subscription at any time through your account settings.
+            </p>
+          </div>
+
+          <DialogFooter className="gap-2">
+            <Button 
+              variant="outline" 
+              onClick={handleBillingCancellation}
+              className="flex-1"
+            >
+              Cancel
+            </Button>
+            <Button 
+              onClick={handleBillingConfirmation}
+              className="flex-1 bg-blue-600 hover:bg-blue-700 text-white"
+              disabled={loading}
+            >
+              {loading ? "Processing..." : "Confirm & Pay €299"}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
