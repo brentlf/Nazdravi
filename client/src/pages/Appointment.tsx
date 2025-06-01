@@ -34,7 +34,7 @@ export default function Appointment() {
   }, [consentRecords, user?.uid]);
 
   return (
-    <div className="min-h-screen py-20 bg-gradient-to-br from-background to-muted/30 country-texture relative overflow-hidden page-content">
+    <div className="min-h-screen py-20 bg-background relative overflow-hidden page-content">
       <div className="container mx-auto px-4 relative z-10">
         {/* Page Header */}
         <div className="text-center mb-12 relative">
