@@ -2,6 +2,7 @@ import { CheckCircle, Heart, Target, Smile, Star, Award, Users, Clock, Graduatio
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Link } from "wouter";
+import aboutPageBG from "@assets/AboutPageBG.jpg";
 
 export default function About() {
   const credentials = [
@@ -76,7 +77,7 @@ export default function About() {
       {/* Full-Width Hero Section */}
       <section className="relative h-screen flex items-center justify-center w-full"
                style={{
-                 backgroundImage: `linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.3)), url('https://images.unsplash.com/photo-1542838132-92c53300491e?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80')`,
+                 backgroundImage: `linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.2)), url(${aboutPageBG})`,
                  backgroundSize: 'cover',
                  backgroundPosition: 'center',
                  backgroundAttachment: 'fixed'
