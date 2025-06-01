@@ -90,7 +90,7 @@ export default function About() {
               <Stethoscope className="w-10 h-10 text-white" />
             </div>
           </div>
-          <h1 className="text-5xl md:text-7xl font-bold mb-6 tracking-wide">
+          <h1 className="text-5xl md:text-7xl font-bold mb-6 tracking-wide text-white">
             REGISTERED DIETITIAN
           </h1>
           <p className="text-xl md:text-2xl font-light mb-8 leading-relaxed">
