@@ -427,6 +427,17 @@
   box-shadow: 0 12px 35px -10px rgba(0, 0, 0, 0.2);
 }
 
+/* Enhanced pop-out effect for text elements */
+h1.floating-element {
+  text-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  transform: translateY(-3px);
+  display: inline-block;
+  padding: 0.5rem;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+}
+
 /* Seamless Image Integration */
 .image-float-left {
   clip-path: ellipse(80% 100% at 0% 50%);
