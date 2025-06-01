@@ -67,7 +67,7 @@ export default function Home() {
   ];
 
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen page-content">
       {/* Hero Section */}
       <section className="relative overflow-hidden py-20 lg:py-32 country-texture mediterranean-header">
         {/* Subtle Mediterranean Elements */}

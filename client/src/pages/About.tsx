@@ -45,7 +45,7 @@ export default function About() {
   ];
 
   return (
-    <div className="min-h-screen py-20 bg-gradient-to-br from-background to-muted/30 country-texture relative overflow-hidden">
+    <div className="min-h-screen py-20 bg-gradient-to-br from-background to-muted/30 country-texture relative overflow-hidden page-content">
       <div className="container mx-auto px-4 relative z-10">
         {/* Hero Section */}
         <section className="mb-20 relative">
