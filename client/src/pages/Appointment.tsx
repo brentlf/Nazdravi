@@ -119,12 +119,12 @@ export default function Appointment() {
               {/* Consent Status */}
               {user && (
                 hasConsent ? (
-                  <div className="flex items-center justify-between p-3 bg-green-50 dark:bg-green-900/20 rounded-lg border border-green-200 dark:border-green-800">
-                    <div className="flex items-center gap-3">
-                      <CheckCircle className="w-5 h-5 text-green-500" />
+                  <div className="flex items-center justify-between p-2 bg-green-50 dark:bg-green-900/20 rounded border border-green-200 dark:border-green-800">
+                    <div className="flex items-center gap-2">
+                      <CheckCircle className="w-4 h-4 text-green-500" />
                       <div>
-                        <h4 className="font-medium text-green-800 dark:text-green-200">{t("informed-consent", "appointment")}</h4>
-                        <p className="text-sm text-green-600 dark:text-green-300">{t("consent-completed", "appointment")}</p>
+                        <p className="font-medium text-green-800 dark:text-green-200 text-sm">{t("informed-consent", "appointment")}</p>
+                        <p className="text-xs text-green-600 dark:text-green-300">{t("consent-completed", "appointment")}</p>
                       </div>
                     </div>
                     <span className="text-xs bg-green-100 text-green-800 dark:bg-green-900/50 dark:text-green-200 px-2 py-1 rounded">
