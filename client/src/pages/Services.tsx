@@ -1,3 +1,4 @@
+import { useState } from "react";
 import {
   ClipboardList,
   MessageCircle,
@@ -9,6 +10,8 @@ import {
   Star,
   Award,
   TrendingUp,
+  Crown,
+  CreditCard,
 } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -20,6 +23,14 @@ import { doc, updateDoc } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 import { useToast } from "@/hooks/use-toast";
 import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import {
   FloatingOrganic,
   DoodleConnector,
   OrganicImage,
@@ -30,6 +41,8 @@ export default function Services() {
   const [, setLocation] = useLocation();
   const { toast } = useToast();
   const { data: userData } = useFirestoreDocument("users", user?.uid || "");
+  const [showBillingConfirmation, setShowBillingConfirmation] = useState(false);
+  const [pendingPlanType, setPendingPlanType] = useState<"pay-as-you-go" | "complete-program" | null>(null);
 
   const handleServicePlanSelection = async (planType: "pay-as-you-go" | "complete-program") => {
     if (!user) {
@@ -42,8 +55,19 @@ export default function Services() {
       return;
     }
 
+    // Show billing confirmation for Complete Program upgrade
+    if (planType === "complete-program" && userData?.servicePlan !== "complete-program") {
+      setPendingPlanType(planType);
+      setShowBillingConfirmation(true);
+      return;
+    }
+
+    await updateServicePlan(planType);
+  };
+
+  const updateServicePlan = async (planType: "pay-as-you-go" | "complete-program") => {
     try {
-      const userRef = doc(db, "users", user.uid);
+      const userRef = doc(db, "users", user!.uid);
       const updateData: any = {
         servicePlan: planType,
         updatedAt: new Date(),
@@ -76,6 +100,19 @@ export default function Services() {
         variant: "destructive",
       });
     }
+  };
+
+  const confirmBillingUpgrade = async () => {
+    if (pendingPlanType) {
+      await updateServicePlan(pendingPlanType);
+      setShowBillingConfirmation(false);
+      setPendingPlanType(null);
+    }
+  };
+
+  const cancelBillingUpgrade = () => {
+    setShowBillingConfirmation(false);
+    setPendingPlanType(null);
   };
 
   const mainServices = [
@@ -340,6 +377,77 @@ export default function Services() {
         size="medium"
         delay={4}
       />
+
+      {/* Billing Confirmation Dialog */}
+      <Dialog open={showBillingConfirmation} onOpenChange={setShowBillingConfirmation}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-3">
+              <div className="w-10 h-10 bg-orange-100 dark:bg-orange-900/20 rounded-full flex items-center justify-center">
+                <CreditCard className="h-5 w-5 text-orange-600" />
+              </div>
+              Complete Program Upgrade
+            </DialogTitle>
+            <DialogDescription className="text-left pt-2">
+              You're about to upgrade to the Complete Program which includes:
+            </DialogDescription>
+          </DialogHeader>
+
+          <div className="space-y-4">
+            <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-4">
+              <div className="flex items-start gap-3">
+                <Crown className="h-5 w-5 text-blue-600 mt-0.5" />
+                <div>
+                  <h4 className="font-semibold text-blue-900 dark:text-blue-100">What's Included:</h4>
+                  <ul className="text-sm text-blue-800 dark:text-blue-200 mt-2 space-y-1">
+                    <li>• Unlimited nutrition consultations</li>
+                    <li>• Personalized meal plans and recipes</li>
+                    <li>• Priority 24/7 support access</li>
+                    <li>• Weekly progress tracking sessions</li>
+                    <li>• Comprehensive nutrition education</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+
+            <div className="bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 rounded-lg p-4">
+              <div className="flex items-start gap-3">
+                <div className="w-5 h-5 bg-amber-500 rounded-full flex items-center justify-center mt-0.5">
+                  <span className="text-white text-xs font-bold">€</span>
+                </div>
+                <div>
+                  <h4 className="font-semibold text-amber-900 dark:text-amber-100">Billing Information:</h4>
+                  <p className="text-sm text-amber-800 dark:text-amber-200 mt-1">
+                    <strong>€299 per month</strong> - Billing starts immediately upon confirmation.
+                    Your first charge will be processed today and will recur monthly.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <div className="text-sm text-gray-600 dark:text-gray-400">
+              By confirming, you agree to the monthly subscription fee and terms of service.
+              You can cancel anytime from your account settings.
+            </div>
+          </div>
+
+          <DialogFooter className="flex-col sm:flex-row gap-2">
+            <Button
+              variant="outline"
+              onClick={cancelBillingUpgrade}
+              className="w-full sm:w-auto"
+            >
+              Cancel
+            </Button>
+            <Button
+              onClick={confirmBillingUpgrade}
+              className="w-full sm:w-auto bg-green-600 hover:bg-green-700 text-white"
+            >
+              Confirm Upgrade - €299/month
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
