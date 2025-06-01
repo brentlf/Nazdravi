@@ -96,23 +96,19 @@ export default function About() {
 
             {/* Center Content */}
             <div className="flex flex-col justify-center space-y-6">
-              <h2 className="text-3xl font-bold text-center">Mother and Baby Health</h2>
+              <h2 className="text-3xl font-bold text-center">Your Wellness Partner</h2>
               
-              <div className="space-y-4 text-center">
-                <div className="space-y-2">
-                  <h3 className="font-semibold text-lg">MSc Clinical Nutrition</h3>
-                  <p className="text-muted-foreground">Advanced expertise in clinical nutrition science</p>
-                </div>
-                
-                <div className="space-y-2">
-                  <h3 className="font-semibold text-lg">Registered Dietitian</h3>
-                  <p className="text-muted-foreground">HPCSA and HCPC certified professional</p>
-                </div>
-                
-                <div className="space-y-2">
-                  <h3 className="font-semibold text-lg">Specialized Care</h3>
-                  <p className="text-muted-foreground">Focus on maternal and infant nutrition</p>
-                </div>
+              <p className="text-center text-muted-foreground mb-4">
+                Evidence-based nutrition science with real-world practicality. Let's create sustainable habits that fit your life.
+              </p>
+
+              <div className="space-y-3">
+                {credentials.map((credential, index) => (
+                  <div key={index} className="flex items-center justify-center gap-2">
+                    <CheckCircle className="w-4 h-4 text-green-500" />
+                    <span className="text-sm font-medium">{credential}</span>
+                  </div>
+                ))}
               </div>
             </div>
 
@@ -124,8 +120,27 @@ export default function About() {
             </div>
           </div>
 
-          {/* Bottom Images Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          {/* My Approach Values Section */}
+          <div className="mb-16">
+            <h2 className="text-3xl font-bold text-center mb-8">My Approach</h2>
+            <div className="grid md:grid-cols-4 gap-6 max-w-5xl mx-auto">
+              {values.map((value, index) => {
+                const Icon = value.icon;
+                return (
+                  <Card key={index} className="mediterranean-card floating-element">
+                    <CardContent className="p-6 text-center">
+                      <Icon className="w-8 h-8 text-primary mx-auto mb-3" />
+                      <h3 className="font-bold mb-2">{value.title}</h3>
+                      <p className="text-sm text-muted-foreground">{value.description}</p>
+                    </CardContent>
+                  </Card>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* Bottom Images Grid with Stats */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-16">
             {/* Left Image */}
             <div className="h-80 bg-cover bg-center rounded-lg shadow-lg"
                  style={{
@@ -140,29 +155,39 @@ export default function About() {
                  }}>
             </div>
           </div>
+
+          {/* Stats Section */}
+          <div className="text-center mb-16">
+            <div className="grid md:grid-cols-3 gap-8 max-w-3xl mx-auto">
+              {stats.map((stat, index) => (
+                <div key={index} className="space-y-2">
+                  <div className="text-4xl font-bold text-primary">{stat.number}</div>
+                  <div className="text-muted-foreground">{stat.label}</div>
+                </div>
+              ))}
+            </div>
+          </div>
         </div>
       </section>
 
       {/* Personal Story Section */}
       <section className="py-16 bg-muted/20">
         <div className="max-w-4xl mx-auto px-6 text-center">
-          <h2 className="text-3xl font-bold mb-8">My Journey</h2>
+          <h2 className="text-3xl font-bold mb-8">Your dedicated nutrition partner</h2>
           <div className="space-y-6 text-lg leading-relaxed">
             <p>
-              My passion for nutrition began with my own journey to understanding how food impacts our bodies, 
-              minds, and overall wellbeing. With advanced training in clinical nutrition and years of practice, 
-              I've dedicated my career to helping individuals and families build sustainable, healthy relationships with food.
+              You deserve to feel heard and supported. Your story matters, and together we'll transform your relationship with food. 
+              My approach combines evidence-based nutrition science with real-world practicality to create sustainable habits that fit your life.
             </p>
             <p>
-              I specialize in mother and baby health, understanding the unique nutritional needs during pregnancy, 
-              breastfeeding, and early childhood development. Every client receives personalized care based on 
-              evidence-based nutrition science combined with practical, real-world solutions.
+              Whether you're looking for personalized nutrition plans, ongoing support, or expert guidance on your wellness journey, 
+              I'm here to help you build lifelong healthy habits. Let's create nutrition plans that bring joy, not stress.
             </p>
           </div>
           
           <div className="mt-12">
             <Button asChild size="lg" className="px-8 py-4">
-              <Link href="/appointment">Start Your Journey</Link>
+              <Link href="/appointment">Book Consultation</Link>
             </Button>
           </div>
         </div>
