@@ -21,7 +21,7 @@ import {
   DoodleConnector,
   OrganicImage,
 } from "@/components/ui/PageTransition";
-import heroImage from "@assets/HeroBG.png";
+import heroImage from "@assets/OrangesBG.jpg";
 
 export default function Home() {
   const services = [
@@ -87,7 +87,7 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-background page-content">
       {/* Hero Section */}
-      <section className="relative overflow-hidden py-20 lg:py-32 min-h-screen flex items-center">
+      <section className="relative overflow-hidden pt-8 pb-20 min-h-[90vh] flex items-center">
         {/* Full background image */}
         <div
           className="absolute inset-0 bg-cover bg-center bg-no-repeat"
@@ -96,25 +96,25 @@ export default function Home() {
           }}
         ></div>
 
-        <div className="container mx-auto px-4 relative z-10">
-          <div className="grid lg:grid-cols-2 gap-12 items-center">
+        <div className="max-w-screen-3xl mx-auto px-6 relative z-2">
+          <div className="grid lg:grid-cols-2 gap-15 items-center">
             {/* Content */}
-            <div className="space-y-8 relative">
+            <div className="space-y-6 relative">
               <Badge
                 variant="secondary"
-                className="w-fit font-serif-elegant border-0 bg-primary/10 text-primary floating-element"
+                className="w-fit font-serif-elegant border-0 bg-white/20 text-white floating-element"
               >
                 Nourish Your Best Life
               </Badge>
 
-              <h1 className="font-display text-5xl md:text-7xl lg:text-8xl xl:text-9xl leading-tight text-foreground">
+              <h1 className="font-display text-4xl md:text-6xl lg:text-7xl xl:text-8xl leading-tight text-white">
                 Discover the Art of
-                <span className="block text-primary font-display italic">
+                <span className="block text-white font-display italic">
                   Holistic Nutrition
                 </span>
               </h1>
 
-              <p className="serif-body text-xl text-muted-foreground max-w-2xl leading-relaxed">
+              <p className="serif-body text-xl text-gray-200 max-w-2xl leading-relaxed">
                 Experience personalized nutrition guidance rooted in
                 Mediterranean wisdom and modern science. Together, we'll
                 cultivate sustainable habits that nourish both body and soul.
