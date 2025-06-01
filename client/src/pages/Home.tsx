@@ -80,29 +80,29 @@ export default function Home() {
           <div className="grid lg:grid-cols-2 gap-12 items-center">
             {/* Content */}
             <div className="space-y-8 relative">
-              <Badge variant="secondary" className="w-fit shadow-lg border-0 bg-gradient-to-r from-primary/20 to-accent/20 backdrop-blur-sm">
-                🌱 Transform Your Health Today
+              <Badge variant="secondary" className="w-fit font-serif-elegant border-0 bg-gradient-to-r from-primary/15 to-accent/15 text-primary">
+                Nourish Your Best Life
               </Badge>
               
-              <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-foreground leading-tight">
-                Transform Your Health with 
-                <span className="block text-primary bg-gradient-to-r from-primary to-primary/80 bg-clip-text text-transparent">Personalized Nutrition</span>
+              <h1 className="font-display text-4xl md:text-5xl lg:text-6xl leading-tight text-foreground">
+                Discover the Art of 
+                <span className="block text-primary font-display italic">Holistic Nutrition</span>
               </h1>
               
-              <p className="text-xl text-muted-foreground max-w-2xl">
-                Personalized nutrition counseling designed to help you achieve your health goals through sustainable lifestyle changes and expert guidance.
+              <p className="serif-body text-xl text-muted-foreground max-w-2xl leading-relaxed">
+                Experience personalized nutrition guidance rooted in Mediterranean wisdom and modern science. Together, we'll cultivate sustainable habits that nourish both body and soul.
               </p>
               
               <div className="flex flex-col sm:flex-row gap-4">
-                <Button size="lg" asChild className="bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70 shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition-all duration-300">
+                <Button size="lg" asChild className="mediterranean-button font-serif-elegant">
                   <Link href="/appointment">
                     <Calendar className="mr-2 h-5 w-5" />
-                    Book Free Consultation ✨
+                    Begin Your Journey
                   </Link>
                 </Button>
-                <Button variant="outline" size="lg" asChild className="border-2 border-primary/30 hover:border-primary hover:bg-primary/10 backdrop-blur-sm shadow-md hover:shadow-lg transform hover:-translate-y-1 transition-all duration-300">
+                <Button variant="outline" size="lg" asChild className="border-2 border-primary/30 hover:border-primary hover:bg-primary/10 font-serif-elegant warm-glow">
                   <Link href="/services">
-                    Learn More 🌿
+                    Explore Services
                   </Link>
                 </Button>
               </div>
@@ -153,14 +153,14 @@ export default function Home() {
         </div>
       </section>
       {/* Services Section */}
-      <section className="py-20 bg-white dark:bg-gray-800">
+      <section className="py-20 bg-gradient-to-br from-background to-muted/30">
         <div className="container mx-auto px-4">
           <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold mb-4">
-              Your journey to better health starts here
+            <h2 className="font-display text-3xl md:text-4xl mb-6 text-foreground">
+              Nurturing Wellness Through Ancient Wisdom
             </h2>
-            <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-              As a certified nutritional therapist, I specialize in helping individuals transform their relationship with food and achieve lasting health results. My passion is helping people discover the power of nutrition and create sustainable habits that support their overall wellbeing.
+            <p className="serif-body text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
+              As a certified nutritional therapist, I blend Mediterranean traditions with modern science to help you transform your relationship with food. Together, we'll discover sustainable practices that honor both your heritage and your health goals.
             </p>
           </div>
 
@@ -168,17 +168,17 @@ export default function Home() {
             {services.map((service, index) => {
               const Icon = service.icon;
               return (
-                <Card key={index} className="text-center hover:shadow-lg transition-shadow duration-300">
+                <Card key={index} className="mediterranean-card text-center hover:shadow-xl transition-all duration-500 border-0">
                   <CardContent className="p-8">
-                    <div className="w-16 h-16 bg-primary-100 dark:bg-primary-900/30 rounded-full flex items-center justify-center mx-auto mb-6">
-                      <Icon className="w-8 h-8 text-primary-600" />
+                    <div className="w-16 h-16 bg-gradient-to-br from-primary/20 to-accent/20 rounded-full flex items-center justify-center mx-auto mb-6 warm-glow">
+                      <Icon className="w-8 h-8 text-primary" />
                     </div>
-                    <h3 className="text-xl font-semibold mb-4">{service.title}</h3>
-                    <p className="text-muted-foreground mb-6">{service.description}</p>
-                    <ul className="space-y-2">
+                    <h3 className="font-display text-xl mb-4 text-foreground">{service.title}</h3>
+                    <p className="serif-body text-muted-foreground mb-6 leading-relaxed">{service.description}</p>
+                    <ul className="space-y-3">
                       {service.features.map((feature, featureIndex) => (
-                        <li key={featureIndex} className="flex items-center justify-center gap-2 text-sm">
-                          <CheckCircle className="w-4 h-4 text-green-500" />
+                        <li key={featureIndex} className="flex items-center justify-center gap-2 serif-body text-sm">
+                          <CheckCircle className="w-4 h-4 text-primary" />
                           {feature}
                         </li>
                       ))}
@@ -191,28 +191,28 @@ export default function Home() {
         </div>
       </section>
       {/* Testimonials Section */}
-      <section className="py-20 bg-primary-50 dark:bg-gray-900">
+      <section className="py-20 bg-gradient-to-br from-accent/10 to-secondary/10 country-texture">
         <div className="container mx-auto px-4">
           <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold mb-4">
-              What Our Clients Say
+            <h2 className="font-display text-3xl md:text-4xl mb-6 text-foreground">
+              Stories of Transformation
             </h2>
-            <p className="text-xl text-muted-foreground">
-              Real results from real people who transformed their health
+            <p className="serif-body text-xl text-muted-foreground leading-relaxed">
+              Real journeys from clients who discovered the joy of nourishing themselves
             </p>
           </div>
 
           <div className="grid md:grid-cols-3 gap-8">
             {testimonials.map((testimonial, index) => (
-              <Card key={index} className="bg-white dark:bg-gray-800">
-                <CardContent className="p-6">
-                  <div className="flex mb-4">
+              <Card key={index} className="mediterranean-card border-0 warm-glow">
+                <CardContent className="p-8">
+                  <div className="flex justify-center mb-6">
                     {[...Array(testimonial.rating)].map((_, i) => (
-                      <Star key={i} className="w-5 h-5 fill-yellow-400 text-yellow-400" />
+                      <Star key={i} className="w-5 h-5 fill-accent text-accent" />
                     ))}
                   </div>
-                  <p className="text-muted-foreground mb-4 italic">"{testimonial.quote}"</p>
-                  <p className="font-semibold">— {testimonial.name}</p>
+                  <p className="serif-body text-muted-foreground mb-6 italic leading-relaxed text-center">"{testimonial.quote}"</p>
+                  <p className="font-display text-center text-foreground">— {testimonial.name}</p>
                 </CardContent>
               </Card>
             ))}
@@ -220,18 +220,18 @@ export default function Home() {
         </div>
       </section>
       {/* CTA Section */}
-      <section className="py-20 text-white bg-[#f7f2ed]">
-        <div className="container mx-auto px-4 text-center bg-[#ffffff00]">
-          <h2 className="text-3xl md:text-4xl font-bold mb-4">
-            Ready to Start Your Transformation?
+      <section className="py-20 bg-gradient-to-br from-primary/15 to-accent/15 country-texture">
+        <div className="container mx-auto px-4 text-center">
+          <h2 className="font-display text-3xl md:text-4xl mb-6 text-foreground">
+            Ready to Embrace Your Wellness Journey?
           </h2>
-          <p className="text-xl mb-8 opacity-90 text-[#050404]">
-            Book your free consultation today and take the first step towards a healthier, happier you.
+          <p className="serif-body text-xl mb-8 text-muted-foreground leading-relaxed max-w-2xl mx-auto">
+            Begin your personalized nutrition transformation with a complimentary consultation. Let's explore how Mediterranean-inspired wellness can nourish your life.
           </p>
-          <Button size="lg" variant="secondary" asChild>
+          <Button size="lg" asChild className="mediterranean-button font-serif-elegant">
             <Link href="/appointment">
               <Calendar className="mr-2 h-5 w-5" />
-              Book Free Consultation
+              Schedule Your Consultation
             </Link>
           </Button>
         </div>
