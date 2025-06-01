@@ -237,6 +237,12 @@ export default function Appointment() {
           </div>
         </div>
       </div>
+      
+      {/* Floating background elements */}
+      <FloatingOrganic className="absolute top-20 -right-20 opacity-15" size="large" delay={2} />
+      <FloatingOrganic className="absolute bottom-20 -left-20 opacity-15" size="large" delay={4} />
+      <FloatingOrganic className="absolute top-1/2 right-10 opacity-10" size="medium" delay={1} />
+      <FloatingOrganic className="absolute bottom-1/3 left-10 opacity-10" size="medium" delay={3} />
     </div>
   );
 }
