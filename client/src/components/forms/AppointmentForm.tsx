@@ -32,6 +32,14 @@ import { useAuth } from "@/contexts/AuthContext";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { Alert, AlertDescription } from "@/components/ui/alert";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 
 const appointmentSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters"),
@@ -53,6 +61,8 @@ type AppointmentFormData = z.infer<typeof appointmentSchema>;
 export function AppointmentForm() {
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [selectedDate, setSelectedDate] = useState("");
+  const [showBillingConfirmation, setShowBillingConfirmation] = useState(false);
+  const [pendingFormData, setPendingFormData] = useState<AppointmentFormData | null>(null);
   const { toast } = useToast();
   const { user } = useAuth();
   const { data: userData } = useFirestoreDocument("users", user?.uid || "");
@@ -105,6 +115,18 @@ export function AppointmentForm() {
   ];
 
   const onSubmit = async (data: AppointmentFormData) => {
+    // Check if user is selecting Complete Program and doesn't already have it
+    if (data.servicePlan === "complete-program" && userData?.servicePlan !== "complete-program") {
+      setPendingFormData(data);
+      setShowBillingConfirmation(true);
+      return;
+    }
+
+    // Proceed with normal submission
+    await submitAppointment(data);
+  };
+
+  const submitAppointment = async (data: AppointmentFormData) => {
     try {
       // Double-check availability before booking to prevent conflicts
       const appointmentsRef = collection(db, "appointments");
@@ -183,6 +205,21 @@ export function AppointmentForm() {
         variant: "destructive",
       });
     }
+  };
+
+  const handleBillingConfirmation = async () => {
+    if (pendingFormData) {
+      setShowBillingConfirmation(false);
+      await submitAppointment(pendingFormData);
+      setPendingFormData(null);
+    }
+  };
+
+  const handleBillingCancellation = () => {
+    setShowBillingConfirmation(false);
+    setPendingFormData(null);
+    // Reset the service plan selection to pay-as-you-go
+    form.setValue("servicePlan", "pay-as-you-go");
   };
 
   if (isSubmitted) {
@@ -290,30 +327,56 @@ export function AppointmentForm() {
                       defaultValue={field.value}
                       className="grid md:grid-cols-2 gap-4 mt-3"
                     >
-                      <div>
+                      <div className="relative">
                         <RadioGroupItem value="Initial" id="initial" className="peer sr-only" />
                         <Label
                           htmlFor="initial"
-                          className="flex items-center space-x-3 p-4 border-2 border-gray-200 dark:border-gray-600 rounded-lg cursor-pointer peer-checked:border-primary-500 peer-checked:bg-primary-50 dark:peer-checked:bg-primary-900/20 transition-all duration-200"
+                          className={`
+                            flex items-center justify-between p-4 border-2 rounded-lg cursor-pointer transition-all duration-200
+                            ${field.value === "Initial" 
+                              ? "border-blue-500 bg-blue-50 dark:bg-blue-900/20 ring-2 ring-blue-500/20" 
+                              : "border-gray-200 dark:border-gray-600 hover:border-gray-300"
+                            }
+                          `}
                         >
-                          <Calendar className="h-5 w-5 text-primary-500" />
-                          <div>
-                            <p className="font-medium">Initial Consultation</p>
-                            <p className="text-sm text-muted-foreground">60 minutes - €89</p>
+                          <div className="flex items-center space-x-3">
+                            <Calendar className="h-5 w-5 text-primary-500" />
+                            <div>
+                              <p className="font-medium">Initial Consultation</p>
+                              <p className="text-sm text-muted-foreground">60 minutes - €89</p>
+                            </div>
                           </div>
+                          {field.value === "Initial" && (
+                            <div className="w-5 h-5 bg-blue-500 rounded-full flex items-center justify-center">
+                              <div className="w-2 h-2 bg-white rounded-full"></div>
+                            </div>
+                          )}
                         </Label>
                       </div>
-                      <div>
+                      <div className="relative">
                         <RadioGroupItem value="Follow-up" id="followup" className="peer sr-only" />
                         <Label
                           htmlFor="followup"
-                          className="flex items-center space-x-3 p-4 border-2 border-gray-200 dark:border-gray-600 rounded-lg cursor-pointer peer-checked:border-primary-500 peer-checked:bg-primary-50 dark:peer-checked:bg-primary-900/20 transition-all duration-200"
+                          className={`
+                            flex items-center justify-between p-4 border-2 rounded-lg cursor-pointer transition-all duration-200
+                            ${field.value === "Follow-up" 
+                              ? "border-blue-500 bg-blue-50 dark:bg-blue-900/20 ring-2 ring-blue-500/20" 
+                              : "border-gray-200 dark:border-gray-600 hover:border-gray-300"
+                            }
+                          `}
                         >
-                          <Clock className="h-5 w-5 text-primary-500" />
-                          <div>
-                            <p className="font-medium">Follow-up Session</p>
-                            <p className="text-sm text-muted-foreground">30 minutes - €49</p>
+                          <div className="flex items-center space-x-3">
+                            <Clock className="h-5 w-5 text-primary-500" />
+                            <div>
+                              <p className="font-medium">Follow-up Session</p>
+                              <p className="text-sm text-muted-foreground">30 minutes - €49</p>
+                            </div>
                           </div>
+                          {field.value === "Follow-up" && (
+                            <div className="w-5 h-5 bg-blue-500 rounded-full flex items-center justify-center">
+                              <div className="w-2 h-2 bg-white rounded-full"></div>
+                            </div>
+                          )}
                         </Label>
                       </div>
                     </RadioGroup>

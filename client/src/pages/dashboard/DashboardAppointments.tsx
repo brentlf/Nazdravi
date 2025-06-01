@@ -1508,18 +1508,67 @@ export default function DashboardAppointments() {
                   name="type"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Consultation Type</FormLabel>
-                      <Select onValueChange={field.onChange} defaultValue={field.value}>
-                        <FormControl>
-                          <SelectTrigger>
-                            <SelectValue placeholder="Select consultation type" />
-                          </SelectTrigger>
-                        </FormControl>
-                        <SelectContent>
-                          <SelectItem value="Initial">Initial Consultation</SelectItem>
-                          <SelectItem value="Follow-up">Follow-up Consultation</SelectItem>
-                        </SelectContent>
-                      </Select>
+                      <FormLabel>Consultation Type *</FormLabel>
+                      <FormControl>
+                        <RadioGroup
+                          onValueChange={field.onChange}
+                          defaultValue={field.value}
+                          className="grid md:grid-cols-2 gap-4 mt-3"
+                        >
+                          <div className="relative">
+                            <RadioGroupItem value="Initial" id="dashboard-initial" className="peer sr-only" />
+                            <Label
+                              htmlFor="dashboard-initial"
+                              className={`
+                                flex items-center justify-between p-4 border-2 rounded-lg cursor-pointer transition-all duration-200
+                                ${field.value === "Initial" 
+                                  ? "border-blue-500 bg-blue-50 dark:bg-blue-900/20 ring-2 ring-blue-500/20" 
+                                  : "border-gray-200 dark:border-gray-600 hover:border-gray-300"
+                                }
+                              `}
+                            >
+                              <div className="flex items-center space-x-3">
+                                <Calendar className="h-5 w-5 text-primary-500" />
+                                <div>
+                                  <p className="font-medium">Initial Consultation</p>
+                                  <p className="text-sm text-muted-foreground">60 minutes - €89</p>
+                                </div>
+                              </div>
+                              {field.value === "Initial" && (
+                                <div className="w-5 h-5 bg-blue-500 rounded-full flex items-center justify-center">
+                                  <div className="w-2 h-2 bg-white rounded-full"></div>
+                                </div>
+                              )}
+                            </Label>
+                          </div>
+                          <div className="relative">
+                            <RadioGroupItem value="Follow-up" id="dashboard-followup" className="peer sr-only" />
+                            <Label
+                              htmlFor="dashboard-followup"
+                              className={`
+                                flex items-center justify-between p-4 border-2 rounded-lg cursor-pointer transition-all duration-200
+                                ${field.value === "Follow-up" 
+                                  ? "border-blue-500 bg-blue-50 dark:bg-blue-900/20 ring-2 ring-blue-500/20" 
+                                  : "border-gray-200 dark:border-gray-600 hover:border-gray-300"
+                                }
+                              `}
+                            >
+                              <div className="flex items-center space-x-3">
+                                <Clock className="h-5 w-5 text-primary-500" />
+                                <div>
+                                  <p className="font-medium">Follow-up Session</p>
+                                  <p className="text-sm text-muted-foreground">30 minutes - €49</p>
+                                </div>
+                              </div>
+                              {field.value === "Follow-up" && (
+                                <div className="w-5 h-5 bg-blue-500 rounded-full flex items-center justify-center">
+                                  <div className="w-2 h-2 bg-white rounded-full"></div>
+                                </div>
+                              )}
+                            </Label>
+                          </div>
+                        </RadioGroup>
+                      </FormControl>
                       <FormMessage />
                     </FormItem>
                   )}
