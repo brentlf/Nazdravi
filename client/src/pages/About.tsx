@@ -73,8 +73,37 @@ export default function About() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-white dark:from-gray-900 dark:to-gray-800 page-content">
+      {/* Full-Width Hero Section */}
+      <section className="relative h-screen flex items-center justify-center w-full"
+               style={{
+                 backgroundImage: `linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.3)), url('https://images.unsplash.com/photo-1542838132-92c53300491e?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80')`,
+                 backgroundSize: 'cover',
+                 backgroundPosition: 'center',
+                 backgroundAttachment: 'fixed'
+               }}>
+        
+        {/* Hero Content */}
+        <div className="relative z-10 text-center text-white px-8 max-w-4xl">
+          <div className="mb-6">
+            <div className="inline-flex items-center justify-center w-20 h-20 bg-white/10 backdrop-blur-sm rounded-full mb-6">
+              <Stethoscope className="w-10 h-10 text-white" />
+            </div>
+          </div>
+          <h1 className="text-5xl md:text-7xl font-bold mb-6 tracking-wide">
+            REGISTERED DIETITIAN
+          </h1>
+          <p className="text-xl md:text-2xl font-light mb-8 leading-relaxed">
+            Hi! I'm Vee, a Registered Dietitian with the HPCSA and HCPC
+          </p>
+          <div className="flex items-center justify-center gap-2 text-lg font-medium">
+            <Heart className="w-5 h-5 text-red-400" />
+            <span>Your Wellness Partner</span>
+          </div>
+        </div>
+      </section>
+
       {/* 3-Column Layout Container */}
-      <div className="grid grid-cols-12 min-h-screen">
+      <div className="grid grid-cols-12">
         
         {/* Left Column - Images */}
         <div className="col-span-3 relative">
@@ -98,37 +127,8 @@ export default function About() {
           </div>
         </div>
 
-        {/* Middle Column - Content with Hero Background */}
+        {/* Middle Column - Content */}
         <div className="col-span-6 relative">
-          {/* Hero Section with Background */}
-          <section className="relative h-screen flex items-center justify-center"
-                   style={{
-                     backgroundImage: `linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.3)), url('https://images.unsplash.com/photo-1542838132-92c53300491e?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80')`,
-                     backgroundSize: 'cover',
-                     backgroundPosition: 'center',
-                     backgroundAttachment: 'fixed'
-                   }}>
-            
-            {/* Hero Content */}
-            <div className="relative z-10 text-center text-white px-8 max-w-3xl">
-              <div className="mb-6">
-                <div className="inline-flex items-center justify-center w-20 h-20 bg-white/10 backdrop-blur-sm rounded-full mb-6">
-                  <Stethoscope className="w-10 h-10 text-white" />
-                </div>
-              </div>
-              <h1 className="text-5xl md:text-7xl font-bold mb-6 tracking-wide">
-                REGISTERED DIETITIAN
-              </h1>
-              <p className="text-xl md:text-2xl font-light mb-8 leading-relaxed">
-                Hi! I'm Vee, a Registered Dietitian with the HPCSA and HCPC
-              </p>
-              <div className="flex items-center justify-center gap-2 text-lg font-medium">
-                <Heart className="w-5 h-5 text-red-400" />
-                <span>Your Wellness Partner</span>
-              </div>
-            </div>
-          </section>
-
           {/* Content Sections */}
           <section className="bg-white dark:bg-gray-900 px-8 py-20">
             {/* About Section */}
