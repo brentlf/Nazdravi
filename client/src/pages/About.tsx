@@ -21,18 +21,19 @@ export default function About() {
   const credentials = [
     {
       icon: GraduationCap,
-      title: "MSc Clinical Nutrition",
-      description: "Advanced Master's degree in Clinical Nutrition Science",
-    },
-    {
-      icon: Shield,
       title: "Registered Dietitian HPCSA",
       description: "Licensed with Health Professions Council of South Africa",
     },
     {
+      icon: Shield,
+      title: "Registered Dietitian HCPC",
+      description:
+        "Licensed with Health Professions Council in the United Kingdom",
+    },
+    {
       icon: Stethoscope,
-      title: "Sports Nutritionist",
-      description: "Specialized expertise in performance nutrition",
+      title: "Clinical Experience",
+      description: "Years working in hospitals within the clinical practice",
     },
     {
       icon: BookOpen,
@@ -190,16 +191,16 @@ export default function About() {
                         key={index}
                         className="border-0 shadow-lg hover:shadow-xl transition-shadow duration-300 bg-gradient-to-br from-blue-50 to-white dark:from-gray-800 dark:to-gray-700"
                       >
-                        <CardContent className="p-6">
-                          <div className="flex items-start gap-4">
-                            <div className="w-12 h-12 bg-blue-100 dark:bg-blue-900 rounded-lg flex items-center justify-center flex-shrink-0">
-                              <Icon className="w-6 h-6 text-blue-600 dark:text-blue-400" />
+                        <CardContent className="p-4">
+                          <div className="flex items-start gap-3">
+                            <div className="w-10 h-10 bg-blue-100 dark:bg-blue-900 rounded-lg flex items-center justify-center flex-shrink-0">
+                              <Icon className="w-5 h-5 text-blue-600 dark:text-blue-400" />
                             </div>
                             <div className="text-left">
-                              <h3 className="font-bold text-lg mb-2">
+                              <h3 className="font-bold text-base mb-1">
                                 {credential.title}
                               </h3>
-                              <p className="text-sm text-gray-600 dark:text-gray-400 leading-relaxed">
+                              <p className="text-xs text-gray-600 dark:text-gray-400 leading-relaxed">
                                 {credential.description}
                               </p>
                             </div>
@@ -230,14 +231,14 @@ export default function About() {
                       key={index}
                       className="border-0 shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1 bg-gradient-to-br from-white to-gray-50 dark:from-gray-800 dark:to-gray-700"
                     >
-                      <CardContent className="p-8 text-center">
-                        <div className="w-16 h-16 bg-gradient-to-br from-blue-100 to-blue-200 dark:from-blue-900 dark:to-blue-800 rounded-full flex items-center justify-center mx-auto mb-6">
-                          <Icon className="w-8 h-8 text-blue-600 dark:text-blue-400" />
+                      <CardContent className="p-4 text-center">
+                        <div className="w-12 h-12 bg-gradient-to-br from-blue-100 to-blue-200 dark:from-blue-900 dark:to-blue-800 rounded-full flex items-center justify-center mx-auto mb-4">
+                          <Icon className="w-6 h-6 text-blue-600 dark:text-blue-400" />
                         </div>
-                        <h3 className="text-xl font-bold mb-4">
+                        <h3 className="text-lg font-bold mb-2">
                           {value.title}
                         </h3>
-                        <p className="text-gray-600 dark:text-gray-400 leading-relaxed">
+                        <p className="text-sm text-gray-600 dark:text-gray-400 leading-relaxed">
                           {value.description}
                         </p>
                       </CardContent>
@@ -257,7 +258,7 @@ export default function About() {
               </h2>
               <div className="w-24 h-1 bg-rose-600 mx-auto rounded-full mb-6"></div>
 
-              <div className="space-y-6 text-lg leading-relaxed max-w-3xl mx-auto text-gray-700 dark:text-gray-300">
+              <div className="space-y-4 text-base leading-relaxed max-w-3xl mx-auto text-gray-700 dark:text-gray-300">
                 <p>
                   You deserve to feel heard and supported. Your story matters,
                   and together we'll transform your relationship with food. My
