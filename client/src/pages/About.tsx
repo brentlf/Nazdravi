@@ -83,22 +83,24 @@ export default function About() {
         </div>
       </section>
 
-      {/* Main Content Grid */}
-      <section className="py-16">
+      {/* Overlapping Images Grid */}
+      <section className="py-16 relative">
         <div className="max-w-7xl mx-auto px-6">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
-            {/* Left Image */}
-            <div className="h-96 bg-cover bg-center rounded-lg shadow-lg"
-                 style={{
-                   backgroundImage: `url('https://images.unsplash.com/photo-1586201375761-83865001e31c?ixlib=rb-4.0.3&auto=format&fit=crop&w=987&q=80')`,
-                 }}>
+          {/* Main overlapping grid container */}
+          <div className="relative min-h-[600px] mb-16">
+            {/* Left Image - Overlapping */}
+            <div 
+              className="absolute top-0 left-0 w-80 h-96 bg-cover bg-center rounded-lg shadow-xl z-10 transform rotate-2"
+              style={{
+                backgroundImage: `url('https://images.unsplash.com/photo-1586201375761-83865001e31c?ixlib=rb-4.0.3&auto=format&fit=crop&w=987&q=80')`,
+              }}>
             </div>
 
             {/* Center Content */}
-            <div className="flex flex-col justify-center space-y-6">
-              <h2 className="text-3xl font-bold text-center">Your Wellness Partner</h2>
+            <div className="absolute top-16 left-1/2 transform -translate-x-1/2 bg-white dark:bg-gray-900 p-8 rounded-xl shadow-xl z-20 max-w-md">
+              <h2 className="text-3xl font-bold text-center mb-4">Your Wellness Partner</h2>
               
-              <p className="text-center text-muted-foreground mb-4">
+              <p className="text-center text-muted-foreground mb-6">
                 Evidence-based nutrition science with real-world practicality. Let's create sustainable habits that fit your life.
               </p>
 
@@ -112,16 +114,33 @@ export default function About() {
               </div>
             </div>
 
-            {/* Right Image */}
-            <div className="h-96 bg-cover bg-center rounded-lg shadow-lg"
-                 style={{
-                   backgroundImage: `url('https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80')`,
-                 }}>
+            {/* Right Image - Overlapping */}
+            <div 
+              className="absolute top-12 right-0 w-80 h-96 bg-cover bg-center rounded-lg shadow-xl z-10 transform -rotate-2"
+              style={{
+                backgroundImage: `url('https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80')`,
+              }}>
+            </div>
+
+            {/* Bottom Left Image - Smaller, overlapping */}
+            <div 
+              className="absolute bottom-0 left-16 w-64 h-72 bg-cover bg-center rounded-lg shadow-lg z-15 transform rotate-1"
+              style={{
+                backgroundImage: `url('https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80')`,
+              }}>
+            </div>
+
+            {/* Bottom Right Image - Smaller, overlapping */}
+            <div 
+              className="absolute bottom-8 right-16 w-64 h-72 bg-cover bg-center rounded-lg shadow-lg z-15 transform -rotate-1"
+              style={{
+                backgroundImage: `url('https://images.unsplash.com/photo-1559181567-c3190ca9959b?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80')`,
+              }}>
             </div>
           </div>
 
           {/* My Approach Values Section */}
-          <div className="mb-16">
+          <div className="mb-16 mt-32">
             <h2 className="text-3xl font-bold text-center mb-8">My Approach</h2>
             <div className="grid md:grid-cols-4 gap-6 max-w-5xl mx-auto">
               {values.map((value, index) => {
@@ -136,23 +155,6 @@ export default function About() {
                   </Card>
                 );
               })}
-            </div>
-          </div>
-
-          {/* Bottom Images Grid with Stats */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-16">
-            {/* Left Image */}
-            <div className="h-80 bg-cover bg-center rounded-lg shadow-lg"
-                 style={{
-                   backgroundImage: `url('https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80')`,
-                 }}>
-            </div>
-
-            {/* Right Image */}
-            <div className="h-80 bg-cover bg-center rounded-lg shadow-lg"
-                 style={{
-                   backgroundImage: `url('https://images.unsplash.com/photo-1559181567-c3190ca9959b?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80')`,
-                 }}>
             </div>
           </div>
 
