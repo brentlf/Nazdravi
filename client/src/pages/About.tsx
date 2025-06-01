@@ -61,54 +61,52 @@ export default function About() {
 
   return (
     <div className="min-h-screen bg-background page-content">
-      {/* Hero Section with Overlapping Images */}
-      <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
-        {/* Overlapping Images Background */}
-        <div className="absolute inset-0">
-          {/* Left Image - Overlapping */}
-          <div 
-            className="absolute top-10 left-10 w-80 h-96 bg-cover bg-center rounded-lg shadow-xl z-10 transform rotate-2"
-            style={{
-              backgroundImage: `url('https://images.unsplash.com/photo-1586201375761-83865001e31c?ixlib=rb-4.0.3&auto=format&fit=crop&w=987&q=80')`,
-            }}>
-          </div>
-
-          {/* Right Image - Overlapping */}
-          <div 
-            className="absolute top-20 right-10 w-80 h-96 bg-cover bg-center rounded-lg shadow-xl z-10 transform -rotate-2"
-            style={{
-              backgroundImage: `url('https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80')`,
-            }}>
-          </div>
-
-          {/* Bottom Left Image - Smaller, overlapping */}
-          <div 
-            className="absolute bottom-20 left-20 w-64 h-72 bg-cover bg-center rounded-lg shadow-lg z-15 transform rotate-1"
-            style={{
-              backgroundImage: `url('https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80')`,
-            }}>
-          </div>
-
-          {/* Bottom Right Image - Smaller, overlapping */}
-          <div 
-            className="absolute bottom-10 right-20 w-64 h-72 bg-cover bg-center rounded-lg shadow-lg z-15 transform -rotate-1"
-            style={{
-              backgroundImage: `url('https://images.unsplash.com/photo-1559181567-c3190ca9959b?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80')`,
-            }}>
-          </div>
-
-          {/* Background overlay for text readability */}
-          <div className="absolute inset-0 bg-white/70 dark:bg-black/70 z-5"></div>
-        </div>
+      {/* Hero Section with Grid-Based Overlapping Images */}
+      <section className="relative w-full h-screen bg-white dark:bg-gray-900">
+        {/* Images positioned absolutely for overlapping effect */}
+        <img 
+          src="https://images.unsplash.com/photo-1542838132-92c53300491e?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" 
+          alt="Citrus fruits"
+          className="absolute top-4 left-1/2 w-1/3 h-64 object-cover rounded-lg shadow-lg transform -translate-x-1/2 z-10" 
+        />
         
-        {/* Hero Content - Clear and prominent */}
-        <div className="relative z-30 text-center max-w-4xl mx-auto px-6">
-          <h1 className="text-6xl md:text-8xl font-bold mb-6 tracking-wide text-gray-900 dark:text-white drop-shadow-lg">
+        <img 
+          src="https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" 
+          alt="Fresh figs"
+          className="absolute top-10 right-10 w-1/4 h-48 object-cover rounded-lg shadow-lg z-10" 
+        />
+        
+        <img 
+          src="https://images.unsplash.com/photo-1586201375761-83865001e31c?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" 
+          alt="Woven basket"
+          className="absolute top-10 left-10 w-1/4 h-48 object-cover rounded-lg shadow-lg z-10" 
+        />
+        
+        <img 
+          src="https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" 
+          alt="Healthy lifestyle"
+          className="absolute bottom-10 left-10 w-1/3 h-56 object-cover rounded-lg shadow-lg z-10" 
+        />
+        
+        <img 
+          src="https://images.unsplash.com/photo-1559181567-c3190ca9959b?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" 
+          alt="Nutrition and wellness"
+          className="absolute bottom-10 right-10 w-1/3 h-56 object-cover rounded-lg shadow-lg z-10" 
+        />
+
+        {/* Central Text Content */}
+        <div className="absolute top-1/3 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-center z-20">
+          <h1 className="text-5xl md:text-7xl font-bold mb-6 tracking-wide text-gray-900 dark:text-white">
             REGISTERED DIETITIAN
           </h1>
-          <p className="text-2xl md:text-3xl font-light text-gray-800 dark:text-gray-200 drop-shadow-md">
+          <p className="text-xl md:text-2xl font-light text-gray-800 dark:text-gray-200">
             Hi! I'm Vee, a Registered Dietitian with the HPCSA and HCPC
           </p>
+        </div>
+
+        {/* Secondary Text */}
+        <div className="absolute bottom-1/2 left-1/2 transform -translate-x-1/2 translate-y-20 text-center text-lg font-light z-20 text-gray-800 dark:text-gray-200">
+          Your Wellness Partner
         </div>
       </section>
 
