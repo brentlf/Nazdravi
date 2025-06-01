@@ -125,23 +125,39 @@ export default function Home() {
               </div>
             </div>
 
-            {/* Organic Hero Image with Mediterranean Flow */}
-            <div className="relative animate-float">
-              {/* Main Image with Organic Masking */}
-              <div className="relative overflow-hidden blob-mask shadow-2xl warm-glow">
-                <img 
-                  src={heroImage} 
-                  alt="Mediterranean nutrition lifestyle" 
-                  className="w-full h-96 lg:h-[500px] object-cover transition-transform duration-700 hover:scale-110"
-                />
-                {/* Subtle overlay elements */}
-                <div className="absolute top-6 right-6 w-12 h-12 bg-gradient-to-br from-primary/30 to-accent/20 rounded-full animate-float" style={{animationDelay: '1s'}}></div>
-                <div className="absolute bottom-8 left-8 w-8 h-8 bg-gradient-to-br from-accent/40 to-secondary/30 rounded-full animate-float" style={{animationDelay: '2s'}}></div>
+            {/* Organic Hero Image with Seamless Integration */}
+            <div className="relative">
+              {/* Main Image with Organic Shape */}
+              <OrganicImage 
+                src={heroImage}
+                alt="Mediterranean nutrition lifestyle"
+                shape="blob"
+                size="hero"
+                className="shadow-2xl warm-glow floating-element"
+              />
+              
+              {/* Handwritten accent overlay */}
+              <div className="absolute top-8 right-8 bg-white/90 backdrop-blur-sm p-4 rounded-full shadow-lg floating-element">
+                <div className="doodle-arrow">
+                  <span className="font-display text-primary italic text-sm">Wholesome Living</span>
+                </div>
               </div>
               
-              {/* Gentle floating elements */}
-              <div className="absolute -top-4 -right-4 w-16 h-16 bg-gradient-to-br from-primary/20 to-transparent rounded-full blur-lg animate-float"></div>
-              <div className="absolute -bottom-6 -left-6 w-20 h-20 bg-gradient-to-br from-accent/15 to-transparent rounded-full blur-xl animate-float" style={{animationDelay: '3s'}}></div>
+              {/* Stats bubble integrated into image */}
+              <div className="absolute bottom-8 left-8 bg-primary/90 backdrop-blur-sm p-4 rounded-full text-white shadow-lg floating-element">
+                <div className="text-center">
+                  <div className="font-display text-lg">500+</div>
+                  <div className="serif-body text-xs opacity-90">Clients</div>
+                </div>
+              </div>
+              
+              {/* Organic floating decorations */}
+              <FloatingOrganic className="absolute -top-12 -right-12" size="large" delay={0} />
+              <FloatingOrganic className="absolute -bottom-16 -left-16 opacity-70" size="large" delay={2} />
+              
+              {/* Handwritten doodle connectors */}
+              <DoodleConnector direction="right" className="absolute top-1/4 -right-8 w-16" />
+              <DoodleConnector direction="left" className="absolute bottom-1/3 -left-8 w-12" />
             </div>
 
           </div>
@@ -161,63 +177,113 @@ export default function Home() {
             </p>
             
             {/* Handwritten connecting doodle */}
-            <div className="absolute -bottom-8 left-1/2 transform -translate-x-1/2 doodle-line w-32 rotate-12"></div>
+            <DoodleConnector direction="down" className="absolute -bottom-8 left-1/2 transform -translate-x-1/2 w-32" />
           </div>
 
-          <div className="grid md:grid-cols-3 gap-8">
+          <div className="grid md:grid-cols-3 gap-8 relative">
             {services.map((service, index) => {
               const Icon = service.icon;
               return (
-                <Card key={index} className="mediterranean-card text-center hover:shadow-xl transition-all duration-500 border-0">
-                  <CardContent className="p-8">
-                    <div className="w-16 h-16 bg-gradient-to-br from-primary/20 to-accent/20 rounded-full flex items-center justify-center mx-auto mb-6 warm-glow">
-                      <Icon className="w-8 h-8 text-primary" />
-                    </div>
-                    <h3 className="font-display text-xl mb-4 text-foreground">{service.title}</h3>
-                    <p className="serif-body text-muted-foreground mb-6 leading-relaxed">{service.description}</p>
-                    <ul className="space-y-3">
-                      {service.features.map((feature, featureIndex) => (
-                        <li key={featureIndex} className="flex items-center justify-center gap-2 serif-body text-sm">
-                          <CheckCircle className="w-4 h-4 text-primary" />
-                          {feature}
-                        </li>
-                      ))}
-                    </ul>
-                  </CardContent>
-                </Card>
+                <div key={index} className="relative">
+                  <Card className="mediterranean-card text-center hover:shadow-xl transition-all duration-500 border-0 floating-element">
+                    <CardContent className="p-8">
+                      {/* Handwritten doodle accent for middle card */}
+                      {index === 1 && (
+                        <div className="absolute -top-4 -right-4">
+                          <span className="font-display text-accent italic text-sm transform rotate-12 inline-block">Popular!</span>
+                          <DoodleConnector direction="right" className="w-8 mt-1" />
+                        </div>
+                      )}
+                      
+                      <div className="w-16 h-16 bg-gradient-to-br from-primary/20 to-accent/20 blob-shape flex items-center justify-center mx-auto mb-6 warm-glow floating-element">
+                        <Icon className="w-8 h-8 text-primary" />
+                      </div>
+                      
+                      <h3 className="font-display text-xl mb-4 text-foreground handwritten-accent">{service.title}</h3>
+                      <p className="serif-body text-muted-foreground mb-6 leading-relaxed">{service.description}</p>
+                      
+                      <ul className="space-y-3">
+                        {service.features.map((feature, featureIndex) => (
+                          <li key={featureIndex} className="flex items-center justify-center gap-2 serif-body text-sm">
+                            <CheckCircle className="w-4 h-4 text-primary" />
+                            {feature}
+                          </li>
+                        ))}
+                      </ul>
+                    </CardContent>
+                  </Card>
+                  
+                  {/* Floating organic elements around cards */}
+                  {index === 0 && <FloatingOrganic className="absolute -top-8 -left-8 opacity-40" size="small" delay={1} />}
+                  {index === 2 && <FloatingOrganic className="absolute -bottom-8 -right-8 opacity-40" size="small" delay={3} />}
+                </div>
               );
             })}
+            
+            {/* Connecting doodle lines between cards */}
+            <DoodleConnector direction="right" className="absolute top-1/2 left-1/3 transform -translate-y-1/2 w-16 hidden md:block" />
+            <DoodleConnector direction="right" className="absolute top-1/2 left-2/3 transform -translate-y-1/2 w-16 hidden md:block" />
           </div>
         </div>
       </section>
       {/* Testimonials Section */}
-      <section className="py-20 bg-gradient-to-br from-accent/10 to-secondary/10 country-texture">
+      <section className="py-20 bg-gradient-to-br from-accent/10 to-secondary/10 country-texture relative overflow-hidden">
         <div className="container mx-auto px-4">
-          <div className="text-center mb-16">
-            <h2 className="font-display text-3xl md:text-4xl mb-6 text-foreground">
-              Stories of Transformation
-            </h2>
-            <p className="serif-body text-xl text-muted-foreground leading-relaxed">
+          <div className="text-center mb-16 relative">
+            <div className="doodle-arrow mb-4">
+              <h2 className="font-display text-3xl md:text-4xl mb-6 text-foreground handwritten-accent">
+                Stories of Transformation
+              </h2>
+            </div>
+            <p className="serif-body text-xl text-muted-foreground leading-relaxed max-w-2xl mx-auto">
               Real journeys from clients who discovered the joy of nourishing themselves
             </p>
+            
+            {/* Connecting doodle to testimonials */}
+            <DoodleConnector direction="down" className="absolute -bottom-8 left-1/2 transform -translate-x-1/2 w-24" />
           </div>
 
-          <div className="grid md:grid-cols-3 gap-8">
+          <div className="grid md:grid-cols-3 gap-8 relative">
             {testimonials.map((testimonial, index) => (
-              <Card key={index} className="mediterranean-card border-0 warm-glow">
-                <CardContent className="p-8">
-                  <div className="flex justify-center mb-6">
-                    {[...Array(testimonial.rating)].map((_, i) => (
-                      <Star key={i} className="w-5 h-5 fill-accent text-accent" />
-                    ))}
-                  </div>
-                  <p className="serif-body text-muted-foreground mb-6 italic leading-relaxed text-center">"{testimonial.quote}"</p>
-                  <p className="font-display text-center text-foreground">— {testimonial.name}</p>
-                </CardContent>
-              </Card>
+              <div key={index} className="relative">
+                <Card className="mediterranean-card border-0 warm-glow floating-element overflow-hidden">
+                  <CardContent className="p-8 relative">
+                    {/* Organic background pattern */}
+                    <div className="absolute top-0 right-0 w-24 h-24 bg-gradient-to-br from-primary/5 to-accent/5 blob-shape opacity-50"></div>
+                    
+                    <div className="flex justify-center mb-6">
+                      {[...Array(testimonial.rating)].map((_, i) => (
+                        <Star key={i} className="w-5 h-5 fill-accent text-accent" />
+                      ))}
+                    </div>
+                    
+                    <p className="serif-body text-muted-foreground mb-6 italic leading-relaxed text-center relative z-10">
+                      "{testimonial.quote}"
+                    </p>
+                    <p className="font-display text-center text-foreground handwritten-accent">
+                      — {testimonial.name}
+                    </p>
+                    
+                    {/* Handwritten flourish */}
+                    {index === 1 && (
+                      <div className="absolute -bottom-2 -right-2">
+                        <span className="text-accent text-2xl transform rotate-12 inline-block">✨</span>
+                      </div>
+                    )}
+                  </CardContent>
+                </Card>
+                
+                {/* Floating organic decorations */}
+                {index === 0 && <FloatingOrganic className="absolute -top-6 -right-6 opacity-30" size="small" delay={0.5} />}
+                {index === 2 && <FloatingOrganic className="absolute -bottom-6 -left-6 opacity-30" size="small" delay={2.5} />}
+              </div>
             ))}
           </div>
         </div>
+        
+        {/* Large floating background elements */}
+        <FloatingOrganic className="absolute top-20 -right-20 opacity-20" size="large" delay={1} />
+        <FloatingOrganic className="absolute bottom-20 -left-20 opacity-20" size="large" delay={3} />
       </section>
       {/* CTA Section */}
       <section className="py-20 bg-gradient-to-br from-primary/15 to-accent/15 country-texture">
