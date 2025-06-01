@@ -48,7 +48,8 @@ export default function Home() {
   const testimonials = [
     {
       name: "Sarah M.",
-      quote: "Transformed my nutrition approach. Easy to follow, incredible results!",
+      quote:
+        "Transformed my nutrition approach. Easy to follow, incredible results!",
       rating: 5,
     },
     {
@@ -110,7 +111,7 @@ export default function Home() {
                 <Button
                   size="lg"
                   asChild
-                  className="mediterranean-button font-serif-elegant"
+                  className="border-2 border-primary/30 hover:border-primary hover:bg-blue-600/50 font-serif-elegant warm-glow"
                 >
                   <Link href="/appointment">
                     <Calendar className="mr-2 h-5 w-5" />
@@ -121,7 +122,15 @@ export default function Home() {
                   variant="outline"
                   size="lg"
                   asChild
-                  className="border-2 border-primary/30 hover:border-primary hover:bg-primary/10 font-serif-elegant warm-glow"
+                  className="border-2 border-primary/30 hover:border-primary hover:bg-blue-500/40 bg-blue-200/70 font-serif-elegant warm-glow"
+                >
+                  <Link href="/about">More about Vee</Link>
+                </Button>
+                <Button
+                  variant="outline"
+                  size="lg"
+                  asChild
+                  className="border-2 border-primary/30 hover:border-primary hover:bg-primary/30 font-serif-elegant warm-glow"
                 >
                   <Link href="/services">Explore Services</Link>
                 </Button>
@@ -145,13 +154,16 @@ export default function Home() {
                 })}
               </div>
               */}
-              
             </div>
           </div>
         </div>
       </section>
-      
-      {/* Services Section */}
+    </div>
+  );
+}
+
+{
+  /* Services Section 
       <section className="py-10 bg-muted/20">
         <div className="container mx-auto px-4">
           <div className="text-center mb-8">
@@ -187,7 +199,7 @@ export default function Home() {
         </div>
       </section>
       
-      {/* Testimonials Section 
+      {/* Testimonials Section* 
       <section className="py-10 bg-muted/10">
         <div className="container mx-auto px-4">
           <div className="text-center mb-8">
@@ -219,13 +231,16 @@ export default function Home() {
         </div>
       </section>
     
-      {/* CTA Section */}
+      {/* CTA Section 
       <section className="py-10 bg-primary/10">
         <div className="container mx-auto px-4 text-center">
           <div className="max-w-lg mx-auto">
-            <h2 className="font-display text-2xl md:text-3xl mb-4">Ready to Start?</h2>
+            <h2 className="font-display text-2xl md:text-3xl mb-4">
+              Ready to Start?
+            </h2>
             <p className="text-muted-foreground mb-6">
-              Begin your personalized nutrition transformation with a complimentary consultation.
+              Begin your personalized nutrition transformation with a
+              complimentary consultation.
             </p>
             <Button asChild className="w-full">
               <Link href="/appointment">
@@ -236,6 +251,5 @@ export default function Home() {
           </div>
         </div>
       </section>
-    </div>
-  );
+      */
 }
