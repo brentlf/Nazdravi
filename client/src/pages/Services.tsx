@@ -1,256 +1,282 @@
-import { Check, Calendar, Clock, Users, Target, MessageCircle, FileText } from "lucide-react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
+import { ClipboardList, MessageCircle, BookOpen, Calendar, Users, Target, CheckCircle, Star, Award, TrendingUp } from "lucide-react";
+import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { Link } from "wouter";
+import { FloatingOrganic, DoodleConnector, OrganicImage } from "@/components/ui/PageTransition";
 
 export default function Services() {
-  const services = [
+  const mainServices = [
     {
-      id: "initial",
-      title: "Initial Consultation",
-      duration: "60 minutes",
-      price: "€89",
-      description: "Comprehensive assessment of your current health status, dietary habits, and lifestyle to create your personalized nutrition roadmap.",
-      features: [
-        "Complete health assessment",
-        "Detailed nutrition analysis", 
-        "Goal setting session",
-        "Personalized recommendations",
-        "Client dashboard access",
-        "Follow-up plan outline"
-      ],
-      icon: Users,
-      popular: false,
-      color: "bg-blue-500"
+      icon: ClipboardList,
+      title: "Personalized Meal Plans",
+      description: "Custom nutrition plans tailored to your goals, preferences, and lifestyle",
+      features: ["Detailed meal planning", "Shopping lists", "Recipe substitutions", "Portion guidance"],
+      price: "From €80/month",
+      popular: false
     },
     {
-      id: "followup",
-      title: "Follow-up Session",
-      duration: "30 minutes",
-      price: "€49",
-      description: "Regular check-ins to monitor progress, adjust your plan, and provide ongoing support for sustainable results.",
-      features: [
-        "Progress review",
-        "Plan adjustments",
-        "Nutritional guidance",
-        "Motivation support",
-        "Q&A session",
-        "Updated recommendations"
-      ],
-      icon: Target,
-      popular: true,
-      color: "bg-green-500"
+      icon: MessageCircle,
+      title: "24/7 Support & Coaching",
+      description: "Get instant answers and ongoing support through our messaging platform",
+      features: ["Quick responses", "Motivational support", "Expert guidance", "Progress tracking"],
+      price: "From €120/month",
+      popular: true
     },
     {
-      id: "complete",
-      title: "Complete Program",
-      duration: "12 weeks",
-      price: "€449",
-      description: "Comprehensive 12-week program including initial consultation, weekly follow-ups, and personalized meal plans.",
-      features: [
-        "Initial consultation (60 min)",
-        "Weekly follow-up sessions",
-        "Personalized meal plans",
-        "Shopping lists",
-        "Recipe collection",
-        "24/7 messaging support",
-        "Progress tracking tools",
-        "Lifestyle coaching"
-      ],
-      icon: Calendar,
-      popular: false,
-      color: "bg-purple-500"
+      icon: BookOpen,
+      title: "Educational Resources",
+      description: "Access comprehensive guides and materials to support your journey",
+      features: ["Nutrition guides", "Recipe collections", "Video tutorials", "Meal prep guides"],
+      price: "From €50/month",
+      popular: false
     }
   ];
 
   const additionalServices = [
     {
-      icon: MessageCircle,
-      title: "Meal Planning",
-      description: "Custom meal plans tailored to your preferences and dietary needs"
+      icon: Calendar,
+      title: "One-on-One Consultations",
+      description: "Personalized sessions to discuss your goals and create your plan",
+      duration: "60 minutes",
+      price: "€85 per session"
+    },
+    {
+      icon: Users,
+      title: "Group Workshops",
+      description: "Join others on similar journeys in our interactive workshops",
+      duration: "90 minutes",
+      price: "€35 per person"
     },
     {
       icon: Target,
-      title: "Progress Tracking",
-      description: "Monitor your journey with comprehensive tracking tools"
-    },
-    {
-      icon: Clock,
-      title: "24/7 Support",
-      description: "Round-the-clock messaging support for questions and motivation"
+      title: "Specialized Programs",
+      description: "Targeted programs for specific health conditions or goals",
+      duration: "3-6 months",
+      price: "Custom pricing"
     }
   ];
 
-  const processSteps = [
-    {
-      step: "1",
-      title: "Assessment",
-      description: "Comprehensive health and lifestyle evaluation"
-    },
-    {
-      step: "2", 
-      title: "Planning",
-      description: "Personalized nutrition plan development"
-    },
-    {
-      step: "3",
-      title: "Implementation",
-      description: "Implementation and support"
-    },
-    {
-      step: "4",
-      title: "Monitoring",
-      description: "Ongoing monitoring and adjustments"
-    }
+  const benefits = [
+    "Evidence-based nutrition approach",
+    "Flexible meal planning options",
+    "Ongoing support and motivation",
+    "Progress tracking and adjustments",
+    "Recipe modifications for dietary needs",
+    "Educational resources and guides"
   ];
 
   return (
-    <div className="min-h-screen py-20">
-      {/* Hero Section */}
-      <section className="container mx-auto px-4 mb-20">
-        <div className="text-center max-w-4xl mx-auto">
-          <h1 className="text-4xl md:text-5xl font-bold mb-6">
-            Comprehensive Nutrition Services
-          </h1>
-          <p className="text-xl text-muted-foreground mb-8">
-            Personalized nutrition solutions designed to help you achieve your health goals with expert guidance and ongoing support.
-          </p>
-        </div>
-      </section>
-
-      {/* Services Grid */}
-      <section className="container mx-auto px-4 mb-20">
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {services.map((service) => {
-            const Icon = service.icon;
-            return (
-              <Card 
-                key={service.id} 
-                className={`relative hover:shadow-xl transition-all duration-300 hover:-translate-y-2 h-full flex flex-col ${
-                  service.popular ? 'ring-2 ring-primary-500' : ''
-                }`}
-              >
-                {service.popular && (
-                  <div className="absolute -top-3 left-1/2 transform -translate-x-1/2">
-                    <Badge className="bg-primary-500 text-white">Most Popular</Badge>
-                  </div>
-                )}
-                
-                <CardHeader className="text-center pb-4">
-                  <div className={`w-16 h-16 ${service.color} rounded-full flex items-center justify-center mx-auto mb-4`}>
-                    <Icon className="w-8 h-8 text-white" />
-                  </div>
-                  <CardTitle className="text-2xl mb-2">{service.title}</CardTitle>
-                  <div className="flex items-center justify-center gap-4 text-muted-foreground">
-                    <span className="flex items-center gap-1">
-                      <Clock className="w-4 h-4" />
-                      {service.duration}
-                    </span>
-                  </div>
-                </CardHeader>
-
-                <CardContent className="space-y-6 flex flex-col flex-grow">
-                  <div className="text-center">
-                    <div className="text-3xl font-bold text-primary-600">{service.price}</div>
-                    <p className="text-sm text-muted-foreground">One-time fee</p>
-                  </div>
-
-                  <p className="text-muted-foreground text-center">{service.description}</p>
-
-                  <ul className="space-y-3 flex-grow">
-                    {service.features.map((feature, index) => (
-                      <li key={index} className="flex items-start gap-3">
-                        <Check className="w-5 h-5 text-green-500 mt-0.5 flex-shrink-0" />
-                        <span className="text-sm">{feature}</span>
-                      </li>
-                    ))}
-                  </ul>
-
-                  <Button className="w-full mt-auto" asChild>
-                    <Link href="/appointment">Book Now</Link>
-                  </Button>
-                </CardContent>
-              </Card>
-            );
-          })}
-        </div>
-      </section>
-
-      {/* Additional Services */}
-      <section className="bg-primary-50 dark:bg-gray-800 py-20">
-        <div className="container mx-auto px-4">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold mb-4">
-              What's Included
-            </h2>
-            <p className="text-xl text-muted-foreground">
-              Every service comes with comprehensive support and resources
+    <div className="min-h-screen py-20 bg-gradient-to-br from-background to-muted/30 country-texture relative overflow-hidden">
+      <div className="container mx-auto px-4 relative z-10">
+        {/* Hero Section */}
+        <section className="mb-20 relative">
+          <div className="max-w-4xl mx-auto text-center">
+            <Badge variant="secondary" className="mb-4 text-base px-4 py-2 floating-element">
+              Comprehensive Nutrition Services
+            </Badge>
+            <div className="doodle-arrow mb-6">
+              <h1 className="font-display text-4xl md:text-5xl font-bold mb-6 handwritten-accent">
+                Transform Your Health Journey
+              </h1>
+            </div>
+            <p className="serif-body text-xl text-muted-foreground mb-8 leading-relaxed max-w-3xl mx-auto">
+              Choose from our range of personalized nutrition services designed to fit your lifestyle, goals, and budget. Every plan is crafted with care to ensure sustainable, lasting results.
             </p>
+            
+            {/* Connecting doodle */}
+            <DoodleConnector direction="down" className="absolute -bottom-8 left-1/2 transform -translate-x-1/2 w-32" />
+          </div>
+        </section>
+
+        {/* Main Services Section */}
+        <section className="mb-20">
+          <div className="text-center mb-12 relative">
+            <div className="doodle-arrow mb-4">
+              <h2 className="font-display text-3xl md:text-4xl mb-6 text-foreground handwritten-accent">
+                Our Core Services
+              </h2>
+            </div>
+            <p className="serif-body text-xl text-muted-foreground max-w-2xl mx-auto leading-relaxed">
+              Comprehensive nutrition support tailored to your unique needs
+            </p>
+            
+            <DoodleConnector direction="down" className="absolute -bottom-6 left-1/2 transform -translate-x-1/2 w-24" />
+          </div>
+
+          <div className="grid md:grid-cols-3 gap-8 relative">
+            {mainServices.map((service, index) => {
+              const Icon = service.icon;
+              return (
+                <div key={index} className="relative">
+                  <Card className={`mediterranean-card h-full floating-element ${service.popular ? 'ring-2 ring-primary/20' : ''}`}>
+                    <CardContent className="p-8 relative">
+                      {/* Popular badge */}
+                      {service.popular && (
+                        <div className="absolute -top-4 -right-4">
+                          <Badge className="bg-primary text-white handwritten-accent">Most Popular</Badge>
+                          <DoodleConnector direction="right" className="w-8 mt-1" />
+                        </div>
+                      )}
+                      
+                      <div className="w-16 h-16 bg-gradient-to-br from-primary/20 to-accent/20 blob-shape flex items-center justify-center mx-auto mb-6 warm-glow floating-element">
+                        <Icon className="w-8 h-8 text-primary" />
+                      </div>
+                      
+                      <h3 className="font-display text-xl mb-4 text-center handwritten-accent">{service.title}</h3>
+                      <p className="serif-body text-muted-foreground mb-6 text-center leading-relaxed">{service.description}</p>
+                      
+                      <ul className="space-y-3 mb-6">
+                        {service.features.map((feature, featureIndex) => (
+                          <li key={featureIndex} className="flex items-center gap-2 serif-body text-sm">
+                            <CheckCircle className="w-4 h-4 text-primary flex-shrink-0" />
+                            {feature}
+                          </li>
+                        ))}
+                      </ul>
+                      
+                      <div className="text-center">
+                        <p className="font-display text-2xl font-bold text-primary mb-4">{service.price}</p>
+                        <Button className="w-full mediterranean-card" asChild>
+                          <Link href="/register">Get Started</Link>
+                        </Button>
+                      </div>
+                      
+                      {/* Organic background decoration */}
+                      <div className="absolute top-0 right-0 w-24 h-24 bg-gradient-to-br from-primary/5 to-accent/5 blob-shape opacity-50"></div>
+                    </CardContent>
+                  </Card>
+                  
+                  {/* Floating organic decorations */}
+                  {index === 0 && <FloatingOrganic className="absolute -top-8 -left-8 opacity-30" size="small" delay={1} />}
+                  {index === 2 && <FloatingOrganic className="absolute -bottom-8 -right-8 opacity-30" size="small" delay={3} />}
+                </div>
+              );
+            })}
+            
+            {/* Connecting doodle lines between cards */}
+            <DoodleConnector direction="right" className="absolute top-1/2 left-1/3 transform -translate-y-1/2 w-16 hidden md:block" />
+            <DoodleConnector direction="right" className="absolute top-1/2 left-2/3 transform -translate-y-1/2 w-16 hidden md:block" />
+          </div>
+        </section>
+
+        {/* Additional Services Section */}
+        <section className="mb-20">
+          <div className="text-center mb-12 relative">
+            <div className="doodle-arrow mb-4">
+              <h2 className="font-display text-3xl md:text-4xl mb-6 text-foreground handwritten-accent">
+                Additional Services
+              </h2>
+            </div>
+            <p className="serif-body text-xl text-muted-foreground max-w-2xl mx-auto leading-relaxed">
+              Specialized support for your unique wellness goals
+            </p>
+            
+            <DoodleConnector direction="down" className="absolute -bottom-6 left-1/2 transform -translate-x-1/2 w-24" />
           </div>
 
           <div className="grid md:grid-cols-3 gap-8">
             {additionalServices.map((service, index) => {
               const Icon = service.icon;
               return (
-                <Card key={index} className="text-center hover:shadow-lg transition-shadow duration-300">
-                  <CardContent className="p-8">
-                    <div className="w-16 h-16 bg-primary-100 dark:bg-primary-900/30 rounded-full flex items-center justify-center mx-auto mb-6">
-                      <Icon className="w-8 h-8 text-primary-600" />
-                    </div>
-                    <h3 className="text-xl font-semibold mb-4">{service.title}</h3>
-                    <p className="text-muted-foreground">{service.description}</p>
-                  </CardContent>
-                </Card>
+                <div key={index} className="relative">
+                  <Card className="mediterranean-card h-full floating-element">
+                    <CardContent className="p-6 text-center relative">
+                      <div className="w-12 h-12 bg-gradient-to-br from-accent/20 to-secondary/20 blob-shape flex items-center justify-center mx-auto mb-4 floating-element">
+                        <Icon className="w-6 h-6 text-accent" />
+                      </div>
+                      
+                      <h3 className="font-display text-lg mb-3 handwritten-accent">{service.title}</h3>
+                      <p className="serif-body text-muted-foreground mb-4 text-sm leading-relaxed">{service.description}</p>
+                      
+                      <div className="space-y-2">
+                        <p className="serif-body text-sm text-muted-foreground">Duration: {service.duration}</p>
+                        <p className="font-display text-lg font-bold text-accent">{service.price}</p>
+                      </div>
+                      
+                      {/* Organic background decoration */}
+                      <div className="absolute top-0 right-0 w-16 h-16 bg-gradient-to-br from-accent/5 to-secondary/5 blob-shape opacity-50"></div>
+                    </CardContent>
+                  </Card>
+                  
+                  {index === 1 && <FloatingOrganic className="absolute -top-4 -right-4 opacity-20" size="small" delay={2} />}
+                </div>
               );
             })}
           </div>
-        </div>
-      </section>
+        </section>
 
-      {/* Process Section */}
-      <section className="py-20">
-        <div className="container mx-auto px-4">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold mb-4">
-              How It Works
-            </h2>
-            <p className="text-xl text-muted-foreground">
-              Simple steps to transform your health
+        {/* Benefits Section */}
+        <section className="mb-20">
+          <div className="text-center mb-12 relative">
+            <div className="doodle-arrow mb-4">
+              <h2 className="font-display text-3xl md:text-4xl mb-6 text-foreground handwritten-accent">
+                Why Choose Our Services?
+              </h2>
+            </div>
+            <p className="serif-body text-xl text-muted-foreground max-w-2xl mx-auto leading-relaxed">
+              Experience the difference of personalized, evidence-based nutrition care
             </p>
           </div>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
-            {processSteps.map((step, index) => (
-              <div key={index} className="text-center">
-                <div className="w-16 h-16 bg-primary-500 text-white rounded-full flex items-center justify-center mx-auto mb-4 text-2xl font-bold">
-                  {step.step}
-                </div>
-                <h3 className="text-xl font-semibold mb-2">{step.title}</h3>
-                <p className="text-muted-foreground">{step.description}</p>
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {benefits.map((benefit, index) => (
+              <div key={index} className="relative">
+                <Card className="mediterranean-card p-4 floating-element">
+                  <CardContent className="p-0 flex items-center gap-3">
+                    <CheckCircle className="w-5 h-5 text-primary flex-shrink-0" />
+                    <span className="serif-body text-sm">{benefit}</span>
+                  </CardContent>
+                </Card>
+                
+                {index === 2 && <FloatingOrganic className="absolute -top-3 -right-3 opacity-20" size="small" delay={1.5} />}
               </div>
             ))}
           </div>
-        </div>
-      </section>
+        </section>
 
-      {/* CTA Section */}
-      <section className="bg-primary-600 text-white py-20">
-        <div className="container mx-auto px-4 text-center">
-          <h2 className="text-3xl md:text-4xl font-bold mb-4">
-            Ready to Start Your Journey?
-          </h2>
-          <p className="text-xl mb-8 opacity-90">
-            Choose the service that best fits your needs and take the first step towards better health.
-          </p>
-          <Button size="lg" variant="secondary" asChild>
-            <Link href="/appointment">
-              <Calendar className="mr-2 h-5 w-5" />
-              Book Your Consultation
-            </Link>
-          </Button>
-        </div>
-      </section>
+        {/* CTA Section */}
+        <section className="text-center">
+          <div className="max-w-2xl mx-auto relative">
+            <div className="mediterranean-card p-8 floating-element overflow-hidden">
+              <div className="relative z-10">
+                <div className="doodle-arrow mb-4">
+                  <h2 className="font-display text-3xl font-bold mb-4 handwritten-accent">Ready to Begin?</h2>
+                </div>
+                <p className="serif-body text-lg text-muted-foreground mb-8 leading-relaxed">
+                  Take the first step towards a healthier, happier you. Let's create a nutrition plan that works for your life.
+                </p>
+                <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                  <Button size="lg" asChild className="mediterranean-card">
+                    <Link href="/register">Start Your Journey</Link>
+                  </Button>
+                  <Button size="lg" variant="outline" asChild className="mediterranean-card">
+                    <Link href="/about">Learn More About Me</Link>
+                  </Button>
+                </div>
+                <p className="serif-body text-sm text-muted-foreground mt-6">
+                  Free consultation available for new clients
+                </p>
+              </div>
+              
+              {/* Organic background decorations */}
+              <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-primary/10 to-accent/10 blob-shape"></div>
+              <div className="absolute bottom-0 left-0 w-24 h-24 bg-gradient-to-br from-accent/10 to-secondary/10 blob-shape"></div>
+            </div>
+            
+            {/* Handwritten flourish */}
+            <div className="absolute -bottom-4 -right-4">
+              <span className="text-accent text-2xl transform rotate-12 inline-block">✨</span>
+            </div>
+          </div>
+        </section>
+      </div>
+      
+      {/* Floating background elements */}
+      <FloatingOrganic className="absolute top-20 -right-20 opacity-15" size="large" delay={1} />
+      <FloatingOrganic className="absolute bottom-20 -left-20 opacity-15" size="large" delay={3} />
+      <FloatingOrganic className="absolute top-1/2 right-10 opacity-10" size="medium" delay={2} />
+      <FloatingOrganic className="absolute bottom-1/3 left-10 opacity-10" size="medium" delay={4} />
     </div>
   );
 }
