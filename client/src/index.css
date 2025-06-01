@@ -233,10 +233,10 @@
   .mediterranean-primary-800 { background-color: hsl(20, 70%, 35%); }
   .mediterranean-primary-900 { background-color: hsl(20, 65%, 25%); }
   
-  /* Enhanced Mediterranean card styles */
+  /* Enhanced card styles */
   .mediterranean-card {
-    @apply bg-card border-0 rounded-3xl;
-    background: linear-gradient(135deg, hsl(var(--card)), hsl(45, 30%, 96%));
+    @apply bg-card border-0 rounded-xl;
+    background: hsl(var(--card));
     backdrop-filter: blur(20px);
     box-shadow: 
       0 10px 25px -5px rgba(0, 0, 0, 0.1),
@@ -253,10 +253,10 @@
     border-color: hsl(var(--primary) / 0.3);
   }
   
-  /* Mediterranean button styles */
+  /* Button styles */
   .mediterranean-button {
     @apply px-6 py-3 rounded-xl font-medium transition-all duration-300;
-    background: linear-gradient(135deg, hsl(var(--primary)), hsl(15, 80%, 60%));
+    background: hsl(var(--primary));
     color: hsl(var(--primary-foreground));
     box-shadow: 0 4px 15px hsla(var(--primary), 0.25);
   }
@@ -369,9 +369,7 @@
 
 /* Fluid Container Shapes */
 .fluid-container {
-  background: linear-gradient(135deg, 
-    hsl(var(--primary) / 0.1) 0%, 
-    hsl(var(--accent) / 0.1) 100%);
+  background: hsl(var(--muted));
   clip-path: ellipse(100% 85% at 50% 0%);
   position: relative;
   overflow: hidden;
@@ -384,9 +382,7 @@
   left: -50%;
   width: 200%;
   height: 200%;
-  background: radial-gradient(circle, 
-    hsl(var(--primary) / 0.05) 0%, 
-    transparent 70%);
+  background: hsl(var(--muted) / 0.3);
   animation: float 6s ease-in-out infinite;
 }
 
@@ -395,9 +391,7 @@
   position: absolute;
   width: 100px;
   height: 2px;
-  background: linear-gradient(90deg, 
-    hsl(var(--accent)) 0%, 
-    transparent 100%);
+  background: hsl(var(--accent));
   border-radius: 10px;
   opacity: 0.6;
 }

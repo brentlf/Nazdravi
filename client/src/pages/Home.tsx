@@ -70,18 +70,18 @@ export default function Home() {
     <div className="min-h-screen bg-background page-content">
       {/* Hero Section */}
       <section className="relative overflow-hidden py-20 lg:py-32 country-texture mediterranean-header">
-        {/* Subtle Mediterranean Elements */}
-        <div className="absolute inset-0 overflow-hidden pointer-events-none opacity-60">
-          <div className="absolute top-20 left-10 w-24 h-24 bg-gradient-to-br from-primary/20 to-primary/5 rounded-full blur-2xl"></div>
-          <div className="absolute top-60 right-16 w-32 h-32 bg-gradient-to-br from-accent/15 to-accent/5 rounded-full blur-3xl"></div>
-          <div className="absolute bottom-40 left-20 w-28 h-28 bg-gradient-to-br from-secondary/20 to-secondary/5 rounded-full blur-2xl"></div>
+        {/* Clean background elements */}
+        <div className="absolute inset-0 overflow-hidden pointer-events-none opacity-30">
+          <div className="absolute top-20 left-10 w-24 h-24 bg-primary/10 rounded-full blur-2xl"></div>
+          <div className="absolute top-60 right-16 w-32 h-32 bg-accent/8 rounded-full blur-3xl"></div>
+          <div className="absolute bottom-40 left-20 w-28 h-28 bg-secondary/10 rounded-full blur-2xl"></div>
         </div>
 
         <div className="container mx-auto px-4 relative z-10">
           <div className="grid lg:grid-cols-2 gap-12 items-center">
             {/* Content */}
             <div className="space-y-8 relative">
-              <Badge variant="secondary" className="w-fit font-serif-elegant border-0 bg-gradient-to-r from-primary/15 to-accent/15 text-primary">
+              <Badge variant="secondary" className="w-fit font-serif-elegant border-0 bg-primary/10 text-primary">
                 Nourish Your Best Life
               </Badge>
               
@@ -164,7 +164,7 @@ export default function Home() {
         </div>
       </section>
       {/* Services Section */}
-      <section className="py-20 bg-gradient-to-br from-background to-muted/30">
+      <section className="py-20 bg-muted/20">
         <div className="container mx-auto px-4">
           <div className="text-center mb-16 relative">
             <div className="doodle-arrow mb-4">
@@ -195,7 +195,7 @@ export default function Home() {
                         </div>
                       )}
                       
-                      <div className="w-16 h-16 bg-gradient-to-br from-primary/20 to-accent/20 blob-shape flex items-center justify-center mx-auto mb-6 warm-glow floating-element">
+                      <div className="w-16 h-16 bg-primary/20 blob-shape flex items-center justify-center mx-auto mb-6 warm-glow floating-element">
                         <Icon className="w-8 h-8 text-primary" />
                       </div>
                       

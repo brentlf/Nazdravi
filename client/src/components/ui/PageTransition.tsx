@@ -46,7 +46,7 @@ export function FloatingOrganic({
 
   return (
     <div 
-      className={`floating-element blob-shape bg-gradient-to-br from-primary/10 to-accent/15 ${sizeClasses[size]} ${className}`}
+      className={`floating-element blob-shape bg-primary/5 ${sizeClasses[size]} ${className}`}
       style={{ animationDelay: `${delay}s` }}
     />
   );

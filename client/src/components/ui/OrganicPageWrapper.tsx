@@ -18,10 +18,10 @@ export function OrganicPageWrapper({
   className = ""
 }: OrganicPageWrapperProps) {
   const backgroundClasses = {
-    primary: "bg-gradient-to-br from-primary/10 to-accent/15",
-    accent: "bg-gradient-to-br from-accent/10 to-secondary/10",
-    muted: "bg-gradient-to-br from-background to-muted/30",
-    neutral: "bg-gradient-to-br from-background to-muted/20"
+    primary: "bg-primary/5",
+    accent: "bg-accent/5",
+    muted: "bg-muted",
+    neutral: "bg-background"
   };
 
   return (
