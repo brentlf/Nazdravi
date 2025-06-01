@@ -9,6 +9,7 @@ import { LanguageProvider } from "@/contexts/LanguageContext";
 import { Header } from "@/components/common/Header";
 import { Footer } from "@/components/common/Footer";
 import { RouteGuard } from "@/components/common/RouteGuard";
+import { PageTransition } from "@/components/ui/PageTransition";
 import NotFound from "@/pages/not-found";
 
 // Public pages
