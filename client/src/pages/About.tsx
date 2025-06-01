@@ -21,10 +21,10 @@ import aboutMeImage from "@assets/AboutMe.jpg";
 
 export default function About() {
   const credentials = [
-    "MSc in Clinical Nutrition",
-    "Registered Dietitian (RD)",
-    "Certified Sports Nutritionist",
-    "Member of Professional Nutrition Association",
+    "MSc Clinical Nutrition",
+    "Registered Dietitian",
+    "Sports Nutritionist",
+    "Professional Member",
   ];
 
   const values = [
