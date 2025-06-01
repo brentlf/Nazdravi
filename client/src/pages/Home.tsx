@@ -16,6 +16,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { NewsletterForm } from "@/components/forms/NewsletterForm";
+import { FloatingOrganic, DoodleConnector, OrganicImage } from "@/components/ui/PageTransition";
 import heroImage from "@assets/AboutMe.jpg";
 
 export default function Home() {
@@ -124,29 +125,23 @@ export default function Home() {
               </div>
             </div>
 
-            {/* Vibrant Hero Image with Floating Elements */}
-            <div className="relative">
-              {/* Main Image with Dynamic Border */}
-              <div className="relative rounded-3xl overflow-hidden shadow-2xl transform hover:scale-105 transition-transform duration-700">
+            {/* Organic Hero Image with Mediterranean Flow */}
+            <div className="relative animate-float">
+              {/* Main Image with Organic Masking */}
+              <div className="relative overflow-hidden blob-mask shadow-2xl warm-glow">
                 <img 
                   src={heroImage} 
-                  alt="Healthy nutrition and lifestyle" 
-                  className="w-full h-96 lg:h-[500px] object-cover"
+                  alt="Mediterranean nutrition lifestyle" 
+                  className="w-full h-96 lg:h-[500px] object-cover transition-transform duration-700 hover:scale-110"
                 />
-                {/* Colorful overlay elements */}
-                <div className="absolute top-4 right-4 w-16 h-16 bg-gradient-to-br from-primary to-primary/60 rounded-full animate-bounce delay-700"></div>
-                <div className="absolute bottom-6 left-6 w-12 h-12 bg-gradient-to-br from-accent to-accent/60 rounded-full animate-pulse"></div>
+                {/* Subtle overlay elements */}
+                <div className="absolute top-6 right-6 w-12 h-12 bg-gradient-to-br from-primary/30 to-accent/20 rounded-full animate-float" style={{animationDelay: '1s'}}></div>
+                <div className="absolute bottom-8 left-8 w-8 h-8 bg-gradient-to-br from-accent/40 to-secondary/30 rounded-full animate-float" style={{animationDelay: '2s'}}></div>
               </div>
               
-              {/* Floating decorative shapes around image */}
-              <div className="absolute -top-6 -right-6 w-24 h-24 bg-gradient-to-br from-primary/40 to-primary/20 rounded-full blur-lg animate-pulse"></div>
-              <div className="absolute -bottom-8 -left-8 w-36 h-36 bg-gradient-to-br from-accent/30 to-accent/10 rounded-full blur-xl animate-bounce delay-1000"></div>
-              <div className="absolute top-1/3 -right-4 w-14 h-14 bg-gradient-to-br from-secondary/50 to-secondary/25 rounded-full blur-md animate-pulse delay-500"></div>
-              <div className="absolute bottom-1/4 -left-4 w-18 h-18 bg-gradient-to-br from-primary/35 to-primary/15 rounded-full blur-lg animate-bounce delay-1500"></div>
-              
-              {/* Organic blob decorations */}
-              <div className="absolute top-16 -left-3 w-8 h-20 bg-gradient-to-br from-accent/40 to-transparent rounded-full transform rotate-12 blur-sm"></div>
-              <div className="absolute bottom-16 -right-3 w-20 h-10 bg-gradient-to-br from-primary/30 to-transparent rounded-full transform -rotate-45 blur-sm"></div>
+              {/* Gentle floating elements */}
+              <div className="absolute -top-4 -right-4 w-16 h-16 bg-gradient-to-br from-primary/20 to-transparent rounded-full blur-lg animate-float"></div>
+              <div className="absolute -bottom-6 -left-6 w-20 h-20 bg-gradient-to-br from-accent/15 to-transparent rounded-full blur-xl animate-float" style={{animationDelay: '3s'}}></div>
             </div>
 
           </div>
@@ -155,13 +150,18 @@ export default function Home() {
       {/* Services Section */}
       <section className="py-20 bg-gradient-to-br from-background to-muted/30">
         <div className="container mx-auto px-4">
-          <div className="text-center mb-16">
-            <h2 className="font-display text-3xl md:text-4xl mb-6 text-foreground">
-              Nurturing Wellness Through Ancient Wisdom
-            </h2>
+          <div className="text-center mb-16 relative">
+            <div className="doodle-arrow mb-4">
+              <h2 className="font-display text-3xl md:text-4xl mb-6 text-foreground handwritten-accent">
+                Nurturing Wellness Through Ancient Wisdom
+              </h2>
+            </div>
             <p className="serif-body text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
               As a certified nutritional therapist, I blend Mediterranean traditions with modern science to help you transform your relationship with food. Together, we'll discover sustainable practices that honor both your heritage and your health goals.
             </p>
+            
+            {/* Handwritten connecting doodle */}
+            <div className="absolute -bottom-8 left-1/2 transform -translate-x-1/2 doodle-line w-32 rotate-12"></div>
           </div>
 
           <div className="grid md:grid-cols-3 gap-8">
