@@ -127,7 +127,7 @@ export default function Home() {
                 </Button>
               </div>
 
-              {/* Stats */}
+              {/* Stats 
               <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
                 {stats.map((stat, index) => {
                   const Icon = stat.icon;
@@ -144,17 +144,20 @@ export default function Home() {
                   );
                 })}
               </div>
+              */}
+              
             </div>
           </div>
         </div>
       </section>
+      
       {/* Services Section */}
       <section className="py-10 bg-muted/20">
         <div className="container mx-auto px-4">
           <div className="text-center mb-8">
-            <h2 className="font-display text-2xl md:text-3xl mb-4">How I Support You</h2>
+            <h2 className="font-display text-2xl md:text-3xl mb-4">Ditch the Fads. Embrace Real Nutrition.</h2>
             <p className="text-muted-foreground max-w-2xl mx-auto">
-              Mediterranean traditions with modern science for sustainable wellness
+              Say goodbye to gimmicks and hello to a sustainable, balanced lifestyle. Rooted in science—not trends—our approach is simple: make healthier decisions, one step at a time. No extremes, no restrictions—just evidence-based guidance that fits your real life. Ready to feel good for good?
             </p>
           </div>
 
@@ -183,7 +186,8 @@ export default function Home() {
           </div>
         </div>
       </section>
-      {/* Testimonials Section */}
+      
+      {/* Testimonials Section 
       <section className="py-10 bg-muted/10">
         <div className="container mx-auto px-4">
           <div className="text-center mb-8">
@@ -213,19 +217,8 @@ export default function Home() {
             ))}
           </div>
         </div>
-
-        {/* Large floating background elements */}
-        <FloatingOrganic
-          className="absolute top-20 -right-20 opacity-20"
-          size="large"
-          delay={1}
-        />
-        <FloatingOrganic
-          className="absolute bottom-20 -left-20 opacity-20"
-          size="large"
-          delay={3}
-        />
       </section>
+    
       {/* CTA Section */}
       <section className="py-10 bg-primary/10">
         <div className="container mx-auto px-4 text-center">
