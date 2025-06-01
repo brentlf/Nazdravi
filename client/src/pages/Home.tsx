@@ -102,12 +102,12 @@ export default function Home() {
             <div className="space-y-8 relative">
               <Badge
                 variant="secondary"
-                className="w-fit font-serif-elegant border-0 bg-primary/10 text-primary"
+                className="w-fit font-serif-elegant border-0 bg-primary/10 text-primary floating-element"
               >
                 Nourish Your Best Life
               </Badge>
 
-              <h1 className="font-display text-4xl md:text-5xl lg:text-6xl leading-tight text-foreground floating-element">
+              <h1 className="font-display text-4xl md:text-5xl lg:text-6xl leading-tight text-foreground">
                 Discover the Art of
                 <span className="block text-primary font-display italic">
                   Holistic Nutrition
