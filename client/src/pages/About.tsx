@@ -125,7 +125,7 @@ export default function About() {
       {/* 3-Column Layout Section */}
       <div className="grid grid-cols-12 min-h-screen">
         {/* Left Column - Images */}
-        <div className="col-span-3 bg-gray-50 dark:bg-gray-800">
+        <div className="col-span-3 dark:bg-gray-800">
           <div className="sticky top-0 h-screen flex flex-col gap-6 p-6">
             <div className="relative group flex-1">
               <img
@@ -160,7 +160,7 @@ export default function About() {
               </div>
 
               <div className="space-y-8 text-center max-w-3xl mx-auto">
-                <p className="text-xl leading-relaxed text-gray-700 dark:text-gray-300">
+                <p className="leading-relaxed text-gray-700 dark:text-gray-300">
                   Hi! I’m Vee, a Registered Dietitian with both the Health
                   Professions Council of South Africa (HPCSA) and the Health and
                   Care Professions Council (HCPC) in the UK. With over 8 years
@@ -169,14 +169,14 @@ export default function About() {
                   managing complex medical conditions to guiding parents through
                   the critical stages of infant and child nutrition.
                 </p>
-                <p className="text-xl leading-relaxed text-gray-700 dark:text-gray-300">
+                <p className="leading-relaxed text-gray-700 dark:text-gray-300">
                   My passion lies in real, practical nutrition—grounded in
                   science, not fad diets. I believe healthy living doesn’t have
                   to be restrictive or overwhelming. Instead, I help clients
                   build sustainable habits that fit naturally into their
                   lifestyle, culture, and family needs.
                 </p>
-                <p className="text-xl leading-relaxed text-gray-700 dark:text-gray-300">
+                <p className="leading-relaxed text-gray-700 dark:text-gray-300">
                   Whether you’re navigating a new diagnosis, trying to feel more
                   confident during pregnancy and postpartum, or simply looking
                   to eat better without the confusion, I’m here to help you make
@@ -223,7 +223,7 @@ export default function About() {
                 <div className="w-24 h-1 bg-green-600 mx-auto rounded-full"></div>
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+              <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
                 {values.map((value, index) => {
                   const Icon = value.icon;
                   return (
@@ -265,12 +265,6 @@ export default function About() {
                   approach combines evidence-based nutrition science with
                   real-world practicality.
                 </p>
-                <p>
-                  Whether you're looking for personalized nutrition plans,
-                  ongoing support, or expert guidance on your wellness journey,
-                  I'm here to help you build lifelong healthy habits that bring
-                  joy, not stress.
-                </p>
               </div>
 
               <div className="mt-12">
@@ -287,7 +281,7 @@ export default function About() {
         </div>
 
         {/* Right Column - Images */}
-        <div className="col-span-3 bg-gray-50 dark:bg-gray-800">
+        <div className="col-span-3 dark:bg-gray-800">
           <div className="sticky top-0 h-screen flex flex-col gap-6 p-6">
             <div className="relative group flex-1">
               <img

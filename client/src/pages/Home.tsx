@@ -74,7 +74,7 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-background page-content">
       {/* Hero Section */}
-      <section className="relative overflow-hidden pt-8 pb-20 min-h-[90vh] flex items-center">
+<section className="relative overflow-hidden py-16 flex items-center">
         {/* Full background image */}
         <div
           className="absolute inset-0 bg-cover bg-center bg-no-repeat"
