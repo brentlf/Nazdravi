@@ -5,31 +5,31 @@
 @tailwind utilities;
 
 :root {
-  /* Mediterranean Country Palette - From reference images */
-  --primary: 155 28% 52%; /* #6B9A7A - Deep olive green from lemons & countryside */
+  /* Clean Blue and White Theme */
+  --primary: 215 85% 55%; /* #2563EB - Clean blue */
   --primary-foreground: 0 0% 100%;
   
-  /* Background Colors - Warm stone and linen tones */
-  --background: 42 35% 97%; /* #FAFAF6 - warm linen white */
-  --foreground: 25 20% 18%; /* #2F2B26 - rich charcoal brown */
+  /* Background Colors - Clean whites */
+  --background: 0 0% 100%; /* Pure white */
+  --foreground: 220 15% 20%; /* Dark blue-gray */
   
-  /* Natural UI Colors */
-  --muted: 40 25% 92%; /* #F1EDEA - warm stone beige */
-  --muted-foreground: 28 15% 42%; /* #6A645B - muted earth brown */
-  --popover: 42 35% 98%; /* Warm linen white */
-  --popover-foreground: 25 20% 22%;
-  --card: 43 40% 96%; /* #F7F5F0 - soft cream card */
-  --card-foreground: 25 20% 22%;
-  --border: 38 18% 86%; /* #E0DCD6 - gentle stone border */
-  --input: 40 25% 93%; /* Soft warm input */
-  --secondary: 15 35% 80%; /* #D4B89A - warm sand tone */
-  --secondary-foreground: 25 20% 22%;
-  --accent: 20 45% 72%; /* #CFA882 - golden terracotta */
-  --accent-foreground: 25 20% 22%;
-  --destructive: 12 55% 58%; /* Terra cotta red */
+  /* Clean UI Colors */
+  --muted: 210 20% 96%; /* Very light blue */
+  --muted-foreground: 215 15% 50%; /* Medium blue-gray */
+  --popover: 0 0% 100%; /* Pure white */
+  --popover-foreground: 220 15% 20%;
+  --card: 0 0% 100%; /* Pure white cards */
+  --card-foreground: 220 15% 20%;
+  --border: 210 20% 90%; /* Light blue border */
+  --input: 210 20% 95%; /* Light blue input */
+  --secondary: 210 15% 94%; /* Light blue-gray */
+  --secondary-foreground: 220 15% 20%;
+  --accent: 200 85% 60%; /* Bright blue accent */
+  --accent-foreground: 0 0% 100%;
+  --destructive: 0 65% 55%; /* Red for errors */
   --destructive-foreground: 0 0% 98%;
-  --ring: 155 28% 52%;
-  --radius: 0.75rem;
+  --ring: 215 85% 55%;
+  --radius: 0.5rem;
   
   /* Natural Chart Colors */
   --chart-1: 150 30% 60%; /* Sage green */
@@ -50,26 +50,26 @@
 }
 
 .dark {
-  /* Dark Mediterranean theme - Rich evening tones */
-  --background: 25 15% 8%; /* #16140F - deep charcoal with warm undertones */
-  --foreground: 42 25% 90%; /* #E8E4DC - warm light cream */
-  --muted: 25 12% 16%; /* #2A2622 - muted warm dark */
-  --muted-foreground: 38 15% 70%; /* #B8B0A6 - readable warm gray */
-  --popover: 25 18% 10%; /* #1A1814 - deep warm popover */
-  --popover-foreground: 42 25% 88%; /* Bright warm text */
-  --card: 25 15% 12%; /* #1F1D18 - warm dark card */
-  --card-foreground: 42 25% 88%; /* Bright warm card text */
-  --border: 25 12% 28%; /* #484139 - visible warm border */
-  --input: 25 15% 18%; /* #302D26 - warm dark input */
-  --primary: 155 35% 58%; /* Brighter olive for dark mode visibility */
-  --primary-foreground: 25 15% 8%; /* Deep text on primary */
-  --secondary: 15 25% 25%; /* #443A32 - warm dark secondary */
-  --secondary-foreground: 42 25% 85%; /* Bright warm text */
-  --accent: 20 35% 35%; /* #5E4F3F - warm earth accent */
-  --accent-foreground: 42 25% 85%; /* Bright warm accent text */
-  --destructive: 12 65% 62%; /* Terra cotta for dark mode */
-  --destructive-foreground: 42 25% 95%; /* Very bright warm text */
-  --ring: 155 35% 58%;
+  /* Clean Dark Blue Theme */
+  --background: 220 20% 8%; /* Dark blue-gray */
+  --foreground: 0 0% 95%; /* Light gray text */
+  --muted: 220 15% 15%; /* Dark blue muted */
+  --muted-foreground: 210 10% 65%; /* Medium gray */
+  --popover: 220 20% 10%; /* Dark blue popover */
+  --popover-foreground: 0 0% 95%;
+  --card: 220 18% 12%; /* Dark blue card */
+  --card-foreground: 0 0% 95%;
+  --border: 220 15% 25%; /* Dark blue border */
+  --input: 220 15% 18%; /* Dark blue input */
+  --primary: 215 85% 65%; /* Bright blue for dark mode */
+  --primary-foreground: 0 0% 100%;
+  --secondary: 220 15% 20%; /* Dark blue secondary */
+  --secondary-foreground: 0 0% 90%;
+  --accent: 200 85% 70%; /* Bright accent blue */
+  --accent-foreground: 0 0% 100%;
+  --destructive: 0 65% 62%; /* Red for errors */
+  --destructive-foreground: 0 0% 95%;
+  --ring: 215 85% 65%;
   
   /* Dark sidebar colors */
   --sidebar-background: 240 5.9% 10%;

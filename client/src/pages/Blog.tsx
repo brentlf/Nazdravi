@@ -65,7 +65,7 @@ export default function Blog() {
   }
 
   return (
-    <div className="min-h-screen py-20 bg-gradient-to-br from-background to-muted/30 country-texture relative overflow-hidden page-content">
+    <div className="min-h-screen py-20 bg-background relative overflow-hidden page-content">
       {/* Hero Section */}
       <section className="container mx-auto px-4 mb-16 relative">
         <div className="text-center max-w-4xl mx-auto">
