@@ -135,43 +135,43 @@ export default function Blog() {
       {/* Blog Posts Grid */}
       <section className="container mx-auto px-4">
         {postsToShow.length > 0 ? (
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div className="grid md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
             {postsToShow.map((post) => (
               <article key={post.id} className="group h-full">
-                <Card className="hover:shadow-xl transition-all duration-300 hover:-translate-y-2 overflow-hidden h-full flex flex-col">
+                <Card className="hover:shadow-lg transition-all duration-300 hover:-translate-y-1 overflow-hidden h-full flex flex-col">
                   {/* Featured Image */}
                   <div className="relative overflow-hidden">
                     <img
                       src={
                         post.featuredImage ||
                         post.image ||
-                        "https://images.unsplash.com/photo-1498837167922-ddd27525d352?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=400"
+                        "https://images.unsplash.com/photo-1498837167922-ddd27525d352?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&h=200"
                       }
                       alt={post.title}
-                      className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300"
+                      className="w-full h-24 object-cover group-hover:scale-105 transition-transform duration-300"
                     />
                     {/* Category overlay */}
-                    <div className="absolute top-4 left-4">
-                      <Badge className="bg-primary-500 text-white">
+                    <div className="absolute top-2 left-2">
+                      <Badge className="bg-primary-500 text-white text-xs">
                         {post.category || "Nutrition"}
                       </Badge>
                     </div>
                   </div>
 
-                  <CardContent className="p-6 flex flex-col flex-grow">
+                  <CardContent className="p-3 flex flex-col flex-grow">
                     {/* Meta information */}
-                    <div className="flex items-center text-sm text-muted-foreground mb-3">
-                      <Calendar className="w-4 h-4 mr-1" />
+                    <div className="flex items-center text-xs text-muted-foreground mb-2">
+                      <Calendar className="w-3 h-3 mr-1" />
                       <span>{post.date || "Recent"}</span>
-                      <span className="mx-2">•</span>
-                      <Clock className="w-4 h-4 mr-1" />
+                      <span className="mx-1">•</span>
+                      <Clock className="w-3 h-3 mr-1" />
                       <span>
-                        {calculateReadTime(post.excerpt || "")} min read
+                        {calculateReadTime(post.excerpt || "")} min
                       </span>
                     </div>
 
                     {/* Title */}
-                    <h2 className="text-xl font-semibold mb-3 group-hover:text-primary-600 transition-colors line-clamp-2">
+                    <h2 className="text-sm font-semibold mb-2 group-hover:text-primary-600 transition-colors line-clamp-2">
                       <Link
                         href={`/blog/post?id=${post.id}`}
                         className="hover:text-primary-600 transition-colors"
@@ -181,7 +181,7 @@ export default function Blog() {
                     </h2>
 
                     {/* Excerpt */}
-                    <p className="text-muted-foreground mb-4 line-clamp-3 flex-grow">
+                    <p className="text-muted-foreground text-xs mb-2 line-clamp-2 flex-grow">
                       {post.excerpt}
                     </p>
 
