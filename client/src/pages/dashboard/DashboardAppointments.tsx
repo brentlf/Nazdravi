@@ -453,16 +453,31 @@ export default function DashboardAppointments() {
   }
 
   return (
-    <div className="min-h-screen py-20 bg-gray-50 dark:bg-gray-900">
-      <div className="container mx-auto px-4">
-        {/* Back to Dashboard Navigation */}
-        <div className="mb-6">
+    <div className="min-h-screen py-20 bg-gradient-to-br from-background to-muted/30 country-texture relative overflow-hidden">
+      <div className="container mx-auto px-4 relative z-10">
+        {/* Back to Dashboard Navigation with organic design */}
+        <div className="mb-8 relative">
           <Link href="/dashboard">
-            <Button variant="ghost" className="flex items-center gap-2 text-sm">
+            <Button variant="ghost" className="flex items-center gap-2 text-sm mediterranean-card floating-element">
               <ArrowLeft className="w-4 h-4" />
               Back to Dashboard
             </Button>
           </Link>
+          
+          {/* Page header with handwritten accent */}
+          <div className="text-center mt-8 mb-6">
+            <div className="doodle-arrow mb-4">
+              <h1 className="font-display text-3xl md:text-4xl mb-4 text-foreground handwritten-accent">
+                Your Appointments
+              </h1>
+            </div>
+            <p className="serif-body text-xl text-muted-foreground max-w-2xl mx-auto leading-relaxed">
+              Schedule consultations and manage your wellness journey
+            </p>
+            
+            {/* Connecting doodle */}
+            <DoodleConnector direction="down" className="absolute -bottom-4 left-1/2 transform -translate-x-1/2 w-24" />
+          </div>
         </div>
 
         {/* Booking Requirements - Condensed */}
@@ -1605,6 +1620,11 @@ export default function DashboardAppointments() {
           </DialogContent>
         </Dialog>
       </div>
+      
+      {/* Floating background elements */}
+      <FloatingOrganic className="absolute top-20 -right-20 opacity-15" size="large" delay={1} />
+      <FloatingOrganic className="absolute bottom-20 -left-20 opacity-15" size="large" delay={3} />
+      <FloatingOrganic className="absolute top-1/2 right-10 opacity-10" size="medium" delay={2} />
     </div>
   );
 }

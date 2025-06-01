@@ -9,6 +9,7 @@ import { useFirestoreCollection } from "@/hooks/useFirestore";
 import { Plan } from "@/types";
 import { where, orderBy } from "firebase/firestore";
 import { Link } from "wouter";
+import { FloatingOrganic, DoodleConnector } from "@/components/ui/PageTransition";
 
 export default function DashboardPlan() {
   const { effectiveUser: user, isAdminViewingClient } = useAuth();
