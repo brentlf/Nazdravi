@@ -9,44 +9,42 @@ export default function Services() {
   const mainServices = [
     {
       icon: ClipboardList,
-      title: "Personalized Meal Plans",
-      description: "Custom nutrition plans tailored to your goals, preferences, and lifestyle",
-      features: ["Detailed meal planning", "Shopping lists", "Recipe substitutions", "Portion guidance"],
-      price: "From €80/month",
-      popular: false
+      title: "Meal Plans",
+      description: "Custom nutrition tailored to you",
+      features: ["Meal planning", "Shopping lists", "Recipe swaps"],
+      price: "€80/month"
     },
     {
       icon: MessageCircle,
-      title: "24/7 Support & Coaching",
-      description: "Get instant answers and ongoing support through our messaging platform",
-      features: ["Quick responses", "Motivational support", "Expert guidance", "Progress tracking"],
-      price: "From €120/month",
+      title: "24/7 Support",
+      description: "Direct access to expert guidance",
+      features: ["Quick responses", "Progress tracking", "Daily motivation"],
+      price: "€120/month",
       popular: true
     },
     {
       icon: BookOpen,
-      title: "Educational Resources",
-      description: "Access comprehensive guides and materials to support your journey",
-      features: ["Nutrition guides", "Recipe collections", "Video tutorials", "Meal prep guides"],
-      price: "From €50/month",
-      popular: false
+      title: "Resources",
+      description: "Complete nutrition education",
+      features: ["Guides", "Videos", "Meal prep tips"],
+      price: "€50/month"
     }
   ];
 
   const additionalServices = [
     {
       icon: Calendar,
-      title: "One-on-One Consultations",
-      description: "Personalized sessions to discuss your goals and create your plan",
-      duration: "60 minutes",
-      price: "€85 per session"
+      title: "1:1 Sessions",
+      description: "Personal nutrition consultation",
+      duration: "60 min",
+      price: "€85"
     },
     {
       icon: Users,
-      title: "Group Workshops",
-      description: "Join others on similar journeys in our interactive workshops",
-      duration: "90 minutes",
-      price: "€35 per person"
+      title: "Group Sessions",
+      description: "Interactive nutrition workshops",
+      duration: "90 min",
+      price: "€35"
     },
     {
       icon: Target,

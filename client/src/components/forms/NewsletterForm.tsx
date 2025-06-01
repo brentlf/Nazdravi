@@ -42,10 +42,14 @@ export function NewsletterForm() {
       form.reset();
       toast({
         title: "Subscribed!",
-        description: "Thank you for subscribing. Check your email for the free meal planning guide!",
+        description:
+          "Thank you for subscribing. Check your email for the free meal planning guide!",
       });
     } catch (error: any) {
-      if (error.code === "permission-denied" || error.message.includes("unique")) {
+      if (
+        error.code === "permission-denied" ||
+        error.message.includes("unique")
+      ) {
         toast({
           title: "Already subscribed",
           description: "This email is already subscribed to our newsletter.",
@@ -87,8 +91,8 @@ export function NewsletterForm() {
                     <Input
                       {...field}
                       type="email"
-                      placeholder={t("email-placeholder", "home")}
-                      className="bg-white border-0 text-gray-900 placeholder:text-gray-500"
+                      placeholder={t("email-address", "home")}
+                      className="bg-white border-fill text-gray-900 placeholder:text-gray-500"
                     />
                   </FormControl>
                   <FormMessage className="text-white/90" />
@@ -98,7 +102,7 @@ export function NewsletterForm() {
             <Button
               type="submit"
               disabled={loading}
-              className="text-primary-600 hover:bg-gray-100 font-semibold bg-[#008747]"
+              className="text-white hover:bg-blue-200 font-semibold bg-blue-600"
             >
               {loading ? (
                 "Subscribing..."
@@ -114,12 +118,15 @@ export function NewsletterForm() {
       </Form>
       {/* Free Resource Incentive */}
       <div className="mt-8 backdrop-blur-sm rounded-2xl p-6 bg-[#f7f2ed]">
-        <div className="flex items-center justify-center space-x-3 mb-4 text-[#000000]">
-          <Gift className="w-6 h-6 text-white" />
-          <h3 className="text-lg font-semibold text-[#120404]">{t("free-bonus", "home")}</h3>
+        <div className="flex items-center justify-center space-x-3 mb-3 text-[#000000]">
+          <Gift className="w-6 h-6 text-blue-800" />
+          <h3 className="text-lg font-semibold text-blue-900">
+            {t("free-bonus", "home")}
+          </h3>
         </div>
         <p className="text-sm text-center text-[#050000e6]">
-          {t("meal-planning-guide", "home")}
+          Sign up for our newsletter today and get a free meal-plan guide to
+          kick-start your health journey!
         </p>
       </div>
       <p className="text-white/80 text-sm mt-4 text-center">

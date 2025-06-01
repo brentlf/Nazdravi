@@ -27,52 +27,38 @@ export default function Home() {
   const services = [
     {
       icon: ClipboardList,
-      title: "Personalized Meal Plans",
-      description:
-        "Custom nutrition plans tailored to your goals and preferences",
-      features: [
-        "Detailed meal planning",
-        "Shopping lists",
-        "Recipe substitutions",
-      ],
+      title: "Meal Plans",
+      description: "Custom nutrition tailored to you",
+      features: ["Meal planning", "Shopping lists", "Recipe swaps"],
     },
     {
       icon: MessageCircle,
-      title: "24/7 Support & Messaging",
-      description:
-        "Get instant answers and ongoing support through our messaging platform",
-      features: ["Quick responses", "Motivational support", "Expert guidance"],
+      title: "24/7 Support",
+      description: "Direct access to expert guidance",
+      features: ["Quick responses", "Progress tracking", "Motivation"],
     },
     {
       icon: BookOpen,
-      title: "Educational Resources",
-      description:
-        "Access comprehensive guides and materials to support your journey",
-      features: [
-        "Nutrition guides",
-        "Recipe collections",
-        "Progress tracking tools",
-      ],
+      title: "Resources",
+      description: "Complete nutrition education",
+      features: ["Guides", "Recipes", "Progress tools"],
     },
   ];
 
   const testimonials = [
     {
       name: "Sarah M.",
-      quote:
-        "Vee completely transformed my approach to nutrition. The personalized plan was easy to follow and the results were incredible!",
+      quote: "Transformed my nutrition approach. Easy to follow, incredible results!",
       rating: 5,
     },
     {
       name: "Michael R.",
-      quote:
-        "The expertise and support Vee provides is unmatched. I finally understand how to properly nourish my body.",
+      quote: "Unmatched expertise. Finally understand proper nutrition.",
       rating: 5,
     },
     {
       name: "Emma L.",
-      quote:
-        "Best investment I've ever made for my health. Vee's guidance helped me achieve goals I thought were impossible.",
+      quote: "Best health investment. Achieved impossible goals.",
       rating: 5,
     },
   ];
@@ -153,9 +139,7 @@ export default function Home() {
                       <div className="text-2xl font-bold text-white">
                         {stat.number}
                       </div>
-                      <div className="text-xs text-gray-200">
-                        {stat.label}
-                      </div>
+                      <div className="text-xs text-gray-200">{stat.label}</div>
                     </div>
                   );
                 })}
@@ -179,12 +163,6 @@ export default function Home() {
               relationship with food. Together, we'll discover sustainable
               practices that honor both your heritage and your health goals.
             </p>
-
-            {/* Handwritten connecting doodle */}
-            <DoodleConnector
-              direction="down"
-              className="absolute -bottom-8 left-1/2 transform -translate-x-1/2 w-32"
-            />
           </div>
 
           <div className="grid md:grid-cols-3 gap-8 relative">
@@ -200,15 +178,11 @@ export default function Home() {
                           <span className="font-display text-accent italic text-sm transform rotate-12 inline-block">
                             Popular!
                           </span>
-                          <DoodleConnector
-                            direction="right"
-                            className="w-8 mt-1"
-                          />
                         </div>
                       )}
 
-                      <div className="w-16 h-16 bg-primary/20 blob-shape flex items-center justify-center mx-auto mb-6 warm-glow floating-element">
-                        <Icon className="w-8 h-8 text-primary" />
+                      <div className="w-16 h-16 bg-green-500/20 blob-shape flex items-center justify-center mx-auto mb-6 warm-glow floating-element">
+                        <Icon className="w-8 h-8 text-green-500" />
                       </div>
 
                       <h3 className="font-display text-xl mb-4 text-foreground handwritten-accent">
@@ -224,42 +198,16 @@ export default function Home() {
                             key={featureIndex}
                             className="flex items-center justify-center gap-2 serif-body text-sm"
                           >
-                            <CheckCircle className="w-4 h-4 text-primary" />
+                            <CheckCircle className="w-4 h-4 text-green-500" />
                             {feature}
                           </li>
                         ))}
                       </ul>
                     </CardContent>
                   </Card>
-
-                  {/* Floating organic elements around cards */}
-                  {index === 0 && (
-                    <FloatingOrganic
-                      className="absolute -top-8 -left-8 opacity-40"
-                      size="small"
-                      delay={1}
-                    />
-                  )}
-                  {index === 2 && (
-                    <FloatingOrganic
-                      className="absolute -bottom-8 -right-8 opacity-40"
-                      size="small"
-                      delay={3}
-                    />
-                  )}
                 </div>
               );
             })}
-
-            {/* Connecting doodle lines between cards */}
-            <DoodleConnector
-              direction="right"
-              className="absolute top-1/2 left-1/3 transform -translate-y-1/2 w-16 hidden md:block"
-            />
-            <DoodleConnector
-              direction="right"
-              className="absolute top-1/2 left-2/3 transform -translate-y-1/2 w-16 hidden md:block"
-            />
           </div>
         </div>
       </section>
@@ -276,12 +224,6 @@ export default function Home() {
               Real journeys from clients who discovered the joy of nourishing
               themselves
             </p>
-
-            {/* Connecting doodle to testimonials */}
-            <DoodleConnector
-              direction="down"
-              className="absolute -bottom-8 left-1/2 transform -translate-x-1/2 w-24"
-            />
           </div>
 
           <div className="grid md:grid-cols-3 gap-8 relative">
@@ -296,7 +238,7 @@ export default function Home() {
                       {[...Array(testimonial.rating)].map((_, i) => (
                         <Star
                           key={i}
-                          className="w-5 h-5 fill-accent text-accent"
+                          className="w-5 h-5 fill-yellow-500/20 text-yellow-500"
                         />
                       ))}
                     </div>
@@ -307,15 +249,6 @@ export default function Home() {
                     <p className="font-display text-center text-foreground handwritten-accent">
                       — {testimonial.name}
                     </p>
-
-                    {/* Handwritten flourish */}
-                    {index === 1 && (
-                      <div className="absolute -bottom-2 -right-2">
-                        <span className="text-accent text-2xl transform rotate-12 inline-block">
-                          ✨
-                        </span>
-                      </div>
-                    )}
                   </CardContent>
                 </Card>
 
