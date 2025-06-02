@@ -530,25 +530,22 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(400).json({ success: false, error: "Missing required field: clientName" });
       }
       
-      // Queue email in Firebase with correct format
-      const docRef = await db.collection("mail").add({
-        to: 'info@veenutrition.com',
-        toName: 'Admin Team',
-        type: "admin-reschedule-request",
-        status: "pending",
-        data: { 
-          clientName: clientName || '',
-          clientEmail: clientEmail || '',
-          originalDate: originalDate || '',
-          originalTime: originalTime || '',
-          reason: reason || 'No reason provided'
-        },
-        createdAt: new Date()
-      });
+      // Send admin reschedule request notification directly using Resend
+      const emailSent = await resendService.sendAdminRescheduleRequest(
+        clientName,
+        clientEmail || '',
+        originalDate || '',
+        originalTime || '',
+        reason || 'No reason provided'
+      );
 
-      res.json({ success: true, message: "Admin reschedule request notification queued", docId: docRef.id });
+      if (emailSent) {
+        res.json({ success: true, message: "Admin reschedule request notification sent successfully" });
+      } else {
+        res.status(500).json({ success: false, error: "Failed to send admin reschedule request notification" });
+      }
     } catch (error: any) {
-      console.error("Error queuing admin reschedule request notification:", error);
+      console.error("Error sending admin reschedule request notification:", error);
       res.status(500).json({ success: false, error: error.message });
     }
   });

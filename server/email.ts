@@ -265,6 +265,22 @@ export class ResendService {
     return result;
   }
 
+  async sendAdminRescheduleRequest(
+    clientName: string,
+    clientEmail: string,
+    originalDate: string,
+    originalTime: string,
+    reason: string
+  ): Promise<boolean> {
+    const template = this.getRescheduleRequestTemplate(clientName, clientEmail, originalDate, originalTime, reason);
+    return this.sendEmail({
+      to: 'admin@veenutrition.com',
+      subject: template.subject,
+      html: template.html,
+      text: template.text
+    });
+  }
+
   async sendAdminInvoicePaid(clientName: string, amount: number, invoiceId: string): Promise<boolean> {
     const template = this.getAdminInvoicePaidTemplate(clientName, amount, invoiceId);
     return this.sendEmail({
