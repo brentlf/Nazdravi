@@ -1,106 +1,99 @@
-import * as functions from 'firebase-functions/v1';
-import * as admin from 'firebase-admin';
-import * as https from 'https';
-
+"use strict";
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.processScheduledDowngrades = exports.sendDailyReminders = exports.onInvoiceCreated = exports.processMonthlyBilling = exports.processMailQueue = exports.onRescheduleRequest = exports.onAppointmentCreated = exports.onAppointmentConfirmed = exports.onUserCreated = void 0;
+const functions = __importStar(require("firebase-functions/v1"));
+const admin = __importStar(require("firebase-admin"));
+const https = __importStar(require("https"));
 // Initialize Firebase Admin
 admin.initializeApp();
-
-interface EmailTemplate {
-  subject: string;
-  html: string;
-  text?: string;
-}
-
-interface SendEmailParams {
-  to: string;
-  toName?: string;
-  subject: string;
-  html: string;
-  text?: string;
-}
-
 class ResendEmailService {
-  async sendEmail(params: SendEmailParams): Promise<boolean> {
-    const RESEND_API_KEY = functions.config().resend?.apikey;
-    
-    if (!RESEND_API_KEY) {
-      console.error('Resend API key not configured');
-      return false;
-    }
-
-    return new Promise((resolve) => {
-      const postData = JSON.stringify({
-        from: 'Vee Nutrition <info@veenutrition.com>',
-        to: [`${params.toName || ''} <${params.to}>`],
-        subject: params.subject,
-        html: params.html,
-        text: params.text || ''
-      });
-
-      
-      const options = {
-        hostname: 'api.resend.com',
-        port: 443,
-        path: '/emails',
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${RESEND_API_KEY}`,
-          'Content-Length': Buffer.byteLength(postData)
+    async sendEmail(params) {
+        const RESEND_API_KEY = functions.config().resend?.apikey;
+        if (!RESEND_API_KEY) {
+            console.error('Resend API key not configured');
+            return false;
         }
-      };
-
-      const req = https.request(options, (res) => {
-        let responseData = '';
-        
-        res.on('data', (chunk) => {
-          responseData += chunk;
+        return new Promise((resolve) => {
+            const postData = JSON.stringify({
+                from: 'Vee Nutrition <info@veenutrition.com>',
+                to: [`${params.toName || ''} <${params.to}>`],
+                subject: params.subject,
+                html: params.html,
+                text: params.text || ''
+            });
+            const options = {
+                hostname: 'api.resend.com',
+                port: 443,
+                path: '/emails',
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${RESEND_API_KEY}`,
+                    'Content-Length': Buffer.byteLength(postData)
+                }
+            };
+            const req = https.request(options, (res) => {
+                let responseData = '';
+                res.on('data', (chunk) => {
+                    responseData += chunk;
+                });
+                res.on('end', () => {
+                    console.log('Resend response:', res.statusCode, responseData);
+                    if (res.statusCode === 200 || res.statusCode === 201) {
+                        console.log(`Email sent successfully to: ${params.to}`);
+                        resolve(true);
+                    }
+                    else {
+                        console.error('Resend API error:', res.statusCode, responseData);
+                        resolve(false);
+                    }
+                });
+            });
+            req.on('error', (error) => {
+                console.error('Email sending failed:', error);
+                resolve(false);
+            });
+            req.write(postData);
+            req.end();
         });
-        
-        res.on('end', () => {
-          console.log('Resend response:', res.statusCode, responseData);
-          
-          if (res.statusCode === 200 || res.statusCode === 201) {
-            console.log(`Email sent successfully to: ${params.to}`);
-            resolve(true);
-          } else {
-            console.error('Resend API error:', res.statusCode, responseData);
-            resolve(false);
-          }
+    }
+    async sendAppointmentReminder(email, name, date, time, type) {
+        const template = this.getAppointmentReminderTemplate(name, date, time, type);
+        return this.sendEmail({
+            to: email,
+            toName: name,
+            subject: template.subject,
+            html: template.html,
+            text: template.text,
         });
-      });
-
-      req.on('error', (error) => {
-        console.error('Email sending failed:', error);
-        resolve(false);
-      });
-
-      req.write(postData);
-      req.end();
-    });
-  }
-
-  async sendAppointmentReminder(
-    email: string,
-    name: string,
-    date: string,
-    time: string,
-    type: string
-  ): Promise<boolean> {
-    const template = this.getAppointmentReminderTemplate(name, date, time, type);
-    return this.sendEmail({
-      to: email,
-      toName: name,
-      subject: template.subject,
-      html: template.html,
-      text: template.text,
-    });
-  }
-
-  getAccountConfirmationTemplate(name: string): EmailTemplate {
-    return {
-      subject: 'Welcome to Vee Nutrition - Account Created Successfully',
-      html: `
+    }
+    getAccountConfirmationTemplate(name) {
+        return {
+            subject: 'Welcome to Vee Nutrition - Account Created Successfully',
+            html: `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; background-color: #f8faf8;">
           <div style="background-color: white; padding: 30px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
             <div style="text-align: center; margin-bottom: 30px;">
@@ -140,14 +133,13 @@ class ResendEmailService {
           </div>
         </div>
       `,
-      text: `Welcome to Vee Nutrition, ${name}! Your account has been created successfully. Visit your dashboard to get started with your nutrition journey.`
-    };
-  }
-
-  getAppointmentConfirmationTemplate(name: string, date: string, time: string, type: string): EmailTemplate {
-    return {
-      subject: 'Appointment Confirmed - Vee Nutrition',
-      html: `
+            text: `Welcome to Vee Nutrition, ${name}! Your account has been created successfully. Visit your dashboard to get started with your nutrition journey.`
+        };
+    }
+    getAppointmentConfirmationTemplate(name, date, time, type) {
+        return {
+            subject: 'Appointment Confirmed - Vee Nutrition',
+            html: `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; background-color: #f8faf8;">
           <div style="background-color: white; padding: 30px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
             <div style="text-align: center; margin-bottom: 30px;">
@@ -197,14 +189,13 @@ class ResendEmailService {
           </div>
         </div>
       `,
-      text: `Appointment Confirmed! Hi ${name}, your ${type} appointment is confirmed for ${date} at ${time}. Please keep a food diary and prepare any questions.`
-    };
-  }
-
-  getAppointmentReminderTemplate(name: string, date: string, time: string, type: string): EmailTemplate {
-    return {
-      subject: 'Appointment Reminder - Tomorrow at Vee Nutrition',
-      html: `
+            text: `Appointment Confirmed! Hi ${name}, your ${type} appointment is confirmed for ${date} at ${time}. Please keep a food diary and prepare any questions.`
+        };
+    }
+    getAppointmentReminderTemplate(name, date, time, type) {
+        return {
+            subject: 'Appointment Reminder - Tomorrow at Vee Nutrition',
+            html: `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; background-color: #f8faf8;">
           <div style="background-color: white; padding: 30px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
             <div style="text-align: center; margin-bottom: 30px;">
@@ -244,14 +235,13 @@ class ResendEmailService {
           </div>
         </div>
       `,
-      text: `Appointment Reminder: Hi ${name}, your ${type} appointment is tomorrow (${date}) at ${time}. Please review your food diary and prepare any questions.`
-    };
-  }
-
-  getPaymentReminderTemplate(name: string, amount: number, invoiceNumber: string, paymentUrl: string): EmailTemplate {
-    return {
-      subject: `Payment Reminder - Invoice ${invoiceNumber}`,
-      html: `
+            text: `Appointment Reminder: Hi ${name}, your ${type} appointment is tomorrow (${date}) at ${time}. Please review your food diary and prepare any questions.`
+        };
+    }
+    getPaymentReminderTemplate(name, amount, invoiceNumber, paymentUrl) {
+        return {
+            subject: `Payment Reminder - Invoice ${invoiceNumber}`,
+            html: `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; background-color: #f8faf8;">
           <div style="background-color: white; padding: 30px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
             <div style="text-align: center; margin-bottom: 30px;">
@@ -293,7 +283,7 @@ class ResendEmailService {
           </div>
         </div>
       `,
-      text: `Payment Reminder - Invoice ${invoiceNumber}
+            text: `Payment Reminder - Invoice ${invoiceNumber}
 
 Dear ${name},
 
@@ -305,13 +295,12 @@ If you have any questions, please contact us.
 
 Best regards,
 Vee Nutrition Team`
-    };
-  }
-
-  getRescheduleRequestTemplate(clientName: string, clientEmail: string, originalDate: string, originalTime: string, reason?: string): EmailTemplate {
-    return {
-      subject: `Reschedule Request from ${clientName}`,
-      html: `
+        };
+    }
+    getRescheduleRequestTemplate(clientName, clientEmail, originalDate, originalTime, reason) {
+        return {
+            subject: `Reschedule Request from ${clientName}`,
+            html: `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; background-color: #f8faf8;">
           <div style="background-color: white; padding: 30px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
             <div style="text-align: center; margin-bottom: 30px;">
@@ -350,16 +339,13 @@ Vee Nutrition Team`
           </div>
         </div>
       `,
-      text: `Reschedule request from ${clientName} (${clientEmail}) for appointment on ${originalDate} at ${originalTime}. ${reason ? `Reason: ${reason}` : ''}`
-    };
-  }
-
-
-
-  getRescheduleConfirmationTemplate(name: string, newDate: string, newTime: string, type: string): EmailTemplate {
-    return {
-      subject: 'Reschedule Confirmed - Vee Nutrition',
-      html: `
+            text: `Reschedule request from ${clientName} (${clientEmail}) for appointment on ${originalDate} at ${originalTime}. ${reason ? `Reason: ${reason}` : ''}`
+        };
+    }
+    getRescheduleConfirmationTemplate(name, newDate, newTime, type) {
+        return {
+            subject: 'Reschedule Confirmed - Vee Nutrition',
+            html: `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; background-color: #f8faf8;">
           <div style="background-color: white; padding: 30px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
             <div style="text-align: center; margin-bottom: 30px;">
@@ -386,14 +372,13 @@ Vee Nutrition Team`
           </div>
         </div>
       `,
-      text: `Reschedule confirmed! Your ${type} appointment has been moved to ${newDate} at ${newTime}.`
-    };
-  }
-
-  getInvoiceGeneratedTemplate(name: string, amount: number, invoiceId: string): EmailTemplate {
-    return {
-      subject: 'Session Complete - Invoice Ready - Vee Nutrition',
-      html: `
+            text: `Reschedule confirmed! Your ${type} appointment has been moved to ${newDate} at ${newTime}.`
+        };
+    }
+    getInvoiceGeneratedTemplate(name, amount, invoiceId) {
+        return {
+            subject: 'Session Complete - Invoice Ready - Vee Nutrition',
+            html: `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; background-color: #f8faf8;">
           <div style="background-color: white; padding: 30px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
             <div style="text-align: center; margin-bottom: 30px;">
@@ -426,14 +411,13 @@ Vee Nutrition Team`
           </div>
         </div>
       `,
-      text: `Session complete! Your invoice (${invoiceId}) for €${amount} is ready. View and pay at your dashboard.`
-    };
-  }
-
-  getLateRescheduleTemplate(name: string, date: string, time: string): EmailTemplate {
-    return {
-      subject: 'Late Reschedule Notice - €5 Fee Applied - Vee Nutrition',
-      html: `
+            text: `Session complete! Your invoice (${invoiceId}) for €${amount} is ready. View and pay at your dashboard.`
+        };
+    }
+    getLateRescheduleTemplate(name, date, time) {
+        return {
+            subject: 'Late Reschedule Notice - €5 Fee Applied - Vee Nutrition',
+            html: `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; background-color: #f8faf8;">
           <div style="background-color: white; padding: 30px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
             <div style="text-align: center; margin-bottom: 30px;">
@@ -467,14 +451,13 @@ Vee Nutrition Team`
           </div>
         </div>
       `,
-      text: `Late reschedule notice: Your appointment on ${date} at ${time} has been rescheduled. A €5 late reschedule fee applies.`
-    };
-  }
-
-  getNoShowPenaltyTemplate(name: string, date: string, time: string, penaltyAmount: number): EmailTemplate {
-    return {
-      subject: 'Missed Appointment - No-Show Penalty Applied - Vee Nutrition',
-      html: `
+            text: `Late reschedule notice: Your appointment on ${date} at ${time} has been rescheduled. A €5 late reschedule fee applies.`
+        };
+    }
+    getNoShowPenaltyTemplate(name, date, time, penaltyAmount) {
+        return {
+            subject: 'Missed Appointment - No-Show Penalty Applied - Vee Nutrition',
+            html: `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; background-color: #f8faf8;">
           <div style="background-color: white; padding: 30px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
             <div style="text-align: center; margin-bottom: 30px;">
@@ -514,14 +497,13 @@ Vee Nutrition Team`
           </div>
         </div>
       `,
-      text: `Missed appointment notice: You missed your appointment on ${date} at ${time}. A no-show penalty of €${penaltyAmount.toFixed(2)} has been applied.`
-    };
-  }
-
-  getAppointmentCancelledTemplate(name: string, date: string, time: string, reason?: string): EmailTemplate {
-    return {
-      subject: 'Appointment Cancelled - Vee Nutrition',
-      html: `
+            text: `Missed appointment notice: You missed your appointment on ${date} at ${time}. A no-show penalty of €${penaltyAmount.toFixed(2)} has been applied.`
+        };
+    }
+    getAppointmentCancelledTemplate(name, date, time, reason) {
+        return {
+            subject: 'Appointment Cancelled - Vee Nutrition',
+            html: `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; background-color: #f8faf8;">
           <div style="background-color: white; padding: 30px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
             <div style="text-align: center; margin-bottom: 30px;">
@@ -561,21 +543,14 @@ Vee Nutrition Team`
           </div>
         </div>
       `,
-      text: `Appointment cancelled: Your appointment on ${date} at ${time} has been cancelled. ${reason ? `Reason: ${reason}` : ''} Please book a new appointment when convenient.`
-    };
-  }
-
-  // Admin notification templates
-  getAdminNewAppointmentTemplate(appointmentData: {
-    clientName: string;
-    clientEmail: string;
-    type: string;
-    date: string;
-    time: string;
-  }): EmailTemplate {
-    return {
-      subject: `New Appointment Request - ${appointmentData.clientName}`,
-      html: `
+            text: `Appointment cancelled: Your appointment on ${date} at ${time} has been cancelled. ${reason ? `Reason: ${reason}` : ''} Please book a new appointment when convenient.`
+        };
+    }
+    // Admin notification templates
+    getAdminNewAppointmentTemplate(appointmentData) {
+        return {
+            subject: `New Appointment Request - ${appointmentData.clientName}`,
+            html: `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; background-color: #f8faf8;">
           <div style="background-color: white; padding: 30px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
             <div style="text-align: center; margin-bottom: 30px;">
@@ -610,14 +585,13 @@ Vee Nutrition Team`
           </div>
         </div>
       `,
-      text: `New appointment request from ${appointmentData.clientName} (${appointmentData.clientEmail}) for ${appointmentData.type} on ${appointmentData.date} at ${appointmentData.time}.`
-    };
-  }
-
-  getAdminHealthUpdateTemplate(clientName: string, clientEmail: string, updateType: string): EmailTemplate {
-    return {
-      subject: `Health Information Update - ${clientName}`,
-      html: `
+            text: `New appointment request from ${appointmentData.clientName} (${appointmentData.clientEmail}) for ${appointmentData.type} on ${appointmentData.date} at ${appointmentData.time}.`
+        };
+    }
+    getAdminHealthUpdateTemplate(clientName, clientEmail, updateType) {
+        return {
+            subject: `Health Information Update - ${clientName}`,
+            html: `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; background-color: #f8faf8;">
           <div style="background-color: white; padding: 30px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
             <div style="text-align: center; margin-bottom: 30px;">
@@ -650,14 +624,13 @@ Vee Nutrition Team`
           </div>
         </div>
       `,
-      text: `Health information update from ${clientName} (${clientEmail}). Update type: ${updateType}.`
-    };
-  }
-
-  getAdminPaymentReceivedTemplate(clientName: string, amount: number, invoiceId: string, paymentMethod: string): EmailTemplate {
-    return {
-      subject: `Payment Received - ${clientName} - €${amount}`,
-      html: `
+            text: `Health information update from ${clientName} (${clientEmail}). Update type: ${updateType}.`
+        };
+    }
+    getAdminPaymentReceivedTemplate(clientName, amount, invoiceId, paymentMethod) {
+        return {
+            subject: `Payment Received - ${clientName} - €${amount}`,
+            html: `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; background-color: #f8faf8;">
           <div style="background-color: white; padding: 30px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
             <div style="text-align: center; margin-bottom: 30px;">
@@ -687,14 +660,13 @@ Vee Nutrition Team`
           </div>
         </div>
       `,
-      text: `Payment received from ${clientName}: €${amount.toFixed(2)} for invoice ${invoiceId} via ${paymentMethod}.`
-    };
-  }
-
-  getAdminPlanUpgradeTemplate(clientName: string, planType: string, previousPlan: string): EmailTemplate {
-    return {
-      subject: `Plan Upgrade - ${clientName} - ${planType}`,
-      html: `
+            text: `Payment received from ${clientName}: €${amount.toFixed(2)} for invoice ${invoiceId} via ${paymentMethod}.`
+        };
+    }
+    getAdminPlanUpgradeTemplate(clientName, planType, previousPlan) {
+        return {
+            subject: `Plan Upgrade - ${clientName} - ${planType}`,
+            html: `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; background-color: #f8faf8;">
           <div style="background-color: white; padding: 30px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
             <div style="text-align: center; margin-bottom: 30px;">
@@ -727,14 +699,13 @@ Vee Nutrition Team`
           </div>
         </div>
       `,
-      text: `Service plan upgrade: ${clientName} upgraded from ${previousPlan} to ${planType}.`
-    };
-  }
-
-  getAdminClientMessageTemplate(clientName: string, clientEmail: string, messageType: string, urgency: string): EmailTemplate {
-    return {
-      subject: `New Client Message - ${clientName} - ${urgency}`,
-      html: `
+            text: `Service plan upgrade: ${clientName} upgraded from ${previousPlan} to ${planType}.`
+        };
+    }
+    getAdminClientMessageTemplate(clientName, clientEmail, messageType, urgency) {
+        return {
+            subject: `New Client Message - ${clientName} - ${urgency}`,
+            html: `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; background-color: #f8faf8;">
           <div style="background-color: white; padding: 30px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
             <div style="text-align: center; margin-bottom: 30px;">
@@ -764,138 +735,116 @@ Vee Nutrition Team`
           </div>
         </div>
       `,
-      text: `New ${urgency.toLowerCase()} priority message from ${clientName} (${clientEmail}). Type: ${messageType}.`
-    };
-  }
+            text: `New ${urgency.toLowerCase()} priority message from ${clientName} (${clientEmail}). Type: ${messageType}.`
+        };
+    }
 }
-
 const emailService = new ResendEmailService();
-
 // 1. New User Account Created
-export const onUserCreated = functions.firestore
-  .document('users/{userId}')
-  .onCreate(async (snap: any, context: any) => {
+exports.onUserCreated = functions.firestore
+    .document('users/{userId}')
+    .onCreate(async (snap, context) => {
     const user = snap.data();
     const userId = context.params.userId;
-    
     console.log('🔍 DEBUG: NEW USER CREATED TRIGGER');
     console.log('📧 User Email:', user.email);
     console.log('👤 User Name:', user.name);
     console.log('🆔 User ID:', userId);
     console.log('📋 User Role:', user.role);
     console.log('🕒 Timestamp:', new Date().toISOString());
-    
     try {
-      const template = emailService.getAccountConfirmationTemplate(user.name);
-      console.log('📧 Email template generated successfully');
-      console.log('📋 Subject:', template.subject);
-      
-      const mailDoc = await admin.firestore().collection('mail').add({
-        to: [user.email],
-        message: {
-          subject: template.subject,
-          html: template.html,
-          text: template.text,
-        },
-        type: 'account-confirmation',
-        createdAt: admin.firestore.FieldValue.serverTimestamp(),
-      });
-      
-      console.log('✅ Welcome email queued successfully. Mail ID:', mailDoc.id);
-      console.log('📬 Email will be sent to:', user.email);
-      
-    } catch (error) {
-      console.error('❌ ERROR in onUserCreated:', error);
-      console.error('📧 Failed to queue welcome email for:', user.email);
+        const template = emailService.getAccountConfirmationTemplate(user.name);
+        console.log('📧 Email template generated successfully');
+        console.log('📋 Subject:', template.subject);
+        const mailDoc = await admin.firestore().collection('mail').add({
+            to: [user.email],
+            message: {
+                subject: template.subject,
+                html: template.html,
+                text: template.text,
+            },
+            type: 'account-confirmation',
+            createdAt: admin.firestore.FieldValue.serverTimestamp(),
+        });
+        console.log('✅ Welcome email queued successfully. Mail ID:', mailDoc.id);
+        console.log('📬 Email will be sent to:', user.email);
     }
-  });
-
+    catch (error) {
+        console.error('❌ ERROR in onUserCreated:', error);
+        console.error('📧 Failed to queue welcome email for:', user.email);
+    }
+});
 // 2. Appointment Status Changed to Confirmed
-export const onAppointmentConfirmed = functions.firestore
-  .document('appointments/{appointmentId}')
-  .onUpdate(async (change: any, context: any) => {
+exports.onAppointmentConfirmed = functions.firestore
+    .document('appointments/{appointmentId}')
+    .onUpdate(async (change, context) => {
     const before = change.before.data();
     const after = change.after.data();
     const appointmentId = context.params.appointmentId;
-    
     console.log('🔍 DEBUG: APPOINTMENT STATUS CHANGE TRIGGER');
     console.log('🆔 Appointment ID:', appointmentId);
     console.log('📊 Status Before:', before.status);
     console.log('📊 Status After:', after.status);
     console.log('🕒 Timestamp:', new Date().toISOString());
-    
     if (before.status !== 'confirmed' && after.status === 'confirmed') {
-      console.log('✅ Appointment confirmation detected');
-      
-      // Extract client details - handle different field name variations
-      const clientName = after.clientName || after.name || after.userName || 'Client';
-      const clientEmail = after.clientEmail || after.email || after.userEmail;
-      const appointmentTime = after.time || after.timeslot;
-      const appointmentType = after.type || after.servicePlan || 'consultation';
-      
-      console.log('👤 Client Name (resolved):', clientName);
-      console.log('📧 Client Email (resolved):', clientEmail);
-      console.log('📅 Date:', after.date);
-      console.log('🕐 Time (resolved):', appointmentTime);
-      console.log('📋 Type (resolved):', appointmentType);
-      
-      if (!clientEmail) {
-        console.error('❌ No client email found in appointment data');
-        console.error('📋 Available fields:', Object.keys(after));
-        return;
-      }
-      
-      try {
-        const template = emailService.getAppointmentConfirmationTemplate(
-          clientName,
-          after.date,
-          appointmentTime,
-          appointmentType
-        );
-        console.log('📧 Confirmation template generated');
-        console.log('📋 Subject:', template.subject);
-        
-        // Send email directly using Resend instead of queuing for Firebase extension
-        const emailSent = await emailService.sendEmail({
-          to: clientEmail,
-          toName: clientName,
-          subject: template.subject,
-          html: template.html,
-          text: template.text,
-        });
-        
-        if (emailSent) {
-          console.log('✅ Confirmation email sent successfully via Resend');
-        } else {
-          console.log('❌ Failed to send confirmation email via Resend');
+        console.log('✅ Appointment confirmation detected');
+        // Extract client details - handle different field name variations
+        const clientName = after.clientName || after.name || after.userName || 'Client';
+        const clientEmail = after.clientEmail || after.email || after.userEmail;
+        const appointmentTime = after.time || after.timeslot;
+        const appointmentType = after.type || after.servicePlan || 'consultation';
+        console.log('👤 Client Name (resolved):', clientName);
+        console.log('📧 Client Email (resolved):', clientEmail);
+        console.log('📅 Date:', after.date);
+        console.log('🕐 Time (resolved):', appointmentTime);
+        console.log('📋 Type (resolved):', appointmentType);
+        if (!clientEmail) {
+            console.error('❌ No client email found in appointment data');
+            console.error('📋 Available fields:', Object.keys(after));
+            return;
         }
-        console.log('📬 Email attempted to:', clientEmail);
-        
-      } catch (error) {
-        console.error('❌ ERROR in onAppointmentConfirmed:', error);
-        console.error('📧 Failed to queue confirmation email for:', after.clientEmail);
-      }
-    } else {
-      console.log('ℹ️ Status change detected but not a confirmation');
+        try {
+            const template = emailService.getAppointmentConfirmationTemplate(clientName, after.date, appointmentTime, appointmentType);
+            console.log('📧 Confirmation template generated');
+            console.log('📋 Subject:', template.subject);
+            // Send email directly using Resend instead of queuing for Firebase extension
+            const emailSent = await emailService.sendEmail({
+                to: clientEmail,
+                toName: clientName,
+                subject: template.subject,
+                html: template.html,
+                text: template.text,
+            });
+            if (emailSent) {
+                console.log('✅ Confirmation email sent successfully via Resend');
+            }
+            else {
+                console.log('❌ Failed to send confirmation email via Resend');
+            }
+            console.log('📬 Email attempted to:', clientEmail);
+        }
+        catch (error) {
+            console.error('❌ ERROR in onAppointmentConfirmed:', error);
+            console.error('📧 Failed to queue confirmation email for:', after.clientEmail);
+        }
     }
-  });
-
+    else {
+        console.log('ℹ️ Status change detected but not a confirmation');
+    }
+});
 // 3. New Appointment Created - Admin Notification
-export const onAppointmentCreated = functions.firestore
-  .document('appointments/{appointmentId}')
-  .onCreate(async (snap: any, context: any) => {
+exports.onAppointmentCreated = functions.firestore
+    .document('appointments/{appointmentId}')
+    .onCreate(async (snap, context) => {
     const appointmentData = snap.data();
     const appointmentId = context.params.appointmentId;
-    
     console.log('🔍 DEBUG: NEW APPOINTMENT CREATED TRIGGER');
     console.log('🆔 Appointment ID:', appointmentId);
     console.log('📋 RAW APPOINTMENT DATA:', JSON.stringify(appointmentData, null, 2));
-    
     // Extract client details - handle different field name variations
     const clientName = appointmentData.clientName || appointmentData.name || appointmentData.userName || 'Client';
     const clientEmail = appointmentData.clientEmail || appointmentData.email || appointmentData.userEmail;
     const appointmentTime = appointmentData.time || appointmentData.timeslot;
-    
     console.log('👤 Client Name (resolved):', clientName);
     console.log('📧 Client Email (resolved):', clientEmail);
     console.log('📅 Date:', appointmentData.date);
@@ -904,395 +853,291 @@ export const onAppointmentCreated = functions.firestore
     console.log('📊 Status:', appointmentData.status);
     console.log('👤 User ID:', appointmentData.userId);
     console.log('🕒 Timestamp:', new Date().toISOString());
-    
     if (!clientEmail) {
-      console.error('❌ No client email found in appointment data');
-      console.error('📋 Available fields:', Object.keys(appointmentData));
-      return;
+        console.error('❌ No client email found in appointment data');
+        console.error('📋 Available fields:', Object.keys(appointmentData));
+        return;
     }
-    
     try {
-      // Create a normalized appointment object for the template
-      const normalizedAppointment = {
-        clientName: clientName || 'Client',
-        clientEmail: clientEmail,
-        type: appointmentData.type || appointmentData.servicePlan || 'consultation',
-        date: appointmentData.date || 'Unknown Date',
-        time: appointmentTime || 'Unknown Time'
-      };
-      
-      const template = emailService.getAdminNewAppointmentTemplate(normalizedAppointment);
-      console.log('📧 Admin notification template generated');
-      console.log('📋 Subject:', template.subject);
-      console.log('📬 Sending to admin: admin@veenutrition.com');
-      
-      // Send email directly using Resend instead of queuing for Firebase extension
-      const emailSent = await emailService.sendEmail({
-        to: 'admin@veenutrition.com',
-        toName: 'Admin Team',
-        subject: template.subject,
-        html: template.html,
-        text: template.text,
-      });
-      
-      if (emailSent) {
-        console.log('✅ Admin notification sent successfully via Resend');
-      } else {
-        console.log('❌ Failed to send admin notification via Resend');
-      }
-      console.log('📬 Admin notification attempted for appointment from:', clientEmail);
-      
-    } catch (error) {
-      console.error('❌ ERROR in onAppointmentCreated:', error);
-      console.error('📧 Failed to queue admin notification for appointment:', appointmentId);
+        // Create a normalized appointment object for the template
+        const normalizedAppointment = {
+            clientName: clientName || 'Client',
+            clientEmail: clientEmail,
+            type: appointmentData.type || appointmentData.servicePlan || 'consultation',
+            date: appointmentData.date || 'Unknown Date',
+            time: appointmentTime || 'Unknown Time'
+        };
+        const template = emailService.getAdminNewAppointmentTemplate(normalizedAppointment);
+        console.log('📧 Admin notification template generated');
+        console.log('📋 Subject:', template.subject);
+        console.log('📬 Sending to admin: admin@veenutrition.com');
+        // Send email directly using Resend instead of queuing for Firebase extension
+        const emailSent = await emailService.sendEmail({
+            to: 'admin@veenutrition.com',
+            toName: 'Admin Team',
+            subject: template.subject,
+            html: template.html,
+            text: template.text,
+        });
+        if (emailSent) {
+            console.log('✅ Admin notification sent successfully via Resend');
+        }
+        else {
+            console.log('❌ Failed to send admin notification via Resend');
+        }
+        console.log('📬 Admin notification attempted for appointment from:', clientEmail);
     }
-  });
-
+    catch (error) {
+        console.error('❌ ERROR in onAppointmentCreated:', error);
+        console.error('📧 Failed to queue admin notification for appointment:', appointmentId);
+    }
+});
 // 4. Reschedule Request Created
-export const onRescheduleRequest = functions.firestore
-  .document('appointments/{appointmentId}')
-  .onUpdate(async (change: any, context: any) => {
+exports.onRescheduleRequest = functions.firestore
+    .document('appointments/{appointmentId}')
+    .onUpdate(async (change, context) => {
     const before = change.before.data();
     const after = change.after.data();
-    
     if (before.status !== 'reschedule_requested' && after.status === 'reschedule_requested') {
-      console.log('Reschedule request created:', after.clientEmail);
-      
-      const template = emailService.getRescheduleRequestTemplate(
-        after.clientName,
-        after.clientEmail,
-        after.date,
-        after.time,
-        after.rescheduleReason
-      );
-      
-      await admin.firestore().collection('mail').add({
-        to: 'admin@veenutrition.com',
-        toName: 'Vee Nutrition Admin',
-        subject: template.subject,
-        html: template.html,
-        text: template.text,
-        type: 'admin-reschedule-request',
-        status: 'pending',
-        createdAt: admin.firestore.FieldValue.serverTimestamp(),
-      });
+        console.log('Reschedule request created:', after.clientEmail);
+        const template = emailService.getRescheduleRequestTemplate(after.clientName, after.clientEmail, after.date, after.time, after.rescheduleReason);
+        await admin.firestore().collection('mail').add({
+            to: 'admin@veenutrition.com',
+            toName: 'Vee Nutrition Admin',
+            subject: template.subject,
+            html: template.html,
+            text: template.text,
+            type: 'admin-reschedule-request',
+            status: 'pending',
+            createdAt: admin.firestore.FieldValue.serverTimestamp(),
+        });
     }
-  });
-
+});
 // 4. Enhanced Mail Queue Processor
-export const processMailQueue = functions.firestore
-  .document('mail/{mailId}')
-  .onCreate(async (snap: any, context: any) => {
+exports.processMailQueue = functions.firestore
+    .document('mail/{mailId}')
+    .onCreate(async (snap, context) => {
     const mailData = snap.data();
-    
     if (mailData.status !== 'pending') {
-      return;
+        return;
     }
-    
     console.log('Processing email from queue:', mailData.to, 'Type:', mailData.type);
-    
     try {
-      let template;
-      
-      switch (mailData.type) {
-        case 'account-confirmation':
-        case 'welcome':
-          template = emailService.getAccountConfirmationTemplate(
-            mailData.data?.name || mailData.toName || 'Client'
-          );
-          break;
-        case 'payment-reminder':
-          template = emailService.getPaymentReminderTemplate(
-            mailData.data?.name || mailData.toName || 'Client',
-            mailData.data?.amount || 0,
-            mailData.data?.invoiceNumber || 'Unknown',
-            mailData.data?.paymentUrl || '#'
-          );
-          break;
-        case 'reschedule-confirmation':
-          template = emailService.getRescheduleConfirmationTemplate(
-            mailData.data.name,
-            mailData.data.newDate,
-            mailData.data.newTime,
-            mailData.data.type || 'Consultation'
-          );
-          break;
-        case 'no-show-penalty':
-          template = emailService.getNoShowPenaltyTemplate(
-            mailData.data.name,
-            mailData.data.date,
-            mailData.data.time,
-            mailData.data.penaltyAmount
-          );
-          break;
-        case 'appointment-confirmation':
-          template = emailService.getAppointmentConfirmationTemplate(
-            mailData.data.name,
-            mailData.data.date,
-            mailData.data.time,
-            mailData.data.type || 'Consultation'
-          );
-          break;
-        case 'appointment-reminder':
-          template = emailService.getAppointmentReminderTemplate(
-            mailData.data.name,
-            mailData.data.date,
-            mailData.data.time,
-            mailData.data.type || 'Consultation'
-          );
-          break;
-        case 'reschedule-request':
-          template = emailService.getRescheduleRequestTemplate(
-            mailData.data.name,
-            mailData.data.email || mailData.to,
-            mailData.data.originalDate,
-            mailData.data.originalTime,
-            mailData.data.reason
-          );
-          break;
-        case 'appointment-cancelled':
-          template = emailService.getAppointmentCancelledTemplate(
-            mailData.data.name,
-            mailData.data.date,
-            mailData.data.time,
-            mailData.data.reason
-          );
-          break;
-        case 'late-reschedule':
-          template = emailService.getLateRescheduleTemplate(
-            mailData.data.name,
-            mailData.data.date,
-            mailData.data.time
-          );
-          break;
-        case 'invoice-generated':
-          template = emailService.getInvoiceGeneratedTemplate(
-            mailData.data.name,
-            mailData.data.amount,
-            mailData.data.invoiceId
-          );
-          break;
-        case 'admin-new-appointment':
-          template = emailService.getAdminNewAppointmentTemplate({
-            clientName: mailData.data.clientName,
-            clientEmail: mailData.data.clientEmail,
-            type: mailData.data.appointmentType,
-            date: mailData.data.date,
-            time: mailData.data.time
-          });
-          break;
-        case 'admin-health-update':
-          template = emailService.getAdminHealthUpdateTemplate(
-            mailData.data.clientName,
-            mailData.data.clientEmail,
-            mailData.data.updateType
-          );
-          break;
-        case 'admin-payment-received':
-          template = emailService.getAdminPaymentReceivedTemplate(
-            mailData.data.clientName,
-            mailData.data.amount,
-            mailData.data.invoiceId,
-            mailData.data.paymentMethod
-          );
-          break;
-        case 'admin-plan-upgrade':
-          template = emailService.getAdminPlanUpgradeTemplate(
-            mailData.data.clientName,
-            mailData.data.planType,
-            mailData.data.previousPlan
-          );
-          break;
-        case 'admin-client-message':
-          template = emailService.getAdminClientMessageTemplate(
-            mailData.data.clientName,
-            mailData.data.clientEmail,
-            mailData.data.messageType,
-            mailData.data.urgency
-          );
-          break;
-        case 'admin-reschedule-request':
-          template = emailService.getRescheduleRequestTemplate(
-            mailData.data.clientName,
-            mailData.data.clientEmail,
-            mailData.data.originalDate,
-            mailData.data.originalTime,
-            mailData.data.reason
-          );
-          break;
-        default:
-          // Use existing data if template type not found
-          template = {
-            subject: mailData.subject || 'Notification from Vee Nutrition',
-            html: mailData.html || '',
-            text: mailData.text || ''
-          };
-      }
-      
-      const success = await emailService.sendEmail({
-        to: mailData.to,
-        toName: mailData.toName || 'Client',
-        subject: template.subject,
-        html: template.html,
-        text: template.text
-      });
-      
-      if (success) {
-        await snap.ref.update({
-          status: 'sent',
-          sentAt: admin.firestore.FieldValue.serverTimestamp(),
-        });
-        console.log('Email sent successfully to', mailData.to);
-      } else {
-        await snap.ref.update({
-          status: 'failed',
-          failedAt: admin.firestore.FieldValue.serverTimestamp(),
-        });
-        console.log('Email failed to', mailData.to);
-      }
-    } catch (error: any) {
-      console.error('Email sending failed:', error);
-      await snap.ref.update({
-        status: 'failed',
-        error: error?.message || 'Unknown error',
-        failedAt: admin.firestore.FieldValue.serverTimestamp(),
-      });
-    }
-  });
-
-// 5. Daily Monthly Billing Processor
-export const processMonthlyBilling = functions.pubsub
-  .schedule('0 9 * * *') // 9 AM daily
-  .timeZone('Europe/Amsterdam')
-  .onRun(async (context: any) => {
-    console.log('🔄 Running daily monthly billing processor...');
-    
-    try {
-      // Get all users with Complete Program service plan
-      const usersSnapshot = await admin.firestore()
-        .collection('users')
-        .where('servicePlan', '==', 'complete-program')
-        .where('subscriptionStatus', '==', 'active')
-        .get();
-
-      const processedUsers = [];
-      const now = new Date();
-
-      for (const userDoc of usersSnapshot.docs) {
-        const userData = userDoc.data();
-        const userId = userDoc.id;
-        
-        try {
-          const nextBillingDate = userData.nextBillingDate?.toDate();
-          const currentCycle = userData.currentBillingCycle || 0;
-          const maxCycles = userData.maxBillingCycles || 3;
-          const plannedDowngrade = userData.plannedDowngrade;
-
-          // Skip if user has planned downgrade or billing cycle is complete
-          if (plannedDowngrade || currentCycle >= maxCycles || !nextBillingDate) {
-            continue;
-          }
-
-          // Check if it's time to generate next month's invoice
-          if (nextBillingDate <= now) {
-            console.log(`📅 Processing billing for ${userData.name} (${userData.email})`);
-            
-            // Check if invoice already exists for this billing cycle
-            const existingInvoices = await admin.firestore()
-              .collection('invoices')
-              .where('userId', '==', userId)
-              .where('invoiceType', '==', 'subscription')
-              .where('billingCycle', '==', currentCycle + 1)
-              .get();
-
-            if (existingInvoices.empty) {
-              // Generate next month's invoice directly
-              const nextCycle = currentCycle + 1;
-              const billingDate = new Date(nextBillingDate);
-              
-              // Create subscription invoice
-              const invoiceData = {
-                userId,
-                clientName: userData.name,
-                clientEmail: userData.email,
-                month: billingDate.getMonth() + 1,
-                year: billingDate.getFullYear(),
-                subscriptionAmount: userData.monthlyAmount || 150,
-                billingCycle: nextCycle
-              };
-
-              // Add invoice to Firestore
-              await admin.firestore().collection('invoices').add({
-                ...invoiceData,
-                invoiceType: 'subscription',
-                status: 'unpaid',
-                totalAmount: invoiceData.subscriptionAmount,
-                subscriptionMonth: invoiceData.month,
-                subscriptionYear: invoiceData.year,
-                dueDate: billingDate,
-                createdAt: admin.firestore.FieldValue.serverTimestamp(),
-                items: [{
-                  description: `Complete Program - Month ${nextCycle} of 3`,
-                  amount: invoiceData.subscriptionAmount,
-                  type: 'subscription'
-                }]
-              });
-
-              // Update user's billing cycle and next billing date
-              const followingMonth = new Date(billingDate.getFullYear(), billingDate.getMonth() + 1, billingDate.getDate());
-              await admin.firestore().collection('users').doc(userId).update({
-                currentBillingCycle: nextCycle,
-                nextBillingDate: followingMonth,
-                updatedAt: admin.firestore.FieldValue.serverTimestamp()
-              });
-
-              processedUsers.push({
-                userId,
-                email: userData.email,
-                name: userData.name,
-                billingCycle: currentCycle + 1,
-                status: 'invoice_generated'
-              });
-              
-              console.log(`✅ Invoice generated for ${userData.name} - Cycle ${currentCycle + 1}`);
-            } else {
-              console.log(`⏭️ Invoice already exists for ${userData.name} - Cycle ${currentCycle + 1}`);
-            }
-          }
-        } catch (error) {
-          console.error(`❌ Error processing user ${userId}:`, error);
-          processedUsers.push({
-            userId,
-            email: userData.email,
-            name: userData.name,
-            status: 'error',
-            error: error instanceof Error ? error.message : 'Unknown error'
-          });
+        let template;
+        switch (mailData.type) {
+            case 'account-confirmation':
+            case 'welcome':
+                template = emailService.getAccountConfirmationTemplate(mailData.data?.name || mailData.toName || 'Client');
+                break;
+            case 'payment-reminder':
+                template = emailService.getPaymentReminderTemplate(mailData.data?.name || mailData.toName || 'Client', mailData.data?.amount || 0, mailData.data?.invoiceNumber || 'Unknown', mailData.data?.paymentUrl || '#');
+                break;
+            case 'reschedule-confirmation':
+                template = emailService.getRescheduleConfirmationTemplate(mailData.data.name, mailData.data.newDate, mailData.data.newTime, mailData.data.type || 'Consultation');
+                break;
+            case 'no-show-penalty':
+                template = emailService.getNoShowPenaltyTemplate(mailData.data.name, mailData.data.date, mailData.data.time, mailData.data.penaltyAmount);
+                break;
+            case 'appointment-confirmation':
+                template = emailService.getAppointmentConfirmationTemplate(mailData.data.name, mailData.data.date, mailData.data.time, mailData.data.type || 'Consultation');
+                break;
+            case 'appointment-reminder':
+                template = emailService.getAppointmentReminderTemplate(mailData.data.name, mailData.data.date, mailData.data.time, mailData.data.type || 'Consultation');
+                break;
+            case 'reschedule-request':
+                template = emailService.getRescheduleRequestTemplate(mailData.data.name, mailData.data.email || mailData.to, mailData.data.originalDate, mailData.data.originalTime, mailData.data.reason);
+                break;
+            case 'appointment-cancelled':
+                template = emailService.getAppointmentCancelledTemplate(mailData.data.name, mailData.data.date, mailData.data.time, mailData.data.reason);
+                break;
+            case 'late-reschedule':
+                template = emailService.getLateRescheduleTemplate(mailData.data.name, mailData.data.date, mailData.data.time);
+                break;
+            case 'invoice-generated':
+                template = emailService.getInvoiceGeneratedTemplate(mailData.data.name, mailData.data.amount, mailData.data.invoiceId);
+                break;
+            case 'admin-new-appointment':
+                template = emailService.getAdminNewAppointmentTemplate({
+                    clientName: mailData.data.clientName,
+                    clientEmail: mailData.data.clientEmail,
+                    type: mailData.data.appointmentType,
+                    date: mailData.data.date,
+                    time: mailData.data.time
+                });
+                break;
+            case 'admin-health-update':
+                template = emailService.getAdminHealthUpdateTemplate(mailData.data.clientName, mailData.data.clientEmail, mailData.data.updateType);
+                break;
+            case 'admin-payment-received':
+                template = emailService.getAdminPaymentReceivedTemplate(mailData.data.clientName, mailData.data.amount, mailData.data.invoiceId, mailData.data.paymentMethod);
+                break;
+            case 'admin-plan-upgrade':
+                template = emailService.getAdminPlanUpgradeTemplate(mailData.data.clientName, mailData.data.planType, mailData.data.previousPlan);
+                break;
+            case 'admin-client-message':
+                template = emailService.getAdminClientMessageTemplate(mailData.data.clientName, mailData.data.clientEmail, mailData.data.messageType, mailData.data.urgency);
+                break;
+            case 'admin-reschedule-request':
+                template = emailService.getRescheduleRequestTemplate(mailData.data.clientName, mailData.data.clientEmail, mailData.data.originalDate, mailData.data.originalTime, mailData.data.reason);
+                break;
+            default:
+                // Use existing data if template type not found
+                template = {
+                    subject: mailData.subject || 'Notification from Vee Nutrition',
+                    html: mailData.html || '',
+                    text: mailData.text || ''
+                };
         }
-      }
-
-      // Log summary
-      console.log(`📊 Monthly billing processing complete:`, {
-        totalUsers: usersSnapshot.docs.length,
-        processedUsers: processedUsers.length,
-        successful: processedUsers.filter(u => u.status === 'invoice_generated').length,
-        errors: processedUsers.filter(u => u.status === 'error').length
-      });
-
-      return { success: true, processedUsers };
-    } catch (error) {
-      console.error('❌ Error in monthly billing processor:', error);
-      return { success: false, error: error instanceof Error ? error.message : 'Unknown error' };
+        const success = await emailService.sendEmail({
+            to: mailData.to,
+            toName: mailData.toName || 'Client',
+            subject: template.subject,
+            html: template.html,
+            text: template.text
+        });
+        if (success) {
+            await snap.ref.update({
+                status: 'sent',
+                sentAt: admin.firestore.FieldValue.serverTimestamp(),
+            });
+            console.log('Email sent successfully to', mailData.to);
+        }
+        else {
+            await snap.ref.update({
+                status: 'failed',
+                failedAt: admin.firestore.FieldValue.serverTimestamp(),
+            });
+            console.log('Email failed to', mailData.to);
+        }
     }
-  });
-
+    catch (error) {
+        console.error('Email sending failed:', error);
+        await snap.ref.update({
+            status: 'failed',
+            error: error?.message || 'Unknown error',
+            failedAt: admin.firestore.FieldValue.serverTimestamp(),
+        });
+    }
+});
+// 5. Daily Monthly Billing Processor
+exports.processMonthlyBilling = functions.pubsub
+    .schedule('0 9 * * *') // 9 AM daily
+    .timeZone('Europe/Amsterdam')
+    .onRun(async (context) => {
+    console.log('🔄 Running daily monthly billing processor...');
+    try {
+        // Get all users with Complete Program service plan
+        const usersSnapshot = await admin.firestore()
+            .collection('users')
+            .where('servicePlan', '==', 'complete-program')
+            .where('subscriptionStatus', '==', 'active')
+            .get();
+        const processedUsers = [];
+        const now = new Date();
+        for (const userDoc of usersSnapshot.docs) {
+            const userData = userDoc.data();
+            const userId = userDoc.id;
+            try {
+                const nextBillingDate = userData.nextBillingDate?.toDate();
+                const currentCycle = userData.currentBillingCycle || 0;
+                const maxCycles = userData.maxBillingCycles || 3;
+                const plannedDowngrade = userData.plannedDowngrade;
+                // Skip if user has planned downgrade or billing cycle is complete
+                if (plannedDowngrade || currentCycle >= maxCycles || !nextBillingDate) {
+                    continue;
+                }
+                // Check if it's time to generate next month's invoice
+                if (nextBillingDate <= now) {
+                    console.log(`📅 Processing billing for ${userData.name} (${userData.email})`);
+                    // Check if invoice already exists for this billing cycle
+                    const existingInvoices = await admin.firestore()
+                        .collection('invoices')
+                        .where('userId', '==', userId)
+                        .where('invoiceType', '==', 'subscription')
+                        .where('billingCycle', '==', currentCycle + 1)
+                        .get();
+                    if (existingInvoices.empty) {
+                        // Generate next month's invoice directly
+                        const nextCycle = currentCycle + 1;
+                        const billingDate = new Date(nextBillingDate);
+                        // Create subscription invoice
+                        const invoiceData = {
+                            userId,
+                            clientName: userData.name,
+                            clientEmail: userData.email,
+                            month: billingDate.getMonth() + 1,
+                            year: billingDate.getFullYear(),
+                            subscriptionAmount: userData.monthlyAmount || 150,
+                            billingCycle: nextCycle
+                        };
+                        // Add invoice to Firestore
+                        await admin.firestore().collection('invoices').add({
+                            ...invoiceData,
+                            invoiceType: 'subscription',
+                            status: 'unpaid',
+                            totalAmount: invoiceData.subscriptionAmount,
+                            subscriptionMonth: invoiceData.month,
+                            subscriptionYear: invoiceData.year,
+                            dueDate: billingDate,
+                            createdAt: admin.firestore.FieldValue.serverTimestamp(),
+                            items: [{
+                                    description: `Complete Program - Month ${nextCycle} of 3`,
+                                    amount: invoiceData.subscriptionAmount,
+                                    type: 'subscription'
+                                }]
+                        });
+                        // Update user's billing cycle and next billing date
+                        const followingMonth = new Date(billingDate.getFullYear(), billingDate.getMonth() + 1, billingDate.getDate());
+                        await admin.firestore().collection('users').doc(userId).update({
+                            currentBillingCycle: nextCycle,
+                            nextBillingDate: followingMonth,
+                            updatedAt: admin.firestore.FieldValue.serverTimestamp()
+                        });
+                        processedUsers.push({
+                            userId,
+                            email: userData.email,
+                            name: userData.name,
+                            billingCycle: currentCycle + 1,
+                            status: 'invoice_generated'
+                        });
+                        console.log(`✅ Invoice generated for ${userData.name} - Cycle ${currentCycle + 1}`);
+                    }
+                    else {
+                        console.log(`⏭️ Invoice already exists for ${userData.name} - Cycle ${currentCycle + 1}`);
+                    }
+                }
+            }
+            catch (error) {
+                console.error(`❌ Error processing user ${userId}:`, error);
+                processedUsers.push({
+                    userId,
+                    email: userData.email,
+                    name: userData.name,
+                    status: 'error',
+                    error: error instanceof Error ? error.message : 'Unknown error'
+                });
+            }
+        }
+        // Log summary
+        console.log(`📊 Monthly billing processing complete:`, {
+            totalUsers: usersSnapshot.docs.length,
+            processedUsers: processedUsers.length,
+            successful: processedUsers.filter(u => u.status === 'invoice_generated').length,
+            errors: processedUsers.filter(u => u.status === 'error').length
+        });
+        return { success: true, processedUsers };
+    }
+    catch (error) {
+        console.error('❌ Error in monthly billing processor:', error);
+        return { success: false, error: error instanceof Error ? error.message : 'Unknown error' };
+    }
+});
 // 6. Invoice Created - Email Notification
-export const onInvoiceCreated = functions.firestore
-  .document('invoices/{invoiceId}')
-  .onCreate(async (snap: any, context: any) => {
+exports.onInvoiceCreated = functions.firestore
+    .document('invoices/{invoiceId}')
+    .onCreate(async (snap, context) => {
     const invoiceData = snap.data();
     const invoiceId = context.params.invoiceId;
-    
     console.log('🔍 DEBUG: NEW INVOICE CREATED TRIGGER');
     console.log('🆔 Invoice ID:', invoiceId);
     console.log('📄 Invoice Number:', invoiceData.invoiceNumber);
@@ -1304,133 +1149,106 @@ export const onInvoiceCreated = functions.firestore
     console.log('📊 Status:', invoiceData.status);
     console.log('📅 Due Date:', invoiceData.dueDate);
     console.log('🕒 Timestamp:', new Date().toISOString());
-    
     // Send emails for all invoice types (session, subscription, and custom invoices)
     if (invoiceData.invoiceType === 'subscription' || invoiceData.invoiceType === 'invoice' || invoiceData.invoiceType === 'session') {
-      console.log('✅ Invoice type qualifies for email notification');
-      
-      try {
-        const template = emailService.getInvoiceGeneratedTemplate(
-          invoiceData.clientName || 'Client',
-          invoiceData.totalAmount || invoiceData.amount || 0,
-          snap.id
-        );
-        console.log('📧 Invoice notification template generated');
-        console.log('📋 Subject:', template.subject);
-        
-        // Send email directly using Resend instead of queuing for Firebase extension
-        const emailSent = await emailService.sendEmail({
-          to: invoiceData.clientEmail,
-          toName: invoiceData.clientName || 'Client',
-          subject: template.subject,
-          html: template.html,
-          text: template.text,
-        });
-        
-        if (emailSent) {
-          console.log('✅ Invoice email sent successfully via Resend');
-        } else {
-          console.log('❌ Failed to send invoice email via Resend');
+        console.log('✅ Invoice type qualifies for email notification');
+        try {
+            const template = emailService.getInvoiceGeneratedTemplate(invoiceData.clientName || 'Client', invoiceData.totalAmount || invoiceData.amount || 0, snap.id);
+            console.log('📧 Invoice notification template generated');
+            console.log('📋 Subject:', template.subject);
+            // Send email directly using Resend instead of queuing for Firebase extension
+            const emailSent = await emailService.sendEmail({
+                to: invoiceData.clientEmail,
+                toName: invoiceData.clientName || 'Client',
+                subject: template.subject,
+                html: template.html,
+                text: template.text,
+            });
+            if (emailSent) {
+                console.log('✅ Invoice email sent successfully via Resend');
+            }
+            else {
+                console.log('❌ Failed to send invoice email via Resend');
+            }
+            console.log('📬 Email attempted to:', invoiceData.clientEmail);
         }
-        console.log('📬 Email attempted to:', invoiceData.clientEmail);
-        
-      } catch (error) {
-        console.error('❌ ERROR in onInvoiceCreated:', error);
-        console.error('📧 Failed to queue invoice email for:', invoiceData.clientEmail);
-      }
-    } else {
-      console.log('ℹ️ Invoice type does not qualify for email notification:', invoiceData.invoiceType);
+        catch (error) {
+            console.error('❌ ERROR in onInvoiceCreated:', error);
+            console.error('📧 Failed to queue invoice email for:', invoiceData.clientEmail);
+        }
     }
-  });
-
+    else {
+        console.log('ℹ️ Invoice type does not qualify for email notification:', invoiceData.invoiceType);
+    }
+});
 // 7. Daily Reminder Scheduler
-export const sendDailyReminders = functions.pubsub
-  .schedule('0 18 * * *') // 6 PM daily
-  .timeZone('Europe/Amsterdam')
-  .onRun(async (context: any) => {
+exports.sendDailyReminders = functions.pubsub
+    .schedule('0 18 * * *') // 6 PM daily
+    .timeZone('Europe/Amsterdam')
+    .onRun(async (context) => {
     console.log('Running daily appointment reminders...');
-    
     const tomorrow = new Date();
     tomorrow.setDate(tomorrow.getDate() + 1);
     const tomorrowString = tomorrow.toISOString().split('T')[0];
-    
     const appointmentsSnapshot = await admin.firestore()
-      .collection('appointments')
-      .where('date', '==', tomorrowString)
-      .where('status', '==', 'confirmed')
-      .get();
-    
+        .collection('appointments')
+        .where('date', '==', tomorrowString)
+        .where('status', '==', 'confirmed')
+        .get();
     const promises = appointmentsSnapshot.docs.map(async (doc) => {
-      const appointment = doc.data();
-      
-      // Send email directly using Resend
-      return emailService.sendAppointmentReminder(
-        appointment.clientEmail || appointment.email,
-        appointment.clientName || appointment.name || 'Client',
-        appointment.date,
-        appointment.time,
-        appointment.type
-      );
+        const appointment = doc.data();
+        // Send email directly using Resend
+        return emailService.sendAppointmentReminder(appointment.clientEmail || appointment.email, appointment.clientName || appointment.name || 'Client', appointment.date, appointment.time, appointment.type);
     });
-    
     await Promise.all(promises);
     console.log(`Queued ${promises.length} reminder emails`);
-  });
-
+});
 // 6. Scheduled Downgrade Processor
-export const processScheduledDowngrades = functions.pubsub
-  .schedule('0 2 * * *') // 2 AM daily
-  .timeZone('Europe/Amsterdam')
-  .onRun(async (context: any) => {
+exports.processScheduledDowngrades = functions.pubsub
+    .schedule('0 2 * * *') // 2 AM daily
+    .timeZone('Europe/Amsterdam')
+    .onRun(async (context) => {
     console.log('🔄 Processing scheduled downgrades...');
-    
     try {
-      // Get all users with planned downgrades
-      const usersWithDowngrades = await admin.firestore()
-        .collection('users')
-        .where('plannedDowngrade', '==', true)
-        .get();
-      
-      const processedDowngrades = [];
-      const now = new Date();
-      
-      for (const userDoc of usersWithDowngrades.docs) {
-        const userData = userDoc.data();
-        const downgradeEffectiveDate = userData.downgradeEffectiveDate?.toDate();
-        
-        if (downgradeEffectiveDate && downgradeEffectiveDate <= now) {
-          console.log(`⏰ Processing downgrade for user ${userDoc.id}, effective date: ${downgradeEffectiveDate}`);
-          
-          try {
-            // Execute downgrade - update user to Pay-as-you-go
-            await userDoc.ref.update({
-              servicePlan: 'pay-as-you-go',
-              subscriptionStatus: 'downgraded',
-              plannedDowngrade: false,
-              downgradeExecutedAt: admin.firestore.FieldValue.serverTimestamp(),
-              // Clear Complete Program related fields
-              programStartDate: null,
-              programEndDate: null,
-              currentBillingCycle: null,
-              nextBillingDate: null,
-              maxBillingCycles: null,
-              monthlyAmount: null,
-              updatedAt: admin.firestore.FieldValue.serverTimestamp()
-            });
-            
-            processedDowngrades.push({
-              userId: userDoc.id,
-              email: userData.email,
-              effectiveDate: downgradeEffectiveDate,
-              status: 'success'
-            });
-            
-            console.log(`✓ User ${userDoc.id} successfully downgraded to Pay-as-you-go`);
-            
-            // Optionally send notification email about successful downgrade
-            const emailTemplate = {
-              subject: 'Service Plan Updated - Now Pay-As-You-Go',
-              html: `
+        // Get all users with planned downgrades
+        const usersWithDowngrades = await admin.firestore()
+            .collection('users')
+            .where('plannedDowngrade', '==', true)
+            .get();
+        const processedDowngrades = [];
+        const now = new Date();
+        for (const userDoc of usersWithDowngrades.docs) {
+            const userData = userDoc.data();
+            const downgradeEffectiveDate = userData.downgradeEffectiveDate?.toDate();
+            if (downgradeEffectiveDate && downgradeEffectiveDate <= now) {
+                console.log(`⏰ Processing downgrade for user ${userDoc.id}, effective date: ${downgradeEffectiveDate}`);
+                try {
+                    // Execute downgrade - update user to Pay-as-you-go
+                    await userDoc.ref.update({
+                        servicePlan: 'pay-as-you-go',
+                        subscriptionStatus: 'downgraded',
+                        plannedDowngrade: false,
+                        downgradeExecutedAt: admin.firestore.FieldValue.serverTimestamp(),
+                        // Clear Complete Program related fields
+                        programStartDate: null,
+                        programEndDate: null,
+                        currentBillingCycle: null,
+                        nextBillingDate: null,
+                        maxBillingCycles: null,
+                        monthlyAmount: null,
+                        updatedAt: admin.firestore.FieldValue.serverTimestamp()
+                    });
+                    processedDowngrades.push({
+                        userId: userDoc.id,
+                        email: userData.email,
+                        effectiveDate: downgradeEffectiveDate,
+                        status: 'success'
+                    });
+                    console.log(`✓ User ${userDoc.id} successfully downgraded to Pay-as-you-go`);
+                    // Optionally send notification email about successful downgrade
+                    const emailTemplate = {
+                        subject: 'Service Plan Updated - Now Pay-As-You-Go',
+                        html: `
                 <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
                   <h2>Service Plan Updated</h2>
                   <p>Hi ${userData.name || 'there'},</p>
@@ -1439,41 +1257,38 @@ export const processScheduledDowngrades = functions.pubsub
                   <p>Thank you for choosing Vee Nutrition!</p>
                 </div>
               `,
-              text: `Your service plan has been updated to Pay-As-You-Go. Continue booking sessions through your dashboard.`
-            };
-            
-            await admin.firestore().collection('mail').add({
-              to: userData.email,
-              toName: userData.name || 'Client',
-              subject: emailTemplate.subject,
-              html: emailTemplate.html,
-              text: emailTemplate.text,
-              type: 'plan-downgrade-notification',
-              status: 'pending',
-              createdAt: admin.firestore.FieldValue.serverTimestamp(),
-            });
-            
-          } catch (error) {
-            console.error(`Error processing downgrade for user ${userDoc.id}:`, error);
-            processedDowngrades.push({
-              userId: userDoc.id,
-              email: userData.email,
-              effectiveDate: downgradeEffectiveDate,
-              status: 'error',
-              error: error instanceof Error ? error.message : 'Unknown error'
-            });
-          }
+                        text: `Your service plan has been updated to Pay-As-You-Go. Continue booking sessions through your dashboard.`
+                    };
+                    await admin.firestore().collection('mail').add({
+                        to: userData.email,
+                        toName: userData.name || 'Client',
+                        subject: emailTemplate.subject,
+                        html: emailTemplate.html,
+                        text: emailTemplate.text,
+                        type: 'plan-downgrade-notification',
+                        status: 'pending',
+                        createdAt: admin.firestore.FieldValue.serverTimestamp(),
+                    });
+                }
+                catch (error) {
+                    console.error(`Error processing downgrade for user ${userDoc.id}:`, error);
+                    processedDowngrades.push({
+                        userId: userDoc.id,
+                        email: userData.email,
+                        effectiveDate: downgradeEffectiveDate,
+                        status: 'error',
+                        error: error instanceof Error ? error.message : 'Unknown error'
+                    });
+                }
+            }
         }
-      }
-      
-      console.log(`✓ Processed ${processedDowngrades.length} scheduled downgrades`);
-      
-      // Log summary for monitoring
-      if (processedDowngrades.length > 0) {
-        console.log('Downgrade processing summary:', processedDowngrades);
-      }
-      
-    } catch (error) {
-      console.error('Error in scheduled downgrade processor:', error);
+        console.log(`✓ Processed ${processedDowngrades.length} scheduled downgrades`);
+        // Log summary for monitoring
+        if (processedDowngrades.length > 0) {
+            console.log('Downgrade processing summary:', processedDowngrades);
+        }
     }
-  });
+    catch (error) {
+        console.error('Error in scheduled downgrade processor:', error);
+    }
+});

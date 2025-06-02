@@ -343,20 +343,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const reminderPromises = appointmentsSnapshot.docs.map(async (doc) => {
         const appointment = doc.data();
         
-        const template = resendService.getAppointmentReminderTemplate(
+        return resendService.sendAppointmentReminder(
+          appointment.clientEmail || appointment.email,
           appointment.clientName || appointment.name,
           appointment.date,
           appointment.time || appointment.timeslot,
           appointment.type
         );
-        
-        return resendService.sendEmail({
-          to: appointment.clientEmail || appointment.email,
-          toName: appointment.clientName || appointment.name,
-          subject: template.subject,
-          html: template.html,
-          text: template.text
-        });
       });
       
       const results = await Promise.all(reminderPromises);
