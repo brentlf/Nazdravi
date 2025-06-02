@@ -273,35 +273,8 @@ export function HealthInformationForm({ userId }: HealthInformationFormProps) {
         return;
       }
 
-      // Update pre-evaluation form with health data
-      const preEvaluationRef = doc(db, "preEvaluationForms", userId);
-      await updateDoc(preEvaluationRef, {
-        age: data.age ? parseInt(data.age) : null,
-        height: data.height,
-        currentWeight: data.weight,
-        medicalConditions: data.medicalConditions,
-        allergies: data.allergies,
-        currentMedications: data.currentMedications,
-        dietaryRestrictions: data.dietaryRestrictions,
-        healthGoals: data.healthGoals,
-        activityLevel: data.activityLevel,
-        stressLevel: data.stressLevel,
-        sleepHours: data.sleepHours ? parseInt(data.sleepHours) : null,
-        waterIntake: data.waterIntake,
-        smokingStatus: data.smokingStatus,
-        alcoholConsumption: data.alcoholConsumption,
-        lastUpdated: new Date(),
-      });
-
-      // Update consent form with contact data
-      const consentRef = doc(db, "consentForms", userId);
-      await updateDoc(consentRef, {
-        emergencyContactName: data.emergencyContactName,
-        emergencyContactPhone: data.emergencyContactPhone,
-        gpName: data.gpName,
-        gpPhone: data.gpPhone,
-        lastUpdated: new Date(),
-      });
+      // The health information form only updates the user profile
+      // PreEvaluation data is handled separately when users complete appointment assessments
 
       // Send admin notification about health updates
       try {
