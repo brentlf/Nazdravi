@@ -834,25 +834,26 @@ export default function DashboardProfile() {
                     <SelectTrigger>
                       <SelectValue placeholder="Select your service plan" />
                     </SelectTrigger>
-                    <SelectContent>
+                    <SelectContent className="w-full min-w-[300px]">
                       <SelectItem 
                         value="pay-as-you-go" 
                         disabled={currentUserData?.plannedDowngrade && currentUserData?.servicePlan === "complete-program"}
+                        className="py-3"
                       >
-                        <div className="flex flex-col">
-                          <span className="font-medium">Pay As You Go</span>
-                          <span className="text-sm text-gray-500">Individual session billing</span>
+                        <div className="flex flex-col w-full">
+                          <span className="font-medium text-sm">Pay As You Go</span>
+                          <span className="text-xs text-gray-500 break-words">Individual session billing</span>
                           {currentUserData?.plannedDowngrade && currentUserData?.servicePlan === "complete-program" && (
-                            <span className="text-xs text-amber-600">Downgrade already scheduled</span>
+                            <span className="text-xs text-amber-600 break-words">Downgrade already scheduled</span>
                           )}
                         </div>
                       </SelectItem>
-                      <SelectItem value="complete-program">
-                        <div className="flex flex-col">
-                          <span className="font-medium">Complete Program (3 Months)</span>
-                          <span className="text-sm text-gray-500">Monthly billing with unlimited consultations</span>
+                      <SelectItem value="complete-program" className="py-3">
+                        <div className="flex flex-col w-full">
+                          <span className="font-medium text-sm">Complete Program (3 Months)</span>
+                          <span className="text-xs text-gray-500 break-words">Monthly billing with unlimited consultations</span>
                           {currentUserData?.plannedDowngrade && (
-                            <span className="text-xs text-green-600">Select to reinstate program</span>
+                            <span className="text-xs text-green-600 break-words">Select to reinstate program</span>
                           )}
                         </div>
                       </SelectItem>
