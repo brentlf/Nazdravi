@@ -83,23 +83,20 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const { email, name, date, time, meetingUrl } = req.body;
       
-      // Queue email in Firebase with correct format - ensure meetingUrl has default value
-      const docRef = await db.collection("mail").add({
-        to: email,
-        toName: name,
-        type: "appointment-confirmation",
-        status: "pending",
-        data: { 
-          name, 
-          date, 
-          time, 
-          meetingUrl: meetingUrl || '',
-          type: 'Consultation'
-        },
-        createdAt: new Date()
-      });
+      // Send email directly using working Resend service
+      const emailSent = await mailerLiteService.sendAppointmentConfirmation(
+        email, 
+        name, 
+        date, 
+        time, 
+        'Consultation'
+      );
 
-      res.json({ success: true, message: "Appointment confirmation email queued", docId: docRef.id });
+      if (emailSent) {
+        res.json({ success: true, message: "Appointment confirmation email sent successfully" });
+      } else {
+        res.status(500).json({ success: false, error: "Failed to send appointment confirmation email" });
+      }
     } catch (error: any) {
       console.error("Error queuing appointment confirmation email:", error);
       res.status(500).json({ success: false, error: error.message });
@@ -169,19 +166,24 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const { email, name, date, time, reason } = req.body;
       
-      // Queue email in Firebase with correct format
-      await db.collection("mail").add({
-        to: [email],
-        message: {
-          subject: `Appointment Cancelled - ${date}`,
-          html: `<p>Dear ${name},</p><p>Your appointment on ${date} at ${time} has been cancelled. Reason: ${reason}</p>`,
-          text: `Dear ${name}, Your appointment on ${date} at ${time} has been cancelled. Reason: ${reason}`
-        },
-        type: "appointment-cancelled",
-        createdAt: new Date()
+      // Send email directly using working Resend service
+      const subject = `Appointment Cancelled - ${date}`;
+      const html = `<p>Dear ${name},</p><p>Your appointment on ${date} at ${time} has been cancelled. Reason: ${reason}</p>`;
+      const text = `Dear ${name}, Your appointment on ${date} at ${time} has been cancelled. Reason: ${reason}`;
+      
+      const emailSent = await mailerLiteService.sendEmail({
+        to: email,
+        toName: name,
+        subject,
+        html,
+        text
       });
 
-      res.json({ success: true, message: "Appointment cancellation email queued" });
+      if (emailSent) {
+        res.json({ success: true, message: "Appointment cancellation email sent successfully" });
+      } else {
+        res.status(500).json({ success: false, error: "Failed to send appointment cancellation email" });
+      }
     } catch (error: any) {
       console.error("Error queuing appointment cancellation email:", error);
       res.status(500).json({ success: false, error: error.message });
