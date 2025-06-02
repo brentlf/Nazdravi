@@ -261,6 +261,7 @@ export default function AdminMessages() {
                 {filteredUsers.map((client) => {
                   const chatRoom = createChatRoom(client.uid);
                   const lastMessage = getLastMessage(client.uid);
+                  const unreadCount = getUnreadCount(client.uid);
                   const isSelected = selectedChatRoom === chatRoom;
 
                   return (
