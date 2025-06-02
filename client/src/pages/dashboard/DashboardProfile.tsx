@@ -282,14 +282,20 @@ export default function DashboardProfile() {
 
   // Handle preferences update
   const onPreferencesSubmit = async (data: PreferencesFormData) => {
-    // Check if user is switching to complete program
-    if (data.servicePlan === "complete-program" && currentUserData?.servicePlan !== "complete-program") {
+    // Check if user is reinstating Complete Program (has planned downgrade but selects complete program)
+    if (data.servicePlan === "complete-program" && currentUserData?.plannedDowngrade) {
+      await handleReinstatement(data);
+      return;
+    }
+
+    // Check if user is switching to complete program for the first time
+    if (data.servicePlan === "complete-program" && currentUserData?.servicePlan !== "complete-program" && !currentUserData?.plannedDowngrade) {
       setShowCompleteProgramDialog(true);
       return;
     }
 
-    // Check if Complete Program user is switching to Pay-As-You-Go
-    if (data.servicePlan === "pay-as-you-go" && currentUserData?.servicePlan === "complete-program") {
+    // Check if Complete Program user is switching to Pay-As-You-Go (schedule downgrade)
+    if (data.servicePlan === "pay-as-you-go" && currentUserData?.servicePlan === "complete-program" && !currentUserData?.plannedDowngrade) {
       await handlePlannedDowngrade(data);
       return;
     }
@@ -335,6 +341,64 @@ export default function DashboardProfile() {
       toast({
         title: "Downgrade Failed",
         description: "Failed to schedule downgrade. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  // Handle reinstatement of Complete Program (cancels planned downgrade)
+  const handleReinstatement = async (data: PreferencesFormData) => {
+    setIsLoading(true);
+    try {
+      const updateData: any = {
+        preferredLanguage: data.preferredLanguage,
+        emailNotifications: data.emailNotifications,
+        servicePlan: "complete-program",
+        plannedDowngrade: false,
+        downgradeEffectiveDate: null,
+        reinstatedAt: Timestamp.fromDate(new Date()),
+        updatedAt: Timestamp.fromDate(new Date())
+      };
+
+      // Update Firebase document
+      await setDoc(doc(db, "users", user?.uid || ""), updateData, { merge: true });
+      
+      // Update local state
+      const newUserData = { ...currentUserData, ...updateData };
+      setCurrentUserData(newUserData);
+
+      // Update user preferences
+      await updateUserProfile(updateData);
+
+      // Call backend to reinstate billing cycle
+      try {
+        const response = await fetch('/api/subscriptions/reinstate', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            userId: user?.uid
+          }),
+        });
+
+        if (!response.ok) {
+          console.error('Failed to reinstate billing cycle');
+        }
+      } catch (error) {
+        console.error('Error calling reinstate API:', error);
+      }
+
+      toast({
+        title: "Complete Program Reinstated",
+        description: "Your Complete Program has been reinstated. All remaining billing cycles will continue as scheduled.",
+      });
+    } catch (error) {
+      toast({
+        title: "Reinstatement failed",
+        description: "Failed to reinstate Complete Program. Please try again.",
         variant: "destructive",
       });
     } finally {
@@ -741,6 +805,28 @@ export default function DashboardProfile() {
 
                 <div>
                   <Label htmlFor="servicePlan">Service Plan</Label>
+                  
+                  {/* Current Service Plan Status Display */}
+                  {currentUserData && (
+                    <div className="mb-3 p-3 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg">
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <span className="text-sm font-medium text-blue-900 dark:text-blue-100">
+                            Current Plan: {currentUserData.servicePlan === "complete-program" ? "Complete Program" : "Pay As You Go"}
+                          </span>
+                          {currentUserData.plannedDowngrade && currentUserData.downgradeEffectiveDate && (
+                            <div className="text-xs text-amber-600 dark:text-amber-400 mt-1">
+                              Scheduled to downgrade to Pay-As-You-Go on {new Date(currentUserData.downgradeEffectiveDate.seconds * 1000).toLocaleDateString()}
+                            </div>
+                          )}
+                        </div>
+                        <div className="text-xs text-blue-600 dark:text-blue-400">
+                          {currentUserData.plannedDowngrade ? "Downgrade Scheduled" : "Active"}
+                        </div>
+                      </div>
+                    </div>
+                  )}
+
                   <Select
                     value={preferencesForm.watch("servicePlan")}
                     onValueChange={(value) => preferencesForm.setValue("servicePlan", value as "pay-as-you-go" | "complete-program")}
@@ -749,16 +835,25 @@ export default function DashboardProfile() {
                       <SelectValue placeholder="Select your service plan" />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="pay-as-you-go">
+                      <SelectItem 
+                        value="pay-as-you-go" 
+                        disabled={currentUserData?.plannedDowngrade && currentUserData?.servicePlan === "complete-program"}
+                      >
                         <div className="flex flex-col">
                           <span className="font-medium">Pay As You Go</span>
                           <span className="text-sm text-gray-500">Individual session billing</span>
+                          {currentUserData?.plannedDowngrade && currentUserData?.servicePlan === "complete-program" && (
+                            <span className="text-xs text-amber-600">Downgrade already scheduled</span>
+                          )}
                         </div>
                       </SelectItem>
                       <SelectItem value="complete-program">
                         <div className="flex flex-col">
                           <span className="font-medium">Complete Program (3 Months)</span>
                           <span className="text-sm text-gray-500">Monthly billing with unlimited consultations</span>
+                          {currentUserData?.plannedDowngrade && (
+                            <span className="text-xs text-green-600">Select to reinstate program</span>
+                          )}
                         </div>
                       </SelectItem>
                     </SelectContent>

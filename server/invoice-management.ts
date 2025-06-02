@@ -399,6 +399,37 @@ export class InvoiceManagementService {
     }
   }
 
+  // Reinstate Complete Program subscription (cancel planned downgrade)
+  async reinstateSubscription(userId: string): Promise<{ success: boolean; message: string }> {
+    try {
+      const userDoc = await db.collection('users').doc(userId).get();
+      if (!userDoc.exists) {
+        return { success: false, message: 'User not found' };
+      }
+      
+      const userData = userDoc.data();
+      if (!userData?.plannedDowngrade) {
+        return { success: false, message: 'No planned downgrade to cancel' };
+      }
+      
+      // Restore Complete Program status and cancel planned downgrade
+      await db.collection('users').doc(userId).update({
+        servicePlan: 'complete-program',
+        subscriptionStatus: 'active',
+        plannedDowngrade: false,
+        downgradeEffectiveDate: null,
+        reinstatedAt: new Date(),
+        updatedAt: new Date()
+      });
+      
+      console.log(`✓ User ${userId} Complete Program reinstated - planned downgrade cancelled`);
+      return { success: true, message: 'Complete Program reinstated successfully. All remaining billing cycles will continue as scheduled.' };
+    } catch (error) {
+      console.error('Error reinstating subscription:', error);
+      return { success: false, message: 'Failed to reinstate subscription' };
+    }
+  }
+
   // Cancel subscription (prevents future invoices)
   async cancelSubscription(userId: string): Promise<{ success: boolean; message: string }> {
     try {

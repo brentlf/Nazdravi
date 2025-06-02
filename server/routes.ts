@@ -1285,6 +1285,31 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Reinstate Complete Program subscription (cancel planned downgrade)
+  app.post("/api/subscriptions/reinstate", async (req, res) => {
+    try {
+      const { userId } = req.body;
+      
+      if (!userId) {
+        return res.status(400).json({ 
+          success: false, 
+          error: "Missing required field: userId" 
+        });
+      }
+
+      const result = await invoiceService.reinstateSubscription(userId);
+
+      res.json(result);
+
+    } catch (error: any) {
+      console.error("Error reinstating subscription:", error);
+      res.status(500).json({ 
+        success: false, 
+        error: error.message || "Failed to reinstate subscription" 
+      });
+    }
+  });
+
   // Cancel subscription
   app.post("/api/subscriptions/cancel", async (req, res) => {
     try {
