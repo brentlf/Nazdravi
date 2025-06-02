@@ -1167,7 +1167,38 @@ export const processMonthlyBilling = functions.pubsub
     }
   });
 
-// 6. Daily Reminder Scheduler
+// 6. Invoice Created - Email Notification
+export const onInvoiceCreated = functions.firestore
+  .document('invoices/{invoiceId}')
+  .onCreate(async (snap: any, context: any) => {
+    const invoiceData = snap.data();
+    console.log('New invoice created:', invoiceData.invoiceNumber);
+    
+    // Only send emails for subscription invoices and custom invoices
+    if (invoiceData.invoiceType === 'subscription' || invoiceData.invoiceType === 'invoice') {
+      const template = emailService.getInvoiceGeneratedTemplate(
+        invoiceData.clientName || 'Client',
+        invoiceData.totalAmount || invoiceData.amount || 0,
+        snap.id,
+        invoiceData.currency || 'EUR'
+      );
+      
+      await admin.firestore().collection('mail').add({
+        to: invoiceData.clientEmail,
+        toName: invoiceData.clientName || 'Client',
+        subject: template.subject,
+        html: template.html,
+        text: template.text,
+        type: 'invoice-generated',
+        status: 'pending',
+        createdAt: admin.firestore.FieldValue.serverTimestamp(),
+      });
+      
+      console.log(`Invoice email notification queued for ${invoiceData.clientEmail}`);
+    }
+  });
+
+// 7. Daily Reminder Scheduler
 export const sendDailyReminders = functions.pubsub
   .schedule('0 18 * * *') // 6 PM daily
   .timeZone('Europe/Amsterdam')
