@@ -805,7 +805,31 @@ export const onAppointmentConfirmed = functions.firestore
     }
   });
 
-// 3. Reschedule Request Created
+// 3. New Appointment Created - Admin Notification
+export const onAppointmentCreated = functions.firestore
+  .document('appointments/{appointmentId}')
+  .onCreate(async (snap: any, context: any) => {
+    const appointmentData = snap.data();
+    console.log('New appointment created:', appointmentData.clientEmail);
+    
+    const template = emailService.getAdminNewAppointmentTemplate(appointmentData);
+    
+    // Send admin notification
+    await admin.firestore().collection('mail').add({
+      to: 'admin@veenutrition.com',
+      toName: 'Vee Nutrition Admin',
+      subject: template.subject,
+      html: template.html,
+      text: template.text,
+      type: 'admin-new-appointment',
+      status: 'pending',
+      createdAt: admin.firestore.FieldValue.serverTimestamp(),
+    });
+    
+    console.log('Admin notification queued for new appointment');
+  });
+
+// 4. Reschedule Request Created
 export const onRescheduleRequest = functions.firestore
   .document('appointments/{appointmentId}')
   .onUpdate(async (change: any, context: any) => {
