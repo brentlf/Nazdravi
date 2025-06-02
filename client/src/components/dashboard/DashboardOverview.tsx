@@ -53,9 +53,9 @@ export function DashboardOverview() {
     chatRoom ? [where("chatRoom", "==", chatRoom)] : [],
   );
 
-  // Count unread messages (messages where user hasn't read them)
+  // Count unread messages (messages TO the user that haven't been read)
   const unreadCount = messages?.filter(message => 
-    message.sender !== user?.uid && !message.readBy?.includes(user?.uid || '')
+    message.toUser === user?.uid && (message.read === false || message.read === undefined)
   )?.length || 0;
 
   const { data: progressEntries } = useFirestoreCollection<Progress>(

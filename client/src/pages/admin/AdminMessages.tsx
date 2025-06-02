@@ -271,6 +271,7 @@ export default function AdminMessages() {
                   const lastMessage = getLastMessage(client.uid);
                   const unreadCount = getUnreadCount(client.uid);
                   const isSelected = selectedChatRoom === chatRoom;
+                  const hasUnread = unreadCount > 0;
 
                   return (
                     <div
@@ -281,20 +282,34 @@ export default function AdminMessages() {
                       }`}
                     >
                       <div className="flex items-start space-x-3">
-                        <Avatar className="w-10 h-10">
-                          <AvatarImage src={client.photoURL} />
-                          <AvatarFallback>
-                            {client.name.split(' ').map(n => n[0]).join('').toUpperCase()}
-                          </AvatarFallback>
-                        </Avatar>
+                        <div className="relative">
+                          <Avatar className="w-10 h-10">
+                            <AvatarImage src={client.photoURL} />
+                            <AvatarFallback>
+                              {client.name.split(' ').map(n => n[0]).join('').toUpperCase()}
+                            </AvatarFallback>
+                          </Avatar>
+                          {hasUnread && (
+                            <div className="absolute -top-1 -right-1 w-4 h-4 bg-red-500 rounded-full flex items-center justify-center">
+                              <div className="w-2 h-2 bg-white rounded-full"></div>
+                            </div>
+                          )}
+                        </div>
                         <div className="flex-1 min-w-0">
                           <div className="flex items-center justify-between">
-                            <p className="text-sm font-medium truncate">{client.name}</p>
-                            {lastMessage && (
-                              <span className="text-xs text-muted-foreground">
-                                {new Date(lastMessage.createdAt).toLocaleDateString()}
-                              </span>
-                            )}
+                            <p className={`text-sm truncate ${hasUnread ? 'font-semibold' : 'font-medium'}`}>{client.name}</p>
+                            <div className="flex items-center space-x-2">
+                              {unreadCount > 0 && (
+                                <Badge variant="destructive" className="text-xs h-5 px-1.5">
+                                  {unreadCount}
+                                </Badge>
+                              )}
+                              {lastMessage && (
+                                <span className="text-xs text-muted-foreground">
+                                  {new Date(lastMessage.createdAt).toLocaleDateString()}
+                                </span>
+                              )}
+                            </div>
                           </div>
                           <p className="text-xs text-muted-foreground truncate">{client.email}</p>
                           {lastMessage && (
@@ -351,13 +366,13 @@ export default function AdminMessages() {
                           <div
                             className={`max-w-xs lg:max-w-md px-4 py-2 rounded-lg ${
                               message.fromUser === "admin" || message.fromUser === user?.uid
-                                ? 'bg-blue-600 text-white'
-                                : 'bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-100'
+                                ? 'bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-200 border border-green-200 dark:border-green-700'
+                                : 'bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-200 border border-blue-200 dark:border-blue-700'
                             }`}
                           >
                             <p className="text-sm">{message.text}</p>
                             <p className={`text-xs mt-1 ${
-                              message.fromUser === "admin" || message.fromUser === user?.uid ? 'text-blue-100' : 'text-muted-foreground'
+                              message.fromUser === "admin" || message.fromUser === user?.uid ? 'text-green-600 dark:text-green-300' : 'text-blue-600 dark:text-blue-300'
                             }`}>
                               {(() => {
                                 try {
