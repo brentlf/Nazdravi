@@ -139,25 +139,22 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(400).json({ success: false, error: "Missing required fields: email and name" });
       }
       
-      // Queue reschedule confirmation email to client
-      const docRef = await db.collection("mail").add({
-        to: email, // Send to client
-        toName: name,
-        type: "reschedule-request",
-        status: "pending",
-        data: { 
-          name, 
-          originalDate: originalDate || '', 
-          originalTime: originalTime || '', 
-          newDate: newDate || '', 
-          newTime: newTime || '' 
-        },
-        createdAt: new Date()
-      });
+      // Send reschedule confirmation email directly using Resend
+      const emailSent = await resendService.sendRescheduleConfirmation(
+        email,
+        name,
+        newDate || '',
+        newTime || '',
+        'Follow-up' // Default type, can be made dynamic if needed
+      );
 
-      res.json({ success: true, message: "Reschedule confirmation email queued", docId: docRef.id });
+      if (emailSent) {
+        res.json({ success: true, message: "Reschedule confirmation email sent successfully" });
+      } else {
+        res.status(500).json({ success: false, error: "Failed to send reschedule confirmation email" });
+      }
     } catch (error: any) {
-      console.error("Error queuing reschedule confirmation email:", error);
+      console.error("Error sending reschedule confirmation email:", error);
       res.status(500).json({ success: false, error: error.message });
     }
   });
@@ -294,24 +291,22 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(400).json({ success: false, error: "Missing required fields: email and name" });
       }
       
-      // Queue email in Firebase using exact same format as working appointment emails
-      const docRef = await db.collection("mail").add({
-        to: email,
-        toName: name,
-        type: "payment-reminder",
-        status: "pending",
-        data: { 
-          name: name || '',
-          amount: amount || 0,
-          invoiceNumber: invoiceNumber || '',
-          paymentUrl: paymentUrl || ''
-        },
-        createdAt: new Date()
-      });
+      // Send payment reminder email directly using Resend
+      const emailSent = await resendService.sendPaymentReminder(
+        email,
+        name,
+        amount || 0,
+        invoiceNumber || '',
+        paymentUrl || ''
+      );
 
-      res.json({ success: true, message: "Payment reminder email queued", docId: docRef.id });
+      if (emailSent) {
+        res.json({ success: true, message: "Payment reminder email sent successfully" });
+      } else {
+        res.status(500).json({ success: false, error: "Failed to send payment reminder email" });
+      }
     } catch (error: any) {
-      console.error("Error queuing payment reminder email:", error);
+      console.error("Error sending payment reminder email:", error);
       res.status(500).json({ success: false, error: error.message });
     }
   });

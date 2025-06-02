@@ -156,6 +156,59 @@ export class ResendService {
     });
   }
 
+  // Reschedule confirmation email
+  async sendRescheduleConfirmation(
+    email: string,
+    name: string,
+    newDate: string,
+    newTime: string,
+    type: string
+  ): Promise<boolean> {
+    const template = this.getRescheduleConfirmationTemplate(name, newDate, newTime, type);
+    return this.sendEmail({
+      to: email,
+      toName: name,
+      subject: template.subject,
+      html: template.html,
+      text: template.text,
+    });
+  }
+
+  // Appointment cancelled email
+  async sendAppointmentCancelled(
+    email: string,
+    name: string,
+    date: string,
+    time: string,
+    reason?: string
+  ): Promise<boolean> {
+    const template = this.getAppointmentCancelledTemplate(name, date, time, reason);
+    return this.sendEmail({
+      to: email,
+      toName: name,
+      subject: template.subject,
+      html: template.html,
+      text: template.text,
+    });
+  }
+
+  // Late reschedule notice email
+  async sendLateRescheduleNotice(
+    email: string,
+    name: string,
+    date: string,
+    time: string
+  ): Promise<boolean> {
+    const template = this.getLateRescheduleTemplate(name, date, time);
+    return this.sendEmail({
+      to: email,
+      toName: name,
+      subject: template.subject,
+      html: template.html,
+      text: template.text,
+    });
+  }
+
   // Enhanced email automation for client notifications
   async sendInvoiceGenerated(email: string, name: string, amount: number, invoiceId: string): Promise<boolean> {
     const template = this.getInvoiceGeneratedTemplate(name, amount, invoiceId);
@@ -168,25 +221,21 @@ export class ResendService {
     });
   }
 
-  async sendAppointmentCancelled(email: string, name: string, date: string, time: string, reason?: string): Promise<boolean> {
-    const template = this.getAppointmentCancelledTemplate(name, date, time, reason);
+  // Payment reminder email
+  async sendPaymentReminder(
+    email: string,
+    name: string,
+    amount: number,
+    invoiceNumber: string,
+    paymentUrl: string
+  ): Promise<boolean> {
+    const template = this.getPaymentReminderTemplate(name, amount, invoiceNumber, paymentUrl);
     return this.sendEmail({
       to: email,
       toName: name,
       subject: template.subject,
       html: template.html,
-      text: template.text
-    });
-  }
-
-  async sendLateRescheduleNotice(email: string, name: string, date: string, time: string): Promise<boolean> {
-    const template = this.getLateRescheduleTemplate(name, date, time);
-    return this.sendEmail({
-      to: email,
-      toName: name,
-      subject: template.subject,
-      html: template.html,
-      text: template.text
+      text: template.text,
     });
   }
 
@@ -418,6 +467,52 @@ export class ResendService {
         </div>
       `,
       text: `Hi ${name}, reminder: Your ${type} is tomorrow, ${date} at ${time}. We're looking forward to seeing you!`
+    };
+  }
+
+  private getRescheduleConfirmationTemplate(
+    name: string,
+    newDate: string,
+    newTime: string,
+    type: string
+  ): EmailTemplate {
+    return {
+      subject: 'Reschedule Confirmed - Vee Nutrition',
+      html: `
+        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%); padding: 20px;">
+          <div style="background: white; padding: 30px; border-radius: 10px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);">
+            <div style="text-align: center; margin-bottom: 30px;">
+              <h1 style="color: #A5CBA4; margin: 0;">🌿 Vee Nutrition</h1>
+            </div>
+            
+            <h2 style="color: #333; margin-bottom: 20px;">Reschedule Confirmed</h2>
+            
+            <p style="color: #666; line-height: 1.6; margin-bottom: 20px;">
+              Hi ${name}, your reschedule request has been approved! Here are your new appointment details:
+            </p>
+            
+            <div style="background-color: #d4edda; padding: 20px; border-radius: 8px; margin: 20px 0; border-left: 4px solid #28a745;">
+              <h3 style="color: #155724; margin-top: 0;">New Appointment Details</h3>
+              <p style="margin: 5px 0;"><strong>Type:</strong> ${type}</p>
+              <p style="margin: 5px 0;"><strong>New Date:</strong> ${newDate}</p>
+              <p style="margin: 5px 0;"><strong>New Time:</strong> ${newTime}</p>
+            </div>
+            
+            <div style="text-align: center; margin: 30px 0;">
+              <a href="e394ccd4-b3dd-43ba-8feb-deda267050d2-00-3v6n3vit95c2j.spock.replit.dev/dashboard/appointments" 
+                 style="background-color: #A5CBA4; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; display: inline-block; font-weight: bold;">
+                View in Dashboard
+              </a>
+            </div>
+            
+            <div style="border-top: 1px solid #eee; padding-top: 20px; margin-top: 30px; text-align: center; color: #999; font-size: 14px;">
+              <p>Vee Nutrition | Transforming Lives Through Nutrition</p>
+              <p>Email: info@veenutrition.com</p>
+            </div>
+          </div>
+        </div>
+      `,
+      text: `Hi ${name}, your reschedule has been confirmed! New appointment: ${type} on ${newDate} at ${newTime}.`
     };
   }
 
