@@ -132,6 +132,27 @@ export function HealthInformationForm({ userId }: HealthInformationFormProps) {
     "other"
   ];
 
+  const medicationOptions = [
+    "blood-pressure-medication",
+    "diabetes-medication",
+    "cholesterol-medication",
+    "thyroid-medication",
+    "vitamins-supplements",
+    "other",
+    "none"
+  ];
+
+  const allergyOptions = [
+    "dairy-lactose",
+    "gluten",
+    "nuts",
+    "shellfish",
+    "eggs",
+    "soy",
+    "other",
+    "none"
+  ];
+
   // Load Firebase data on component mount
   useEffect(() => {
     const loadHealthData = async () => {
@@ -155,8 +176,11 @@ export function HealthInformationForm({ userId }: HealthInformationFormProps) {
             targetWeight: userData.targetWeight || "",
             medicalConditions: userData.medicalConditions || [],
             otherMedicalCondition: userData.otherMedicalCondition || "",
+            medications: userData.medications || [],
+            otherMedication: userData.otherMedication || "",
             allergies: userData.allergies || [],
-            currentMedications: userData.medications || [],
+            otherAllergy: userData.otherAllergy || "",
+            currentMedications: userData.currentMedications || "",
             dietaryRestrictions: userData.dietaryRestrictions || [],
             healthGoals: userData.healthGoals || [],
             otherHealthGoal: userData.otherHealthGoal || "",
@@ -431,25 +455,92 @@ export function HealthInformationForm({ userId }: HealthInformationFormProps) {
             )}
           </div>
 
-          {/* Health Details */}
+          {/* Medications */}
           <div className="space-y-4">
-            <h3 className="text-lg font-semibold">Health Details</h3>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
-                <Label htmlFor="allergies">Allergies</Label>
-                <Textarea
-                  id="allergies"
-                  {...form.register("allergies")}
-                  placeholder="List any allergies or food intolerances"
-                  rows={3}
+            <Label>Are you currently taking any medications? (Select all that apply)</Label>
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
+              {medicationOptions.map((medication) => (
+                <div key={medication} className="flex items-center space-x-2">
+                  <Checkbox
+                    id={medication}
+                    checked={form.watch("medications")?.includes(medication)}
+                    onCheckedChange={(checked) => {
+                      const currentMedications = form.getValues("medications") || [];
+                      if (checked) {
+                        form.setValue("medications", [...currentMedications, medication]);
+                      } else {
+                        form.setValue("medications", currentMedications.filter(m => m !== medication));
+                      }
+                    }}
+                  />
+                  <Label htmlFor={medication} className="text-sm capitalize">
+                    {medication.replace('-', ' ')}
+                  </Label>
+                </div>
+              ))}
+            </div>
+
+            {/* Conditional input for other medication */}
+            {hasOtherMedication && (
+              <div className="mt-4">
+                <Label htmlFor="otherMedication">Please specify other medication</Label>
+                <Input
+                  id="otherMedication"
+                  {...form.register("otherMedication")}
+                  placeholder="Describe your medication"
                 />
               </div>
+            )}
+          </div>
+
+          {/* Food Allergies */}
+          <div className="space-y-4">
+            <Label>Do you have any food allergies or intolerances? (Select all that apply)</Label>
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
+              {allergyOptions.map((allergy) => (
+                <div key={allergy} className="flex items-center space-x-2">
+                  <Checkbox
+                    id={allergy}
+                    checked={form.watch("allergies")?.includes(allergy)}
+                    onCheckedChange={(checked) => {
+                      const currentAllergies = form.getValues("allergies") || [];
+                      if (checked) {
+                        form.setValue("allergies", [...currentAllergies, allergy]);
+                      } else {
+                        form.setValue("allergies", currentAllergies.filter(a => a !== allergy));
+                      }
+                    }}
+                  />
+                  <Label htmlFor={allergy} className="text-sm capitalize">
+                    {allergy.replace('-', ' ')}
+                  </Label>
+                </div>
+              ))}
+            </div>
+
+            {/* Conditional input for other allergy */}
+            {hasOtherAllergy && (
+              <div className="mt-4">
+                <Label htmlFor="otherAllergy">Please specify other allergy</Label>
+                <Input
+                  id="otherAllergy"
+                  {...form.register("otherAllergy")}
+                  placeholder="Describe your allergy or intolerance"
+                />
+              </div>
+            )}
+          </div>
+
+          {/* Health Details */}
+          <div className="space-y-4">
+            <h3 className="text-lg font-semibold">Additional Health Details</h3>
+            <div className="grid grid-cols-1 gap-4">
               <div>
-                <Label htmlFor="currentMedications">Current Medications</Label>
+                <Label htmlFor="currentMedications">Additional Medications/Supplements</Label>
                 <Textarea
                   id="currentMedications"
                   {...form.register("currentMedications")}
-                  placeholder="List current medications and supplements"
+                  placeholder="List any additional medications, supplements, or treatments not mentioned above"
                   rows={3}
                 />
               </div>
