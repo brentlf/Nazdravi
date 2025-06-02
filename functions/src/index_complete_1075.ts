@@ -895,10 +895,11 @@ export const onAppointmentCreated = functions.firestore
     try {
       // Create a normalized appointment object for the template
       const normalizedAppointment = {
-        ...appointmentData,
-        clientName,
-        clientEmail,
-        time: appointmentTime
+        clientName: clientName || 'Client',
+        clientEmail: clientEmail,
+        type: appointmentData.type || appointmentData.servicePlan || 'consultation',
+        date: appointmentData.date || 'Unknown Date',
+        time: appointmentTime || 'Unknown Time'
       };
       
       const template = emailService.getAdminNewAppointmentTemplate(normalizedAppointment);
