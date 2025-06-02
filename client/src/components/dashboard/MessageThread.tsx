@@ -235,8 +235,8 @@ export function MessageThread() {
 
       {/* Messages Area */}
       <CardContent className="flex-1 flex flex-col p-0">
-        <ScrollArea className="flex-1 p-6">
-          <div className="space-y-4">
+        <div className="flex-1 overflow-hidden">
+          <div className="h-full overflow-y-auto p-6 space-y-4" style={{ maxHeight: '400px' }}>
             {messages && messages.length > 0 ? (
               messages.map((message) => {
                 const isFromUser = message.fromUser === user?.uid;
@@ -295,7 +295,7 @@ export function MessageThread() {
             )}
             <div ref={messagesEndRef} />
           </div>
-        </ScrollArea>
+        </div>
 
         {/* Message Input */}
         <div className="p-6 border-t">

@@ -323,7 +323,7 @@ export default function AdminMessages() {
                 
                 {/* Messages */}
                 <CardContent className="p-0">
-                  <div className="h-[400px] overflow-y-auto p-4 space-y-4">
+                  <div className="h-[400px] overflow-y-auto p-4 space-y-4" id="admin-messages-container">
                     {messagesLoading ? (
                       <div className="space-y-4">
                         {[...Array(3)].map((_, i) => (
@@ -379,6 +379,7 @@ export default function AdminMessages() {
                         <p>No messages yet. Start the conversation!</p>
                       </div>
                     )}
+                    <div id="admin-messages-end" />
                   </div>
                   
                   {/* Message Input */}
