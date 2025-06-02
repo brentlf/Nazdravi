@@ -838,19 +838,21 @@ export const onAppointmentConfirmed = functions.firestore
         console.log('📧 Confirmation template generated');
         console.log('📋 Subject:', template.subject);
         
-        const mailDoc = await admin.firestore().collection('mail').add({
-          to: [clientEmail],
-          message: {
-            subject: template.subject,
-            html: template.html,
-            text: template.text,
-          },
-          type: 'appointment-confirmation',
-          createdAt: admin.firestore.FieldValue.serverTimestamp(),
+        // Send email directly using Resend instead of queuing for Firebase extension
+        const emailSent = await emailService.sendEmail({
+          to: clientEmail,
+          toName: clientName,
+          subject: template.subject,
+          html: template.html,
+          text: template.text,
         });
         
-        console.log('✅ Confirmation email queued successfully. Mail ID:', mailDoc.id);
-        console.log('📬 Email will be sent to:', clientEmail);
+        if (emailSent) {
+          console.log('✅ Confirmation email sent successfully via Resend');
+        } else {
+          console.log('❌ Failed to send confirmation email via Resend');
+        }
+        console.log('📬 Email attempted to:', clientEmail);
         
       } catch (error) {
         console.error('❌ ERROR in onAppointmentConfirmed:', error);
@@ -907,19 +909,21 @@ export const onAppointmentCreated = functions.firestore
       console.log('📋 Subject:', template.subject);
       console.log('📬 Sending to admin: admin@veenutrition.com');
       
-      const mailDoc = await admin.firestore().collection('mail').add({
-        to: ['admin@veenutrition.com'],
-        message: {
-          subject: template.subject,
-          html: template.html,
-          text: template.text,
-        },
-        type: 'admin-new-appointment',
-        createdAt: admin.firestore.FieldValue.serverTimestamp(),
+      // Send email directly using Resend instead of queuing for Firebase extension
+      const emailSent = await emailService.sendEmail({
+        to: 'admin@veenutrition.com',
+        toName: 'Admin Team',
+        subject: template.subject,
+        html: template.html,
+        text: template.text,
       });
       
-      console.log('✅ Admin notification queued successfully. Mail ID:', mailDoc.id);
-      console.log('📬 Admin will be notified about appointment from:', clientEmail);
+      if (emailSent) {
+        console.log('✅ Admin notification sent successfully via Resend');
+      } else {
+        console.log('❌ Failed to send admin notification via Resend');
+      }
+      console.log('📬 Admin notification attempted for appointment from:', clientEmail);
       
     } catch (error) {
       console.error('❌ ERROR in onAppointmentCreated:', error);
@@ -1347,15 +1351,13 @@ export const sendDailyReminders = functions.pubsub
         appointment.type
       );
       
-      return admin.firestore().collection('mail').add({
-        to: [appointment.clientEmail || appointment.email],
-        message: {
-          subject: template.subject,
-          html: template.html,
-          text: template.text,
-        },
-        type: 'appointment-reminder',
-        createdAt: admin.firestore.FieldValue.serverTimestamp(),
+      // Send email directly using Resend
+      return emailService.sendEmail({
+        to: appointment.clientEmail || appointment.email,
+        toName: appointment.clientName || appointment.name || 'Client',
+        subject: template.subject,
+        html: template.html,
+        text: template.text,
       });
     });
     

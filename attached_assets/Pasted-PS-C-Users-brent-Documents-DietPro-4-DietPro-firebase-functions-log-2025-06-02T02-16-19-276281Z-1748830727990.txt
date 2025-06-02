@@ -1,0 +1,57 @@
+PS C:\Users\brent\Documents\DietPro (4)\DietPro> firebase functions:log
+2025-06-02T02:16:19.276281Z ? onAppointmentCreated:   "timeslot": "15:00",
+2025-06-02T02:16:19.276284Z ? onAppointmentCreated:   "type": "Follow-up",
+2025-06-02T02:16:19.276288Z ? onAppointmentCreated:   "userId": "h49TW1K0CFP3FxO2zuzAgMvrXRS2"
+2025-06-02T02:16:19.276291Z ? onAppointmentCreated: }
+2025-06-02T02:16:19.276294Z ? onAppointmentCreated: 👤 Client Name (resolved): Mclovin
+2025-06-02T02:16:19.276337Z ? onAppointmentCreated: 📧 Client Email (resolved): ytp004.lf@gmail.com
+2025-06-02T02:16:19.276370Z ? onAppointmentCreated: 📅 Date: 2025-06-06
+2025-06-02T02:16:19.276409Z ? onAppointmentCreated: 🕐 Time (resolved): 15:00
+2025-06-02T02:16:19.276640Z ? onAppointmentCreated: 📋 Type: Follow-up
+2025-06-02T02:16:19.276710Z ? onAppointmentCreated: 📊 Status: pending
+2025-06-02T02:16:19.276771Z ? onAppointmentCreated: 👤 User ID: h49TW1K0CFP3FxO2zuzAgMvrXRS2
+2025-06-02T02:16:19.276824Z ? onAppointmentCreated: 🕒 Timestamp: 2025-06-02T02:16:19.277Z
+2025-06-02T02:16:19.277235Z ? onAppointmentCreated: 📧 Admin notification template generated
+2025-06-02T02:16:19.277278Z ? onAppointmentCreated: 📋 Subject: New Appointment Request - Mclovin
+2025-06-02T02:16:19.277312Z ? onAppointmentCreated: 📬 Sending to admin: admin@veenutrition.com
+2025-06-02T02:16:22.832923Z ? onAppointmentCreated: ✅ Admin notification queued successfully. Mail ID: hmUsDQRSc7fVTLogHZZN
+2025-06-02T02:16:22.832966Z ? onAppointmentCreated: 📬 Admin will be notified about appointment from: ytp004.lf@gmail.com
+2025-06-02T02:16:22.846855395Z D onAppointmentCreated: Function execution took 3649 ms, finished with status: 'ok'
+2025-06-02T02:16:23.389750262Z D processMailQueue: Function execution started
+2025-06-02T02:16:23.454361999Z D processMailQueue: Function execution took 64 ms, finished with status: 'ok'
+2025-06-02T02:16:24.058916Z I ext-firestore-send-email-processqueue:
+2025-06-02T02:16:24.077503Z I ext-firestore-send-email-processqueue: {"clientId":"<omitted>","tls":"{}","clientSecret":"<omitted>","message":"Started execution of extension with configuration","smtpConnectionUri":"<omitted>","database":"(default)","location":"us-central1","secure":true,"defaultFrom":"info@veenutrition.com","port":465,"mailCollection":"mail","TTLExpireValue":1,"databaseRegion":"nam5","TTLExpireType":"never","authenticationType":"UsernamePassword","refreshToken":"<omitted>","testing":false,"smtpPassword":"<omitted>"}
+2025-06-02T02:16:24.300182Z I ext-firestore-send-email-processqueue: Completed execution of extension
+2025-06-02T02:16:25.029522Z I ext-firestore-send-email-processqueue:
+2025-06-02T02:16:25.036793Z I ext-firestore-send-email-processqueue: {"clientId":"<omitted>","testing":false,"defaultFrom":"info@veenutrition.com","mailCollection":"mail","smtpConnectionUri":"<omitted>","TTLExpireValue":1,"tls":"{}","location":"us-central1","clientSecret":"<omitted>","port":465,"message":"Started execution of extension with configuration","databaseRegion":"nam5","database":"(default)","TTLExpireType":"never","refreshToken":"<omitted>","secure":true,"smtpPassword":"<omitted>","authenticationType":"UsernamePassword"}
+2025-06-02T02:16:25.252452Z I ext-firestore-send-email-processqueue:
+2025-06-02T02:16:25.304875Z I ext-firestore-send-email-processqueue: Attempting delivery for message: mail/hmUsDQRSc7fVTLogHZZN
+2025-06-02T02:16:25.306290Z I ext-firestore-send-email-processqueue: {"mailOptions":{"text":"New appointment request from Mclovin (ytp004.lf@gmail.com) for Follow-up on 2025-06-06 at 15:00.","from":"info@veenutrition.com","to":["admin@veenutrition.com"],"subject":"New Appointment Request - Mclovin","cc":[],"bcc":[],"html":"\n        <div style=\"font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; background-color: #f8faf8;\">\n          <div style=\"background-color: white; padding: 30px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);\">\n            <div style=\"text-align: center; margin-bottom: 30px;\">\n              <h1 style=\"color: #A5CBA4; margin: 0;\">🌿 Vee Nutrition Admin</h1>\n            </div>\n            \n            <h2 style=\"color: #333; margin-bottom: 20px;\">📅 New Appointment Request</h2>\n            \n            <div style=\"background-color: #fff3cd; padding: 20px; border-radius: 8px; margin: 20px 0; border-left: 4px solid #ffc107;\">\n              <h3 style=\"color: #856404; margin-top: 0;\">Client Information</h3>\n              <p style=\"margin: 5px 0; color: #856404;\"><strong>Name:</strong> Mclovin</p>\n              <p style=\"margin: 5px 0; color: #856404;\"><strong>Email:</strong> ytp004.lf@gmail.com</p>\n            </div>\n            \n            <div style=\"background-color: #d4edda; padding: 20px; border-radius: 8px; margin: 20px 0; border-left: 4px solid #28a745;\">\n              <h3 style=\"color: #155724; margin-top: 0;\">Appointment Details</h3>\n              <p style=\"margin: 5px 0; color: #155724;\"><strong>Type:</strong> Follow-up</p>\n              <p style=\"margin: 5px 0; color: #155724;\"><strong>Date:</strong> 2025-06-06</p>\n          
+    <p style=\"margin: 5px 0; color: #155724;\"><strong>Time:</strong> 15:00</p>\n            </div>\n            \n            <div style=\"text-align: center; margin: 30px 0;\">\n              <a href=\"https://your-domain.replit.app/admin/appointments\" style=\"background-color: #A5CBA4; color: white; padding: 12px 25px; text-decoration: none; border-radius: 5px; font-weight: bold;\">\n                Manage Appointments\n             
+ </a>\n            </div>\n            \n            <div style=\"border-top: 1px solid #eee; padding-top: 20px; margin-top: 30px; text-align: center; color: #999; font-size: 14px;\">\n              <p>Vee Nutrition Admin Dashboard</p>\n              <p>Please confirm or reschedule this appointment promptly</p>\n            </div>\n          </div>\n        </div>\n      "},"message":"Sending via transport.sendMail()"}
+2025-06-02T02:16:25.306799Z E ext-firestore-send-email-processqueue: Error: Error when delivering message=mail/hmUsDQRSc7fVTLogHZZN: TypeError: Cannot read properties of undefined (reading 'sendMail')
+    at entryFromArgs (/workspace/node_modules/firebase-functions/lib/logger/index.js:133:19)
+    at Object.error (/workspace/node_modules/firebase-functions/lib/logger/index.js:120:11)
+    at Object.deliveryError (/workspace/lib/logs.js:66:33)
+    at deliver (/workspace/lib/index.js:161:14)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async processWrite (/workspace/lib/index.js:277:9)
+    at async /workspace/lib/index.js:288:9
+2025-06-02T02:16:25.373990Z I ext-firestore-send-email-processqueue: Completed execution of extension
+2025-06-02T02:16:25.404645Z W ext-firestore-send-email-processqueue: Invalid URI: please reconfigure with a valid SMTP connection URI
+2025-06-02T02:16:25.405922Z ? ext-firestore-send-email-processqueue: Error: Invalid URI: please reconfigure with a valid SMTP connection URI
+    at setSmtpCredentials (/workspace/lib/helpers.js:49:15)
+    at transportLayer (/workspace/lib/index.js:69:45)
+    at initialize (/workspace/lib/index.js:44:23)
+    at /workspace/lib/index.js:281:11
+    at /workspace/node_modules/firebase-functions/lib/common/onInit.js:33:16
+    at AsyncLocalStorage.run (node:internal/async_local_storage/async_hooks:91:14)
+    at /workspace/node_modules/firebase-functions/lib/v2/trace.js:18:37
+    at func (/workspace/node_modules/firebase-functions/lib/v2/providers/firestore.js:317:78)
+    at /layers/google.nodejs.functions-framework/functions-framework/node_modules/@google-cloud/functions-framework/build/src/function_wrappers.js:119:25
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+
+2025-06-02T02:16:26.021060Z I ext-firestore-send-email-processqueue:
+2025-06-02T02:16:26.027877Z I ext-firestore-send-email-processqueue: {"defaultFrom":"info@veenutrition.com","TTLExpireType":"never","databaseRegion":"nam5","location":"us-central1","TTLExpireValue":1,"message":"Started execution of extension with configuration","smtpConnectionUri":"<omitted>","clientId":"<omitted>","testing":false,"refreshToken":"<omitted>","mailCollection":"mail","smtpPassword":"<omitted>","secure":true,"database":"(default)","clientSecret":"<omitted>","tls":"{}","authenticationType":"UsernamePassword","port":465}
+2025-06-02T02:16:26.028274Z I ext-firestore-send-email-processqueue: Completed execution of extension
+PS C:\Users\brent\Documents\DietPro (4)\DietPro> 
