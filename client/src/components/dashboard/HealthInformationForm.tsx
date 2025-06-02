@@ -35,6 +35,13 @@ const healthInfoSchema = z.object({
   waterIntake: z.string().optional(),
   smokingStatus: z.string().optional(),
   alcoholConsumption: z.string().optional(),
+  targetWeight: z.string().optional(),
+  previousDietExperience: z.string().optional(),
+  motivationLevel: z.string().optional(),
+  availableTimeForCooking: z.string().optional(),
+  preferredMealTimes: z.array(z.string()).optional(),
+  budgetRange: z.string().optional(),
+  additionalNotes: z.string().optional(),
 });
 
 type HealthInfoFormData = z.infer<typeof healthInfoSchema>;
@@ -73,6 +80,13 @@ export function HealthInformationForm({ userId }: HealthInformationFormProps) {
       waterIntake: "",
       smokingStatus: "",
       alcoholConsumption: "",
+      targetWeight: "",
+      previousDietExperience: "",
+      motivationLevel: "",
+      availableTimeForCooking: "",
+      preferredMealTimes: [],
+      budgetRange: "",
+      additionalNotes: "",
     },
   });
 
@@ -127,17 +141,26 @@ export function HealthInformationForm({ userId }: HealthInformationFormProps) {
             age: userData.age?.toString() || "",
             height: userData.height || "",
             weight: userData.currentWeight || "",
+            targetWeight: userData.targetWeight || "",
             medicalConditions: userData.medicalConditions || [],
+            otherMedicalCondition: userData.otherMedicalCondition || "",
             allergies: userData.allergies || [],
             currentMedications: userData.medications || [],
             dietaryRestrictions: userData.dietaryRestrictions || [],
             healthGoals: userData.healthGoals || [],
+            otherHealthGoal: userData.otherHealthGoal || "",
             activityLevel: userData.activityLevel || "",
             stressLevel: userData.stressLevel || "",
             sleepHours: userData.sleepHours?.toString() || "",
             waterIntake: userData.waterIntake || "",
             smokingStatus: userData.smokingStatus || "",
             alcoholConsumption: userData.alcoholConsumption || "",
+            previousDietExperience: userData.previousDietExperience || "",
+            motivationLevel: userData.motivationLevel || "",
+            availableTimeForCooking: userData.availableTimeForCooking || "",
+            preferredMealTimes: userData.preferredMealTimes || [],
+            budgetRange: userData.budgetRange || "",
+            additionalNotes: userData.additionalNotes || "",
             emergencyContactName: userData.emergencyContact || "",
             emergencyContactPhone: userData.emergencyContactPhone || "",
             gpName: userData.gpContact || "",
@@ -348,6 +371,14 @@ export function HealthInformationForm({ userId }: HealthInformationFormProps) {
                   placeholder="e.g., 70kg or 154lbs"
                 />
               </div>
+              <div>
+                <Label htmlFor="targetWeight">Target Weight</Label>
+                <Input
+                  id="targetWeight"
+                  {...form.register("targetWeight")}
+                  placeholder="e.g., 65kg or 143lbs"
+                />
+              </div>
             </div>
           </div>
 
@@ -514,6 +545,80 @@ export function HealthInformationForm({ userId }: HealthInformationFormProps) {
                   placeholder="e.g., None, Occasional, Regular"
                 />
               </div>
+            </div>
+
+            {/* Additional Lifestyle Factors */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-6">
+              <div>
+                <Label htmlFor="previousDietExperience">Previous Diet Experience</Label>
+                <Textarea
+                  id="previousDietExperience"
+                  {...form.register("previousDietExperience")}
+                  placeholder="Describe your previous diet experiences"
+                  rows={3}
+                />
+              </div>
+              <div>
+                <Label htmlFor="motivationLevel">Motivation Level (1-10)</Label>
+                <Input
+                  id="motivationLevel"
+                  {...form.register("motivationLevel")}
+                  placeholder="Rate your motivation for change"
+                />
+              </div>
+              <div>
+                <Label htmlFor="availableTimeForCooking">Available Cooking Time</Label>
+                <Input
+                  id="availableTimeForCooking"
+                  {...form.register("availableTimeForCooking")}
+                  placeholder="e.g., 30 minutes daily, weekends only"
+                />
+              </div>
+              <div>
+                <Label htmlFor="budgetRange">Budget Range for Nutrition</Label>
+                <Input
+                  id="budgetRange"
+                  {...form.register("budgetRange")}
+                  placeholder="e.g., $50-100 weekly, €200 monthly"
+                />
+              </div>
+            </div>
+
+            {/* Preferred Meal Times */}
+            <div className="mt-4">
+              <Label>Preferred Meal Times (Select all that apply)</Label>
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mt-2">
+                {["early-morning", "morning", "midday", "afternoon", "evening", "late-evening"].map((time) => (
+                  <div key={time} className="flex items-center space-x-2">
+                    <Checkbox
+                      id={time}
+                      checked={form.watch("preferredMealTimes")?.includes(time)}
+                      onCheckedChange={(checked) => {
+                        const currentTimes = form.getValues("preferredMealTimes") || [];
+                        if (checked) {
+                          form.setValue("preferredMealTimes", [...currentTimes, time]);
+                        } else {
+                          form.setValue("preferredMealTimes", currentTimes.filter(t => t !== time));
+                        }
+                      }}
+                    />
+                    <Label htmlFor={time} className="text-sm capitalize">
+                      {time.replace('-', ' ')}
+                    </Label>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Additional Notes */}
+            <div className="mt-4">
+              <Label htmlFor="additionalNotes">Additional Notes</Label>
+              <Textarea
+                id="additionalNotes"
+                {...form.register("additionalNotes")}
+                placeholder="Any additional information you'd like to share about your health, lifestyle, or nutrition goals"
+                rows={4}
+              />
             </div>
           </div>
 
