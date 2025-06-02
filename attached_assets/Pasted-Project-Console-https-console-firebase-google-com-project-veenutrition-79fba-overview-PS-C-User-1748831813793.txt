@@ -1,0 +1,38 @@
+Project Console: https://console.firebase.google.com/project/veenutrition-79fba/overview
+PS C:\Users\brent\Documents\DietPro (4)\DietPro> firebase functions:log
+2025-06-02T02:33:25.360587596Z D onRescheduleRequest: Function execution took 6 ms, finished with status: 'ok'
+2025-06-02T02:33:41.123040479Z D onAppointmentConfirmed: Function execution started
+2025-06-02T02:33:41.127335Z ? onAppointmentConfirmed: 🔍 DEBUG: APPOINTMENT STATUS CHANGE TRIGGER
+2025-06-02T02:33:41.127399Z ? onAppointmentConfirmed: 🆔 Appointment ID: xPtxrdMi7B8Yn3cfJnSZ
+2025-06-02T02:33:41.127408Z ? onAppointmentConfirmed: 📊 Status Before: confirmed
+2025-06-02T02:33:41.127411Z ? onAppointmentConfirmed: 📊 Status After: done
+2025-06-02T02:33:41.127427Z ? onAppointmentConfirmed: 🕒 Timestamp: 2025-06-02T02:33:41.127Z
+2025-06-02T02:33:41.127432Z ? onAppointmentConfirmed: ℹ️ Status change detected but not a confirmation
+2025-06-02T02:33:41.128350686Z D onAppointmentConfirmed: Function execution took 5 ms, finished with status: 'ok'
+2025-06-02T02:33:41.156983Z D onRescheduleRequest: Function execution started
+2025-06-02T02:33:41.162939494Z D onRescheduleRequest: Function execution took 5 ms, finished with status: 'ok'
+2025-06-02T02:34:04.975179458Z D onInvoiceCreated: Function execution started
+2025-06-02T02:34:05.151146Z ? onInvoiceCreated: 🔍 DEBUG: NEW INVOICE CREATED TRIGGER
+2025-06-02T02:34:05.151393Z ? onInvoiceCreated: 🆔 Invoice ID: Qnq3XQZPiOZQ1IG18Op6
+2025-06-02T02:34:05.151457Z ? onInvoiceCreated: 📄 Invoice Number: CUSTOM-1748831644111
+2025-06-02T02:34:05.151498Z ? onInvoiceCreated: 📧 Client Email: ytp004.lf@gmail.com
+2025-06-02T02:34:05.151590Z ? onInvoiceCreated: 👤 Client Name: Mclovin
+2025-06-02T02:34:05.152218Z ? onInvoiceCreated: 💰 Amount: 80
+2025-06-02T02:34:05.152265Z ? onInvoiceCreated: 💱 Currency: eur
+2025-06-02T02:34:05.152316Z ? onInvoiceCreated: 📋 Invoice Type: session
+2025-06-02T02:34:05.152631Z ? onInvoiceCreated: 📊 Status: unpaid
+2025-06-02T02:34:05.154909Z ? onInvoiceCreated: 📅 Due Date: Timestamp { _seconds: 1749436444, _nanoseconds: 334000000 }
+2025-06-02T02:34:05.154985Z ? onInvoiceCreated: 🕒 Timestamp: 2025-06-02T02:34:05.155Z
+2025-06-02T02:34:05.155028Z ? onInvoiceCreated: ℹ️ Invoice type does not qualify for email notification: session
+2025-06-02T02:34:05.178962444Z D onInvoiceCreated: Function execution took 203 ms, finished with status: 'ok'
+2025-06-02T02:34:06.317858399Z D onRescheduleRequest: Function execution started
+2025-06-02T02:34:06.322168193Z D onRescheduleRequest: Function execution took 4 ms, finished with status: 'ok'
+2025-06-02T02:34:06.880511601Z D onAppointmentConfirmed: Function execution started
+2025-06-02T02:34:06.884192Z ? onAppointmentConfirmed: 🔍 DEBUG: APPOINTMENT STATUS CHANGE TRIGGER
+2025-06-02T02:34:06.884203Z ? onAppointmentConfirmed: 🆔 Appointment ID: xPtxrdMi7B8Yn3cfJnSZ
+2025-06-02T02:34:06.884223Z ? onAppointmentConfirmed: 📊 Status Before: done
+2025-06-02T02:34:06.884226Z ? onAppointmentConfirmed: 📊 Status After: done
+2025-06-02T02:34:06.884295Z ? onAppointmentConfirmed: 🕒 Timestamp: 2025-06-02T02:34:06.885Z
+2025-06-02T02:34:06.884303Z ? onAppointmentConfirmed: ℹ️ Status change detected but not a confirmation
+2025-06-02T02:34:06.885272300Z D onAppointmentConfirmed: Function execution took 4 ms, finished with status: 'ok'
+PS C:\Users\brent\Documents\DietPro (4)\DietPro> 

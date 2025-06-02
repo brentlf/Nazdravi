@@ -1288,8 +1288,8 @@ export const onInvoiceCreated = functions.firestore
     console.log('📅 Due Date:', invoiceData.dueDate);
     console.log('🕒 Timestamp:', new Date().toISOString());
     
-    // Only send emails for subscription invoices and custom invoices
-    if (invoiceData.invoiceType === 'subscription' || invoiceData.invoiceType === 'invoice') {
+    // Send emails for all invoice types (session, subscription, and custom invoices)
+    if (invoiceData.invoiceType === 'subscription' || invoiceData.invoiceType === 'invoice' || invoiceData.invoiceType === 'session') {
       console.log('✅ Invoice type qualifies for email notification');
       
       try {
@@ -1301,19 +1301,21 @@ export const onInvoiceCreated = functions.firestore
         console.log('📧 Invoice notification template generated');
         console.log('📋 Subject:', template.subject);
         
-        const mailDoc = await admin.firestore().collection('mail').add({
-          to: [invoiceData.clientEmail],
-          message: {
-            subject: template.subject,
-            html: template.html,
-            text: template.text,
-          },
-          type: 'invoice-generated',
-          createdAt: admin.firestore.FieldValue.serverTimestamp(),
+        // Send email directly using Resend instead of queuing for Firebase extension
+        const emailSent = await emailService.sendEmail({
+          to: invoiceData.clientEmail,
+          toName: invoiceData.clientName || 'Client',
+          subject: template.subject,
+          html: template.html,
+          text: template.text,
         });
         
-        console.log('✅ Invoice email notification queued successfully. Mail ID:', mailDoc.id);
-        console.log('📬 Email will be sent to:', invoiceData.clientEmail);
+        if (emailSent) {
+          console.log('✅ Invoice email sent successfully via Resend');
+        } else {
+          console.log('❌ Failed to send invoice email via Resend');
+        }
+        console.log('📬 Email attempted to:', invoiceData.clientEmail);
         
       } catch (error) {
         console.error('❌ ERROR in onInvoiceCreated:', error);
