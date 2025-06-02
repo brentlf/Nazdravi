@@ -361,6 +361,14 @@ Vee Nutrition Team`
             </div>
             ` : ''}
             
+            ${isLateReschedule ? `
+            <div style="background-color: #f8d7da; padding: 20px; border-radius: 8px; margin: 20px 0; border-left: 4px solid #dc3545;">
+              <h3 style="color: #721c24; margin-top: 0;">⚠️ Late Reschedule Policy</h3>
+              <p style="margin: 0; color: #721c24;"><strong>This reschedule request may be subject to a €${potentialLateFee || 5} late reschedule fee</strong> as it was requested within 4 hours of the appointment time or the new requested time is within 4 hours of now.</p>
+              <p style="margin: 10px 0 0 0; color: #721c24; font-size: 14px;">Admin can decide whether to apply this fee when processing the request.</p>
+            </div>
+            ` : ''}
+            
             <div style="border-top: 1px solid #eee; padding-top: 20px; margin-top: 30px; text-align: center; color: #999; font-size: 14px;">
               <p>Vee Nutrition Admin Dashboard</p>
               <p>Please respond to this request promptly</p>
