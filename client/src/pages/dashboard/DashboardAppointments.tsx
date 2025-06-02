@@ -62,20 +62,30 @@ const appointmentSchema = z.object({
 
 // Pre-evaluation form schema - matches main dashboard comprehensive version
 const preEvaluationSchema = z.object({
+  age: z.string().min(1, "Age is required"),
   healthGoals: z.array(z.string()).min(1, "Please select at least one health goal"),
+  otherHealthGoal: z.string().optional(),
   currentWeight: z.string().min(1, "Current weight is required"),
   targetWeight: z.string().optional(),
   heightCm: z.string().min(1, "Height is required"),
   activityLevel: z.string().min(1, "Please select your activity level"),
   dietaryRestrictions: z.array(z.string()).default([]),
   medicalConditions: z.array(z.string()).default([]),
+  otherMedicalCondition: z.string().optional(),
   medications: z.array(z.string()).default([]),
+  otherMedication: z.string().optional(),
   allergies: z.array(z.string()).default([]),
+  otherAllergy: z.string().optional(),
   previousDietExperience: z.string().min(1, "Please describe your diet experience"),
   motivationLevel: z.string().min(1, "Please select your motivation level"),
   availableTimeForCooking: z.string().min(1, "Please select time available for cooking"),
   preferredMealTimes: z.array(z.string()).default([]),
   budgetRange: z.string().min(1, "Please select your budget range"),
+  stressLevel: z.string().optional(),
+  sleepHours: z.string().optional(),
+  waterIntake: z.string().optional(),
+  smokingStatus: z.string().optional(),
+  alcoholConsumption: z.string().optional(),
   additionalNotes: z.string().optional(),
 });
 
@@ -1102,6 +1112,26 @@ export default function DashboardAppointments() {
             <Form {...preEvaluationForm}>
               <form onSubmit={preEvaluationForm.handleSubmit(onPreEvaluationSubmit)} className="space-y-6">
                 
+                {/* Basic Information */}
+                <div className="space-y-4">
+                  <h3 className="text-lg font-semibold text-sage-dark">Basic Information</h3>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <FormField
+                      control={preEvaluationForm.control}
+                      name="age"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Age *</FormLabel>
+                          <FormControl>
+                            <Input type="number" placeholder="Enter your age" {...field} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </div>
+                </div>
+
                 {/* Health Goals Section */}
                 <div className="space-y-4">
                   <h3 className="text-lg font-semibold text-sage-dark">Health Goals</h3>
@@ -1120,7 +1150,8 @@ export default function DashboardAppointments() {
                             { value: "better-digestion", label: "Better Digestion" },
                             { value: "manage-condition", label: "Manage Medical Condition" },
                             { value: "sports-performance", label: "Sports Performance" },
-                            { value: "general-wellness", label: "General Wellness" }
+                            { value: "general-wellness", label: "General Wellness" },
+                            { value: "other", label: "Other" }
                           ].map((goal) => (
                             <div key={goal.value} className="flex items-center space-x-2">
                               <Checkbox
@@ -1143,6 +1174,23 @@ export default function DashboardAppointments() {
                       </FormItem>
                     )}
                   />
+
+                  {/* Conditional input for other health goal */}
+                  {preEvaluationForm.watch("healthGoals")?.includes("other") && (
+                    <FormField
+                      control={preEvaluationForm.control}
+                      name="otherHealthGoal"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Please specify your other health goal</FormLabel>
+                          <FormControl>
+                            <Input placeholder="Describe your other health goal" {...field} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  )}
                 </div>
 
                 {/* Basic Measurements */}
@@ -1263,6 +1311,23 @@ export default function DashboardAppointments() {
                     )}
                   />
 
+                  {/* Conditional input for other medical condition */}
+                  {preEvaluationForm.watch("medicalConditions")?.includes("other") && (
+                    <FormField
+                      control={preEvaluationForm.control}
+                      name="otherMedicalCondition"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Please specify your other medical condition</FormLabel>
+                          <FormControl>
+                            <Input placeholder="Describe your medical condition" {...field} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  )}
+
                   <FormField
                     control={preEvaluationForm.control}
                     name="medications"
@@ -1300,6 +1365,23 @@ export default function DashboardAppointments() {
                       </FormItem>
                     )}
                   />
+
+                  {/* Conditional input for other medication */}
+                  {preEvaluationForm.watch("medications")?.includes("other") && (
+                    <FormField
+                      control={preEvaluationForm.control}
+                      name="otherMedication"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Please specify your other medication</FormLabel>
+                          <FormControl>
+                            <Input placeholder="Describe your medication" {...field} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  )}
 
                   <FormField
                     control={preEvaluationForm.control}
@@ -1339,6 +1421,23 @@ export default function DashboardAppointments() {
                       </FormItem>
                     )}
                   />
+
+                  {/* Conditional input for other allergy */}
+                  {preEvaluationForm.watch("allergies")?.includes("other") && (
+                    <FormField
+                      control={preEvaluationForm.control}
+                      name="otherAllergy"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Please specify your other allergy</FormLabel>
+                          <FormControl>
+                            <Input placeholder="Describe your allergy or intolerance" {...field} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  )}
                 </div>
 
                 {/* Dietary Information */}
