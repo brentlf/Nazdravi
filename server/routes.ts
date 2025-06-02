@@ -633,32 +633,64 @@ export async function registerRoutes(app: Express): Promise<Server> {
         updatedAt: new Date()
       });
       
-      // Send email notification if status changed to reschedule_requested
-      if (updateData.status === 'reschedule_requested' && currentData?.status !== 'reschedule_requested') {
-        const clientEmail = currentData?.email || currentData?.clientEmail;
-        const clientName = currentData?.name || currentData?.clientName;
-        const appointmentDate = currentData?.date;
-        const appointmentTime = currentData?.timeslot || currentData?.time;
-        
-        if (clientEmail && clientName) {
-          try {
-            // Send reschedule confirmation email to client
-            const emailSent = await resendService.sendRescheduleConfirmation(
+      // Send email notifications based on status changes
+      const clientEmail = currentData?.email || currentData?.clientEmail;
+      const clientName = currentData?.name || currentData?.clientName;
+      const appointmentDate = currentData?.date;
+      const appointmentTime = currentData?.timeslot || currentData?.time;
+      
+      if (clientEmail && clientName && updateData.status !== currentData?.status) {
+        try {
+          let emailSent = false;
+          
+          // Send reschedule confirmation email
+          if (updateData.status === 'reschedule_requested' && currentData?.status !== 'reschedule_requested') {
+            emailSent = await resendService.sendRescheduleConfirmation(
               clientEmail,
               clientName,
               appointmentDate || '',
               appointmentTime || '',
-              'Follow-up' // Default type
+              'Follow-up'
             );
-            
             if (emailSent) {
               console.log(`Reschedule confirmation email sent to ${clientEmail}`);
-            } else {
-              console.error(`Failed to send reschedule confirmation email to ${clientEmail}`);
             }
-          } catch (emailError) {
-            console.error('Error sending reschedule confirmation email:', emailError);
           }
+          
+          // Send appointment cancellation email
+          else if (updateData.status === 'cancelled' && currentData?.status !== 'cancelled') {
+            emailSent = await resendService.sendAppointmentCancelled(
+              clientEmail,
+              clientName,
+              appointmentDate || '',
+              appointmentTime || '',
+              updateData.cancelReason || 'Administrative cancellation'
+            );
+            if (emailSent) {
+              console.log(`Appointment cancellation email sent to ${clientEmail}`);
+            }
+          }
+          
+          // Send no-show notice email
+          else if (updateData.status === 'no-show' && currentData?.status !== 'no-show') {
+            const penaltyAmount = updateData.penaltyAmount || 25; // Default penalty amount
+            emailSent = await resendService.sendNoShowNotice(
+              clientEmail,
+              clientName,
+              appointmentDate || '',
+              appointmentTime || '',
+              penaltyAmount
+            );
+            if (emailSent) {
+              console.log(`No-show penalty notice sent to ${clientEmail}`);
+            }
+          }
+          
+          if (!emailSent && updateData.status !== currentData?.status) {
+            console.error(`Failed to send status change email for ${updateData.status} to ${clientEmail}`);
+          }
+        } catch (emailError) {
+          console.error(`Error sending ${updateData.status} email notification:`, emailError);
         }
       }
       
