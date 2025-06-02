@@ -17,6 +17,7 @@ import { useAuth } from "@/contexts/AuthContext";
 const healthInfoSchema = z.object({
   age: z.string().optional(),
   gender: z.string().optional(),
+  otherGender: z.string().optional(),
   height: z.string().optional(),
   weight: z.string().optional(),
   medicalConditions: z.array(z.string()).optional(),
@@ -66,6 +67,7 @@ export function HealthInformationForm({ userId }: HealthInformationFormProps) {
     defaultValues: {
       age: "",
       gender: "",
+      otherGender: "",
       height: "",
       weight: "",
       medicalConditions: [],
@@ -174,6 +176,7 @@ export function HealthInformationForm({ userId }: HealthInformationFormProps) {
           healthData = {
             age: userData.age?.toString() || "",
             gender: userData.gender || "",
+            otherGender: userData.otherGender || "",
             height: userData.height || "",
             weight: userData.currentWeight || "",
             targetWeight: userData.targetWeight || "",
@@ -432,6 +435,18 @@ export function HealthInformationForm({ userId }: HealthInformationFormProps) {
                 />
               </div>
             </div>
+
+            {/* Conditional input for other gender */}
+            {form.watch("gender") === "other" && (
+              <div className="mt-4">
+                <Label htmlFor="otherGender">Please specify your gender</Label>
+                <Input
+                  id="otherGender"
+                  {...form.register("otherGender")}
+                  placeholder="Please specify"
+                />
+              </div>
+            )}
           </div>
 
           {/* Medical Conditions */}

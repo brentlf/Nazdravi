@@ -64,6 +64,7 @@ const appointmentSchema = z.object({
 const preEvaluationSchema = z.object({
   age: z.string().min(1, "Age is required"),
   gender: z.string().optional(),
+  otherGender: z.string().optional(),
   healthGoals: z.array(z.string()).min(1, "Please select at least one health goal"),
   otherHealthGoal: z.string().optional(),
   currentWeight: z.string().min(1, "Current weight is required"),
@@ -1260,6 +1261,23 @@ export default function DashboardAppointments() {
                       )}
                     />
                   </div>
+
+                  {/* Conditional input for other gender */}
+                  {preEvaluationForm.watch("gender") === "other" && (
+                    <FormField
+                      control={preEvaluationForm.control}
+                      name="otherGender"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Please specify your gender</FormLabel>
+                          <FormControl>
+                            <Input placeholder="Please specify" {...field} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  )}
                 </div>
 
                 {/* Activity Level */}
