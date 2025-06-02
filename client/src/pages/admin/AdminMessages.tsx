@@ -133,6 +133,32 @@ export default function AdminMessages() {
         messageType: "text"
       });
 
+      // Send email notification to client
+      try {
+        const response = await fetch('/api/emails/message-notification', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            fromUserId: "admin",
+            toUserId: clientUserId,
+            messageType: "General",
+            urgency: "Medium",
+            content: newMessage
+          }),
+        });
+        
+        if (response.ok) {
+          console.log('Client notification sent successfully');
+        } else {
+          console.error('Failed to send client notification');
+        }
+      } catch (emailError) {
+        console.error('Email notification error:', emailError);
+        // Don't fail the message sending if email notification fails
+      }
+
       setNewMessage("");
       toast({
         title: "Message sent",

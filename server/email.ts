@@ -1005,6 +1005,46 @@ Vee Nutrition Team`
       text: `New message from ${clientName} (${clientEmail}). Type: ${messageType}, Priority: ${urgency}.`
     };
   }
+
+  private getClientNewMessageTemplate(clientName: string): EmailTemplate {
+    return {
+      subject: `📬 New Message from Vee Nutrition`,
+      html: `
+        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; background-color: #f8faf8;">
+          <div style="background-color: white; padding: 30px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
+            <div style="text-align: center; margin-bottom: 30px;">
+              <h1 style="color: #A5CBA4; margin: 0;">🌿 Vee Nutrition</h1>
+            </div>
+            
+            <h2 style="color: #333; margin-bottom: 20px;">You have a new message!</h2>
+            
+            <p style="color: #666; line-height: 1.6; margin-bottom: 20px;">
+              Hi ${clientName}, you have received a new message from your nutritionist.
+            </p>
+            
+            <div style="background-color: #e3f2fd; padding: 20px; border-radius: 8px; margin: 20px 0; border-left: 4px solid #2196f3;">
+              <p style="color: #1565c0; margin: 0; font-weight: bold;">
+                💬 Please log in to your dashboard to view and respond to your message.
+              </p>
+            </div>
+            
+            <div style="text-align: center; margin: 30px 0;">
+              <a href="${process.env.REPLIT_DEV_DOMAIN || 'https://your-domain.com'}/dashboard/messages" 
+                 style="background-color: #A5CBA4; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; display: inline-block; font-weight: bold;">
+                View Messages
+              </a>
+            </div>
+            
+            <div style="border-top: 1px solid #eee; padding-top: 20px; margin-top: 30px; text-align: center; color: #999; font-size: 14px;">
+              <p>Vee Nutrition | Transforming Lives Through Nutrition</p>
+              <p>Email: info@veenutrition.com</p>
+            </div>
+          </div>
+        </div>
+      `,
+      text: `Hi ${clientName}, you have a new message from Vee Nutrition. Please log in to your dashboard to view and respond.`
+    };
+  }
 }
 
 export const resendService = new ResendService();
