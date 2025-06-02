@@ -301,10 +301,13 @@ export default function DashboardProfile() {
   const handlePlannedDowngrade = async (data: PreferencesFormData) => {
     setIsLoading(true);
     try {
-      const nextBillingDate = currentUserData?.nextBillingDate || currentUserData?.programEndDate;
-      const downgradeEffectiveDate = nextBillingDate ? 
-        (nextBillingDate.toDate ? nextBillingDate.toDate() : new Date(nextBillingDate)) :
-        new Date(Date.now() + 30 * 24 * 60 * 60 * 1000); // Default to 30 days if no billing date
+      // Calculate the end of current billing month
+      const today = new Date();
+      const currentYear = today.getFullYear();
+      const currentMonth = today.getMonth();
+      
+      // Get the first day of next month (which is the downgrade effective date)
+      const downgradeEffectiveDate = new Date(currentYear, currentMonth + 1, 1);
 
       const updateData: any = {
         preferredLanguage: data.preferredLanguage,
