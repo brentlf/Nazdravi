@@ -21,12 +21,24 @@ interface SendEmailParams {
 
 class ResendEmailService {
   async sendEmail(params: SendEmailParams): Promise<boolean> {
+    console.log('🔧 DEBUG: ResendEmailService.sendEmail called');
+    console.log('📧 Email params:', {
+      to: params.to,
+      toName: params.toName,
+      subject: params.subject,
+      hasHtml: !!params.html,
+      hasText: !!params.text
+    });
+    
     const RESEND_API_KEY = functions.config().resend?.apikey;
     
     if (!RESEND_API_KEY) {
-      console.error('Resend API key not configured');
+      console.error('❌ CRITICAL: Resend API key not configured in Firebase Functions config');
+      console.error('💡 Fix: Run "firebase functions:config:set resend.apikey=YOUR_API_KEY"');
       return false;
     }
+    
+    console.log('✅ Resend API key found, proceeding with email send');
 
     return new Promise((resolve) => {
       const postData = JSON.stringify({
@@ -58,13 +70,19 @@ class ResendEmailService {
         });
         
         res.on('end', () => {
-          console.log('Resend response:', res.statusCode, responseData);
+          console.log('📤 Resend API Response:', {
+            statusCode: res.statusCode,
+            responseData: responseData,
+            emailTo: params.to,
+            subject: params.subject
+          });
           
           if (res.statusCode === 200 || res.statusCode === 201) {
-            console.log(`Email sent successfully to: ${params.to}`);
+            console.log(`✅ EMAIL SUCCESS: Sent to ${params.to} - Subject: ${params.subject}`);
             resolve(true);
           } else {
-            console.error('Resend API error:', res.statusCode, responseData);
+            console.error(`❌ EMAIL FAILED: Status ${res.statusCode} to ${params.to}`);
+            console.error('📋 Full response:', responseData);
             resolve(false);
           }
         });
@@ -954,28 +972,280 @@ export const onRescheduleRequest = functions.firestore
   .onUpdate(async (change: any, context: any) => {
     const before = change.before.data();
     const after = change.after.data();
+    const appointmentId = context.params.appointmentId;
+    
+    console.log('🔍 DEBUG: RESCHEDULE REQUEST TRIGGER');
+    console.log('🆔 Appointment ID:', appointmentId);
+    console.log('📊 Status Before:', before.status);
+    console.log('📊 Status After:', after.status);
+    console.log('🕒 Timestamp:', new Date().toISOString());
     
     if (before.status !== 'reschedule_requested' && after.status === 'reschedule_requested') {
-      console.log('Reschedule request created:', after.clientEmail);
+      console.log('✅ Reschedule request detected');
       
-      const template = emailService.getRescheduleRequestTemplate(
-        after.clientName,
-        after.clientEmail,
-        after.date,
-        after.time,
-        after.rescheduleReason
-      );
+      // Extract client details - handle different field name variations
+      const clientName = after.clientName || after.name || after.userName || 'Client';
+      const clientEmail = after.clientEmail || after.email || after.userEmail;
+      const appointmentTime = after.time || after.timeslot;
+      const rescheduleReason = after.rescheduleReason || 'No reason provided';
       
-      await admin.firestore().collection('mail').add({
-        to: 'admin@veenutrition.com',
-        toName: 'Vee Nutrition Admin',
-        subject: template.subject,
-        html: template.html,
-        text: template.text,
-        type: 'admin-reschedule-request',
-        status: 'pending',
-        createdAt: admin.firestore.FieldValue.serverTimestamp(),
+      console.log('👤 Client Name (resolved):', clientName);
+      console.log('📧 Client Email (resolved):', clientEmail);
+      console.log('📅 Date:', after.date);
+      console.log('🕐 Time (resolved):', appointmentTime);
+      console.log('📝 Reschedule Reason:', rescheduleReason);
+      
+      if (!clientEmail) {
+        console.error('❌ No client email found in reschedule request');
+        console.error('📋 Available fields:', Object.keys(after));
+        return;
+      }
+      
+      try {
+        // Send reschedule confirmation to client
+        const clientTemplate = emailService.getRescheduleConfirmationTemplate(
+          clientName,
+          after.date,
+          appointmentTime
+        );
+        console.log('📧 Client reschedule confirmation template generated');
+        
+        const clientEmailSent = await emailService.sendEmail({
+          to: clientEmail,
+          toName: clientName,
+          subject: clientTemplate.subject,
+          html: clientTemplate.html,
+          text: clientTemplate.text
+        });
+        
+        if (clientEmailSent) {
+          console.log('✅ Reschedule confirmation sent to client:', clientEmail);
+        } else {
+          console.error('❌ Failed to send reschedule confirmation to client');
+        }
+        
+        // Send admin notification
+        const adminTemplate = emailService.getRescheduleRequestTemplate(
+          clientName,
+          clientEmail,
+          after.date,
+          appointmentTime,
+          rescheduleReason
+        );
+        console.log('📧 Admin reschedule notification template generated');
+        
+        const adminEmailSent = await emailService.sendEmail({
+          to: 'info@veenutrition.com',
+          toName: 'Vee Nutrition Admin',
+          subject: adminTemplate.subject,
+          html: adminTemplate.html,
+          text: adminTemplate.text
+        });
+        
+        if (adminEmailSent) {
+          console.log('✅ Reschedule notification sent to admin');
+        } else {
+          console.error('❌ Failed to send reschedule notification to admin');
+        }
+        
+      } catch (error) {
+        console.error('❌ ERROR in onRescheduleRequest:', error);
+        console.error('📧 Failed to process reschedule emails for:', clientEmail);
+      }
+    } else {
+      console.log('ℹ️ Status change detected but not reschedule_requested:', {
+        before: before.status,
+        after: after.status
       });
+    }
+  });
+
+// 5. Appointment Cancelled Trigger
+export const onAppointmentCancelled = functions.firestore
+  .document('appointments/{appointmentId}')
+  .onUpdate(async (change: any, context: any) => {
+    const before = change.before.data();
+    const after = change.after.data();
+    const appointmentId = context.params.appointmentId;
+    
+    console.log('🔍 DEBUG: APPOINTMENT CANCELLED TRIGGER');
+    console.log('🆔 Appointment ID:', appointmentId);
+    console.log('📊 Status Before:', before.status);
+    console.log('📊 Status After:', after.status);
+    console.log('🕒 Timestamp:', new Date().toISOString());
+    
+    if (before.status !== 'cancelled' && after.status === 'cancelled') {
+      console.log('✅ Appointment cancellation detected');
+      
+      const clientName = after.clientName || after.name || after.userName || 'Client';
+      const clientEmail = after.clientEmail || after.email || after.userEmail;
+      const appointmentTime = after.time || after.timeslot;
+      const cancelReason = after.cancelReason || 'Administrative cancellation';
+      
+      console.log('👤 Client Name (resolved):', clientName);
+      console.log('📧 Client Email (resolved):', clientEmail);
+      console.log('📅 Date:', after.date);
+      console.log('🕐 Time (resolved):', appointmentTime);
+      console.log('📝 Cancel Reason:', cancelReason);
+      
+      if (!clientEmail) {
+        console.error('❌ No client email found in cancelled appointment');
+        console.error('📋 Available fields:', Object.keys(after));
+        return;
+      }
+      
+      try {
+        const template = emailService.getAppointmentCancelledTemplate(
+          clientName,
+          after.date,
+          appointmentTime,
+          cancelReason
+        );
+        console.log('📧 Cancellation template generated');
+        
+        const emailSent = await emailService.sendEmail({
+          to: clientEmail,
+          toName: clientName,
+          subject: template.subject,
+          html: template.html,
+          text: template.text
+        });
+        
+        if (emailSent) {
+          console.log('✅ Cancellation email sent to client:', clientEmail);
+        } else {
+          console.error('❌ Failed to send cancellation email to client');
+        }
+        
+      } catch (error) {
+        console.error('❌ ERROR in onAppointmentCancelled:', error);
+        console.error('📧 Failed to send cancellation email for:', clientEmail);
+      }
+    }
+  });
+
+// 6. No-Show Penalty Trigger
+export const onAppointmentNoShow = functions.firestore
+  .document('appointments/{appointmentId}')
+  .onUpdate(async (change: any, context: any) => {
+    const before = change.before.data();
+    const after = change.after.data();
+    const appointmentId = context.params.appointmentId;
+    
+    console.log('🔍 DEBUG: NO-SHOW PENALTY TRIGGER');
+    console.log('🆔 Appointment ID:', appointmentId);
+    console.log('📊 Status Before:', before.status);
+    console.log('📊 Status After:', after.status);
+    console.log('🕒 Timestamp:', new Date().toISOString());
+    
+    if (before.status !== 'no-show' && after.status === 'no-show') {
+      console.log('✅ No-show penalty detected');
+      
+      const clientName = after.clientName || after.name || after.userName || 'Client';
+      const clientEmail = after.clientEmail || after.email || after.userEmail;
+      const appointmentTime = after.time || after.timeslot;
+      const penaltyAmount = after.penaltyAmount || 25;
+      
+      console.log('👤 Client Name (resolved):', clientName);
+      console.log('📧 Client Email (resolved):', clientEmail);
+      console.log('📅 Date:', after.date);
+      console.log('🕐 Time (resolved):', appointmentTime);
+      console.log('💰 Penalty Amount:', penaltyAmount);
+      
+      if (!clientEmail) {
+        console.error('❌ No client email found in no-show appointment');
+        console.error('📋 Available fields:', Object.keys(after));
+        return;
+      }
+      
+      try {
+        const template = emailService.getNoShowPenaltyTemplate(
+          clientName,
+          after.date,
+          appointmentTime,
+          penaltyAmount
+        );
+        console.log('📧 No-show penalty template generated');
+        
+        const emailSent = await emailService.sendEmail({
+          to: clientEmail,
+          toName: clientName,
+          subject: template.subject,
+          html: template.html,
+          text: template.text
+        });
+        
+        if (emailSent) {
+          console.log('✅ No-show penalty email sent to client:', clientEmail);
+        } else {
+          console.error('❌ Failed to send no-show penalty email to client');
+        }
+        
+      } catch (error) {
+        console.error('❌ ERROR in onAppointmentNoShow:', error);
+        console.error('📧 Failed to send no-show penalty email for:', clientEmail);
+      }
+    }
+  });
+
+// 7. Late Reschedule Fee Trigger
+export const onLateReschedule = functions.firestore
+  .document('appointments/{appointmentId}')
+  .onUpdate(async (change: any, context: any) => {
+    const before = change.before.data();
+    const after = change.after.data();
+    const appointmentId = context.params.appointmentId;
+    
+    console.log('🔍 DEBUG: LATE RESCHEDULE TRIGGER');
+    console.log('🆔 Appointment ID:', appointmentId);
+    console.log('📊 Late Reschedule Before:', before.lateReschedule);
+    console.log('📊 Late Reschedule After:', after.lateReschedule);
+    console.log('🕒 Timestamp:', new Date().toISOString());
+    
+    if (!before.lateReschedule && after.lateReschedule) {
+      console.log('✅ Late reschedule fee detected');
+      
+      const clientName = after.clientName || after.name || after.userName || 'Client';
+      const clientEmail = after.clientEmail || after.email || after.userEmail;
+      const appointmentTime = after.time || after.timeslot;
+      
+      console.log('👤 Client Name (resolved):', clientName);
+      console.log('📧 Client Email (resolved):', clientEmail);
+      console.log('📅 Date:', after.date);
+      console.log('🕐 Time (resolved):', appointmentTime);
+      
+      if (!clientEmail) {
+        console.error('❌ No client email found in late reschedule');
+        console.error('📋 Available fields:', Object.keys(after));
+        return;
+      }
+      
+      try {
+        const template = emailService.getLateRescheduleTemplate(
+          clientName,
+          after.date,
+          appointmentTime
+        );
+        console.log('📧 Late reschedule template generated');
+        
+        const emailSent = await emailService.sendEmail({
+          to: clientEmail,
+          toName: clientName,
+          subject: template.subject,
+          html: template.html,
+          text: template.text
+        });
+        
+        if (emailSent) {
+          console.log('✅ Late reschedule email sent to client:', clientEmail);
+        } else {
+          console.error('❌ Failed to send late reschedule email to client');
+        }
+        
+      } catch (error) {
+        console.error('❌ ERROR in onLateReschedule:', error);
+        console.error('📧 Failed to send late reschedule email for:', clientEmail);
+      }
     }
   });
 
