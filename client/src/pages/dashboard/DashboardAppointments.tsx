@@ -108,6 +108,7 @@ export default function DashboardAppointments() {
   const [rescheduleDate, setRescheduleDate] = useState("");
   const [rescheduleTimeslot, setRescheduleTimeslot] = useState("");
   const [showAllAppointments, setShowAllAppointments] = useState(false);
+  const [statusFilter, setStatusFilter] = useState<string>("all");
   const [isPreEvaluationOpen, setIsPreEvaluationOpen] = useState(false);
   const [hasPreEvaluation, setHasPreEvaluation] = useState(false);
   const [showBillingConfirmation, setShowBillingConfirmation] = useState(false);
@@ -197,6 +198,51 @@ export default function DashboardAppointments() {
 
   // Use userId data if available, otherwise fall back to email data
   const effectiveAppointments = appointments?.length ? appointments : appointmentsByEmail;
+
+  // Filter appointments based on status filter
+  const filteredAppointments = effectiveAppointments?.filter(appointment => {
+    if (statusFilter === "all") return true;
+    return appointment.status === statusFilter;
+  });
+
+  // Sort appointments chronologically (upcoming first, then past)
+  const sortedAppointments = filteredAppointments?.sort((a, b) => {
+    const dateA = parseAppointmentDate(a);
+    const dateB = parseAppointmentDate(b);
+    const now = new Date();
+    
+    // Separate upcoming and past appointments
+    const aIsUpcoming = dateA >= now;
+    const bIsUpcoming = dateB >= now;
+    
+    if (aIsUpcoming && !bIsUpcoming) return -1; // upcoming first
+    if (!aIsUpcoming && bIsUpcoming) return 1;
+    
+    // For upcoming appointments, show nearest first
+    if (aIsUpcoming && bIsUpcoming) {
+      return dateA.getTime() - dateB.getTime();
+    }
+    
+    // For past appointments, show most recent first
+    return dateB.getTime() - dateA.getTime();
+  });
+
+  const getStatusColor = (status: string) => {
+    switch (status) {
+      case "pending":
+        return "bg-yellow-100 text-yellow-800 dark:bg-yellow-900/20 dark:text-yellow-400";
+      case "confirmed":
+        return "bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-400";
+      case "done":
+        return "bg-blue-100 text-blue-800 dark:bg-blue-900/20 dark:text-blue-400";
+      case "reschedule_requested":
+        return "bg-orange-100 text-orange-800 dark:bg-orange-900/20 dark:text-orange-400";
+      case "cancelled_reschedule":
+        return "bg-red-100 text-red-800 dark:bg-red-900/20 dark:text-red-400";
+      default:
+        return "bg-gray-100 text-gray-800 dark:bg-gray-900/20 dark:text-gray-400";
+    }
+  };
 
   // Fetch user data for service plan information
   const { data: userData } = useFirestoreDocument("users", user?.uid || "");
@@ -553,35 +599,16 @@ export default function DashboardAppointments() {
     }
   };
 
-  const getStatusColor = (status: string) => {
-    switch (status) {
-      case "confirmed":
-        return "bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-400";
-      case "pending":
-        return "bg-yellow-100 text-yellow-800 dark:bg-yellow-900/20 dark:text-yellow-400";
-      case "done":
-        return "bg-blue-100 text-blue-800 dark:bg-blue-900/20 dark:text-blue-400";
-      default:
-        return "bg-red-100 text-red-800 dark:bg-red-900/20 dark:text-red-400";
-    }
-  };
-
-  // Sort appointments by date (newest first, oldest last)
-  const sortedAppointments = effectiveAppointments?.sort((a, b) => {
-    const dateA = parseAppointmentDate(a);
-    const dateB = parseAppointmentDate(b);
-    return dateB.getTime() - dateA.getTime(); // Reverse sort - newest first
-  }) || [];
+  // Use the chronologically sorted appointments
+  const displayAppointments = sortedAppointments || [];
 
   // Get next upcoming appointment (future confirmed/pending appointments only)
-  const upcomingAppointments = sortedAppointments.filter(apt => {
+  const upcomingAppointments = displayAppointments.filter(apt => {
     const appointmentDate = parseAppointmentDate(apt);
     const appointmentDateTime = new Date(`${appointmentDate.toISOString().split('T')[0]}T${apt.timeslot}`);
     const now = new Date();
     return appointmentDateTime > now && 
-           (apt.status === "confirmed" || apt.status === "pending") &&
-           apt.status !== "cancelled" && 
-           apt.status !== "cancelled_reschedule";
+           (apt.status === "confirmed" || apt.status === "pending");
   });
 
   const nextAppointment = upcomingAppointments[0];
