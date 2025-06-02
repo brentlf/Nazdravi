@@ -759,20 +759,38 @@ export const onUserCreated = functions.firestore
   .document('users/{userId}')
   .onCreate(async (snap: any, context: any) => {
     const user = snap.data();
-    console.log('New user created:', user.email);
+    const userId = context.params.userId;
     
-    const template = emailService.getAccountConfirmationTemplate(user.name);
+    console.log('🔍 DEBUG: NEW USER CREATED TRIGGER');
+    console.log('📧 User Email:', user.email);
+    console.log('👤 User Name:', user.name);
+    console.log('🆔 User ID:', userId);
+    console.log('📋 User Role:', user.role);
+    console.log('🕒 Timestamp:', new Date().toISOString());
     
-    await admin.firestore().collection('mail').add({
-      to: user.email,
-      toName: user.name,
-      subject: template.subject,
-      html: template.html,
-      text: template.text,
-      type: 'account-confirmation',
-      status: 'pending',
-      createdAt: admin.firestore.FieldValue.serverTimestamp(),
-    });
+    try {
+      const template = emailService.getAccountConfirmationTemplate(user.name);
+      console.log('📧 Email template generated successfully');
+      console.log('📋 Subject:', template.subject);
+      
+      const mailDoc = await admin.firestore().collection('mail').add({
+        to: user.email,
+        toName: user.name,
+        subject: template.subject,
+        html: template.html,
+        text: template.text,
+        type: 'account-confirmation',
+        status: 'pending',
+        createdAt: admin.firestore.FieldValue.serverTimestamp(),
+      });
+      
+      console.log('✅ Welcome email queued successfully. Mail ID:', mailDoc.id);
+      console.log('📬 Email will be sent to:', user.email);
+      
+    } catch (error) {
+      console.error('❌ ERROR in onUserCreated:', error);
+      console.error('📧 Failed to queue welcome email for:', user.email);
+    }
   });
 
 // 2. Appointment Status Changed to Confirmed
@@ -781,27 +799,52 @@ export const onAppointmentConfirmed = functions.firestore
   .onUpdate(async (change: any, context: any) => {
     const before = change.before.data();
     const after = change.after.data();
+    const appointmentId = context.params.appointmentId;
+    
+    console.log('🔍 DEBUG: APPOINTMENT STATUS CHANGE TRIGGER');
+    console.log('🆔 Appointment ID:', appointmentId);
+    console.log('📊 Status Before:', before.status);
+    console.log('📊 Status After:', after.status);
+    console.log('🕒 Timestamp:', new Date().toISOString());
     
     if (before.status !== 'confirmed' && after.status === 'confirmed') {
-      console.log('Appointment confirmed:', after.clientEmail);
+      console.log('✅ Appointment confirmation detected');
+      console.log('👤 Client Name:', after.clientName);
+      console.log('📧 Client Email:', after.clientEmail);
+      console.log('📅 Date:', after.date);
+      console.log('🕐 Time:', after.time);
+      console.log('📋 Type:', after.type);
       
-      const template = emailService.getAppointmentConfirmationTemplate(
-        after.clientName,
-        after.date,
-        after.time,
-        after.type
-      );
-      
-      await admin.firestore().collection('mail').add({
-        to: after.clientEmail,
-        toName: after.clientName,
-        subject: template.subject,
-        html: template.html,
-        text: template.text,
-        type: 'appointment-confirmation',
-        status: 'pending',
-        createdAt: admin.firestore.FieldValue.serverTimestamp(),
-      });
+      try {
+        const template = emailService.getAppointmentConfirmationTemplate(
+          after.clientName,
+          after.date,
+          after.time,
+          after.type
+        );
+        console.log('📧 Confirmation template generated');
+        console.log('📋 Subject:', template.subject);
+        
+        const mailDoc = await admin.firestore().collection('mail').add({
+          to: after.clientEmail,
+          toName: after.clientName,
+          subject: template.subject,
+          html: template.html,
+          text: template.text,
+          type: 'appointment-confirmation',
+          status: 'pending',
+          createdAt: admin.firestore.FieldValue.serverTimestamp(),
+        });
+        
+        console.log('✅ Confirmation email queued successfully. Mail ID:', mailDoc.id);
+        console.log('📬 Email will be sent to:', after.clientEmail);
+        
+      } catch (error) {
+        console.error('❌ ERROR in onAppointmentConfirmed:', error);
+        console.error('📧 Failed to queue confirmation email for:', after.clientEmail);
+      }
+    } else {
+      console.log('ℹ️ Status change detected but not a confirmation');
     }
   });
 
@@ -810,23 +853,42 @@ export const onAppointmentCreated = functions.firestore
   .document('appointments/{appointmentId}')
   .onCreate(async (snap: any, context: any) => {
     const appointmentData = snap.data();
-    console.log('New appointment created:', appointmentData.clientEmail);
+    const appointmentId = context.params.appointmentId;
     
-    const template = emailService.getAdminNewAppointmentTemplate(appointmentData);
+    console.log('🔍 DEBUG: NEW APPOINTMENT CREATED TRIGGER');
+    console.log('🆔 Appointment ID:', appointmentId);
+    console.log('👤 Client Name:', appointmentData.clientName);
+    console.log('📧 Client Email:', appointmentData.clientEmail);
+    console.log('📅 Date:', appointmentData.date);
+    console.log('🕐 Time:', appointmentData.time);
+    console.log('📋 Type:', appointmentData.type);
+    console.log('📊 Status:', appointmentData.status);
+    console.log('🕒 Timestamp:', new Date().toISOString());
     
-    // Send admin notification
-    await admin.firestore().collection('mail').add({
-      to: 'admin@veenutrition.com',
-      toName: 'Vee Nutrition Admin',
-      subject: template.subject,
-      html: template.html,
-      text: template.text,
-      type: 'admin-new-appointment',
-      status: 'pending',
-      createdAt: admin.firestore.FieldValue.serverTimestamp(),
-    });
-    
-    console.log('Admin notification queued for new appointment');
+    try {
+      const template = emailService.getAdminNewAppointmentTemplate(appointmentData);
+      console.log('📧 Admin notification template generated');
+      console.log('📋 Subject:', template.subject);
+      console.log('📬 Sending to admin: admin@veenutrition.com');
+      
+      const mailDoc = await admin.firestore().collection('mail').add({
+        to: 'admin@veenutrition.com',
+        toName: 'Vee Nutrition Admin',
+        subject: template.subject,
+        html: template.html,
+        text: template.text,
+        type: 'admin-new-appointment',
+        status: 'pending',
+        createdAt: admin.firestore.FieldValue.serverTimestamp(),
+      });
+      
+      console.log('✅ Admin notification queued successfully. Mail ID:', mailDoc.id);
+      console.log('📬 Admin will be notified about appointment from:', appointmentData.clientEmail);
+      
+    } catch (error) {
+      console.error('❌ ERROR in onAppointmentCreated:', error);
+      console.error('📧 Failed to queue admin notification for appointment:', appointmentId);
+    }
   });
 
 // 4. Reschedule Request Created
@@ -1172,29 +1234,53 @@ export const onInvoiceCreated = functions.firestore
   .document('invoices/{invoiceId}')
   .onCreate(async (snap: any, context: any) => {
     const invoiceData = snap.data();
-    console.log('New invoice created:', invoiceData.invoiceNumber);
+    const invoiceId = context.params.invoiceId;
+    
+    console.log('🔍 DEBUG: NEW INVOICE CREATED TRIGGER');
+    console.log('🆔 Invoice ID:', invoiceId);
+    console.log('📄 Invoice Number:', invoiceData.invoiceNumber);
+    console.log('📧 Client Email:', invoiceData.clientEmail);
+    console.log('👤 Client Name:', invoiceData.clientName);
+    console.log('💰 Amount:', invoiceData.totalAmount || invoiceData.amount);
+    console.log('💱 Currency:', invoiceData.currency || 'EUR');
+    console.log('📋 Invoice Type:', invoiceData.invoiceType);
+    console.log('📊 Status:', invoiceData.status);
+    console.log('📅 Due Date:', invoiceData.dueDate);
+    console.log('🕒 Timestamp:', new Date().toISOString());
     
     // Only send emails for subscription invoices and custom invoices
     if (invoiceData.invoiceType === 'subscription' || invoiceData.invoiceType === 'invoice') {
-      const template = emailService.getInvoiceGeneratedTemplate(
-        invoiceData.clientName || 'Client',
-        invoiceData.totalAmount || invoiceData.amount || 0,
-        snap.id,
-        invoiceData.currency || 'EUR'
-      );
+      console.log('✅ Invoice type qualifies for email notification');
       
-      await admin.firestore().collection('mail').add({
-        to: invoiceData.clientEmail,
-        toName: invoiceData.clientName || 'Client',
-        subject: template.subject,
-        html: template.html,
-        text: template.text,
-        type: 'invoice-generated',
-        status: 'pending',
-        createdAt: admin.firestore.FieldValue.serverTimestamp(),
-      });
-      
-      console.log(`Invoice email notification queued for ${invoiceData.clientEmail}`);
+      try {
+        const template = emailService.getInvoiceGeneratedTemplate(
+          invoiceData.clientName || 'Client',
+          invoiceData.totalAmount || invoiceData.amount || 0,
+          snap.id
+        );
+        console.log('📧 Invoice notification template generated');
+        console.log('📋 Subject:', template.subject);
+        
+        const mailDoc = await admin.firestore().collection('mail').add({
+          to: invoiceData.clientEmail,
+          toName: invoiceData.clientName || 'Client',
+          subject: template.subject,
+          html: template.html,
+          text: template.text,
+          type: 'invoice-generated',
+          status: 'pending',
+          createdAt: admin.firestore.FieldValue.serverTimestamp(),
+        });
+        
+        console.log('✅ Invoice email notification queued successfully. Mail ID:', mailDoc.id);
+        console.log('📬 Email will be sent to:', invoiceData.clientEmail);
+        
+      } catch (error) {
+        console.error('❌ ERROR in onInvoiceCreated:', error);
+        console.error('📧 Failed to queue invoice email for:', invoiceData.clientEmail);
+      }
+    } else {
+      console.log('ℹ️ Invoice type does not qualify for email notification:', invoiceData.invoiceType);
     }
   });
 
