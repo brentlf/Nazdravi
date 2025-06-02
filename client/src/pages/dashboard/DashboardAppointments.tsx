@@ -363,17 +363,27 @@ export default function DashboardAppointments() {
       const userRef = doc(db, 'users', user.uid);
       
       await updateDoc(userRef, {
+        // Basic demographic information
+        age: data.age ? parseInt(data.age) : null,
+        gender: data.gender,
+        otherGender: data.otherGender,
+        
         // Basic health information
         healthGoals: data.healthGoals,
+        otherHealthGoal: data.otherHealthGoal,
         currentWeight: data.currentWeight,
         targetWeight: data.targetWeight,
         height: data.heightCm,
+        heightCm: data.heightCm, // Keep both for compatibility
         activityLevel: data.activityLevel,
         
         // Medical information
         medicalConditions: data.medicalConditions,
+        otherMedicalCondition: data.otherMedicalCondition,
         medications: data.medications,
+        otherMedication: data.otherMedication,
         allergies: data.allergies,
+        otherAllergy: data.otherAllergy,
         
         // Dietary information
         dietaryRestrictions: data.dietaryRestrictions,
@@ -382,8 +392,14 @@ export default function DashboardAppointments() {
         // Lifestyle information
         motivationLevel: data.motivationLevel,
         availableTimeForCooking: data.availableTimeForCooking,
+        availableCookingTime: data.availableTimeForCooking, // Keep both for compatibility
         preferredMealTimes: data.preferredMealTimes,
         budgetRange: data.budgetRange,
+        stressLevel: data.stressLevel,
+        sleepHours: data.sleepHours ? parseInt(data.sleepHours) : null,
+        waterIntake: data.waterIntake,
+        smokingStatus: data.smokingStatus,
+        alcoholConsumption: data.alcoholConsumption,
         
         // Additional notes
         additionalNotes: data.additionalNotes,
