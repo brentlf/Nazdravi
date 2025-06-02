@@ -25,6 +25,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
+import { HealthInformationForm } from "@/components/dashboard/HealthInformationForm";
 
 // Profile update schema
 const profileSchema = z.object({

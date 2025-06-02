@@ -490,6 +490,62 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Client health information update notification
+  app.post("/api/emails/health-update", async (req, res) => {
+    try {
+      const { clientName, clientEmail, changedFields, updatedData } = req.body;
+      
+      console.log('🔍 API DEBUG: POST /emails/health-update -', req.path);
+      console.log('🔍 DEBUG: Health update notification request:', {
+        clientName,
+        clientEmail,
+        changedFields: changedFields?.length || 0,
+        hasUpdatedData: !!updatedData
+      });
+
+      if (!clientName || !clientEmail || !changedFields) {
+        return res.status(400).json({ 
+          success: false, 
+          message: "Missing required fields: clientName, clientEmail, changedFields" 
+        });
+      }
+
+      // Create field summary for email
+      const fieldNames = changedFields.map((field: string) => {
+        return field.replace(/([A-Z])/g, ' $1').replace(/^./, (str: string) => str.toUpperCase());
+      });
+
+      const template = resendService.getAdminHealthUpdateTemplate(
+        clientName,
+        clientEmail,
+        fieldNames.length > 1 ? `${fieldNames.length} fields updated` : fieldNames[0]
+      );
+
+      await resendService.sendEmail({
+        to: 'admin@veenutrition.com',
+        toName: 'Vee Nutrition Admin',
+        subject: template.subject,
+        html: template.html,
+        text: template.text
+      });
+
+      console.log('✅ Admin health update notification sent to: admin@veenutrition.com');
+      
+      res.json({ 
+        success: true, 
+        message: "Health update notification sent to admin",
+        fieldsUpdated: changedFields.length
+      });
+
+    } catch (error) {
+      console.error('❌ Error sending health update notification:', error);
+      res.status(500).json({ 
+        success: false, 
+        message: "Failed to send health update notification" 
+      });
+    }
+  });
+
   app.post("/api/emails/admin/payment-received", async (req, res) => {
     try {
       const { clientName, amount, invoiceId, paymentMethod, isTest } = req.body;
