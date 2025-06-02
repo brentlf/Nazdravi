@@ -636,6 +636,52 @@ Vee Nutrition Team`
     };
   }
 
+  getClientMessageTemplate(clientName: string, messageContent: string): EmailTemplate {
+    return {
+      subject: `New Message from Vee Nutrition`,
+      html: `
+      <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; background-color: #f8faf8;">
+        <div style="background-color: white; padding: 30px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
+          <div style="text-align: center; margin-bottom: 30px;">
+            <h1 style="color: #A5CBA4; margin: 0;">🌿 Vee Nutrition</h1>
+          </div>
+          
+          <h2 style="color: #333; margin-bottom: 20px;">💬 New Message</h2>
+          
+          <p style="color: #666; line-height: 1.6; margin-bottom: 20px;">
+            Dear ${clientName},
+          </p>
+          
+          <p style="color: #666; line-height: 1.6; margin-bottom: 20px;">
+            You have received a new message from Vee Nutrition. Please log in to your client portal to view and respond.
+          </p>
+          
+          <div style="text-align: center; margin: 30px 0;">
+            <a href="https://app.veenutrition.com/dashboard/messages" style="background-color: #A5CBA4; color: white; padding: 12px 30px; text-decoration: none; border-radius: 5px; display: inline-block; font-weight: bold;">View Message</a>
+          </div>
+          
+          <p style="color: #666; line-height: 1.6; margin-bottom: 20px;">
+            If you have any questions or need assistance, please don't hesitate to reach out.
+          </p>
+          
+          <div style="border-top: 1px solid #eee; padding-top: 20px; margin-top: 30px; text-align: center; color: #999; font-size: 14px;">
+            <p>Vee Nutrition | Transforming Lives Through Nutrition</p>
+            <p>Email: info@veenutrition.com</p>
+          </div>
+        </div>
+      </div>
+      `,
+      text: `Dear ${clientName},
+
+You have received a new message from Vee Nutrition.
+
+Please log in to your client portal to view and respond: https://app.veenutrition.com/dashboard/messages
+
+Best regards,
+Vee Nutrition Team`
+    };
+  }
+
   // Admin notification templates
   getAdminNewAppointmentTemplate(appointmentData: {
     clientName: string;
@@ -1715,7 +1761,94 @@ export const processMonthlyBilling = functions.pubsub
     }
   });
 
-// 6. Invoice Created - Email Notification
+// 6. Message Created - Email Notification
+export const onMessageCreated = functions.firestore
+  .document('messages/{messageId}')
+  .onCreate(async (snap: any, context: any) => {
+    const messageData = snap.data();
+    const messageId = context.params.messageId;
+    
+    console.log('🔍 DEBUG: NEW MESSAGE CREATED TRIGGER');
+    console.log('🆔 Message ID:', messageId);
+    console.log('👤 From User:', messageData.fromUser);
+    console.log('👤 To User:', messageData.toUser);
+    console.log('💬 Message Type:', messageData.messageType);
+    console.log('🔴 Urgency:', messageData.urgency);
+    console.log('📝 Content:', messageData.content?.substring(0, 100) + '...');
+    console.log('🕒 Timestamp:', new Date().toISOString());
+    
+    try {
+      // Determine who to notify based on message direction
+      if (messageData.fromUser === 'admin' && messageData.toUser !== 'admin') {
+        // Admin sent message to client - notify the client
+        console.log('📧 Admin → Client message, notifying client');
+        
+        // Get client user details
+        const clientDoc = await admin.firestore().collection('users').doc(messageData.toUser).get();
+        const clientData = clientDoc.data();
+        
+        if (clientData && clientData.email) {
+          const template = emailService.getClientMessageTemplate(
+            clientData.name || 'Client',
+            messageData.content || 'New message from Vee Nutrition'
+          );
+          
+          // Send email to client
+          const emailSent = await emailService.sendEmail({
+            to: clientData.email,
+            toName: clientData.name || 'Client',
+            subject: template.subject,
+            html: template.html,
+            text: template.text
+          });
+          
+          if (emailSent) {
+            console.log('✅ Client message notification sent to:', clientData.email);
+          } else {
+            console.error('❌ Failed to send client message notification');
+          }
+        }
+        
+      } else if (messageData.fromUser !== 'admin' && messageData.toUser === 'admin') {
+        // Client sent message to admin - notify admin
+        console.log('📧 Client → Admin message, notifying admin');
+        
+        // Get client user details for context
+        const clientDoc = await admin.firestore().collection('users').doc(messageData.fromUser).get();
+        const clientData = clientDoc.data();
+        
+        if (clientData) {
+          const template = emailService.getAdminClientMessageTemplate(
+            clientData.name || 'Unknown Client',
+            clientData.email || 'unknown@email.com',
+            messageData.messageType || 'General',
+            messageData.urgency || 'Medium'
+          );
+          
+          // Send email to admin
+          const emailSent = await emailService.sendEmail({
+            to: 'admin@veenutrition.com',
+            toName: 'Vee Nutrition Admin',
+            subject: template.subject,
+            html: template.html,
+            text: template.text
+          });
+          
+          if (emailSent) {
+            console.log('✅ Admin message notification sent to: admin@veenutrition.com');
+          } else {
+            console.error('❌ Failed to send admin message notification');
+          }
+        }
+      }
+      
+    } catch (error) {
+      console.error('❌ ERROR in onMessageCreated:', error);
+      console.error('📧 Failed to send message notification');
+    }
+  });
+
+// 7. Invoice Created - Email Notification
 export const onInvoiceCreated = functions.firestore
   .document('invoices/{invoiceId}')
   .onCreate(async (snap: any, context: any) => {
