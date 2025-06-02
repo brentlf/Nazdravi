@@ -1059,3 +1059,104 @@ export const sendDailyReminders = functions.pubsub
     await Promise.all(promises);
     console.log(`Queued ${promises.length} reminder emails`);
   });
+
+// 6. Scheduled Downgrade Processor
+export const processScheduledDowngrades = functions.pubsub
+  .schedule('0 2 * * *') // 2 AM daily
+  .timeZone('Europe/Amsterdam')
+  .onRun(async (context: any) => {
+    console.log('🔄 Processing scheduled downgrades...');
+    
+    try {
+      // Get all users with planned downgrades
+      const usersWithDowngrades = await admin.firestore()
+        .collection('users')
+        .where('plannedDowngrade', '==', true)
+        .get();
+      
+      const processedDowngrades = [];
+      const now = new Date();
+      
+      for (const userDoc of usersWithDowngrades.docs) {
+        const userData = userDoc.data();
+        const downgradeEffectiveDate = userData.downgradeEffectiveDate?.toDate();
+        
+        if (downgradeEffectiveDate && downgradeEffectiveDate <= now) {
+          console.log(`⏰ Processing downgrade for user ${userDoc.id}, effective date: ${downgradeEffectiveDate}`);
+          
+          try {
+            // Execute downgrade - update user to Pay-as-you-go
+            await userDoc.ref.update({
+              servicePlan: 'pay-as-you-go',
+              subscriptionStatus: 'downgraded',
+              plannedDowngrade: false,
+              downgradeExecutedAt: admin.firestore.FieldValue.serverTimestamp(),
+              // Clear Complete Program related fields
+              programStartDate: null,
+              programEndDate: null,
+              currentBillingCycle: null,
+              nextBillingDate: null,
+              maxBillingCycles: null,
+              monthlyAmount: null,
+              updatedAt: admin.firestore.FieldValue.serverTimestamp()
+            });
+            
+            processedDowngrades.push({
+              userId: userDoc.id,
+              email: userData.email,
+              effectiveDate: downgradeEffectiveDate,
+              status: 'success'
+            });
+            
+            console.log(`✓ User ${userDoc.id} successfully downgraded to Pay-as-you-go`);
+            
+            // Optionally send notification email about successful downgrade
+            const emailTemplate = {
+              subject: 'Service Plan Updated - Now Pay-As-You-Go',
+              html: `
+                <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
+                  <h2>Service Plan Updated</h2>
+                  <p>Hi ${userData.name || 'there'},</p>
+                  <p>Your service plan has been successfully updated to Pay-As-You-Go as scheduled.</p>
+                  <p>You can continue booking individual sessions through your dashboard.</p>
+                  <p>Thank you for choosing Vee Nutrition!</p>
+                </div>
+              `,
+              text: `Your service plan has been updated to Pay-As-You-Go. Continue booking sessions through your dashboard.`
+            };
+            
+            await admin.firestore().collection('mail').add({
+              to: userData.email,
+              toName: userData.name || 'Client',
+              subject: emailTemplate.subject,
+              html: emailTemplate.html,
+              text: emailTemplate.text,
+              type: 'plan-downgrade-notification',
+              status: 'pending',
+              createdAt: admin.firestore.FieldValue.serverTimestamp(),
+            });
+            
+          } catch (error) {
+            console.error(`Error processing downgrade for user ${userDoc.id}:`, error);
+            processedDowngrades.push({
+              userId: userDoc.id,
+              email: userData.email,
+              effectiveDate: downgradeEffectiveDate,
+              status: 'error',
+              error: error.message
+            });
+          }
+        }
+      }
+      
+      console.log(`✓ Processed ${processedDowngrades.length} scheduled downgrades`);
+      
+      // Log summary for monitoring
+      if (processedDowngrades.length > 0) {
+        console.log('Downgrade processing summary:', processedDowngrades);
+      }
+      
+    } catch (error) {
+      console.error('Error in scheduled downgrade processor:', error);
+    }
+  });

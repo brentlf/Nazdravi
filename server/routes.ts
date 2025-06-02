@@ -1240,6 +1240,51 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Process planned downgrades - check and execute downgrades that are due
+  app.post("/api/subscriptions/process-downgrades", async (req, res) => {
+    try {
+      console.log("🔄 Processing planned downgrades...");
+      
+      // Get all users with planned downgrades
+      const usersWithDowngrades = await db.collection('users')
+        .where('plannedDowngrade', '==', true)
+        .get();
+      
+      const processedDowngrades = [];
+      const now = new Date();
+      
+      for (const userDoc of usersWithDowngrades.docs) {
+        const userData = userDoc.data();
+        const downgradeEffectiveDate = userData.downgradeEffectiveDate?.toDate();
+        
+        if (downgradeEffectiveDate && downgradeEffectiveDate <= now) {
+          console.log(`⏰ Processing downgrade for user ${userDoc.id}, effective date: ${downgradeEffectiveDate}`);
+          
+          const result = await invoiceService.executeDowngrade(userDoc.id);
+          processedDowngrades.push({
+            userId: userDoc.id,
+            email: userData.email,
+            effectiveDate: downgradeEffectiveDate,
+            result
+          });
+        }
+      }
+      
+      res.json({
+        success: true,
+        message: `Processed ${processedDowngrades.length} downgrades`,
+        processedDowngrades
+      });
+
+    } catch (error: any) {
+      console.error("Error processing downgrades:", error);
+      res.status(500).json({ 
+        success: false, 
+        error: error.message || "Failed to process downgrades" 
+      });
+    }
+  });
+
   // Cancel subscription
   app.post("/api/subscriptions/cancel", async (req, res) => {
     try {

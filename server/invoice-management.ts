@@ -362,6 +362,43 @@ export class InvoiceManagementService {
     return invoice;
   }
 
+  // Execute planned downgrade to Pay-as-you-go
+  async executeDowngrade(userId: string): Promise<{ success: boolean; message: string }> {
+    try {
+      const userDoc = await db.collection('users').doc(userId).get();
+      if (!userDoc.exists) {
+        return { success: false, message: 'User not found' };
+      }
+      
+      const userData = userDoc.data();
+      if (!userData?.plannedDowngrade) {
+        return { success: false, message: 'No planned downgrade found' };
+      }
+      
+      // Update user to Pay-as-you-go service plan
+      await db.collection('users').doc(userId).update({
+        servicePlan: 'pay-as-you-go',
+        subscriptionStatus: 'downgraded',
+        plannedDowngrade: false,
+        downgradeExecutedAt: new Date(),
+        // Clear Complete Program related fields
+        programStartDate: null,
+        programEndDate: null,
+        currentBillingCycle: null,
+        nextBillingDate: null,
+        maxBillingCycles: null,
+        monthlyAmount: null,
+        updatedAt: new Date()
+      });
+      
+      console.log(`✓ User ${userId} successfully downgraded to Pay-as-you-go`);
+      return { success: true, message: 'Successfully downgraded to Pay-as-you-go plan' };
+    } catch (error) {
+      console.error('Error executing downgrade:', error);
+      return { success: false, message: 'Failed to execute downgrade' };
+    }
+  }
+
   // Cancel subscription (prevents future invoices)
   async cancelSubscription(userId: string): Promise<{ success: boolean; message: string }> {
     try {
@@ -469,8 +506,26 @@ export class InvoiceManagementService {
       actualSubscriptionStatus = storedSubscriptionStatus === 'active' ? 'none' : storedSubscriptionStatus;
     }
     
-    // Check if it's time to generate next month's invoice
-    if (actualSubscriptionStatus === 'active' && nextBillingDate && nextBillingDate <= now && currentCycle < maxCycles) {
+    // Check for planned downgrade before generating invoices
+    const plannedDowngrade = userData?.plannedDowngrade;
+    const downgradeEffectiveDate = userData?.downgradeEffectiveDate?.toDate();
+    
+    // If downgrade is planned and effective date has passed, execute downgrade
+    if (plannedDowngrade && downgradeEffectiveDate && downgradeEffectiveDate <= now) {
+      await this.executeDowngrade(userId);
+      // Return downgraded status - no more subscription invoices
+      return { 
+        upcomingInvoices, 
+        overdueInvoices,
+        subscriptionStatus: 'downgraded',
+        nextBillingDate,
+        currentCycle,
+        maxCycles
+      };
+    }
+    
+    // Only generate next invoice if no downgrade is planned or not yet effective
+    if (actualSubscriptionStatus === 'active' && nextBillingDate && nextBillingDate <= now && currentCycle < maxCycles && !plannedDowngrade) {
       await this.generateNextMonthlyInvoice(userId);
     }
     
