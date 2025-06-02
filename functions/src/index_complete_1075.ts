@@ -1017,7 +1017,133 @@ export const processMailQueue = functions.firestore
     }
   });
 
-// 5. Daily Reminder Scheduler
+// 5. Daily Monthly Billing Processor
+export const processMonthlyBilling = functions.pubsub
+  .schedule('0 9 * * *') // 9 AM daily
+  .timeZone('Europe/Amsterdam')
+  .onRun(async (context: any) => {
+    console.log('🔄 Running daily monthly billing processor...');
+    
+    try {
+      // Get all users with Complete Program service plan
+      const usersSnapshot = await admin.firestore()
+        .collection('users')
+        .where('servicePlan', '==', 'complete-program')
+        .where('subscriptionStatus', '==', 'active')
+        .get();
+
+      const processedUsers = [];
+      const now = new Date();
+
+      for (const userDoc of usersSnapshot.docs) {
+        const userData = userDoc.data();
+        const userId = userDoc.id;
+        
+        try {
+          const nextBillingDate = userData.nextBillingDate?.toDate();
+          const currentCycle = userData.currentBillingCycle || 0;
+          const maxCycles = userData.maxBillingCycles || 3;
+          const plannedDowngrade = userData.plannedDowngrade;
+
+          // Skip if user has planned downgrade or billing cycle is complete
+          if (plannedDowngrade || currentCycle >= maxCycles || !nextBillingDate) {
+            continue;
+          }
+
+          // Check if it's time to generate next month's invoice
+          if (nextBillingDate <= now) {
+            console.log(`📅 Processing billing for ${userData.name} (${userData.email})`);
+            
+            // Check if invoice already exists for this billing cycle
+            const existingInvoices = await admin.firestore()
+              .collection('invoices')
+              .where('userId', '==', userId)
+              .where('invoiceType', '==', 'subscription')
+              .where('billingCycle', '==', currentCycle + 1)
+              .get();
+
+            if (existingInvoices.empty) {
+              // Generate next month's invoice directly
+              const nextCycle = currentCycle + 1;
+              const billingDate = new Date(nextBillingDate);
+              
+              // Create subscription invoice
+              const invoiceData = {
+                userId,
+                clientName: userData.name,
+                clientEmail: userData.email,
+                month: billingDate.getMonth() + 1,
+                year: billingDate.getFullYear(),
+                subscriptionAmount: userData.monthlyAmount || 150,
+                billingCycle: nextCycle
+              };
+
+              // Add invoice to Firestore
+              await admin.firestore().collection('invoices').add({
+                ...invoiceData,
+                invoiceType: 'subscription',
+                status: 'unpaid',
+                totalAmount: invoiceData.subscriptionAmount,
+                subscriptionMonth: invoiceData.month,
+                subscriptionYear: invoiceData.year,
+                dueDate: billingDate,
+                createdAt: admin.firestore.FieldValue.serverTimestamp(),
+                items: [{
+                  description: `Complete Program - Month ${nextCycle} of 3`,
+                  amount: invoiceData.subscriptionAmount,
+                  type: 'subscription'
+                }]
+              });
+
+              // Update user's billing cycle and next billing date
+              const followingMonth = new Date(billingDate.getFullYear(), billingDate.getMonth() + 1, billingDate.getDate());
+              await admin.firestore().collection('users').doc(userId).update({
+                currentBillingCycle: nextCycle,
+                nextBillingDate: followingMonth,
+                updatedAt: admin.firestore.FieldValue.serverTimestamp()
+              });
+
+              processedUsers.push({
+                userId,
+                email: userData.email,
+                name: userData.name,
+                billingCycle: currentCycle + 1,
+                status: 'invoice_generated'
+              });
+              
+              console.log(`✅ Invoice generated for ${userData.name} - Cycle ${currentCycle + 1}`);
+            } else {
+              console.log(`⏭️ Invoice already exists for ${userData.name} - Cycle ${currentCycle + 1}`);
+            }
+          }
+        } catch (error) {
+          console.error(`❌ Error processing user ${userId}:`, error);
+          processedUsers.push({
+            userId,
+            email: userData.email,
+            name: userData.name,
+            status: 'error',
+            error: error instanceof Error ? error.message : 'Unknown error'
+          });
+        }
+      }
+
+      // Log summary
+      console.log(`📊 Monthly billing processing complete:`, {
+        totalUsers: usersSnapshot.docs.length,
+        processedUsers: processedUsers.length,
+        successful: processedUsers.filter(u => u.status === 'invoice_generated').length,
+        errors: processedUsers.filter(u => u.status === 'error').length
+      });
+
+      return { success: true, processedUsers };
+    } catch (error) {
+      console.error('❌ Error in monthly billing processor:', error);
+      return { success: false, error: error instanceof Error ? error.message : 'Unknown error' };
+    }
+  });
+
+// 6. Daily Reminder Scheduler
 export const sendDailyReminders = functions.pubsub
   .schedule('0 18 * * *') // 6 PM daily
   .timeZone('Europe/Amsterdam')
@@ -1143,7 +1269,7 @@ export const processScheduledDowngrades = functions.pubsub
               email: userData.email,
               effectiveDate: downgradeEffectiveDate,
               status: 'error',
-              error: error.message
+              error: error instanceof Error ? error.message : 'Unknown error'
             });
           }
         }
