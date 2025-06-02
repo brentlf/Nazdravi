@@ -399,25 +399,57 @@ export default function DashboardAppointments() {
     }
   };
 
+  const isLateReschedule = (originalDate: string, originalTime: string, newDate: string, newTime: string): boolean => {
+    const now = new Date();
+    
+    // Check if reschedule request is within 4 hours of original appointment
+    const originalDateTime = new Date(`${originalDate}T${originalTime}`);
+    const hoursUntilOriginal = (originalDateTime.getTime() - now.getTime()) / (1000 * 60 * 60);
+    
+    // Check if new requested time is within 4 hours from now
+    const newDateTime = new Date(`${newDate}T${newTime}`);
+    const hoursUntilNew = (newDateTime.getTime() - now.getTime()) / (1000 * 60 * 60);
+    
+    return hoursUntilOriginal <= 4 || hoursUntilNew <= 4;
+  };
+
   const handleReschedule = async (newDate: string, newTimeslot: string) => {
     if (!selectedAppointment) return;
 
     try {
+      const isLate = isLateReschedule(
+        selectedAppointment.date,
+        selectedAppointment.timeslot,
+        newDate,
+        newTimeslot
+      );
+
       await updateAppointment(selectedAppointment.id, {
         date: newDate,
         timeslot: newTimeslot,
         status: "clientRescheduleRequested",
         rescheduleReason: "Client requested new appointment time",
         requestedDate: newDate,
-        requestedTime: newTimeslot
+        requestedTime: newTimeslot,
+        lateReschedule: isLate,
+        potentialLateFee: isLate ? 5 : 0
       });
 
       setIsRescheduleOpen(false);
       setSelectedAppointment(null);
-      toast({
-        title: "Reschedule Requested",
-        description: "Your reschedule request has been sent to admin for approval.",
-      });
+      
+      if (isLate) {
+        toast({
+          title: "Reschedule Requested",
+          description: "Your request has been sent. Note: A €5 late reschedule fee may apply due to timing policy.",
+          variant: "destructive",
+        });
+      } else {
+        toast({
+          title: "Reschedule Requested",
+          description: "Your reschedule request has been sent to admin for approval.",
+        });
+      }
     } catch (error) {
       toast({
         title: "Reschedule failed",

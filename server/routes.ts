@@ -627,6 +627,29 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const currentDoc = await appointmentRef.get();
       const currentData = currentDoc.data();
       
+      // Server-side late reschedule detection
+      if (updateData.status === "clientRescheduleRequested" || 
+          updateData.requestedDate || updateData.requestedTime) {
+        
+        const now = new Date();
+        const originalDateTime = new Date(`${currentData?.date}T${currentData?.timeslot || currentData?.time}`);
+        const hoursUntilOriginal = (originalDateTime.getTime() - now.getTime()) / (1000 * 60 * 60);
+        
+        let isLate = hoursUntilOriginal <= 4;
+        
+        // Check if new requested time is within 4 hours from now
+        if (updateData.requestedDate && updateData.requestedTime) {
+          const newDateTime = new Date(`${updateData.requestedDate}T${updateData.requestedTime}`);
+          const hoursUntilNew = (newDateTime.getTime() - now.getTime()) / (1000 * 60 * 60);
+          isLate = isLate || hoursUntilNew <= 4;
+        }
+        
+        if (isLate && !updateData.hasOwnProperty('lateReschedule')) {
+          updateData.lateReschedule = true;
+          updateData.potentialLateFee = 5;
+        }
+      }
+      
       // Update appointment in Firebase
       await appointmentRef.update({
         ...updateData,

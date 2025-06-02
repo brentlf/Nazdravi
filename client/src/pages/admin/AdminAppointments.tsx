@@ -393,10 +393,45 @@ export default function AdminAppointments() {
     return matchesSearch && matchesStatus;
   }) || [];
 
+  const isLateReschedule = (originalDate: string, originalTime: string, newDate?: string, newTime?: string): boolean => {
+    const now = new Date();
+    
+    // Check if reschedule request is within 4 hours of original appointment
+    const originalDateTime = new Date(`${originalDate}T${originalTime}`);
+    const hoursUntilOriginal = (originalDateTime.getTime() - now.getTime()) / (1000 * 60 * 60);
+    
+    // If new date/time provided, check if within 4 hours from now
+    if (newDate && newTime) {
+      const newDateTime = new Date(`${newDate}T${newTime}`);
+      const hoursUntilNew = (newDateTime.getTime() - now.getTime()) / (1000 * 60 * 60);
+      return hoursUntilOriginal <= 4 || hoursUntilNew <= 4;
+    }
+    
+    return hoursUntilOriginal <= 4;
+  };
+
   const handleAppointmentStatusChange = async (appointmentId: string, newStatus: "confirmed" | "done" | "reschedule_requested" | "cancelled_reschedule") => {
     try {
       const appointment = appointments?.find(apt => apt.id === appointmentId);
-      await updateAppointmentStatus(appointmentId, { status: newStatus });
+      
+      // Check for late reschedule when admin processes reschedule requests
+      let updateData: any = { status: newStatus };
+      
+      if (appointment && (newStatus === "confirmed" || newStatus === "reschedule_requested")) {
+        const isLate = isLateReschedule(
+          appointment.date,
+          appointment.timeslot,
+          appointment.requestedDate,
+          appointment.requestedTime
+        );
+        
+        if (isLate) {
+          updateData.lateReschedule = true;
+          updateData.potentialLateFee = 5;
+        }
+      }
+      
+      await updateAppointmentStatus(appointmentId, updateData);
       
       let title = "Appointment updated";
       let description = `Appointment status changed to ${newStatus}.`;

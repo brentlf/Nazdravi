@@ -326,7 +326,7 @@ Vee Nutrition Team`
     };
   }
 
-  getRescheduleRequestTemplate(clientName: string, clientEmail: string, originalDate: string, originalTime: string, reason?: string): EmailTemplate {
+  getRescheduleRequestTemplate(clientName: string, clientEmail: string, originalDate: string, originalTime: string, reason?: string, isLateReschedule?: boolean, potentialLateFee?: number): EmailTemplate {
     return {
       subject: `Reschedule Request from ${clientName}`,
       html: `
@@ -1046,13 +1046,19 @@ export const onClientRescheduleRequest = functions.firestore
       }
       
       try {
+        // Check if this is a late reschedule
+        const isLateReschedule = after.lateReschedule || false;
+        const potentialLateFee = after.potentialLateFee || 0;
+        
         // Send admin notification about client reschedule request
         const adminTemplate = emailService.getRescheduleRequestTemplate(
           clientName,
           clientEmail,
           after.date,
           appointmentTime,
-          rescheduleReason
+          rescheduleReason,
+          isLateReschedule,
+          potentialLateFee
         );
         console.log('📧 Admin reschedule notification template generated');
         
