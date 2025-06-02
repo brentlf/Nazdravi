@@ -809,25 +809,38 @@ export const onAppointmentConfirmed = functions.firestore
     
     if (before.status !== 'confirmed' && after.status === 'confirmed') {
       console.log('✅ Appointment confirmation detected');
-      console.log('👤 Client Name:', after.clientName);
-      console.log('📧 Client Email:', after.clientEmail);
+      
+      // Extract client details - handle different field name variations
+      const clientName = after.clientName || after.name || after.userName || 'Client';
+      const clientEmail = after.clientEmail || after.email || after.userEmail;
+      const appointmentTime = after.time || after.timeslot;
+      const appointmentType = after.type || after.servicePlan || 'consultation';
+      
+      console.log('👤 Client Name (resolved):', clientName);
+      console.log('📧 Client Email (resolved):', clientEmail);
       console.log('📅 Date:', after.date);
-      console.log('🕐 Time:', after.time);
-      console.log('📋 Type:', after.type);
+      console.log('🕐 Time (resolved):', appointmentTime);
+      console.log('📋 Type (resolved):', appointmentType);
+      
+      if (!clientEmail) {
+        console.error('❌ No client email found in appointment data');
+        console.error('📋 Available fields:', Object.keys(after));
+        return;
+      }
       
       try {
         const template = emailService.getAppointmentConfirmationTemplate(
-          after.clientName,
+          clientName,
           after.date,
-          after.time,
-          after.type
+          appointmentTime,
+          appointmentType
         );
         console.log('📧 Confirmation template generated');
         console.log('📋 Subject:', template.subject);
         
         const mailDoc = await admin.firestore().collection('mail').add({
-          to: after.clientEmail,
-          toName: after.clientName,
+          to: clientEmail,
+          toName: clientName,
           subject: template.subject,
           html: template.html,
           text: template.text,
@@ -837,7 +850,7 @@ export const onAppointmentConfirmed = functions.firestore
         });
         
         console.log('✅ Confirmation email queued successfully. Mail ID:', mailDoc.id);
-        console.log('📬 Email will be sent to:', after.clientEmail);
+        console.log('📬 Email will be sent to:', clientEmail);
         
       } catch (error) {
         console.error('❌ ERROR in onAppointmentConfirmed:', error);
@@ -857,16 +870,38 @@ export const onAppointmentCreated = functions.firestore
     
     console.log('🔍 DEBUG: NEW APPOINTMENT CREATED TRIGGER');
     console.log('🆔 Appointment ID:', appointmentId);
-    console.log('👤 Client Name:', appointmentData.clientName);
-    console.log('📧 Client Email:', appointmentData.clientEmail);
+    console.log('📋 RAW APPOINTMENT DATA:', JSON.stringify(appointmentData, null, 2));
+    
+    // Extract client details - handle different field name variations
+    const clientName = appointmentData.clientName || appointmentData.name || appointmentData.userName || 'Client';
+    const clientEmail = appointmentData.clientEmail || appointmentData.email || appointmentData.userEmail;
+    const appointmentTime = appointmentData.time || appointmentData.timeslot;
+    
+    console.log('👤 Client Name (resolved):', clientName);
+    console.log('📧 Client Email (resolved):', clientEmail);
     console.log('📅 Date:', appointmentData.date);
-    console.log('🕐 Time:', appointmentData.time);
-    console.log('📋 Type:', appointmentData.type);
+    console.log('🕐 Time (resolved):', appointmentTime);
+    console.log('📋 Type:', appointmentData.type || appointmentData.servicePlan);
     console.log('📊 Status:', appointmentData.status);
+    console.log('👤 User ID:', appointmentData.userId);
     console.log('🕒 Timestamp:', new Date().toISOString());
     
+    if (!clientEmail) {
+      console.error('❌ No client email found in appointment data');
+      console.error('📋 Available fields:', Object.keys(appointmentData));
+      return;
+    }
+    
     try {
-      const template = emailService.getAdminNewAppointmentTemplate(appointmentData);
+      // Create a normalized appointment object for the template
+      const normalizedAppointment = {
+        ...appointmentData,
+        clientName,
+        clientEmail,
+        time: appointmentTime
+      };
+      
+      const template = emailService.getAdminNewAppointmentTemplate(normalizedAppointment);
       console.log('📧 Admin notification template generated');
       console.log('📋 Subject:', template.subject);
       console.log('📬 Sending to admin: admin@veenutrition.com');
@@ -883,7 +918,7 @@ export const onAppointmentCreated = functions.firestore
       });
       
       console.log('✅ Admin notification queued successfully. Mail ID:', mailDoc.id);
-      console.log('📬 Admin will be notified about appointment from:', appointmentData.clientEmail);
+      console.log('📬 Admin will be notified about appointment from:', clientEmail);
       
     } catch (error) {
       console.error('❌ ERROR in onAppointmentCreated:', error);
