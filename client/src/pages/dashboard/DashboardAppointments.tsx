@@ -362,53 +362,54 @@ export default function DashboardAppointments() {
       const { db } = await import('@/lib/firebase');
       const userRef = doc(db, 'users', user.uid);
       
-      await updateDoc(userRef, {
-        // Basic demographic information
-        age: data.age ? parseInt(data.age) : null,
-        gender: data.gender,
-        otherGender: data.otherGender,
-        
-        // Basic health information
-        healthGoals: data.healthGoals,
-        otherHealthGoal: data.otherHealthGoal,
-        currentWeight: data.currentWeight,
-        targetWeight: data.targetWeight,
-        height: data.heightCm,
-        heightCm: data.heightCm, // Keep both for compatibility
-        activityLevel: data.activityLevel,
-        
-        // Medical information
-        medicalConditions: data.medicalConditions,
-        otherMedicalCondition: data.otherMedicalCondition,
-        medications: data.medications,
-        otherMedication: data.otherMedication,
-        allergies: data.allergies,
-        otherAllergy: data.otherAllergy,
-        
-        // Dietary information
-        dietaryRestrictions: data.dietaryRestrictions,
-        previousDietExperience: data.previousDietExperience,
-        
-        // Lifestyle information
-        motivationLevel: data.motivationLevel,
-        availableTimeForCooking: data.availableTimeForCooking,
-        availableCookingTime: data.availableTimeForCooking, // Keep both for compatibility
-        preferredMealTimes: data.preferredMealTimes,
-        budgetRange: data.budgetRange,
-        stressLevel: data.stressLevel,
-        sleepHours: data.sleepHours ? parseInt(data.sleepHours) : null,
-        waterIntake: data.waterIntake,
-        smokingStatus: data.smokingStatus,
-        alcoholConsumption: data.alcoholConsumption,
-        
-        // Additional notes
-        additionalNotes: data.additionalNotes,
-        
+      // Prepare update data, filtering out undefined values
+      const updateData: any = {
         // Metadata
         healthAssessmentCompleted: true,
         healthAssessmentCompletedAt: new Date(),
         updatedAt: new Date(),
-      });
+      };
+
+      // Add fields only if they have values
+      if (data.age) updateData.age = parseInt(data.age);
+      if (data.gender) updateData.gender = data.gender;
+      if (data.otherGender) updateData.otherGender = data.otherGender;
+      
+      if (data.healthGoals) updateData.healthGoals = data.healthGoals;
+      if (data.otherHealthGoal) updateData.otherHealthGoal = data.otherHealthGoal;
+      if (data.currentWeight) updateData.currentWeight = data.currentWeight;
+      if (data.targetWeight) updateData.targetWeight = data.targetWeight;
+      if (data.heightCm) {
+        updateData.height = data.heightCm;
+        updateData.heightCm = data.heightCm;
+      }
+      if (data.activityLevel) updateData.activityLevel = data.activityLevel;
+      
+      if (data.medicalConditions) updateData.medicalConditions = data.medicalConditions;
+      if (data.otherMedicalCondition) updateData.otherMedicalCondition = data.otherMedicalCondition;
+      if (data.medications) updateData.medications = data.medications;
+      if (data.otherMedication) updateData.otherMedication = data.otherMedication;
+      if (data.allergies) updateData.allergies = data.allergies;
+      if (data.otherAllergy) updateData.otherAllergy = data.otherAllergy;
+      
+      if (data.dietaryRestrictions) updateData.dietaryRestrictions = data.dietaryRestrictions;
+      if (data.previousDietExperience) updateData.previousDietExperience = data.previousDietExperience;
+      
+      if (data.motivationLevel) updateData.motivationLevel = data.motivationLevel;
+      if (data.availableTimeForCooking) {
+        updateData.availableTimeForCooking = data.availableTimeForCooking;
+        updateData.availableCookingTime = data.availableTimeForCooking;
+      }
+      if (data.preferredMealTimes) updateData.preferredMealTimes = data.preferredMealTimes;
+      if (data.budgetRange) updateData.budgetRange = data.budgetRange;
+      if (data.stressLevel) updateData.stressLevel = data.stressLevel;
+      if (data.sleepHours) updateData.sleepHours = parseInt(data.sleepHours);
+      if (data.waterIntake) updateData.waterIntake = data.waterIntake;
+      if (data.smokingStatus) updateData.smokingStatus = data.smokingStatus;
+      if (data.alcoholConsumption) updateData.alcoholConsumption = data.alcoholConsumption;
+      if (data.additionalNotes) updateData.additionalNotes = data.additionalNotes;
+
+      await updateDoc(userRef, updateData);
 
       setIsPreEvaluationOpen(false);
       setHasPreEvaluation(true);
