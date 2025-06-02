@@ -74,7 +74,6 @@ const consentSchema = z.object({
 type ConsentFormData = z.infer<typeof consentSchema>;
 
 export default function ConsentForm() {
-  const [step, setStep] = useState(1);
   const [isSubmitted, setIsSubmitted] = useState(false);
   const { toast } = useToast();
   const { user } = useAuth();
@@ -207,30 +206,14 @@ export default function ConsentForm() {
         <div className="text-center mb-8">
           <h1 className="text-3xl font-bold mb-4">{t("informed-consent-title", "consent")}</h1>
           <p className="text-muted-foreground">
-            {t("step-of", "consent")} {step} {t("of", "consent")} 2: {step === 1 ? t("step-1-title", "consent") : t("step-2-title", "consent")}
+            {t("consent-legal-requirements", "consent")}
           </p>
         </div>
 
-        {/* Progress Indicator */}
-        <div className="flex items-center justify-center mb-8">
-          <div className="flex items-center space-x-4">
-            <div className={`flex items-center justify-center w-8 h-8 rounded-full border-2 ${
-              step >= 1 ? 'bg-[#A5CBA4] border-[#A5CBA4] text-white' : 'border-gray-300'
-            }`}>
-              {step > 1 ? <Check className="w-4 h-4" /> : '1'}
-            </div>
-            <div className={`w-16 h-0.5 ${step >= 2 ? 'bg-[#A5CBA4]' : 'bg-gray-300'}`}></div>
-            <div className={`flex items-center justify-center w-8 h-8 rounded-full border-2 ${
-              step >= 2 ? 'bg-[#A5CBA4] border-[#A5CBA4] text-white' : 'border-gray-300'
-            }`}>
-              2
-            </div>
-          </div>
-        </div>
+
 
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)}>
-            {step === 1 && (
               <div className="space-y-6">
                 {/* Language and Location */}
                 <Card>
@@ -434,167 +417,14 @@ export default function ConsentForm() {
 
                 <div className="flex justify-end">
                   <Button 
-                    type="button" 
-                    onClick={handleNextStep}
-                    className="bg-[#A5CBA4] hover:bg-[#95bb94] text-white"
-                  >
-                    Continue to Health Screening
-                  </Button>
-                </div>
-              </div>
-            )}
-
-            {step === 2 && (
-              <div className="space-y-6">
-                <Card>
-                  <CardHeader>
-                    <CardTitle className="flex items-center gap-2">
-                      <FileText className="w-5 h-5 text-[#A5CBA4]" />
-                      Health Screening Information
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent className="space-y-4">
-                    
-                    <div className="grid md:grid-cols-3 gap-4">
-                      <FormField
-                        control={form.control}
-                        name="age"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel>Age *</FormLabel>
-                            <FormControl>
-                              <Input placeholder="e.g., 30" {...field} />
-                            </FormControl>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-
-                      <FormField
-                        control={form.control}
-                        name="height"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel>Height *</FormLabel>
-                            <FormControl>
-                              <Input placeholder="e.g., 170cm or 5ft 7in" {...field} />
-                            </FormControl>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-
-                      <FormField
-                        control={form.control}
-                        name="weight"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel>Weight *</FormLabel>
-                            <FormControl>
-                              <Input placeholder="e.g., 70kg or 154lbs" {...field} />
-                            </FormControl>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-                    </div>
-
-                    <FormField
-                      control={form.control}
-                      name="chronicConditions"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Chronic Conditions</FormLabel>
-                          <FormControl>
-                            <Textarea 
-                              placeholder="Please list any chronic health conditions (diabetes, hypertension, etc.) or write 'None'"
-                              {...field}
-                            />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-
-                    <FormField
-                      control={form.control}
-                      name="currentMedication"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Current Medications</FormLabel>
-                          <FormControl>
-                            <Textarea 
-                              placeholder="Please list current medications, supplements, or write 'None'"
-                              {...field}
-                            />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-
-                    <FormField
-                      control={form.control}
-                      name="recentBloodTests"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Recent Blood Tests (within 6 months) *</FormLabel>
-                          <Select onValueChange={field.onChange} defaultValue={field.value}>
-                            <FormControl>
-                              <SelectTrigger>
-                                <SelectValue placeholder="Have you had blood tests recently?" />
-                              </SelectTrigger>
-                            </FormControl>
-                            <SelectContent>
-                              <SelectItem value="yes">Yes, within 6 months</SelectItem>
-                              <SelectItem value="no">No recent blood tests</SelectItem>
-                            </SelectContent>
-                          </Select>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-
-                    <FormField
-                      control={form.control}
-                      name="gpContact"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>GP/Primary Care Physician Contact *</FormLabel>
-                          <FormControl>
-                            <Input 
-                              placeholder="Name and contact information of your GP/primary doctor"
-                              {...field}
-                            />
-                          </FormControl>
-                          <FormDescription>
-                            This information is required for coordination of care and emergency situations.
-                          </FormDescription>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-
-                  </CardContent>
-                </Card>
-
-                <div className="flex justify-between">
-                  <Button 
-                    type="button" 
-                    variant="outline"
-                    onClick={() => setStep(1)}
-                  >
-                    Back to Consents
-                  </Button>
-                  <Button 
                     type="submit"
+                    disabled={loading}
                     className="bg-[#A5CBA4] hover:bg-[#95bb94] text-white"
                   >
-                    Complete & Proceed to Booking
+                    {loading ? "Submitting..." : "Complete & Proceed to Booking"}
                   </Button>
                 </div>
               </div>
-            )}
           </form>
         </Form>
       </div>
