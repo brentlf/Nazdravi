@@ -191,19 +191,21 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const { email, name, date, time } = req.body;
       
-      // Queue email in Firebase with correct format
-      await db.collection("mail").add({
-        to: email,
-        toName: name,
-        type: "late-reschedule",
-        status: "pending",
-        data: { name, date, time },
-        createdAt: new Date()
-      });
+      // Send late reschedule notice directly using Resend
+      const emailSent = await resendService.sendLateRescheduleNotice(
+        email,
+        name,
+        date,
+        time
+      );
 
-      res.json({ success: true, message: "Late reschedule notice email queued" });
+      if (emailSent) {
+        res.json({ success: true, message: "Late reschedule notice sent successfully" });
+      } else {
+        res.status(500).json({ success: false, error: "Failed to send late reschedule notice" });
+      }
     } catch (error: any) {
-      console.error("Error queuing late reschedule email:", error);
+      console.error("Error sending late reschedule notice:", error);
       res.status(500).json({ success: false, error: error.message });
     }
   });
@@ -212,43 +214,23 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const { email, name, date, time, penaltyAmount } = req.body;
       
-      console.log("=== NO-SHOW EMAIL DEBUG ===");
-      console.log("Request body:", { email, name, date, time, penaltyAmount });
-      
-      // Queue email in Firebase with correct format for processMailQueue function
-      const docRef = await db.collection("mail").add({
-        to: email,
-        toName: name,
-        type: "no-show",
-        status: "pending",
-        data: { name, date, time, penaltyAmount },
-        createdAt: new Date()
-      });
-      
-      console.log("✅ SUCCESS: Written to Firebase with doc ID:", docRef.id);
-      
-      // Check if the document was processed within 10 seconds
-      setTimeout(async () => {
-        try {
-          const doc = await db.collection("mail").doc(docRef.id).get();
-          const data = doc.data();
-          console.log("📧 Email status after 10 seconds:", data?.status);
-          if (data?.status === "sent") {
-            console.log("✅ Email successfully processed and sent!");
-          } else if (data?.status === "failed") {
-            console.log("❌ Email processing failed:", data?.error);
-          } else {
-            console.log("⏳ Email still pending - Firebase Functions may not be working");
-          }
-        } catch (error) {
-          console.error("Error checking email status:", error);
-        }
-      }, 10000);
+      // Send no-show penalty notice directly using Resend
+      const emailSent = await resendService.sendNoShowNotice(
+        email,
+        name,
+        date,
+        time,
+        penaltyAmount
+      );
 
-      res.json({ success: true, message: "No-show notice email queued", docId: docRef.id });
+      if (emailSent) {
+        res.json({ success: true, message: "No-show penalty notice sent successfully" });
+      } else {
+        res.status(500).json({ success: false, error: "Failed to send no-show penalty notice" });
+      }
     } catch (error: any) {
-      console.error("❌ FIREBASE ERROR:", error.message);
-      res.status(500).json({ success: false, error: error.message, code: error.code });
+      console.error("Error sending no-show penalty notice:", error);
+      res.status(500).json({ success: false, error: error.message });
     }
   });
 

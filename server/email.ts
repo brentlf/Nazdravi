@@ -897,6 +897,29 @@ If you have any questions, please contact us.
 Best regards,
 Vee Nutrition Team`
     };
+    return {
+      subject: `${clientName} has upgraded to ${planType} plan.`,
+      html: `
+        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%); padding: 20px;">
+          <div style="background: white; padding: 30px; border-radius: 10px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);">
+            <div style="text-align: center; margin-bottom: 30px;">
+              <h1 style="color: #A5CBA4; margin: 0;">🌿 Vee Nutrition Admin</h1>
+            </div>
+            
+            <h2 style="color: #333; margin-bottom: 20px;">Plan Upgrade Notification</h2>
+            
+            <p style="color: #666; line-height: 1.6; margin-bottom: 20px;">
+              ${clientName} has upgraded their service plan to ${planType}.
+            </p>
+            
+            <div style="border-top: 1px solid #eee; padding-top: 20px; margin-top: 30px; text-align: center; color: #999; font-size: 14px;">
+              <p>Vee Nutrition Admin Dashboard</p>
+            </div>
+          </div>
+        </div>
+      `,
+      text: `${clientName} has upgraded to ${planType} plan.`
+    };
   }
 
   private getAdminClientMessageTemplate(
