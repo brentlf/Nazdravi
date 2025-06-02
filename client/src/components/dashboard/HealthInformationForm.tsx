@@ -103,122 +103,47 @@ export function HealthInformationForm({ userId }: HealthInformationFormProps) {
       try {
         setIsDataLoading(true);
         
-        let combinedData: any = {};
-        
-        // 1. Load from user profile (primary source)
+        // Load from user profile (single source of truth for health data)
         const userRef = doc(db, "users", userId);
         const userSnap = await getDoc(userRef);
         
+        let healthData: any = {};
+        
         if (userSnap.exists()) {
           const userData = userSnap.data();
-          console.log('📋 User profile data found:', userData);
-          combinedData = {
-            ...combinedData,
+          console.log('📋 Loading health data from user profile:', userData);
+          
+          healthData = {
             age: userData.age?.toString() || "",
             height: userData.height || "",
             weight: userData.currentWeight || "",
             medicalConditions: userData.medicalConditions || [],
-            allergies: userData.allergies || "",
-            currentMedications: userData.medications || "",
-            dietaryRestrictions: userData.dietaryRestrictions || "",
+            allergies: userData.allergies || [],
+            currentMedications: userData.medications || [],
+            dietaryRestrictions: userData.dietaryRestrictions || [],
             healthGoals: userData.healthGoals || [],
             activityLevel: userData.activityLevel || "",
+            stressLevel: userData.stressLevel || "",
+            sleepHours: userData.sleepHours?.toString() || "",
+            waterIntake: userData.waterIntake || "",
+            smokingStatus: userData.smokingStatus || "",
+            alcoholConsumption: userData.alcoholConsumption || "",
             emergencyContactName: userData.emergencyContact || "",
             emergencyContactPhone: userData.emergencyContactPhone || "",
             gpName: userData.gpContact || "",
             gpPhone: userData.gpPhone || "",
           };
+        } else {
+          console.log('⚠️ No user profile data found for user:', userId);
         }
         
-        // 2. Load from pre-evaluation forms collection
-        const preEvaluationRef = doc(db, "preEvaluationForms", userId);
-        const preEvaluationSnap = await getDoc(preEvaluationRef);
-        
-        if (preEvaluationSnap.exists()) {
-          const preEvalData = preEvaluationSnap.data();
-          console.log('📋 Pre-evaluation form data found:', preEvalData);
-          combinedData = {
-            ...combinedData,
-            age: preEvalData.age?.toString() || combinedData.age,
-            height: preEvalData.heightCm || preEvalData.height || combinedData.height,
-            weight: preEvalData.currentWeight || combinedData.weight,
-            medicalConditions: preEvalData.medicalConditions || combinedData.medicalConditions,
-            allergies: preEvalData.allergies || combinedData.allergies,
-            currentMedications: preEvalData.medications || combinedData.currentMedications,
-            dietaryRestrictions: preEvalData.dietaryRestrictions || combinedData.dietaryRestrictions,
-            healthGoals: preEvalData.healthGoals || combinedData.healthGoals,
-            activityLevel: preEvalData.activityLevel || combinedData.activityLevel,
-            stressLevel: preEvalData.stressLevel || "",
-            sleepHours: preEvalData.sleepHours?.toString() || "",
-            waterIntake: preEvalData.waterIntake || "",
-            smokingStatus: preEvalData.smokingStatus || "",
-            alcoholConsumption: preEvalData.alcoholConsumption || "",
-          };
-        }
-        
-        // 3. Load from consent records collection
-        try {
-          const { query, where, orderBy, limit, getDocs, collection } = await import('firebase/firestore');
-          const consentQuery = query(
-            collection(db, "consentRecords"),
-            where("userId", "==", userId),
-            orderBy("submittedAt", "desc"),
-            limit(1)
-          );
-          const consentSnapshot = await getDocs(consentQuery);
-          
-          if (!consentSnapshot.empty) {
-            const consentData = consentSnapshot.docs[0].data();
-            console.log('📋 Consent record data found:', consentData);
-            combinedData = {
-              ...combinedData,
-              emergencyContactName: consentData.emergencyContactName || combinedData.emergencyContactName,
-              emergencyContactPhone: consentData.emergencyContactPhone || combinedData.emergencyContactPhone,
-              gpName: consentData.gpContact || combinedData.gpName,
-              gpPhone: consentData.gpPhone || combinedData.gpPhone,
-              medicalConditions: consentData.medicalConditions?.length ? consentData.medicalConditions : combinedData.medicalConditions,
-              currentMedications: consentData.medications?.length ? consentData.medications : combinedData.currentMedications,
-              allergies: consentData.allergies?.length ? consentData.allergies : combinedData.allergies,
-            };
-          }
-        } catch (error) {
-          console.log('No consent records found or error accessing:', error);
-        }
-        
-        // 4. Load from health assessments collection
-        try {
-          const { query, where, orderBy, limit, getDocs, collection } = await import('firebase/firestore');
-          const healthQuery = query(
-            collection(db, "healthAssessments"),
-            where("userId", "==", userId),
-            orderBy("createdAt", "desc"),
-            limit(1)
-          );
-          const healthSnapshot = await getDocs(healthQuery);
-          
-          if (!healthSnapshot.empty) {
-            const healthData = healthSnapshot.docs[0].data();
-            console.log('📋 Health assessment data found:', healthData);
-            combinedData = {
-              ...combinedData,
-              age: healthData.age?.toString() || combinedData.age,
-              height: healthData.height || combinedData.height,
-              weight: healthData.weight || combinedData.weight,
-              emergencyContactName: healthData.emergencyContact || combinedData.emergencyContactName,
-              gpName: healthData.gpContact || combinedData.gpName,
-            };
-          }
-        } catch (error) {
-          console.log('No health assessments found or error accessing:', error);
-        }
-        
-        console.log('📊 Combined health data being set as defaults:', combinedData);
+        console.log('📊 Health data being set as defaults:', healthData);
         
         // Store original data for comparison
-        setOriginalData(combinedData);
+        setOriginalData(healthData);
         
         // Set form values with Firebase data as defaults
-        form.reset(combinedData);
+        form.reset(healthData);
         
       } catch (error) {
         console.error("Error loading health data:", error);
