@@ -20,6 +20,49 @@ export default function ServicePlanStatusWidget({ user }: ServicePlanStatusWidge
   if (!currentUser) return null;
 
   const isCompleteProgramUser = currentUser.servicePlan === 'complete-program';
+  const hasPlannedDowngrade = currentUser.plannedDowngrade === true;
+  
+  // Check for planned downgrade first
+  if (hasPlannedDowngrade && isCompleteProgramUser) {
+    const downgradeDate = currentUser.downgradeEffectiveDate && typeof currentUser.downgradeEffectiveDate === 'object' && 'toDate' in currentUser.downgradeEffectiveDate ? 
+      (currentUser.downgradeEffectiveDate as any).toDate() : 
+      new Date(currentUser.downgradeEffectiveDate as string);
+
+    return (
+      <Card className="border-2 border-amber-200 dark:border-amber-800 bg-gradient-to-r from-amber-50 to-orange-50 dark:from-amber-900/20 dark:to-orange-900/20">
+        <CardContent className="p-6">
+          <div className="flex items-start justify-between">
+            <div className="flex-1">
+              <div className="flex items-center gap-2 mb-3">
+                <Clock className="w-5 h-5 text-amber-600" />
+                <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
+                  Downgrade Scheduled
+                </h3>
+                <Badge variant="outline" className="text-amber-600 border-amber-600">
+                  Complete Program → Pay As You Go
+                </Badge>
+              </div>
+              <p className="text-gray-600 dark:text-gray-300 mb-4">
+                Your downgrade is scheduled. Your plan will change to Pay-As-You-Go on {downgradeDate ? downgradeDate.toLocaleDateString() : 'your next billing date'}. 
+                You'll continue enjoying full Complete Program access until then.
+              </p>
+              <div className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400">
+                <CheckCircle className="w-4 h-4 text-green-600" />
+                Current benefits still active until downgrade date
+              </div>
+            </div>
+            <div className="ml-6">
+              <Button asChild variant="outline" size="sm">
+                <Link href="/dashboard/profile">
+                  Manage Plan
+                </Link>
+              </Button>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+    );
+  }
   
   // Get program status based on actual database dates
   const getProgramStatus = () => {
