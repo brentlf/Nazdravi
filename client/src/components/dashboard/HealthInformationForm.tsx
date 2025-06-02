@@ -19,6 +19,7 @@ const healthInfoSchema = z.object({
   height: z.string().optional(),
   weight: z.string().optional(),
   medicalConditions: z.array(z.string()).optional(),
+  otherMedicalCondition: z.string().optional(),
   allergies: z.string().optional(),
   currentMedications: z.string().optional(),
   dietaryRestrictions: z.string().optional(),
@@ -27,6 +28,7 @@ const healthInfoSchema = z.object({
   gpName: z.string().optional(),
   gpPhone: z.string().optional(),
   healthGoals: z.array(z.string()).optional(),
+  otherHealthGoal: z.string().optional(),
   activityLevel: z.string().optional(),
   stressLevel: z.string().optional(),
   sleepHours: z.string().optional(),
@@ -55,6 +57,7 @@ export function HealthInformationForm({ userId }: HealthInformationFormProps) {
       height: "",
       weight: "",
       medicalConditions: [],
+      otherMedicalCondition: "",
       allergies: "",
       currentMedications: "",
       dietaryRestrictions: "",
@@ -63,6 +66,7 @@ export function HealthInformationForm({ userId }: HealthInformationFormProps) {
       gpName: "",
       gpPhone: "",
       healthGoals: [],
+      otherHealthGoal: "",
       activityLevel: "",
       stressLevel: "",
       sleepHours: "",
@@ -85,6 +89,12 @@ export function HealthInformationForm({ userId }: HealthInformationFormProps) {
     "other",
     "none"
   ];
+
+  // Watch for "other" selections
+  const watchedMedicalConditions = form.watch("medicalConditions");
+  const watchedHealthGoals = form.watch("healthGoals");
+  const hasOtherMedicalCondition = watchedMedicalConditions?.includes("other");
+  const hasOtherHealthGoal = watchedHealthGoals?.includes("other");
 
   const healthGoalOptions = [
     "weight-loss",
@@ -365,6 +375,18 @@ export function HealthInformationForm({ userId }: HealthInformationFormProps) {
                 </div>
               ))}
             </div>
+
+            {/* Conditional input for other medical condition */}
+            {hasOtherMedicalCondition && (
+              <div className="mt-4">
+                <Label htmlFor="otherMedicalCondition">Please specify other medical condition</Label>
+                <Input
+                  id="otherMedicalCondition"
+                  {...form.register("otherMedicalCondition")}
+                  placeholder="Describe your medical condition"
+                />
+              </div>
+            )}
           </div>
 
           {/* Health Details */}
@@ -425,6 +447,18 @@ export function HealthInformationForm({ userId }: HealthInformationFormProps) {
                 </div>
               ))}
             </div>
+
+            {/* Conditional input for other health goal */}
+            {hasOtherHealthGoal && (
+              <div className="mt-4">
+                <Label htmlFor="otherHealthGoal">Please specify other health goal</Label>
+                <Input
+                  id="otherHealthGoal"
+                  {...form.register("otherHealthGoal")}
+                  placeholder="Describe your health goal"
+                />
+              </div>
+            )}
           </div>
 
           {/* Lifestyle Factors */}
