@@ -176,6 +176,32 @@ export function MessageThread() {
         messageType: "text"
       });
 
+      // Send email notification to admin
+      try {
+        const response = await fetch('/api/emails/message-notification', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            fromUserId: user.uid,
+            toUserId: "admin",
+            messageType: "General",
+            urgency: "Medium",
+            content: data.text
+          }),
+        });
+        
+        if (response.ok) {
+          console.log('Admin notification sent successfully');
+        } else {
+          console.error('Failed to send admin notification');
+        }
+      } catch (emailError) {
+        console.error('Email notification error:', emailError);
+        // Don't fail the message sending if email notification fails
+      }
+
       form.reset();
       // Messages will update automatically via real-time listener
     } catch (error) {

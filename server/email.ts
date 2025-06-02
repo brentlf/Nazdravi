@@ -326,6 +326,20 @@ export class ResendService {
     });
   }
 
+  async sendClientNewMessage(
+    clientName: string,
+    clientEmail: string
+  ): Promise<boolean> {
+    const template = this.getClientNewMessageTemplate(clientName);
+    return this.sendEmail({
+      to: clientEmail,
+      toName: clientName,
+      subject: template.subject,
+      html: template.html,
+      text: template.text
+    });
+  }
+
   async sendPaymentReminder(email: string, name: string, amount: number, invoiceNumber: string, paymentUrl: string): Promise<boolean> {
     const template = this.getPaymentReminderTemplate(name, amount, invoiceNumber, paymentUrl);
     return this.sendEmail({

@@ -187,6 +187,88 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  app.post("/api/emails/message-notification", async (req, res) => {
+    try {
+      const { fromUserId, toUserId, messageType, urgency, content } = req.body;
+      
+      console.log('🔍 DEBUG: Message notification request:', {
+        fromUserId,
+        toUserId,
+        messageType,
+        urgency
+      });
+      
+      if (fromUserId === 'admin' && toUserId !== 'admin') {
+        // Admin sent message to client - notify the client
+        console.log('📧 Admin → Client message, notifying client');
+        
+        // Get client user details from Firestore
+        const clientDoc = await db.collection('users').doc(toUserId).get();
+        
+        if (clientDoc.exists) {
+          const clientData = clientDoc.data();
+          
+          if (clientData && clientData.email) {
+            // Send client message notification
+            const emailSent = await resendService.sendClientNewMessage(
+              clientData.name || 'Client',
+              clientData.email
+            );
+            
+            if (emailSent) {
+              console.log('✅ Client message notification sent to:', clientData.email);
+              res.json({ success: true, message: "Client message notification sent successfully" });
+            } else {
+              res.status(500).json({ success: false, error: "Failed to send client message notification" });
+            }
+          } else {
+            res.status(400).json({ success: false, error: "Client email not found" });
+          }
+        } else {
+          res.status(404).json({ success: false, error: "Client not found" });
+        }
+        
+      } else if (fromUserId !== 'admin' && toUserId === 'admin') {
+        // Client sent message to admin - notify admin
+        console.log('📧 Client → Admin message, notifying admin');
+        
+        // Get client user details for context
+        const clientDoc = await db.collection('users').doc(fromUserId).get();
+        
+        if (clientDoc.exists) {
+          const clientData = clientDoc.data();
+          
+          if (clientData) {
+            // Send admin message notification
+            const emailSent = await resendService.sendAdminNewClientMessage(
+              clientData.name || 'Unknown Client',
+              clientData.email || 'unknown@email.com',
+              messageType || 'General',
+              urgency || 'Medium'
+            );
+            
+            if (emailSent) {
+              console.log('✅ Admin message notification sent to: admin@veenutrition.com');
+              res.json({ success: true, message: "Admin message notification sent successfully" });
+            } else {
+              res.status(500).json({ success: false, error: "Failed to send admin message notification" });
+            }
+          } else {
+            res.status(400).json({ success: false, error: "Client data not found" });
+          }
+        } else {
+          res.status(404).json({ success: false, error: "Client not found" });
+        }
+      } else {
+        res.status(400).json({ success: false, error: "Invalid message notification request" });
+      }
+      
+    } catch (error: any) {
+      console.error("Error sending message notification:", error);
+      res.status(500).json({ success: false, error: error.message });
+    }
+  });
+
   app.post("/api/emails/late-reschedule", async (req, res) => {
     try {
       const { email, name, date, time } = req.body;
