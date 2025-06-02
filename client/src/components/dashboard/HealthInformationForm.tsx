@@ -273,8 +273,68 @@ export function HealthInformationForm({ userId }: HealthInformationFormProps) {
         return;
       }
 
-      // The health information form only updates the user profile
-      // PreEvaluation data is handled separately when users complete appointment assessments
+      // Update user profile with health information
+      const { doc, updateDoc } = await import('firebase/firestore');
+      const { db } = await import('@/lib/firebase');
+      const userRef = doc(db, 'users', userId);
+      
+      // Prepare update data, filtering out undefined values
+      const updateData: any = {
+        updatedAt: new Date(),
+      };
+
+      // Add fields only if they have values
+      if (data.age) updateData.age = parseInt(data.age);
+      if (data.gender) updateData.gender = data.gender;
+      if (data.otherGender) updateData.otherGender = data.otherGender;
+      if (data.height) updateData.height = data.height;
+      if (data.weight) updateData.currentWeight = data.weight;
+      if (data.healthGoals) updateData.healthGoals = data.healthGoals;
+      if (data.otherHealthGoal) updateData.otherHealthGoal = data.otherHealthGoal;
+      if (data.medicalConditions) updateData.medicalConditions = data.medicalConditions;
+      if (data.otherMedicalCondition) updateData.otherMedicalCondition = data.otherMedicalCondition;
+      if (data.currentMedications) updateData.medications = data.currentMedications;
+      if (data.otherMedication) updateData.otherMedication = data.otherMedication;
+      if (data.allergies) updateData.allergies = data.allergies;
+      if (data.otherAllergy) updateData.otherAllergy = data.otherAllergy;
+      if (data.dietaryRestrictions) updateData.dietaryRestrictions = data.dietaryRestrictions;
+      if (data.activityLevel) updateData.activityLevel = data.activityLevel;
+      if (data.motivationLevel) updateData.motivationLevel = data.motivationLevel;
+      if (data.availableTimeForCooking) updateData.availableTimeForCooking = data.availableTimeForCooking;
+      if (data.preferredMealTimes) updateData.preferredMealTimes = data.preferredMealTimes;
+      if (data.budgetRange) updateData.budgetRange = data.budgetRange;
+      if (data.stressLevel) updateData.stressLevel = data.stressLevel;
+      if (data.sleepHours) updateData.sleepHours = parseInt(data.sleepHours);
+      if (data.waterIntake) updateData.waterIntake = data.waterIntake;
+      if (data.smokingStatus) updateData.smokingStatus = data.smokingStatus;
+      if (data.alcoholConsumption) updateData.alcoholConsumption = data.alcoholConsumption;
+      if (data.additionalNotes) updateData.additionalNotes = data.additionalNotes;
+      if (data.emergencyContactName) updateData.emergencyContactName = data.emergencyContactName;
+      if (data.emergencyContactPhone) updateData.emergencyContactPhone = data.emergencyContactPhone;
+      if (data.gpName) updateData.gpName = data.gpName;
+      if (data.gpPhone) updateData.gpPhone = data.gpPhone;
+
+      await updateDoc(userRef, updateData);
+
+      // Also update preEvaluation collection for consistency
+      const { setDoc } = await import('firebase/firestore');
+      const preEvaluationRef = doc(db, 'preEvaluationForms', userId);
+      
+      const preEvaluationData: any = {
+        userId: userId,
+        userEmail: user?.email,
+        completedAt: new Date(),
+        lastUpdated: new Date(),
+      };
+
+      // Add all the health data to preEvaluation as well
+      Object.keys(updateData).forEach(key => {
+        if (key !== 'updatedAt') {
+          preEvaluationData[key] = updateData[key];
+        }
+      });
+
+      await setDoc(preEvaluationRef, preEvaluationData, { merge: true });
 
       // Send admin notification about health updates
       try {
@@ -540,15 +600,6 @@ export function HealthInformationForm({ userId }: HealthInformationFormProps) {
           <div className="space-y-4">
             <h3 className="text-lg font-semibold">Additional Health Details</h3>
             <div className="grid grid-cols-1 gap-4">
-              <div>
-                <Label htmlFor="currentMedications">Additional Medications/Supplements</Label>
-                <Textarea
-                  id="currentMedications"
-                  {...form.register("currentMedications")}
-                  placeholder="List any additional medications, supplements, or treatments not mentioned above"
-                  rows={3}
-                />
-              </div>
               <div>
                 <Label htmlFor="dietaryRestrictions">Dietary Restrictions</Label>
                 <Textarea

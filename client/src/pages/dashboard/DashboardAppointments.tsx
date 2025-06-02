@@ -89,6 +89,10 @@ const preEvaluationSchema = z.object({
   smokingStatus: z.string().optional(),
   alcoholConsumption: z.string().optional(),
   additionalNotes: z.string().optional(),
+  emergencyContactName: z.string().optional(),
+  emergencyContactPhone: z.string().optional(),
+  gpName: z.string().optional(),
+  gpPhone: z.string().optional(),
 });
 
 type AppointmentFormData = z.infer<typeof appointmentSchema>;
@@ -408,8 +412,32 @@ export default function DashboardAppointments() {
       if (data.smokingStatus) updateData.smokingStatus = data.smokingStatus;
       if (data.alcoholConsumption) updateData.alcoholConsumption = data.alcoholConsumption;
       if (data.additionalNotes) updateData.additionalNotes = data.additionalNotes;
+      if (data.emergencyContactName) updateData.emergencyContactName = data.emergencyContactName;
+      if (data.emergencyContactPhone) updateData.emergencyContactPhone = data.emergencyContactPhone;
+      if (data.gpName) updateData.gpName = data.gpName;
+      if (data.gpPhone) updateData.gpPhone = data.gpPhone;
 
       await updateDoc(userRef, updateData);
+
+      // Also save to preEvaluation collection for consistency
+      const { setDoc } = await import('firebase/firestore');
+      const preEvaluationRef = doc(db, 'preEvaluationForms', user.uid);
+      
+      const preEvaluationData: any = {
+        userId: user.uid,
+        userEmail: user.email,
+        completedAt: new Date(),
+        lastUpdated: new Date(),
+      };
+
+      // Add all the health data to preEvaluation as well
+      Object.keys(updateData).forEach(key => {
+        if (key !== 'healthAssessmentCompleted' && key !== 'healthAssessmentCompletedAt' && key !== 'updatedAt') {
+          preEvaluationData[key] = updateData[key];
+        }
+      });
+
+      await setDoc(preEvaluationRef, preEvaluationData, { merge: true });
 
       setIsPreEvaluationOpen(false);
       setHasPreEvaluation(true);
@@ -1800,6 +1828,65 @@ export default function DashboardAppointments() {
                       </FormItem>
                     )}
                   />
+                </div>
+
+                {/* Emergency Contacts */}
+                <div className="space-y-4">
+                  <h3 className="text-lg font-semibold text-sage-dark">Emergency Contacts</h3>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <FormField
+                      control={preEvaluationForm.control}
+                      name="emergencyContactName"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Emergency Contact Name</FormLabel>
+                          <FormControl>
+                            <Input placeholder="Full name" {...field} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <FormField
+                      control={preEvaluationForm.control}
+                      name="emergencyContactPhone"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Emergency Contact Phone</FormLabel>
+                          <FormControl>
+                            <Input placeholder="Phone number" {...field} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <FormField
+                      control={preEvaluationForm.control}
+                      name="gpName"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>GP Name</FormLabel>
+                          <FormControl>
+                            <Input placeholder="Your doctor's name" {...field} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <FormField
+                      control={preEvaluationForm.control}
+                      name="gpPhone"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>GP Phone</FormLabel>
+                          <FormControl>
+                            <Input placeholder="Doctor's phone number" {...field} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </div>
                 </div>
 
                 <div className="flex justify-end gap-4 pt-6">
