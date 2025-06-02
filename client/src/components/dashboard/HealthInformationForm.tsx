@@ -115,6 +115,7 @@ export function HealthInformationForm({ userId }: HealthInformationFormProps) {
         
         if (preEvaluationSnap.exists()) {
           const preEvalData = preEvaluationSnap.data();
+          console.log('📋 Pre-evaluation data found:', preEvalData);
           combinedData = {
             ...combinedData,
             age: preEvalData.age?.toString() || "",
@@ -132,10 +133,13 @@ export function HealthInformationForm({ userId }: HealthInformationFormProps) {
             smokingStatus: preEvalData.smokingStatus || "",
             alcoholConsumption: preEvalData.alcoholConsumption || "",
           };
+        } else {
+          console.log('⚠️ No pre-evaluation data found for user:', userId);
         }
         
         if (consentSnap.exists()) {
           const consentData = consentSnap.data();
+          console.log('📋 Consent form data found:', consentData);
           combinedData = {
             ...combinedData,
             emergencyContactName: consentData.emergencyContactName || "",
@@ -143,7 +147,11 @@ export function HealthInformationForm({ userId }: HealthInformationFormProps) {
             gpName: consentData.gpName || "",
             gpPhone: consentData.gpPhone || "",
           };
+        } else {
+          console.log('⚠️ No consent form data found for user:', userId);
         }
+        
+        console.log('📊 Combined health data being set as defaults:', combinedData);
         
         // Store original data for comparison
         setOriginalData(combinedData);
