@@ -171,11 +171,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
       
       // Queue email in Firebase with correct format
       await db.collection("mail").add({
-        to: email,
-        toName: name,
+        to: [email],
+        message: {
+          subject: `Appointment Cancelled - ${date}`,
+          html: `<p>Dear ${name},</p><p>Your appointment on ${date} at ${time} has been cancelled. Reason: ${reason}</p>`,
+          text: `Dear ${name}, Your appointment on ${date} at ${time} has been cancelled. Reason: ${reason}`
+        },
         type: "appointment-cancelled",
-        status: "pending",
-        data: { name, date, time, reason },
         createdAt: new Date()
       });
 

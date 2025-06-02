@@ -1348,13 +1348,13 @@ export const sendDailyReminders = functions.pubsub
       );
       
       return admin.firestore().collection('mail').add({
-        to: appointment.clientEmail,
-        toName: appointment.clientName,
-        subject: template.subject,
-        html: template.html,
-        text: template.text,
+        to: [appointment.clientEmail || appointment.email],
+        message: {
+          subject: template.subject,
+          html: template.html,
+          text: template.text,
+        },
         type: 'appointment-reminder',
-        status: 'pending',
         createdAt: admin.firestore.FieldValue.serverTimestamp(),
       });
     });
