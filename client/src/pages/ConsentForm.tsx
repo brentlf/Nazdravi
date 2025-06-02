@@ -47,28 +47,25 @@ const consentSchema = z.object({
   }),
   saClientConsent: z.boolean().optional(),
   
-  // Health screening
-  age: z.string().min(1, "Age is required").refine(val => parseInt(val) >= 18 && parseInt(val) <= 120, {
-    message: "Age must be between 18 and 120"
-  }),
-  height: z.string().min(1, "Height is required"),
-  weight: z.string().min(1, "Weight is required"),
-  chronicConditions: z.string(),
-  currentMedication: z.string(),
-  recentBloodTests: z.enum(["yes", "no"], {
-    required_error: "Please specify if you've had recent blood tests"
-  }),
-  gpContact: z.string().min(1, "GP contact information is required"),
-  
   // Service language preference
   preferredLanguage: z.enum(["english", "czech"], {
     required_error: "Please select your preferred consultation language"
   }),
   
   // Location for compliance
-  currentLocation: z.enum(["uk", "south-africa", "czech-republic", "netherlands"], {
+  currentLocation: z.enum(["uk", "south-africa", "czech-republic", "netherlands", "other"], {
     required_error: "Please specify your current location"
-  })
+  }),
+  customLocation: z.string().optional()
+}).refine((data) => {
+  // If "other" is selected, customLocation must be provided
+  if (data.currentLocation === "other") {
+    return data.customLocation && data.customLocation.trim().length > 0;
+  }
+  return true;
+}, {
+  message: "Please specify your country/location when selecting 'Other'",
+  path: ["customLocation"]
 });
 
 type ConsentFormData = z.infer<typeof consentSchema>;
@@ -88,14 +85,13 @@ export default function ConsentForm() {
       videoConsentGDPR: false,
       resultsVariabilityConsent: false,
       saClientConsent: false,
-      chronicConditions: "",
-      currentMedication: "",
-      gpContact: "",
+      customLocation: "",
     },
   });
 
   const watchedLocation = form.watch("currentLocation");
   const isSouthAfrica = watchedLocation === "south-africa";
+  const isOtherLocation = watchedLocation === "other";
 
   const onSubmit = async (data: ConsentFormData) => {
     try {
@@ -264,12 +260,33 @@ export default function ConsentForm() {
                               <SelectItem value="south-africa">🇿🇦 South Africa</SelectItem>
                               <SelectItem value="czech-republic">🇨🇿 Czech Republic</SelectItem>
                               <SelectItem value="netherlands">🇳🇱 Netherlands (Expats)</SelectItem>
+                              <SelectItem value="other">🌍 Other</SelectItem>
                             </SelectContent>
                           </Select>
                           <FormMessage />
                         </FormItem>
                       )}
                     />
+
+                    {/* Conditional custom location input */}
+                    {isOtherLocation && (
+                      <FormField
+                        control={form.control}
+                        name="customLocation"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Please specify your country/location *</FormLabel>
+                            <FormControl>
+                              <Input 
+                                placeholder="Enter your country or location" 
+                                {...field} 
+                              />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                    )}
                   </CardContent>
                 </Card>
 
