@@ -28,7 +28,7 @@ interface SendEmailParams {
   text?: string;
 }
 
-export class MailerLiteService {
+export class ResendService {
   async sendEmail(params: SendEmailParams): Promise<boolean> {
     console.log('🔍 DEBUG: sendEmail called with params:', {
       to: params.to,
@@ -774,4 +774,4 @@ Vee Nutrition Team`
   }
 }
 
-export const mailerLiteService = new MailerLiteService();
+export const resendService = new ResendService();

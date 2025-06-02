@@ -1,6 +1,6 @@
 import { db } from './firebase';
 import Stripe from 'stripe';
-import { mailerLiteService } from './email';
+import { resendService } from './email';
 import { pdfService } from './pdf-service';
 
 if (!process.env.STRIPE_SECRET_KEY) {
@@ -156,7 +156,7 @@ export class InvoiceManagementService {
     }
 
     // Send email notification
-    await mailerLiteService.sendInvoiceGenerated(
+    await resendService.sendInvoiceGenerated(
       data.clientEmail,
       data.clientName,
       totalAmount,
@@ -259,7 +259,7 @@ export class InvoiceManagementService {
     }
 
     // Send email notification
-    await mailerLiteService.sendInvoiceGenerated(
+    await resendService.sendInvoiceGenerated(
       data.clientEmail,
       data.clientName,
       data.subscriptionAmount,
@@ -711,7 +711,7 @@ export class InvoiceManagementService {
 
     // Send email notification
     try {
-      await mailerLiteService.sendInvoiceGenerated(
+      await resendService.sendInvoiceGenerated(
         data.clientEmail,
         data.clientName,
         data.amount,

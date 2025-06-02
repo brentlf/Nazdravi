@@ -1,7 +1,7 @@
 import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { db } from "./firebase";
-import { mailerLiteService } from "./email";
+import { resendService } from "./email";
 import { InvoiceManagementService } from "./invoice-management";
 import { pdfService } from "./pdf-service";
 
@@ -84,7 +84,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const { email, name, date, time, meetingUrl } = req.body;
       
       // Send email directly using working Resend service
-      const emailSent = await mailerLiteService.sendAppointmentConfirmation(
+      const emailSent = await resendService.sendAppointmentConfirmation(
         email, 
         name, 
         date, 
@@ -171,7 +171,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const html = `<p>Dear ${name},</p><p>Your appointment on ${date} at ${time} has been cancelled. Reason: ${reason}</p>`;
       const text = `Dear ${name}, Your appointment on ${date} at ${time} has been cancelled. Reason: ${reason}`;
       
-      const emailSent = await mailerLiteService.sendEmail({
+      const emailSent = await resendService.sendEmail({
         to: email,
         toName: name,
         subject,
