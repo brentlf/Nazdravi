@@ -1057,7 +1057,7 @@ export const onClientRescheduleRequest = functions.firestore
         console.log('📧 Admin reschedule notification template generated');
         
         const adminEmailSent = await emailService.sendEmail({
-          to: 'info@veenutrition.com',
+          to: 'admin@veenutrition.com',
           toName: 'Vee Nutrition Admin',
           subject: adminTemplate.subject,
           html: adminTemplate.html,
