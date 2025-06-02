@@ -406,14 +406,17 @@ export default function DashboardAppointments() {
       await updateAppointment(selectedAppointment.id, {
         date: newDate,
         timeslot: newTimeslot,
-        status: "pending"
+        status: "clientRescheduleRequested",
+        rescheduleReason: "Client requested new appointment time",
+        requestedDate: newDate,
+        requestedTime: newTimeslot
       });
 
       setIsRescheduleOpen(false);
       setSelectedAppointment(null);
       toast({
         title: "Reschedule Requested",
-        description: "We'll confirm your new appointment time within 24 hours.",
+        description: "Your reschedule request has been sent to admin for approval.",
       });
     } catch (error) {
       toast({
