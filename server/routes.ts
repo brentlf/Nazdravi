@@ -443,27 +443,20 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   app.post("/api/emails/admin/plan-upgrade", async (req, res) => {
     try {
-      const { clientName, planType, previousPlan } = req.body;
+      const { clientName, planType } = req.body;
       
       if (!clientName || !planType) {
         return res.status(400).json({ success: false, error: "Missing required fields: clientName and planType" });
       }
       
-      // Queue email in Firebase with correct format
-      const docRef = await db.collection("mail").add({
-        to: 'info@veenutrition.com',
-        toName: 'Admin Team',
-        type: "admin-plan-upgrade",
-        status: "pending",
-        data: { 
-          clientName: clientName || '',
-          planType: planType || '',
-          previousPlan: previousPlan || 'Unknown'
-        },
-        createdAt: new Date()
-      });
+      // Send admin plan upgrade notification directly using Resend
+      const emailSent = await resendService.sendAdminPlanUpgrade(clientName, planType);
 
-      res.json({ success: true, message: "Admin plan upgrade notification queued", docId: docRef.id });
+      if (emailSent) {
+        res.json({ success: true, message: "Admin plan upgrade notification sent successfully" });
+      } else {
+        res.status(500).json({ success: false, error: "Failed to send admin plan upgrade notification" });
+      }
     } catch (error: any) {
       console.error("Error queuing admin plan upgrade notification:", error);
       res.status(500).json({ success: false, error: error.message });
@@ -525,34 +518,6 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.post("/api/emails/admin/plan-upgrade", async (req, res) => {
-    try {
-      const { clientName, planType, previousPlan } = req.body;
-      
-      if (!clientName || !planType) {
-        return res.status(400).json({ success: false, error: "Missing required fields: clientName and planType" });
-      }
-      
-      // Queue email in Firebase with correct format
-      const docRef = await db.collection("mail").add({
-        to: 'info@veenutrition.com',
-        toName: 'Admin Team',
-        type: "admin-plan-upgrade",
-        status: "pending",
-        data: { 
-          clientName: clientName || '',
-          planType: planType || '',
-          previousPlan: previousPlan || 'Unknown'
-        },
-        createdAt: new Date()
-      });
-
-      res.json({ success: true, message: "Admin plan upgrade notification queued", docId: docRef.id });
-    } catch (error: any) {
-      console.error("Error queuing admin plan upgrade notification:", error);
-      res.status(500).json({ success: false, error: error.message });
-    }
-  });
 
   app.post("/api/emails/admin/client-message", async (req, res) => {
     try {
@@ -657,12 +622,45 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const { id } = req.params;
       const updateData = req.body;
       
-      // Update appointment in Firebase
+      // Get current appointment data to check for status changes
       const appointmentRef = db.collection('appointments').doc(id);
+      const currentDoc = await appointmentRef.get();
+      const currentData = currentDoc.data();
+      
+      // Update appointment in Firebase
       await appointmentRef.update({
         ...updateData,
         updatedAt: new Date()
       });
+      
+      // Send email notification if status changed to reschedule_requested
+      if (updateData.status === 'reschedule_requested' && currentData?.status !== 'reschedule_requested') {
+        const clientEmail = currentData?.email || currentData?.clientEmail;
+        const clientName = currentData?.name || currentData?.clientName;
+        const appointmentDate = currentData?.date;
+        const appointmentTime = currentData?.timeslot || currentData?.time;
+        
+        if (clientEmail && clientName) {
+          try {
+            // Send reschedule confirmation email to client
+            const emailSent = await resendService.sendRescheduleConfirmation(
+              clientEmail,
+              clientName,
+              appointmentDate || '',
+              appointmentTime || '',
+              'Follow-up' // Default type
+            );
+            
+            if (emailSent) {
+              console.log(`Reschedule confirmation email sent to ${clientEmail}`);
+            } else {
+              console.error(`Failed to send reschedule confirmation email to ${clientEmail}`);
+            }
+          } catch (emailError) {
+            console.error('Error sending reschedule confirmation email:', emailError);
+          }
+        }
+      }
       
       res.json({ success: true, message: "Appointment updated successfully" });
     } catch (error: any) {
