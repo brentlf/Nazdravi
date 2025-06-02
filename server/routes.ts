@@ -316,6 +316,65 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Send daily appointment reminders
+  app.post("/api/emails/daily-reminders", async (req, res) => {
+    try {
+      console.log('🔍 API DEBUG: POST /emails/daily-reminders -', req.path);
+      
+      // Get tomorrow's date
+      const tomorrow = new Date();
+      tomorrow.setDate(tomorrow.getDate() + 1);
+      const tomorrowStr = tomorrow.toISOString().split('T')[0];
+      
+      // Get all confirmed appointments for tomorrow
+      const appointmentsSnapshot = await db.collection('appointments')
+        .where('date', '==', tomorrowStr)
+        .where('status', '==', 'confirmed')
+        .get();
+      
+      if (appointmentsSnapshot.empty) {
+        return res.json({ 
+          success: true, 
+          message: "No confirmed appointments found for tomorrow",
+          count: 0 
+        });
+      }
+      
+      const reminderPromises = appointmentsSnapshot.docs.map(async (doc) => {
+        const appointment = doc.data();
+        
+        const template = resendService.getAppointmentReminderTemplate(
+          appointment.clientName || appointment.name,
+          appointment.date,
+          appointment.time || appointment.timeslot,
+          appointment.type
+        );
+        
+        return resendService.sendEmail({
+          to: appointment.clientEmail || appointment.email,
+          toName: appointment.clientName || appointment.name,
+          subject: template.subject,
+          html: template.html,
+          text: template.text
+        });
+      });
+      
+      const results = await Promise.all(reminderPromises);
+      const successCount = results.filter(result => result).length;
+      
+      res.json({ 
+        success: true, 
+        message: `Sent ${successCount} of ${appointmentsSnapshot.docs.length} daily reminders`,
+        count: successCount,
+        total: appointmentsSnapshot.docs.length
+      });
+      
+    } catch (error: any) {
+      console.error("Error sending daily reminders:", error);
+      res.status(500).json({ success: false, error: error.message });
+    }
+  });
+
   // Admin notification email routes
   app.post("/api/emails/admin/new-appointment", async (req, res) => {
     try {
