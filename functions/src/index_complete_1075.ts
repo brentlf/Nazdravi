@@ -374,6 +374,51 @@ Vee Nutrition Team`
 
 
 
+  getVeeRescheduleRequestTemplate(name: string, date: string, time: string, reason: string): EmailTemplate {
+    return {
+      subject: `Reschedule Request from Vee Nutrition`,
+      html: `
+        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; background-color: #f8faf8;">
+          <div style="background-color: white; padding: 30px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
+            <div style="text-align: center; margin-bottom: 30px;">
+              <h1 style="color: #A5CBA4; margin: 0;">🌿 Vee Nutrition</h1>
+            </div>
+            
+            <h2 style="color: #333; margin-bottom: 20px;">Reschedule Request</h2>
+            
+            <p style="color: #666; line-height: 1.6; margin-bottom: 20px;">
+              Hi ${name}, we need to reschedule your upcoming appointment due to scheduling changes on our end.
+            </p>
+            
+            <div style="background-color: #e3f2fd; padding: 20px; border-radius: 8px; margin: 20px 0; border-left: 4px solid #2196f3;">
+              <h3 style="color: #1565c0; margin-top: 0;">Current Appointment</h3>
+              <p style="margin: 5px 0;"><strong>Date:</strong> ${date}</p>
+              <p style="margin: 5px 0;"><strong>Time:</strong> ${time}</p>
+              <p style="margin: 5px 0;"><strong>Reason:</strong> ${reason}</p>
+            </div>
+            
+            <p style="color: #666; line-height: 1.6; margin-bottom: 20px;">
+              We sincerely apologize for any inconvenience this may cause. Please contact us to arrange a new appointment time that works for your schedule.
+            </p>
+            
+            <div style="text-align: center; margin: 30px 0;">
+              <a href="https://your-domain.com/dashboard/appointments" 
+                 style="background-color: #A5CBA4; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; display: inline-block; font-weight: bold;">
+                Reschedule Appointment
+              </a>
+            </div>
+            
+            <div style="border-top: 1px solid #eee; padding-top: 20px; margin-top: 30px; text-align: center; color: #999; font-size: 14px;">
+              <p>Vee Nutrition | Transforming Lives Through Nutrition</p>
+              <p>Email: info@veenutrition.com</p>
+            </div>
+          </div>
+        </div>
+      `,
+      text: `Hi ${name}, we need to reschedule your appointment on ${date} at ${time}. Reason: ${reason}. Please contact us to arrange a new time.`
+    };
+  }
+
   getRescheduleConfirmationTemplate(name: string, newDate: string, newTime: string, type: string): EmailTemplate {
     return {
       subject: 'Reschedule Confirmed - Vee Nutrition',
@@ -966,28 +1011,27 @@ export const onAppointmentCreated = functions.firestore
     }
   });
 
-// 4. Reschedule Request Created
-export const onRescheduleRequest = functions.firestore
+// 4. Client Reschedule Request Trigger
+export const onClientRescheduleRequest = functions.firestore
   .document('appointments/{appointmentId}')
   .onUpdate(async (change: any, context: any) => {
     const before = change.before.data();
     const after = change.after.data();
     const appointmentId = context.params.appointmentId;
     
-    console.log('🔍 DEBUG: RESCHEDULE REQUEST TRIGGER');
+    console.log('🔍 DEBUG: CLIENT RESCHEDULE REQUEST TRIGGER');
     console.log('🆔 Appointment ID:', appointmentId);
     console.log('📊 Status Before:', before.status);
     console.log('📊 Status After:', after.status);
     console.log('🕒 Timestamp:', new Date().toISOString());
     
-    if (before.status !== 'reschedule_requested' && after.status === 'reschedule_requested') {
-      console.log('✅ Reschedule request detected');
+    if (before.status !== 'clientRescheduleRequested' && after.status === 'clientRescheduleRequested') {
+      console.log('✅ Client reschedule request detected');
       
-      // Extract client details - handle different field name variations
       const clientName = after.clientName || after.name || after.userName || 'Client';
       const clientEmail = after.clientEmail || after.email || after.userEmail;
       const appointmentTime = after.time || after.timeslot;
-      const rescheduleReason = after.rescheduleReason || 'No reason provided';
+      const rescheduleReason = after.rescheduleReason || 'Client requested schedule change';
       
       console.log('👤 Client Name (resolved):', clientName);
       console.log('📧 Client Email (resolved):', clientEmail);
@@ -996,7 +1040,136 @@ export const onRescheduleRequest = functions.firestore
       console.log('📝 Reschedule Reason:', rescheduleReason);
       
       if (!clientEmail) {
-        console.error('❌ No client email found in reschedule request');
+        console.error('❌ No client email found in client reschedule request');
+        console.error('📋 Available fields:', Object.keys(after));
+        return;
+      }
+      
+      try {
+        // Send admin notification about client reschedule request
+        const adminTemplate = emailService.getRescheduleRequestTemplate(
+          clientName,
+          clientEmail,
+          after.date,
+          appointmentTime,
+          rescheduleReason
+        );
+        console.log('📧 Admin reschedule notification template generated');
+        
+        const adminEmailSent = await emailService.sendEmail({
+          to: 'info@veenutrition.com',
+          toName: 'Vee Nutrition Admin',
+          subject: adminTemplate.subject,
+          html: adminTemplate.html,
+          text: adminTemplate.text
+        });
+        
+        if (adminEmailSent) {
+          console.log('✅ Admin reschedule notification sent');
+        } else {
+          console.error('❌ Failed to send admin reschedule notification');
+        }
+        
+      } catch (error) {
+        console.error('❌ ERROR in onClientRescheduleRequest:', error);
+        console.error('📧 Failed to process client reschedule request emails for:', clientEmail);
+      }
+    }
+  });
+
+// 5. Vee Reschedule Request Trigger  
+export const onVeeRescheduleRequest = functions.firestore
+  .document('appointments/{appointmentId}')
+  .onUpdate(async (change: any, context: any) => {
+    const before = change.before.data();
+    const after = change.after.data();
+    const appointmentId = context.params.appointmentId;
+    
+    console.log('🔍 DEBUG: VEE RESCHEDULE REQUEST TRIGGER');
+    console.log('🆔 Appointment ID:', appointmentId);
+    console.log('📊 Status Before:', before.status);
+    console.log('📊 Status After:', after.status);
+    console.log('🕒 Timestamp:', new Date().toISOString());
+    
+    if (before.status !== 'veeRescheduleRequest' && after.status === 'veeRescheduleRequest') {
+      console.log('✅ Vee reschedule request detected');
+      
+      const clientName = after.clientName || after.name || after.userName || 'Client';
+      const clientEmail = after.clientEmail || after.email || after.userEmail;
+      const appointmentTime = after.time || after.timeslot;
+      const rescheduleReason = after.rescheduleReason || 'Schedule adjustment requested by Vee Nutrition';
+      
+      console.log('👤 Client Name (resolved):', clientName);
+      console.log('📧 Client Email (resolved):', clientEmail);
+      console.log('📅 Date:', after.date);
+      console.log('🕐 Time (resolved):', appointmentTime);
+      console.log('📝 Reschedule Reason:', rescheduleReason);
+      
+      if (!clientEmail) {
+        console.error('❌ No client email found in Vee reschedule request');
+        console.error('📋 Available fields:', Object.keys(after));
+        return;
+      }
+      
+      try {
+        // Send client notification about Vee reschedule request
+        const clientTemplate = emailService.getVeeRescheduleRequestTemplate(
+          clientName,
+          after.date,
+          appointmentTime,
+          rescheduleReason
+        );
+        console.log('📧 Client Vee reschedule notification template generated');
+        
+        const clientEmailSent = await emailService.sendEmail({
+          to: clientEmail,
+          toName: clientName,
+          subject: clientTemplate.subject,
+          html: clientTemplate.html,
+          text: clientTemplate.text
+        });
+        
+        if (clientEmailSent) {
+          console.log('✅ Vee reschedule notification sent to client:', clientEmail);
+        } else {
+          console.error('❌ Failed to send Vee reschedule notification to client');
+        }
+        
+      } catch (error) {
+        console.error('❌ ERROR in onVeeRescheduleRequest:', error);
+        console.error('📧 Failed to process Vee reschedule request emails for:', clientEmail);
+      }
+    }
+  });
+
+// 6. Confirm Reschedule Request Trigger
+export const onConfirmRescheduleRequest = functions.firestore
+  .document('appointments/{appointmentId}')
+  .onUpdate(async (change: any, context: any) => {
+    const before = change.before.data();
+    const after = change.after.data();
+    const appointmentId = context.params.appointmentId;
+    
+    console.log('🔍 DEBUG: CONFIRM RESCHEDULE REQUEST TRIGGER');
+    console.log('🆔 Appointment ID:', appointmentId);
+    console.log('📊 Status Before:', before.status);
+    console.log('📊 Status After:', after.status);
+    console.log('🕒 Timestamp:', new Date().toISOString());
+    
+    if (before.status !== 'confirmRescheduleRequest' && after.status === 'confirmRescheduleRequest') {
+      console.log('✅ Confirm reschedule request detected');
+      
+      const clientName = after.clientName || after.name || after.userName || 'Client';
+      const clientEmail = after.clientEmail || after.email || after.userEmail;
+      const appointmentTime = after.time || after.timeslot;
+      
+      console.log('👤 Client Name (resolved):', clientName);
+      console.log('📧 Client Email (resolved):', clientEmail);
+      console.log('📅 Date:', after.date);
+      console.log('🕐 Time (resolved):', appointmentTime);
+      
+      if (!clientEmail) {
+        console.error('❌ No client email found in confirm reschedule request');
         console.error('📋 Available fields:', Object.keys(after));
         return;
       }
@@ -1025,39 +1198,10 @@ export const onRescheduleRequest = functions.firestore
           console.error('❌ Failed to send reschedule confirmation to client');
         }
         
-        // Send admin notification
-        const adminTemplate = emailService.getRescheduleRequestTemplate(
-          clientName,
-          clientEmail,
-          after.date,
-          appointmentTime,
-          rescheduleReason
-        );
-        console.log('📧 Admin reschedule notification template generated');
-        
-        const adminEmailSent = await emailService.sendEmail({
-          to: 'info@veenutrition.com',
-          toName: 'Vee Nutrition Admin',
-          subject: adminTemplate.subject,
-          html: adminTemplate.html,
-          text: adminTemplate.text
-        });
-        
-        if (adminEmailSent) {
-          console.log('✅ Reschedule notification sent to admin');
-        } else {
-          console.error('❌ Failed to send reschedule notification to admin');
-        }
-        
       } catch (error) {
-        console.error('❌ ERROR in onRescheduleRequest:', error);
-        console.error('📧 Failed to process reschedule emails for:', clientEmail);
+        console.error('❌ ERROR in onConfirmRescheduleRequest:', error);
+        console.error('📧 Failed to process confirm reschedule emails for:', clientEmail);
       }
-    } else {
-      console.log('ℹ️ Status change detected but not reschedule_requested:', {
-        before: before.status,
-        after: after.status
-      });
     }
   });
 

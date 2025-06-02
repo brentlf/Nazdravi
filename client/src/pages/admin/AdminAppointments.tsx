@@ -816,8 +816,10 @@ export default function AdminAppointments() {
                   <SelectItem value="confirmed">Confirmed</SelectItem>
                   <SelectItem value="done">Completed</SelectItem>
                   <SelectItem value="cancelled">Cancelled</SelectItem>
-                  <SelectItem value="reschedule_requested">Reschedule Requested</SelectItem>
-                  <SelectItem value="cancelled_reschedule">Cancelled & Reschedule</SelectItem>
+                  <SelectItem value="clientRescheduleRequested">Client Reschedule Request</SelectItem>
+                  <SelectItem value="confirmRescheduleRequest">Confirm Reschedule</SelectItem>
+                  <SelectItem value="veeRescheduleRequest">Vee Reschedule Request</SelectItem>
+                  <SelectItem value="no-show">No-Show</SelectItem>
                 </SelectContent>
               </Select>
 
@@ -1169,13 +1171,43 @@ export default function AdminAppointments() {
                                       </Button>
                                       <Button
                                         size="sm"
-                                        variant={selectedAppointment.status === "reschedule_requested" ? "default" : "outline"}
-                                        onClick={() => handleStatusChange(selectedAppointment.id!, "reschedule_requested")}
+                                        variant={selectedAppointment.status === "clientRescheduleRequested" ? "default" : "outline"}
+                                        onClick={() => handleStatusChange(selectedAppointment.id!, "clientRescheduleRequested")}
                                         disabled={updateLoading}
                                         className="bg-orange-600 hover:bg-orange-700 text-white"
                                       >
                                         <CalendarX className="w-3 h-3 mr-1" />
-                                        Reschedule Requested
+                                        Client Reschedule Request
+                                      </Button>
+                                      <Button
+                                        size="sm"
+                                        variant={selectedAppointment.status === "confirmRescheduleRequest" ? "default" : "outline"}
+                                        onClick={() => handleStatusChange(selectedAppointment.id!, "confirmRescheduleRequest")}
+                                        disabled={updateLoading}
+                                        className="bg-purple-600 hover:bg-purple-700 text-white"
+                                      >
+                                        <CheckCircle className="w-3 h-3 mr-1" />
+                                        Confirm Reschedule
+                                      </Button>
+                                      <Button
+                                        size="sm"
+                                        variant={selectedAppointment.status === "veeRescheduleRequest" ? "default" : "outline"}
+                                        onClick={() => handleStatusChange(selectedAppointment.id!, "veeRescheduleRequest")}
+                                        disabled={updateLoading}
+                                        className="bg-indigo-600 hover:bg-indigo-700 text-white"
+                                      >
+                                        <RotateCcw className="w-3 h-3 mr-1" />
+                                        Vee Reschedule Request
+                                      </Button>
+                                      <Button
+                                        size="sm"
+                                        variant={selectedAppointment.status === "no-show" ? "default" : "outline"}
+                                        onClick={() => handleStatusChange(selectedAppointment.id!, "no-show")}
+                                        disabled={updateLoading}
+                                        className="bg-red-800 hover:bg-red-900 text-white"
+                                      >
+                                        <UserX className="w-3 h-3 mr-1" />
+                                        No-Show
                                       </Button>
                                     </div>
                                   </div>

@@ -633,6 +633,56 @@ export class ResendService {
     };
   }
 
+  private getVeeRescheduleRequestTemplate(
+    name: string,
+    date: string,
+    time: string,
+    reason: string
+  ): EmailTemplate {
+    return {
+      subject: `Reschedule Request from Vee Nutrition`,
+      html: `
+        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; background-color: #f8faf8;">
+          <div style="background-color: white; padding: 30px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
+            <div style="text-align: center; margin-bottom: 30px;">
+              <h1 style="color: #A5CBA4; margin: 0;">🌿 Vee Nutrition</h1>
+            </div>
+            
+            <h2 style="color: #333; margin-bottom: 20px;">Reschedule Request</h2>
+            
+            <p style="color: #666; line-height: 1.6; margin-bottom: 20px;">
+              Hi ${name}, we need to reschedule your upcoming appointment due to scheduling changes on our end.
+            </p>
+            
+            <div style="background-color: #e3f2fd; padding: 20px; border-radius: 8px; margin: 20px 0; border-left: 4px solid #2196f3;">
+              <h3 style="color: #1565c0; margin-top: 0;">Current Appointment</h3>
+              <p style="margin: 5px 0;"><strong>Date:</strong> ${date}</p>
+              <p style="margin: 5px 0;"><strong>Time:</strong> ${time}</p>
+              <p style="margin: 5px 0;"><strong>Reason:</strong> ${reason}</p>
+            </div>
+            
+            <p style="color: #666; line-height: 1.6; margin-bottom: 20px;">
+              We sincerely apologize for any inconvenience this may cause. Please contact us to arrange a new appointment time that works for your schedule.
+            </p>
+            
+            <div style="text-align: center; margin: 30px 0;">
+              <a href="${process.env.REPLIT_DEV_DOMAIN || 'https://your-domain.com'}/dashboard/appointments" 
+                 style="background-color: #A5CBA4; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; display: inline-block; font-weight: bold;">
+                Reschedule Appointment
+              </a>
+            </div>
+            
+            <div style="border-top: 1px solid #eee; padding-top: 20px; margin-top: 30px; text-align: center; color: #999; font-size: 14px;">
+              <p>Vee Nutrition | Transforming Lives Through Nutrition</p>
+              <p>Email: info@veenutrition.com</p>
+            </div>
+          </div>
+        </div>
+      `,
+      text: `Hi ${name}, we need to reschedule your appointment on ${date} at ${time}. Reason: ${reason}. Please contact us to arrange a new time.`
+    };
+  }
+
   private getLateRescheduleTemplate(name: string, date: string, time: string): EmailTemplate {
     return {
       subject: `Late Reschedule Notice - €5 Fee Applied | Vee Nutrition`,
