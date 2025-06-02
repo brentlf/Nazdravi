@@ -696,6 +696,12 @@ export default function AdminAppointments() {
         return "bg-orange-100 text-orange-800 dark:bg-orange-900/20 dark:text-orange-400";
       case "cancelled_reschedule":
         return "bg-red-100 text-red-800 dark:bg-red-900/20 dark:text-red-400";
+      case "clientRescheduleRequested":
+        return "bg-orange-100 text-orange-800 dark:bg-orange-900/20 dark:text-orange-400";
+      case "confirmRescheduleRequest":
+        return "bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-400";
+      case "veeRescheduleRequest":
+        return "bg-orange-100 text-orange-800 dark:bg-orange-900/20 dark:text-orange-400";
       default:
         return "bg-red-100 text-red-800 dark:bg-red-900/20 dark:text-red-400";
     }

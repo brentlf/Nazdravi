@@ -53,6 +53,11 @@ export function DashboardOverview() {
     chatRoom ? [where("chatRoom", "==", chatRoom)] : [],
   );
 
+  // Count unread messages (messages where user hasn't read them)
+  const unreadCount = messages?.filter(message => 
+    message.sender !== user?.uid && !message.readBy?.includes(user?.uid || '')
+  )?.length || 0;
+
   const { data: progressEntries } = useFirestoreCollection<Progress>(
     "progress",
     user?.uid ? [where("userId", "==", user.uid)] : [],
@@ -220,6 +225,7 @@ export function DashboardOverview() {
       icon: MessageCircle,
       href: "/dashboard/messages",
       color: "bg-primary-500 hover:bg-primary-600",
+      badge: unreadCount > 0 ? unreadCount : undefined,
     },
     {
       title: "View Plan",
@@ -400,12 +406,24 @@ export function DashboardOverview() {
                     >
                       <Link href={action.href}>
                         <div
-                          className={`w-8 h-8 rounded-lg flex items-center justify-center mr-3 ${action.color}`}
+                          className={`w-8 h-8 rounded-lg flex items-center justify-center mr-3 ${action.color} relative`}
                         >
                           <Icon className="w-4 h-4 text-white" />
+                          {action.badge && (
+                            <div className="absolute -top-2 -right-2 w-5 h-5 bg-red-500 text-white text-xs rounded-full flex items-center justify-center">
+                              {action.badge}
+                            </div>
+                          )}
                         </div>
-                        <div className="text-left">
-                          <p className="font-medium">{action.title}</p>
+                        <div className="text-left flex-1">
+                          <div className="flex items-center justify-between">
+                            <p className="font-medium">{action.title}</p>
+                            {action.badge && (
+                              <Badge variant="destructive" className="ml-2 text-xs">
+                                {action.badge}
+                              </Badge>
+                            )}
+                          </div>
                           <p className="text-xs text-muted-foreground">
                             {action.description}
                           </p>
