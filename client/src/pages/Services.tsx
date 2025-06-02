@@ -231,7 +231,7 @@ export default function Services() {
             Choose Your Plan
           </h2>
 
-          <div className="grid md:grid-cols-2 gap-6 max-w-4xl mx-auto mb-10">
+          <div className="grid md:grid-cols-2 gap-6 max-w-4xl mx-auto mb-16">
             {servicePackages.map((pkg, index) => {
               const isPayAsYouGo = pkg.title === "Pay As You Go";
               const isCompleteProgram = pkg.title === "Complete Program";
@@ -282,25 +282,14 @@ export default function Services() {
                       </ul>
 
                       {isPayAsYouGoDisabled ? (
-                        <TooltipProvider>
-                          <Tooltip>
-                            <TooltipTrigger asChild>
-                              <div className="w-full">
-                                <Button 
-                                  className="w-full" 
-                                  disabled
-                                  variant="outline"
-                                >
-                                  <Lock className="h-4 w-4 mr-2" />
-                                  Not Available
-                                </Button>
-                              </div>
-                            </TooltipTrigger>
-                            <TooltipContent className="max-w-xs">
-                              <p>You are currently on the Complete Program. You can switch to Pay-As-You-Go from the client profile page within your client dashboard. You will maintain all the complete program benefits until your billing cycle ends on {nextBillingDate ? new Date(nextBillingDate).toLocaleDateString() : 'your next billing date'}.</p>
-                            </TooltipContent>
-                          </Tooltip>
-                        </TooltipProvider>
+                        <Button 
+                          className="w-full" 
+                          disabled
+                          variant="outline"
+                        >
+                          <Lock className="h-4 w-4 mr-2" />
+                          Not Available
+                        </Button>
                       ) : (
                         <Button 
                           className="w-full" 
@@ -316,10 +305,10 @@ export default function Services() {
                   </Card>
 
                   {isPayAsYouGoDisabled && (
-                    <Alert className="border-blue-200 bg-blue-50 dark:bg-blue-900/20">
+                    <Alert className="border-blue-200 bg-blue-50 dark:bg-blue-900/20 mt-4">
                       <Info className="h-4 w-4" />
-                      <AlertDescription>
-                        You are currently on the Complete Program. To switch to Pay-As-You-Go, visit your <Link href="/dashboard/profile" className="text-blue-600 underline">client dashboard profile</Link>. You'll continue enjoying full access until your billing cycle ends on {nextBillingDate ? new Date(nextBillingDate).toLocaleDateString() : 'your next billing date'}.
+                      <AlertDescription className="text-sm">
+                        <strong>Complete Program Active:</strong> To switch to Pay-As-You-Go, visit your <Link href="/dashboard/profile" className="text-blue-600 hover:text-blue-800 underline font-medium">client dashboard profile</Link>. You'll continue enjoying full access until your billing cycle ends on {nextBillingDate ? new Date(nextBillingDate).toLocaleDateString() : 'your next billing date'}.
                       </AlertDescription>
                     </Alert>
                   )}
