@@ -190,6 +190,19 @@ export default function AdminMessages() {
     return roomMessages[roomMessages.length - 1];
   };
 
+  const getUnreadCount = (clientUserId: string) => {
+    const chatRoom = createChatRoom(clientUserId);
+    // Count unread messages from client to admin
+    const unreadMessages = allMessages?.filter(m => 
+      (m.chatRoom === chatRoom || 
+       m.chatRoom === `admin_${clientUserId}` ||
+       (m.fromUser === clientUserId && m.toUser === "admin")) &&
+      m.fromUser === clientUserId &&
+      (m.read === false || m.read === undefined)
+    ) || [];
+    return unreadMessages.length;
+  };
+
   if (usersLoading) {
     return (
       <div className="min-h-screen py-20 bg-gray-50 dark:bg-gray-900">

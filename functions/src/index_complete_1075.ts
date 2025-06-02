@@ -1940,6 +1940,111 @@ export const sendDailyReminders = functions.pubsub
   });
 
 // 6. Scheduled Downgrade Processor
+// Health Information Update Notification
+export const onHealthInfoUpdated = functions.firestore
+  .document('users/{userId}')
+  .onUpdate(async (change, context) => {
+    const beforeData = change.before.data();
+    const afterData = change.after.data();
+    const userId = context.params.userId;
+    
+    // Check if health-related fields were updated
+    const healthFields = [
+      'age', 'weight', 'height', 'allergies', 'dietaryRestrictions', 
+      'medicalConditions', 'medications', 'activityLevel', 'healthGoals',
+      'previousDiets', 'eatingHabits', 'sleepHours', 'stressLevel',
+      'waterIntake', 'supplementsUsed', 'emergencyContact', 'gpContact'
+    ];
+    
+    const updatedHealthFields = [];
+    
+    for (const field of healthFields) {
+      if (beforeData[field] !== afterData[field]) {
+        updatedHealthFields.push({
+          field,
+          oldValue: beforeData[field] || 'Not provided',
+          newValue: afterData[field] || 'Not provided'
+        });
+      }
+    }
+    
+    // Only send notification if health fields were actually updated
+    if (updatedHealthFields.length === 0) {
+      console.log('🔍 No health information changes detected');
+      return;
+    }
+    
+    console.log('🔍 Health information updated for user:', userId);
+    console.log('📋 Updated fields:', updatedHealthFields.map(f => f.field).join(', '));
+    
+    try {
+      const emailService = new ResendEmailService();
+      
+      // Send admin notification about health update
+      const template = emailService.getAdminHealthUpdateTemplate(
+        afterData.name || 'Unknown Client',
+        afterData.email || 'unknown@email.com',
+        updatedHealthFields.length > 1 ? 'Multiple Fields' : updatedHealthFields[0].field
+      );
+      
+      await emailService.sendEmail({
+        to: 'admin@veenutrition.com',
+        toName: 'Vee Nutrition Admin',
+        subject: template.subject,
+        html: template.html,
+        text: template.text
+      });
+      
+      console.log('✅ Admin health update notification sent successfully');
+      
+    } catch (error) {
+      console.error('❌ Error sending admin health update notification:', error);
+    }
+  });
+
+// Service Plan Upgrade Notification
+export const onServicePlanUpgrade = functions.firestore
+  .document('users/{userId}')
+  .onUpdate(async (change, context) => {
+    const beforeData = change.before.data();
+    const afterData = change.after.data();
+    const userId = context.params.userId;
+    
+    // Check if service plan was upgraded
+    const oldPlan = beforeData.servicePlan;
+    const newPlan = afterData.servicePlan;
+    
+    // Only trigger on actual upgrades (pay-as-you-go -> complete-program)
+    if (oldPlan !== newPlan && newPlan === 'complete-program' && oldPlan === 'pay-as-you-go') {
+      console.log('🔍 Service plan upgrade detected for user:', userId);
+      console.log('📋 Plan change:', `${oldPlan} -> ${newPlan}`);
+      
+      try {
+        const emailService = new ResendEmailService();
+        
+        // Send admin notification about plan upgrade
+        const template = emailService.getAdminPlanUpgradeTemplate(
+          afterData.name || 'Unknown Client',
+          newPlan,
+          oldPlan
+        );
+        
+        await emailService.sendEmail({
+          to: 'admin@veenutrition.com',
+          toName: 'Vee Nutrition Admin',
+          subject: template.subject,
+          html: template.html,
+          text: template.text
+        });
+        
+        console.log('✅ Admin plan upgrade notification sent successfully');
+        
+      } catch (error) {
+        console.error('❌ Error sending admin plan upgrade notification:', error);
+      }
+    }
+  });
+
 export const processScheduledDowngrades = functions.pubsub
   .schedule('0 2 * * *') // 2 AM daily
   .timeZone('Europe/Amsterdam')
