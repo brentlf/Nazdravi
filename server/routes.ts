@@ -409,21 +409,17 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // Use test email for test buttons, production email for real notifications
       const adminEmail = isTest ? 'info@veenutrition.com' : 'admin@veenutrition.com';
       
-      // Queue email in Firebase with correct format
-      const docRef = await db.collection("mail").add({
-        to: adminEmail,
-        toName: 'Admin Team',
-        type: "admin-health-update",
-        status: "pending",
-        data: { 
-          clientName: clientName || '',
-          clientEmail: clientEmail || '',
-          updateType: updateType || 'Health Info Update'
-        },
-        createdAt: new Date()
-      });
+      // Send health update notification directly using Resend
+      const emailSent = await resendService.sendAdminMedicalUpdate(
+        clientName,
+        clientEmail
+      );
 
-      res.json({ success: true, message: "Admin health update notification queued", docId: docRef.id });
+      if (emailSent) {
+        res.json({ success: true, message: "Admin health update notification sent successfully" });
+      } else {
+        res.status(500).json({ success: false, error: "Failed to send health update notification" });
+      }
     } catch (error: any) {
       console.error("Error queuing admin health update notification:", error);
       res.status(500).json({ success: false, error: error.message });
@@ -500,22 +496,19 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(400).json({ success: false, error: "Missing required fields: clientName and clientEmail" });
       }
       
-      // Queue email in Firebase with correct format
-      const docRef = await db.collection("mail").add({
-        to: 'info@veenutrition.com',
-        toName: 'Admin Team',
-        type: "admin-client-message",
-        status: "pending",
-        data: { 
-          clientName: clientName || '',
-          clientEmail: clientEmail || '',
-          messageType: messageType || 'General',
-          urgency: urgency || 'Medium'
-        },
-        createdAt: new Date()
-      });
+      // Send client message notification directly using Resend
+      const emailSent = await resendService.sendAdminNewClientMessage(
+        clientName,
+        clientEmail,
+        messageType || 'General',
+        urgency || 'Medium'
+      );
 
-      res.json({ success: true, message: "Admin client message notification queued", docId: docRef.id });
+      if (emailSent) {
+        res.json({ success: true, message: "Admin client message notification sent successfully" });
+      } else {
+        res.status(500).json({ success: false, error: "Failed to send client message notification" });
+      }
     } catch (error: any) {
       console.error("Error queuing admin client message notification:", error);
       res.status(500).json({ success: false, error: error.message });

@@ -311,6 +311,21 @@ export class ResendService {
     });
   }
 
+  async sendAdminNewClientMessage(
+    clientName: string,
+    clientEmail: string,
+    messageType: string,
+    urgency: string
+  ): Promise<boolean> {
+    const template = this.getAdminClientMessageTemplate(clientName, clientEmail, messageType, urgency);
+    return this.sendEmail({
+      to: 'admin@veenutrition.com',
+      subject: template.subject,
+      html: template.html,
+      text: template.text
+    });
+  }
+
   async sendPaymentReminder(email: string, name: string, amount: number, invoiceNumber: string, paymentUrl: string): Promise<boolean> {
     const template = this.getPaymentReminderTemplate(name, amount, invoiceNumber, paymentUrl);
     return this.sendEmail({
