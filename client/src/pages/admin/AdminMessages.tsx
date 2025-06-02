@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { MessageCircle, Send, Search, User, Clock, ArrowLeft } from "lucide-react";
 import { Link } from "wouter";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -26,6 +26,7 @@ export default function AdminMessages() {
   const [searchTerm, setSearchTerm] = useState("");
   const { user } = useAuth();
   const { toast } = useToast();
+  const messagesEndRef = useRef<HTMLDivElement>(null);
 
   // Fetch all users for chat selection
   const { data: users, loading: usersLoading } = useFirestoreCollection<UserType>("users", [
@@ -108,6 +109,13 @@ export default function AdminMessages() {
       });
     }
   }, [messages, selectedChatRoom, updateMessage]);
+
+  // Auto-scroll to bottom when new messages arrive
+  useEffect(() => {
+    if (messages && messages.length > 0) {
+      messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    }
+  }, [messages]);
 
   // Filter users based on search
   const filteredUsers = users?.filter(u => 
@@ -379,7 +387,7 @@ export default function AdminMessages() {
                         <p>No messages yet. Start the conversation!</p>
                       </div>
                     )}
-                    <div id="admin-messages-end" />
+                    <div ref={messagesEndRef} />
                   </div>
                   
                   {/* Message Input */}
