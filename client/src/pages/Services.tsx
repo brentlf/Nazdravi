@@ -282,14 +282,25 @@ export default function Services() {
                       </ul>
 
                       {isPayAsYouGoDisabled ? (
-                        <Button 
-                          className="w-full" 
-                          disabled
-                          variant="outline"
-                        >
-                          <Lock className="h-4 w-4 mr-2" />
-                          Not Available
-                        </Button>
+                        <TooltipProvider>
+                          <Tooltip>
+                            <TooltipTrigger asChild>
+                              <div className="w-full">
+                                <Button 
+                                  className="w-full" 
+                                  disabled
+                                  variant="outline"
+                                >
+                                  <Lock className="h-4 w-4 mr-2" />
+                                  Not Available
+                                </Button>
+                              </div>
+                            </TooltipTrigger>
+                            <TooltipContent side="top" className="max-w-sm">
+                              <p className="text-sm">Complete Program Active: To switch to Pay-As-You-Go, visit your client dashboard profile. You'll continue enjoying full access until your billing cycle ends.</p>
+                            </TooltipContent>
+                          </Tooltip>
+                        </TooltipProvider>
                       ) : (
                         <Button 
                           className="w-full" 
@@ -304,14 +315,7 @@ export default function Services() {
                     </CardContent>
                   </Card>
 
-                  {isPayAsYouGoDisabled && (
-                    <Alert className="border-blue-200 bg-blue-50 dark:bg-blue-900/20 mt-4">
-                      <Info className="h-4 w-4" />
-                      <AlertDescription className="text-sm">
-                        <strong>Complete Program Active:</strong> To switch to Pay-As-You-Go, visit your <Link href="/dashboard/profile" className="text-blue-600 hover:text-blue-800 underline font-medium">client dashboard profile</Link>. You'll continue enjoying full access until your billing cycle ends on {nextBillingDate ? new Date(nextBillingDate).toLocaleDateString() : 'your next billing date'}.
-                      </AlertDescription>
-                    </Alert>
-                  )}
+
                 </div>
               );
             })}
