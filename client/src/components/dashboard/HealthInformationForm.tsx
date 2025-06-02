@@ -20,7 +20,10 @@ const healthInfoSchema = z.object({
   weight: z.string().optional(),
   medicalConditions: z.array(z.string()).optional(),
   otherMedicalCondition: z.string().optional(),
-  allergies: z.string().optional(),
+  medications: z.array(z.string()).optional(),
+  otherMedication: z.string().optional(),
+  allergies: z.array(z.string()).optional(),
+  otherAllergy: z.string().optional(),
   currentMedications: z.string().optional(),
   dietaryRestrictions: z.string().optional(),
   emergencyContactName: z.string().optional(),
@@ -65,7 +68,10 @@ export function HealthInformationForm({ userId }: HealthInformationFormProps) {
       weight: "",
       medicalConditions: [],
       otherMedicalCondition: "",
-      allergies: "",
+      medications: [],
+      otherMedication: "",
+      allergies: [],
+      otherAllergy: "",
       currentMedications: "",
       dietaryRestrictions: "",
       emergencyContactName: "",
@@ -107,8 +113,12 @@ export function HealthInformationForm({ userId }: HealthInformationFormProps) {
   // Watch for "other" selections
   const watchedMedicalConditions = form.watch("medicalConditions");
   const watchedHealthGoals = form.watch("healthGoals");
+  const watchedMedications = form.watch("medications");
+  const watchedAllergies = form.watch("allergies");
   const hasOtherMedicalCondition = watchedMedicalConditions?.includes("other");
   const hasOtherHealthGoal = watchedHealthGoals?.includes("other");
+  const hasOtherMedication = watchedMedications?.includes("other");
+  const hasOtherAllergy = watchedAllergies?.includes("other");
 
   const healthGoalOptions = [
     "weight-loss",
@@ -118,7 +128,8 @@ export function HealthInformationForm({ userId }: HealthInformationFormProps) {
     "better-digestion",
     "manage-condition",
     "general-wellness",
-    "sports-performance"
+    "sports-performance",
+    "other"
   ];
 
   // Load Firebase data on component mount
