@@ -1006,7 +1006,8 @@ export const onRescheduleRequest = functions.firestore
         const clientTemplate = emailService.getRescheduleConfirmationTemplate(
           clientName,
           after.date,
-          appointmentTime
+          appointmentTime,
+          after.type || 'consultation'
         );
         console.log('📧 Client reschedule confirmation template generated');
         
