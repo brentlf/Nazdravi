@@ -63,6 +63,7 @@ const appointmentSchema = z.object({
 // Pre-evaluation form schema - matches main dashboard comprehensive version
 const preEvaluationSchema = z.object({
   age: z.string().min(1, "Age is required"),
+  gender: z.string().optional(),
   healthGoals: z.array(z.string()).min(1, "Please select at least one health goal"),
   otherHealthGoal: z.string().optional(),
   currentWeight: z.string().min(1, "Current weight is required"),
@@ -1196,20 +1197,73 @@ export default function DashboardAppointments() {
                 {/* Basic Measurements */}
                 <div className="space-y-4">
                   <h3 className="text-lg font-semibold text-sage-dark">Basic Measurements</h3>
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                     <FormField
                       control={preEvaluationForm.control}
-                      name="currentWeight"
+                      name="age"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>Current Weight (kg)</FormLabel>
+                          <FormLabel>Age *</FormLabel>
                           <FormControl>
-                            <Input placeholder="e.g., 70" {...field} />
+                            <Input type="number" placeholder="Your age" {...field} />
                           </FormControl>
                           <FormMessage />
                         </FormItem>
                       )}
                     />
+
+                    <FormField
+                      control={preEvaluationForm.control}
+                      name="gender"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Gender</FormLabel>
+                          <Select onValueChange={field.onChange} defaultValue={field.value}>
+                            <FormControl>
+                              <SelectTrigger>
+                                <SelectValue placeholder="Select gender" />
+                              </SelectTrigger>
+                            </FormControl>
+                            <SelectContent>
+                              <SelectItem value="female">Female</SelectItem>
+                              <SelectItem value="male">Male</SelectItem>
+                              <SelectItem value="other">Other</SelectItem>
+                              <SelectItem value="prefer-not-to-say">Prefer not to say</SelectItem>
+                            </SelectContent>
+                          </Select>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+
+                    <FormField
+                      control={preEvaluationForm.control}
+                      name="heightCm"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Height (cm) *</FormLabel>
+                          <FormControl>
+                            <Input type="number" placeholder="e.g., 170" {...field} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+
+                    <FormField
+                      control={preEvaluationForm.control}
+                      name="currentWeight"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Current Weight (kg) *</FormLabel>
+                          <FormControl>
+                            <Input type="number" placeholder="e.g., 70" {...field} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    
                     <FormField
                       control={preEvaluationForm.control}
                       name="targetWeight"
@@ -1217,20 +1271,7 @@ export default function DashboardAppointments() {
                         <FormItem>
                           <FormLabel>Target Weight (kg)</FormLabel>
                           <FormControl>
-                            <Input placeholder="e.g., 65 (optional)" {...field} />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                    <FormField
-                      control={preEvaluationForm.control}
-                      name="heightCm"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Height (cm)</FormLabel>
-                          <FormControl>
-                            <Input placeholder="e.g., 170" {...field} />
+                            <Input type="number" placeholder="e.g., 65 (optional)" {...field} />
                           </FormControl>
                           <FormMessage />
                         </FormItem>
