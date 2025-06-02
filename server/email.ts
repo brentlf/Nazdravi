@@ -898,6 +898,49 @@ Best regards,
 Vee Nutrition Team`
     };
   }
+
+  private getAdminClientMessageTemplate(
+    clientName: string,
+    clientEmail: string,
+    messageType: string,
+    urgency: string
+  ): EmailTemplate {
+    const urgencyColor = urgency === 'High' ? '#dc3545' : urgency === 'Medium' ? '#ffc107' : '#17a2b8';
+    const urgencyBg = urgency === 'High' ? '#f8d7da' : urgency === 'Medium' ? '#fff3cd' : '#d1ecf1';
+    
+    return {
+      subject: `Client Message - ${clientName} (${urgency} Priority)`,
+      html: `
+        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%); padding: 20px;">
+          <div style="background: white; padding: 30px; border-radius: 10px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);">
+            <div style="text-align: center; margin-bottom: 30px;">
+              <h1 style="color: #A5CBA4; margin: 0;">🌿 Vee Nutrition Admin</h1>
+            </div>
+            
+            <h2 style="color: #333; margin-bottom: 20px;">New Client Message</h2>
+            
+            <p style="color: #666; line-height: 1.6; margin-bottom: 20px;">
+              You have received a new message from a client.
+            </p>
+            
+            <div style="background-color: ${urgencyBg}; padding: 20px; border-radius: 8px; margin: 20px 0; border-left: 4px solid ${urgencyColor};">
+              <h3 style="color: ${urgencyColor}; margin-top: 0;">Message Details</h3>
+              <p style="margin: 5px 0;"><strong>Client:</strong> ${clientName}</p>
+              <p style="margin: 5px 0;"><strong>Email:</strong> ${clientEmail}</p>
+              <p style="margin: 5px 0;"><strong>Type:</strong> ${messageType}</p>
+              <p style="margin: 5px 0;"><strong>Priority:</strong> ${urgency}</p>
+            </div>
+            
+            <div style="border-top: 1px solid #eee; padding-top: 20px; margin-top: 30px; text-align: center; color: #999; font-size: 14px;">
+              <p>Vee Nutrition Admin Dashboard</p>
+              <p>Please respond promptly to client messages</p>
+            </div>
+          </div>
+        </div>
+      `,
+      text: `New message from ${clientName} (${clientEmail}). Type: ${messageType}, Priority: ${urgency}.`
+    };
+  }
 }
 
 export const resendService = new ResendService();
