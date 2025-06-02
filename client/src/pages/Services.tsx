@@ -12,10 +12,19 @@ import {
   TrendingUp,
   Crown,
   CreditCard,
+  Info,
+  Lock,
 } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import { Link, useLocation } from "wouter";
 import { useAuth } from "@/contexts/AuthContext";
 import { useFirestoreDocument } from "@/hooks/useFirestore";
@@ -223,50 +232,100 @@ export default function Services() {
           </h2>
 
           <div className="grid md:grid-cols-2 gap-6 max-w-4xl mx-auto mb-10">
-            {servicePackages.map((pkg, index) => (
-              <Card
-                key={index}
-                className={`mediterranean-card h-full floating-element ${pkg.popular ? "ring-2 ring-primary/20" : ""}`}
-              >
-                <CardContent className="p-6 relative">
-                  {pkg.popular && (
-                    <Badge className="absolute -top-3 left-1/2 transform -translate-x-1/2 bg-primary text-white">
-                      Most Popular
-                    </Badge>
-                  )}
+            {servicePackages.map((pkg, index) => {
+              const isPayAsYouGo = pkg.title === "Pay As You Go";
+              const isCompleteProgram = pkg.title === "Complete Program";
+              const isCurrentlyCompleteProgram = userData?.servicePlan === "complete-program";
+              const isPayAsYouGoDisabled = isPayAsYouGo && isCurrentlyCompleteProgram;
+              const nextBillingDate = userData?.nextBillingDate;
 
-                  <div className="text-center mb-4">
-                    <h3 className="font-display text-xl font-bold mb-2">
-                      {pkg.title}
-                    </h3>
-                    <p className="text-muted-foreground mb-3">
-                      {pkg.description}
-                    </p>
-                    <div className="text-2xl font-bold text-primary">
-                      {pkg.price}
-                    </div>
-                  </div>
-
-                  <ul className="space-y-2 mb-6">
-                    {pkg.features.map((feature, idx) => (
-                      <li key={idx} className="flex items-center text-sm">
-                        <CheckCircle className="w-4 h-4 text-green-500 mr-2" />
-                        {feature}
-                      </li>
-                    ))}
-                  </ul>
-
-                  <Button 
-                    className="w-full" 
-                    onClick={() => handleServicePlanSelection(
-                      pkg.title === "Complete Program" ? "complete-program" : "pay-as-you-go"
-                    )}
+              return (
+                <div key={index} className="space-y-4">
+                  <Card
+                    className={`mediterranean-card h-full floating-element ${
+                      pkg.popular ? "ring-2 ring-primary/20" : ""
+                    } ${isPayAsYouGoDisabled ? "opacity-75" : ""}`}
                   >
-                    Get Started
-                  </Button>
-                </CardContent>
-              </Card>
-            ))}
+                    <CardContent className="p-6 relative">
+                      {pkg.popular && (
+                        <Badge className="absolute -top-3 left-1/2 transform -translate-x-1/2 bg-primary text-white">
+                          Most Popular
+                        </Badge>
+                      )}
+                      
+                      {isCurrentlyCompleteProgram && isCompleteProgram && (
+                        <Badge className="absolute -top-3 right-4 bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300">
+                          Current Plan
+                        </Badge>
+                      )}
+
+                      <div className="text-center mb-4">
+                        <h3 className="font-display text-xl font-bold mb-2 flex items-center justify-center gap-2">
+                          {pkg.title}
+                          {isPayAsYouGoDisabled && <Lock className="h-4 w-4 text-gray-400" />}
+                        </h3>
+                        <p className="text-muted-foreground mb-3">
+                          {pkg.description}
+                        </p>
+                        <div className="text-2xl font-bold text-primary">
+                          {pkg.price}
+                        </div>
+                      </div>
+
+                      <ul className="space-y-2 mb-6">
+                        {pkg.features.map((feature, idx) => (
+                          <li key={idx} className="flex items-center text-sm">
+                            <CheckCircle className="w-4 h-4 text-green-500 mr-2" />
+                            {feature}
+                          </li>
+                        ))}
+                      </ul>
+
+                      {isPayAsYouGoDisabled ? (
+                        <TooltipProvider>
+                          <Tooltip>
+                            <TooltipTrigger asChild>
+                              <div className="w-full">
+                                <Button 
+                                  className="w-full" 
+                                  disabled
+                                  variant="outline"
+                                >
+                                  <Lock className="h-4 w-4 mr-2" />
+                                  Not Available
+                                </Button>
+                              </div>
+                            </TooltipTrigger>
+                            <TooltipContent className="max-w-xs">
+                              <p>You are currently on the Complete Program. You can switch to Pay-As-You-Go from the client profile page within your client dashboard. You will maintain all the complete program benefits until your billing cycle ends on {nextBillingDate ? new Date(nextBillingDate).toLocaleDateString() : 'your next billing date'}.</p>
+                            </TooltipContent>
+                          </Tooltip>
+                        </TooltipProvider>
+                      ) : (
+                        <Button 
+                          className="w-full" 
+                          onClick={() => handleServicePlanSelection(
+                            isCompleteProgram ? "complete-program" : "pay-as-you-go"
+                          )}
+                          disabled={isCurrentlyCompleteProgram && isCompleteProgram}
+                        >
+                          {isCurrentlyCompleteProgram && isCompleteProgram ? "Current Plan" : "Get Started"}
+                        </Button>
+                      )}
+                    </CardContent>
+                  </Card>
+
+                  {isPayAsYouGoDisabled && (
+                    <Alert className="border-blue-200 bg-blue-50 dark:bg-blue-900/20">
+                      <Info className="h-4 w-4" />
+                      <AlertDescription>
+                        You are currently on the Complete Program. To switch to Pay-As-You-Go, visit your <Link href="/dashboard/profile" className="text-blue-600 underline">client dashboard profile</Link>. You'll continue enjoying full access until your billing cycle ends on {nextBillingDate ? new Date(nextBillingDate).toLocaleDateString() : 'your next billing date'}.
+                      </AlertDescription>
+                    </Alert>
+                  )}
+                </div>
+              );
+            })}
           </div>
         </section>
 

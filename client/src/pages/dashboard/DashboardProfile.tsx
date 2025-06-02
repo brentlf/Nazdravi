@@ -288,7 +288,55 @@ export default function DashboardProfile() {
       return;
     }
 
+    // Check if Complete Program user is switching to Pay-As-You-Go
+    if (data.servicePlan === "pay-as-you-go" && currentUserData?.servicePlan === "complete-program") {
+      await handlePlannedDowngrade(data);
+      return;
+    }
+
     await updatePreferences(data);
+  };
+
+  // Handle planned downgrade for Complete Program users
+  const handlePlannedDowngrade = async (data: PreferencesFormData) => {
+    setIsLoading(true);
+    try {
+      const nextBillingDate = currentUserData?.nextBillingDate || currentUserData?.programEndDate;
+      const downgradeEffectiveDate = nextBillingDate ? 
+        (nextBillingDate.toDate ? nextBillingDate.toDate() : new Date(nextBillingDate)) :
+        new Date(Date.now() + 30 * 24 * 60 * 60 * 1000); // Default to 30 days if no billing date
+
+      const updateData: any = {
+        preferredLanguage: data.preferredLanguage,
+        emailNotifications: data.emailNotifications,
+        plannedDowngrade: true,
+        downgradeEffectiveDate: Timestamp.fromDate(downgradeEffectiveDate),
+        // Keep current service plan until downgrade date
+        servicePlan: "complete-program"
+      };
+
+      // Update Firebase document
+      await setDoc(doc(db, "users", user?.uid || ""), updateData, { merge: true });
+      
+      // Update local state
+      const newUserData = { ...currentUserData, ...updateData };
+      setCurrentUserData(newUserData);
+
+      toast({
+        title: "Downgrade Scheduled",
+        description: `Your plan will switch to Pay-As-You-Go on ${downgradeEffectiveDate.toLocaleDateString()}. You'll continue enjoying full access until then.`,
+      });
+
+    } catch (error) {
+      console.error("Error scheduling downgrade:", error);
+      toast({
+        title: "Downgrade Failed",
+        description: "Failed to schedule downgrade. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const renewCompleteProgram = async () => {
