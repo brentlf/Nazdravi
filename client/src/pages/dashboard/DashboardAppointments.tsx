@@ -1657,6 +1657,110 @@ export default function DashboardAppointments() {
                       </FormItem>
                     )}
                   />
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <FormField
+                      control={preEvaluationForm.control}
+                      name="stressLevel"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Stress Level (1-10)</FormLabel>
+                          <FormControl>
+                            <Input 
+                              type="number" 
+                              min="1" 
+                              max="10" 
+                              placeholder="Rate your stress level" 
+                              {...field} 
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+
+                    <FormField
+                      control={preEvaluationForm.control}
+                      name="sleepHours"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Hours of Sleep per Night</FormLabel>
+                          <FormControl>
+                            <Input 
+                              placeholder="Average hours" 
+                              {...field} 
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </div>
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <FormField
+                      control={preEvaluationForm.control}
+                      name="waterIntake"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Daily Water Intake</FormLabel>
+                          <FormControl>
+                            <Input 
+                              placeholder="e.g., 2 liters, 8 glasses" 
+                              {...field} 
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+
+                    <FormField
+                      control={preEvaluationForm.control}
+                      name="smokingStatus"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Smoking Status</FormLabel>
+                          <Select onValueChange={field.onChange} defaultValue={field.value}>
+                            <FormControl>
+                              <SelectTrigger>
+                                <SelectValue placeholder="Select smoking status" />
+                              </SelectTrigger>
+                            </FormControl>
+                            <SelectContent>
+                              <SelectItem value="never">Never</SelectItem>
+                              <SelectItem value="former">Former</SelectItem>
+                              <SelectItem value="current">Current</SelectItem>
+                            </SelectContent>
+                          </Select>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </div>
+
+                  <FormField
+                    control={preEvaluationForm.control}
+                    name="alcoholConsumption"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Alcohol Consumption</FormLabel>
+                        <Select onValueChange={field.onChange} defaultValue={field.value}>
+                          <FormControl>
+                            <SelectTrigger>
+                              <SelectValue placeholder="Select alcohol consumption" />
+                            </SelectTrigger>
+                          </FormControl>
+                          <SelectContent>
+                            <SelectItem value="none">None</SelectItem>
+                            <SelectItem value="occasional">Occasional</SelectItem>
+                            <SelectItem value="regular">Regular</SelectItem>
+                          </SelectContent>
+                        </Select>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
                 </div>
 
                 {/* Additional Notes */}
