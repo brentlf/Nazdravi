@@ -774,13 +774,13 @@ export const onUserCreated = functions.firestore
       console.log('📋 Subject:', template.subject);
       
       const mailDoc = await admin.firestore().collection('mail').add({
-        to: user.email,
-        toName: user.name,
-        subject: template.subject,
-        html: template.html,
-        text: template.text,
+        to: [user.email],
+        message: {
+          subject: template.subject,
+          html: template.html,
+          text: template.text,
+        },
         type: 'account-confirmation',
-        status: 'pending',
         createdAt: admin.firestore.FieldValue.serverTimestamp(),
       });
       
@@ -839,13 +839,13 @@ export const onAppointmentConfirmed = functions.firestore
         console.log('📋 Subject:', template.subject);
         
         const mailDoc = await admin.firestore().collection('mail').add({
-          to: clientEmail,
-          toName: clientName,
-          subject: template.subject,
-          html: template.html,
-          text: template.text,
+          to: [clientEmail],
+          message: {
+            subject: template.subject,
+            html: template.html,
+            text: template.text,
+          },
           type: 'appointment-confirmation',
-          status: 'pending',
           createdAt: admin.firestore.FieldValue.serverTimestamp(),
         });
         
@@ -908,13 +908,13 @@ export const onAppointmentCreated = functions.firestore
       console.log('📬 Sending to admin: admin@veenutrition.com');
       
       const mailDoc = await admin.firestore().collection('mail').add({
-        to: 'admin@veenutrition.com',
-        toName: 'Vee Nutrition Admin',
-        subject: template.subject,
-        html: template.html,
-        text: template.text,
+        to: ['admin@veenutrition.com'],
+        message: {
+          subject: template.subject,
+          html: template.html,
+          text: template.text,
+        },
         type: 'admin-new-appointment',
-        status: 'pending',
         createdAt: admin.firestore.FieldValue.serverTimestamp(),
       });
       
@@ -1298,13 +1298,13 @@ export const onInvoiceCreated = functions.firestore
         console.log('📋 Subject:', template.subject);
         
         const mailDoc = await admin.firestore().collection('mail').add({
-          to: invoiceData.clientEmail,
-          toName: invoiceData.clientName || 'Client',
-          subject: template.subject,
-          html: template.html,
-          text: template.text,
+          to: [invoiceData.clientEmail],
+          message: {
+            subject: template.subject,
+            html: template.html,
+            text: template.text,
+          },
           type: 'invoice-generated',
-          status: 'pending',
           createdAt: admin.firestore.FieldValue.serverTimestamp(),
         });
         

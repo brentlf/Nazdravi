@@ -1,0 +1,37 @@
+PS C:\Users\brent\Documents\DietPro (4)\DietPro> firebase functions:log
+2025-06-02T02:02:56.180947Z ? onAppointmentCreated:   "timeslot": "16:00",
+2025-06-02T02:02:56.180950Z ? onAppointmentCreated:   "type": "Follow-up",
+2025-06-02T02:02:56.180952Z ? onAppointmentCreated:   "userId": "h49TW1K0CFP3FxO2zuzAgMvrXRS2"
+2025-06-02T02:02:56.180955Z ? onAppointmentCreated: }
+2025-06-02T02:02:56.180958Z ? onAppointmentCreated: 👤 Client Name (resolved): Mclovin
+2025-06-02T02:02:56.180980Z ? onAppointmentCreated: 📧 Client Email (resolved): ytp004.lf@gmail.com
+2025-06-02T02:02:56.181029Z ? onAppointmentCreated: 📅 Date: 2025-06-25
+2025-06-02T02:02:56.181076Z ? onAppointmentCreated: 🕐 Time (resolved): 16:00
+2025-06-02T02:02:56.181339Z ? onAppointmentCreated: 📋 Type: Follow-up
+2025-06-02T02:02:56.181413Z ? onAppointmentCreated: 📊 Status: pending
+2025-06-02T02:02:56.181473Z ? onAppointmentCreated: 👤 User ID: h49TW1K0CFP3FxO2zuzAgMvrXRS2
+2025-06-02T02:02:56.181559Z ? onAppointmentCreated: 🕒 Timestamp: 2025-06-02T02:02:56.181Z
+2025-06-02T02:02:56.181883Z ? onAppointmentCreated: 📧 Admin notification template generated
+2025-06-02T02:02:56.181933Z ? onAppointmentCreated: 📋 Subject: New Appointment Request - Mclovin
+2025-06-02T02:02:56.181981Z ? onAppointmentCreated: 📬 Sending to admin: admin@veenutrition.com
+2025-06-02T02:03:00.449914Z ? onAppointmentCreated: ✅ Admin notification queued successfully. Mail ID: 56bR63HhD81c0WgSrYVS
+2025-06-02T02:03:00.449945Z ? onAppointmentCreated: 📬 Admin will be notified about appointment from: ytp004.lf@gmail.com
+2025-06-02T02:03:00.482139366Z D onAppointmentCreated: Function execution took 4506 ms, finished with status: 'ok'
+2025-06-02T02:03:00.968564629Z D processMailQueue: Function execution started
+2025-06-02T02:03:01.144741Z I ext-firestore-send-email-processqueue:
+2025-06-02T02:03:01.165520Z I ext-firestore-send-email-processqueue: {"secure":true,"testing":false,"TTLExpireValue":1,"mailCollection":"mail","smtpConnectionUri":"<omitted>","TTLExpireType":"never","databaseRegion":"nam5","clientSecret":"<omitted>","port":465,"message":"Started execution of extension with configuration","location":"us-central1","refreshToken":"<omitted>","database":"(default)","tls":"{}","authenticationType":"UsernamePassword","defaultFrom":"info@veenutrition.com","smtpPassword":"<omitted>","clientId":"<omitted>"}
+2025-06-02T02:03:01.166690Z ? processMailQueue: Processing email from queue: admin@veenutrition.com Type: admin-new-appointment
+2025-06-02T02:03:01.169292Z ? processMailQueue: Email sending failed: TypeError: Cannot read properties of undefined (reading 'clientName')
+2025-06-02T02:03:01.169307Z ? processMailQueue:     at /workspace/lib/index.js:945:47
+2025-06-02T02:03:01.169313Z ? processMailQueue:     at /workspace/node_modules/firebase-functions/lib/common/onInit.js:33:16
+2025-06-02T02:03:01.169320Z ? processMailQueue:     at cloudFunction (/workspace/node_modules/firebase-functions/lib/v1/cloud-functions.js:81:23)
+2025-06-02T02:03:01.169324Z ? processMailQueue:     at /layers/google.nodejs.functions-framework/functions-framework/node_modules/@google-cloud/functions-framework/build/src/function_wrappers.js:147:25
+2025-06-02T02:03:01.169328Z ? processMailQueue:     at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+2025-06-02T02:03:01.403134Z W ext-firestore-send-email-processqueue: message 'undefined' is not a valid object and no handlebars template has been provided instead - please add as an object or firestore map, otherwise you may experience unexpected results.
+2025-06-02T02:03:01.458582Z I ext-firestore-send-email-processqueue: Completed execution of extension
+2025-06-02T02:03:05.275304063Z D processMailQueue: Function execution took 4306 ms, finished with status: 'ok'
+2025-06-02T02:03:05.363979Z I ext-firestore-send-email-processqueue:
+2025-06-02T02:03:05.371078Z I ext-firestore-send-email-processqueue: {"testing":false,"TTLExpireType":"never","port":465,"clientSecret":"<omitted>","smtpPassword":"<omitted>","clientId":"<omitted>","mailCollection":"mail","secure":true,"databaseRegion":"nam5","TTLExpireValue":1,"message":"Started execution of extension with configuration","location":"us-central1","tls":"{}","defaultFrom":"info@veenutrition.com","smtpConnectionUri":"<omitted>","authenticationType":"UsernamePassword","database":"(default)","refreshToken":"<omitted>"}
+2025-06-02T02:03:05.450572Z W ext-firestore-send-email-processqueue: message 'undefined' is not a valid object and no handlebars template has been provided instead - please add as an object or firestore map, otherwise you may experience unexpected results.
+2025-06-02T02:03:05.491107Z I ext-firestore-send-email-processqueue: Completed execution of extension
+PS C:\Users\brent\Documents\DietPro (4)\DietPro> 
