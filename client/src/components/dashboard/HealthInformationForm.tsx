@@ -16,6 +16,7 @@ import { useAuth } from "@/contexts/AuthContext";
 
 const healthInfoSchema = z.object({
   age: z.string().optional(),
+  gender: z.string().optional(),
   height: z.string().optional(),
   weight: z.string().optional(),
   medicalConditions: z.array(z.string()).optional(),
@@ -64,6 +65,7 @@ export function HealthInformationForm({ userId }: HealthInformationFormProps) {
     resolver: zodResolver(healthInfoSchema),
     defaultValues: {
       age: "",
+      gender: "",
       height: "",
       weight: "",
       medicalConditions: [],
@@ -171,6 +173,7 @@ export function HealthInformationForm({ userId }: HealthInformationFormProps) {
           
           healthData = {
             age: userData.age?.toString() || "",
+            gender: userData.gender || "",
             height: userData.height || "",
             weight: userData.currentWeight || "",
             targetWeight: userData.targetWeight || "",
@@ -380,7 +383,7 @@ export function HealthInformationForm({ userId }: HealthInformationFormProps) {
           {/* Basic Health Metrics */}
           <div className="space-y-4">
             <h3 className="text-lg font-semibold">Basic Health Metrics</h3>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
               <div>
                 <Label htmlFor="age">Age</Label>
                 <Input
@@ -389,6 +392,20 @@ export function HealthInformationForm({ userId }: HealthInformationFormProps) {
                   {...form.register("age")}
                   placeholder="Your age"
                 />
+              </div>
+              <div>
+                <Label htmlFor="gender">Gender</Label>
+                <select
+                  id="gender"
+                  {...form.register("gender")}
+                  className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                >
+                  <option value="">Select gender</option>
+                  <option value="female">Female</option>
+                  <option value="male">Male</option>
+                  <option value="other">Other</option>
+                  <option value="prefer-not-to-say">Prefer not to say</option>
+                </select>
               </div>
               <div>
                 <Label htmlFor="height">Height</Label>
