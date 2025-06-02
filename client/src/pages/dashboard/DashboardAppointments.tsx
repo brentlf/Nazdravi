@@ -90,6 +90,7 @@ export default function DashboardAppointments() {
   const [isCancelOpen, setIsCancelOpen] = useState(false);
   const [selectedAppointment, setSelectedAppointment] = useState<any>(null);
   const [rescheduleDate, setRescheduleDate] = useState("");
+  const [rescheduleTimeslot, setRescheduleTimeslot] = useState("");
   const [showAllAppointments, setShowAllAppointments] = useState(false);
   const [isPreEvaluationOpen, setIsPreEvaluationOpen] = useState(false);
   const [hasPreEvaluation, setHasPreEvaluation] = useState(false);
@@ -696,6 +697,8 @@ export default function DashboardAppointments() {
                           variant="outline"
                           onClick={() => {
                             setSelectedAppointment(nextAppointment);
+                            setRescheduleDate("");
+                            setRescheduleTimeslot("");
                             setIsRescheduleOpen(true);
                           }}
                           title="Reschedule appointment"
@@ -1861,11 +1864,37 @@ export default function DashboardAppointments() {
                   onChange={(e) => setRescheduleDate(e.target.value)}
                 />
               </div>
+              <div>
+                <label className="text-sm font-medium">New Time</label>
+                {rescheduleSlotsLoading ? (
+                  <div className="p-3 text-sm text-muted-foreground">Loading available times...</div>
+                ) : rescheduleSlots && rescheduleSlots.length > 0 ? (
+                  <select 
+                    value={rescheduleTimeslot}
+                    onChange={(e) => setRescheduleTimeslot(e.target.value)}
+                    className="w-full p-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100"
+                  >
+                    <option value="">Select a time</option>
+                    {rescheduleSlots.map((slot) => (
+                      <option key={slot.time} value={slot.time}>
+                        {slot.time}
+                      </option>
+                    ))}
+                  </select>
+                ) : (
+                  <div className="p-3 text-sm text-muted-foreground">
+                    {rescheduleDate ? "No available times for selected date" : "Please select a date first"}
+                  </div>
+                )}
+              </div>
               <div className="flex justify-end gap-3">
                 <Button variant="outline" onClick={() => setIsRescheduleOpen(false)}>
                   Cancel
                 </Button>
-                <Button onClick={() => handleReschedule(rescheduleDate, "09:00")}>
+                <Button 
+                  onClick={() => handleReschedule(rescheduleDate, rescheduleTimeslot)}
+                  disabled={!rescheduleDate || !rescheduleTimeslot}
+                >
                   Reschedule
                 </Button>
               </div>
