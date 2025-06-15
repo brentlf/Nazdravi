@@ -69,27 +69,6 @@ export default function About() {
     },
   ];
 
-  const stats = [
-    {
-      icon: Users,
-      number: "500+",
-      label: "Lives Transformed",
-      description: "Clients successfully achieving their health goals",
-    },
-    {
-      icon: Award,
-      number: "95%",
-      label: "Client Satisfaction",
-      description: "Consistently high satisfaction ratings",
-    },
-    {
-      icon: Clock,
-      number: "24/7",
-      label: "Ongoing Support",
-      description: "Continuous guidance throughout your journey",
-    },
-  ];
-
   return (
     <div className="min-h-screen bg-background page-content">
       {/* Full-Width Hero Section */}
@@ -122,185 +101,138 @@ export default function About() {
         </div>
       </section>
 
-      {/* 3-Column Layout Section */}
-      <div className="grid grid-cols-12 min-h-screen">
-        {/* Left Column - Images */}
-        <div className="col-span-3 dark:bg-gray-800">
-          <div className="sticky top-0 h-screen flex flex-col gap-6 p-6">
-            <div className="relative group flex-1">
-              <img
-                src="https://images.unsplash.com/photo-1586201375761-83865001e31c?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80"
-                alt="Woven basket with fresh produce"
-                className="w-full h-full object-cover rounded-xl shadow-xl group-hover:shadow-2xl transition-shadow duration-300"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent rounded-xl"></div>
-            </div>
-            <div className="relative group flex-1">
-              <img
-                src="https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80"
-                alt="Healthy lifestyle"
-                className="w-full h-full object-cover rounded-xl shadow-xl group-hover:shadow-2xl transition-shadow duration-300"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent rounded-xl"></div>
-            </div>
-          </div>
-        </div>
-
-        {/* Middle Column - Content */}
-        <div className="col-span-6 bg-white dark:bg-gray-900">
-          <section className="px-8 py-12">
-            {/* About Section */}
-            <div className="mb-12">
-              <div className="text-center mb-8">
-                <div className="inline-flex items-center justify-center w-16 h-16 bg-blue-100 dark:bg-blue-900 rounded-full mb-4">
-                  <GraduationCap className="w-8 h-8 text-blue-600 dark:text-blue-400" />
-                </div>
-                <h2 className="text-3xl font-bold mb-4">About Me</h2>
-                <div className="w-24 h-1 bg-blue-600 mx-auto rounded-full"></div>
+      {/* Content Section */}
+      <div className="bg-white dark:bg-gray-900">
+        <section className="container mx-auto px-8 py-12 max-w-4xl">
+          {/* About Section */}
+          <div className="mb-12">
+            <div className="text-center mb-8">
+              <div className="inline-flex items-center justify-center w-16 h-16 bg-blue-100 dark:bg-blue-900 rounded-full mb-4">
+                <GraduationCap className="w-8 h-8 text-blue-600 dark:text-blue-400" />
               </div>
-
-              <div className="space-y-8 text-center max-w-3xl mx-auto">
-                <p className="leading-relaxed text-gray-700 dark:text-gray-300">
-                  Hi! I’m Vee, a Registered Dietitian with both the Health
-                  Professions Council of South Africa (HPCSA) and the Health and
-                  Care Professions Council (HCPC) in the UK. With over 8 years
-                  of clinical experience, I’ve had the privilege of supporting
-                  individuals and families across various stages of life—from
-                  managing complex medical conditions to guiding parents through
-                  the critical stages of infant and child nutrition.
-                </p>
-                <p className="leading-relaxed text-gray-700 dark:text-gray-300">
-                  My passion lies in real, practical nutrition—grounded in
-                  science, not fad diets. I believe healthy living doesn’t have
-                  to be restrictive or overwhelming. Instead, I help clients
-                  build sustainable habits that fit naturally into their
-                  lifestyle, culture, and family needs.
-                </p>
-                <p className="leading-relaxed text-gray-700 dark:text-gray-300">
-                  Whether you’re navigating a new diagnosis, trying to feel more
-                  confident during pregnancy and postpartum, or simply looking
-                  to eat better without the confusion, I’m here to help you make
-                  informed and empowering choices.
-                </p>
-
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-12">
-                  {credentials.map((credential, index) => {
-                    const Icon = credential.icon;
-                    return (
-                      <Card
-                        key={index}
-                        className="border-0 shadow-lg hover:shadow-xl transition-shadow duration-300 bg-gradient-to-br from-blue-50 to-white dark:from-gray-800 dark:to-gray-700"
-                      >
-                        <CardContent className="p-4">
-                          <div className="flex items-start gap-3">
-                            <div className="w-10 h-10 bg-blue-100 dark:bg-blue-900 rounded-lg flex items-center justify-center flex-shrink-0">
-                              <Icon className="w-5 h-5 text-blue-600 dark:text-blue-400" />
-                            </div>
-                            <div className="text-left">
-                              <h3 className="font-bold text-base mb-1">
-                                {credential.title}
-                              </h3>
-                              <p className="text-xs text-gray-600 dark:text-gray-400 leading-relaxed">
-                                {credential.description}
-                              </p>
-                            </div>
-                          </div>
-                        </CardContent>
-                      </Card>
-                    );
-                  })}
-                </div>
-              </div>
+              <h2 className="text-3xl font-bold mb-4">About Me</h2>
+              <div className="w-24 h-1 bg-blue-600 mx-auto rounded-full"></div>
             </div>
 
-            {/* My Approach Section */}
-            <div className="mb-12">
-              <div className="text-center mb-8">
-                <div className="inline-flex items-center justify-center w-16 h-16 bg-green-100 dark:bg-green-900 rounded-full mb-4">
-                  <Target className="w-8 h-8 text-green-600 dark:text-green-400" />
-                </div>
-                <h2 className="text-3xl font-bold mb-4">My Approach</h2>
-                <div className="w-24 h-1 bg-green-600 mx-auto rounded-full"></div>
-              </div>
+            <div className="space-y-8 text-center max-w-3xl mx-auto">
+              <p className="leading-relaxed text-gray-700 dark:text-gray-300">
+                Hi! I'm Vee, a Registered Dietitian with both the Health
+                Professions Council of South Africa (HPCSA) and the Health and
+                Care Professions Council (HCPC) in the UK. With over 8 years
+                of clinical experience, I've had the privilege of supporting
+                individuals and families across various stages of life—from
+                managing complex medical conditions to guiding parents through
+                the critical stages of infant and child nutrition.
+              </p>
+              <p className="leading-relaxed text-gray-700 dark:text-gray-300">
+                My passion lies in real, practical nutrition—grounded in
+                science, not fad diets. I believe healthy living doesn't have
+                to be restrictive or overwhelming. Instead, I help clients
+                build sustainable habits that fit naturally into their
+                lifestyle, culture, and family needs.
+              </p>
+              <p className="leading-relaxed text-gray-700 dark:text-gray-300">
+                Whether you're navigating a new diagnosis, trying to feel more
+                confident during pregnancy and postpartum, or simply looking
+                to eat better without the confusion, I'm here to help you make
+                informed and empowering choices.
+              </p>
 
-              <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
-                {values.map((value, index) => {
-                  const Icon = value.icon;
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-12">
+                {credentials.map((credential, index) => {
+                  const Icon = credential.icon;
                   return (
                     <Card
                       key={index}
-                      className="border-0 shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1 bg-gradient-to-br from-white to-gray-50 dark:from-gray-800 dark:to-gray-700"
+                      className="border-0 shadow-lg hover:shadow-xl transition-shadow duration-300 bg-gradient-to-br from-blue-50 to-white dark:from-gray-800 dark:to-gray-700"
                     >
-                      <CardContent className="p-4 text-center">
-                        <div className="w-12 h-12 bg-gradient-to-br from-blue-100 to-blue-200 dark:from-blue-900 dark:to-blue-800 rounded-full flex items-center justify-center mx-auto mb-4">
-                          <Icon className="w-6 h-6 text-blue-600 dark:text-blue-400" />
+                      <CardContent className="p-4">
+                        <div className="flex items-start gap-3">
+                          <div className="w-10 h-10 bg-blue-100 dark:bg-blue-900 rounded-lg flex items-center justify-center flex-shrink-0">
+                            <Icon className="w-5 h-5 text-blue-600 dark:text-blue-400" />
+                          </div>
+                          <div className="text-left">
+                            <h3 className="font-bold text-base mb-1">
+                              {credential.title}
+                            </h3>
+                            <p className="text-xs text-gray-600 dark:text-gray-400 leading-relaxed">
+                              {credential.description}
+                            </p>
+                          </div>
                         </div>
-                        <h3 className="text-lg font-bold mb-2">
-                          {value.title}
-                        </h3>
-                        <p className="text-sm text-gray-600 dark:text-gray-400 leading-relaxed">
-                          {value.description}
-                        </p>
                       </CardContent>
                     </Card>
                   );
                 })}
               </div>
             </div>
+          </div>
 
-            {/* Personal Story Section */}
-            <div className="text-center">
-              <div className="inline-flex items-center justify-center w-16 h-16 bg-rose-100 dark:bg-rose-900 rounded-full mb-4">
-                <Heart className="w-8 h-8 text-rose-600 dark:text-rose-400" />
+          {/* My Approach Section */}
+          <div className="mb-12">
+            <div className="text-center mb-8">
+              <div className="inline-flex items-center justify-center w-16 h-16 bg-green-100 dark:bg-green-900 rounded-full mb-4">
+                <Target className="w-8 h-8 text-green-600 dark:text-green-400" />
               </div>
-              <h2 className="text-3xl font-bold mb-4">
-                Your Dedicated Partner
-              </h2>
-              <div className="w-24 h-1 bg-rose-600 mx-auto rounded-full mb-6"></div>
-
-              <div className="space-y-4 text-base leading-relaxed max-w-3xl mx-auto text-gray-700 dark:text-gray-300">
-                <p>
-                  You deserve to feel heard and supported. Your story matters,
-                  and together we'll transform your relationship with food. My
-                  approach combines evidence-based nutrition science with
-                  real-world practicality.
-                </p>
-              </div>
-
-              <div className="mt-12">
-                <Button
-                  asChild
-                  size="lg"
-                  className="px-10 py-4 text-lg bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 shadow-lg hover:shadow-xl transition-all duration-300"
-                >
-                  <Link href="/appointment">Book Consultation</Link>
-                </Button>
-              </div>
+              <h2 className="text-3xl font-bold mb-4">My Approach</h2>
+              <div className="w-24 h-1 bg-green-600 mx-auto rounded-full"></div>
             </div>
-          </section>
-        </div>
 
-        {/* Right Column - Images */}
-        <div className="col-span-3 dark:bg-gray-800">
-          <div className="sticky top-0 h-screen flex flex-col gap-6 p-6">
-            <div className="relative group flex-1">
-              <img
-                src="https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80"
-                alt="Fresh figs"
-                className="w-full h-full object-cover rounded-xl shadow-xl group-hover:shadow-2xl transition-shadow duration-300"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent rounded-xl"></div>
-            </div>
-            <div className="relative group flex-1">
-              <img
-                src="https://images.unsplash.com/photo-1559181567-c3190ca9959b?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80"
-                alt="Nutrition and wellness"
-                className="w-full h-full object-cover rounded-xl shadow-xl group-hover:shadow-2xl transition-shadow duration-300"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent rounded-xl"></div>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+              {values.map((value, index) => {
+                const Icon = value.icon;
+                return (
+                  <Card
+                    key={index}
+                    className="border-0 shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1 bg-gradient-to-br from-white to-gray-50 dark:from-gray-800 dark:to-gray-700"
+                  >
+                    <CardContent className="p-4 text-center">
+                      <div className="w-12 h-12 bg-gradient-to-br from-blue-100 to-blue-200 dark:from-blue-900 dark:to-blue-800 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <Icon className="w-6 h-6 text-blue-600 dark:text-blue-400" />
+                      </div>
+                      <h3 className="text-lg font-bold mb-2">
+                        {value.title}
+                      </h3>
+                      <p className="text-sm text-gray-600 dark:text-gray-400 leading-relaxed">
+                        {value.description}
+                      </p>
+                    </CardContent>
+                  </Card>
+                );
+              })}
             </div>
           </div>
-        </div>
+
+          {/* Personal Story Section */}
+          <div className="text-center">
+            <div className="inline-flex items-center justify-center w-16 h-16 bg-rose-100 dark:bg-rose-900 rounded-full mb-4">
+              <Heart className="w-8 h-8 text-rose-600 dark:text-rose-400" />
+            </div>
+            <h2 className="text-3xl font-bold mb-4">
+              Your Dedicated Partner
+            </h2>
+            <div className="w-24 h-1 bg-rose-600 mx-auto rounded-full mb-6"></div>
+
+            <div className="space-y-4 text-base leading-relaxed max-w-3xl mx-auto text-gray-700 dark:text-gray-300">
+              <p>
+                You deserve to feel heard and supported. Your story matters,
+                and together we'll transform your relationship with food. My
+                approach combines evidence-based nutrition science with
+                real-world practicality.
+              </p>
+            </div>
+
+            <div className="mt-12">
+              <Button
+                asChild
+                size="lg"
+                className="px-10 py-4 text-lg bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 shadow-lg hover:shadow-xl transition-all duration-300"
+              >
+                <Link href="/appointment">Book Consultation</Link>
+              </Button>
+            </div>
+          </div>
+        </section>
       </div>
     </div>
   );
