@@ -92,7 +92,7 @@ export default function Blog() {
       {/* Dark overlay - Full Screen */}
       <div className="fixed inset-0 bg-black/40 -z-10" />
 
-      {/* Content Container with proper spacing */}
+      {/* Content Container with proper spacing for footer overlay */}
       <div className="pt-16 pb-20">
         {/* Main content section */}
         <section className="flex flex-col justify-center px-4 h-full">

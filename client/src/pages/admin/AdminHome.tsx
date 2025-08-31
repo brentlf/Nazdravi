@@ -158,18 +158,18 @@ export default function AdminHome() {
   ];
 
   return (
-    <div className="min-h-screen py-20 bg-gradient-to-br from-background to-muted/30 country-texture relative overflow-hidden">
-      <div className="container mx-auto px-4 relative z-10">
+    <div className="h-[calc(100vh-5rem)] py-2 bg-gradient-to-br from-slate-50 via-blue-50/30 to-indigo-50/40 dark:from-slate-900 dark:via-slate-800/50 dark:to-slate-700/30 relative overflow-hidden">
+      <div className="container mx-auto px-4 relative z-10 h-full overflow-y-auto">
         {/* Header with Navigation and Organic Design */}
-        <div className="mb-12 relative">
+        <div className="mb-3 relative">
           <div className="flex items-center justify-between">
             <div className="relative">
-              <div className="doodle-arrow mb-2">
-                <h1 className="font-display text-3xl md:text-4xl mb-2 text-foreground handwritten-accent">
+              <div className="doodle-arrow mb-1">
+                <h1 className="font-display text-xl md:text-2xl mb-1 text-foreground handwritten-accent">
                   Admin Dashboard
                 </h1>
               </div>
-              <p className="serif-body text-xl text-muted-foreground leading-relaxed">
+              <p className="serif-body text-base text-muted-foreground leading-relaxed">
                 Overview of your nutrition practice and client management
               </p>
               
@@ -195,251 +195,180 @@ export default function AdminHome() {
           <DoodleConnector direction="down" className="absolute -bottom-6 left-1/2 transform -translate-x-1/2 w-32" />
         </div>
 
-        {/* Quick Stats */}
-        <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-6 mb-8 items-stretch">
-          {quickStats.map((stat, index) => {
-            const Icon = stat.icon;
-            
-            // Special handling for Daily Reminder Emails tile
-            if (stat.title === "Daily Reminder Emails") {
-              // Get tomorrow's date and appointments
-              const tomorrow = new Date();
-              tomorrow.setDate(tomorrow.getDate() + 1);
-              const tomorrowAppointments = appointments?.filter(apt => {
-                const aptDate = new Date(apt.date);
-                return aptDate.toDateString() === tomorrow.toDateString() && 
-                       apt.status === "confirmed";
-              }) || [];
+        {/* Top Section - Stats + Quick Actions */}
+        <div className="grid lg:grid-cols-3 gap-3 mb-3">
+          {/* Stats Cards */}
+          <div className="lg:col-span-2">
+            <h3 className="text-base font-semibold mb-2 flex items-center gap-2">
+              <TrendingUp className="w-4 h-4" />
+              Key Metrics
+            </h3>
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-2">
+              {quickStats.map((stat, index) => {
+                const Icon = stat.icon;
+                
+                // Get display value and button text based on card type
+                let displayValue, buttonText, displayTitle;
+                
+                if (stat.title === "Daily Reminder Emails") {
+                  const tomorrow = new Date();
+                  tomorrow.setDate(tomorrow.getDate() + 1);
+                  const tomorrowAppointments = appointments?.filter(apt => {
+                    const aptDate = new Date(apt.date);
+                    return aptDate.toDateString() === tomorrow.toDateString() && 
+                           apt.status === "confirmed";
+                  }) || [];
+                  displayValue = tomorrowAppointments.length;
+                  buttonText = "Send";
+                  displayTitle = "Daily Emails";
+                } else {
+                  displayValue = stat.value;
+                  buttonText = "View";
+                  // Create better abbreviated titles for longer names
+                  if (stat.title === "Appointment Management") {
+                    displayTitle = "Appointments";
+                  } else if (stat.title === "Billing & Subscriptions") {
+                    displayTitle = "Billing & Invoicing";
+                  } else if (stat.title.includes("Billing")) {
+                    displayTitle = "Billing";
+                  } else {
+                    displayTitle = stat.title.length > 12 ? 
+                      stat.title.split(' ').slice(0, 2).join(' ') : 
+                      stat.title;
+                  }
+                }
 
-              return (
-                <div key={index} className="relative h-full">
-                  <Card className="mediterranean-card hover:shadow-xl transition-all duration-500 border-0 floating-element h-full">
-                    <CardContent className="p-4 flex flex-col h-full relative min-h-[180px]">
-                      <div className="flex items-center justify-between mb-3">
-                        <h3 className="font-display text-sm text-muted-foreground">{stat.title}</h3>
-                        <div className={`w-8 h-8 blob-shape flex items-center justify-center ${stat.bgColor} floating-element`}>
-                          <Icon className={`w-4 h-4 ${stat.color}`} />
+                return (
+                  <Card key={index} className="bg-gradient-to-br from-white to-slate-50/50 dark:from-slate-800 dark:to-slate-700 border-2 border-slate-300 dark:border-slate-500 hover:border-indigo-400 dark:hover:border-indigo-500 hover:shadow-xl hover:shadow-indigo-200/20 dark:hover:shadow-indigo-900/20 transition-all duration-300 flex-1 min-w-0 h-36">
+                    <CardContent className="p-3 flex flex-col h-full">
+                      {/* Row 1: Header with icon and title */}
+                      <div className="flex items-center gap-2 mb-2 flex-shrink-0">
+                        <div className={`w-5 h-5 rounded flex items-center justify-center ${stat.bgColor} flex-shrink-0`}>
+                          <Icon className={`w-3 h-3 ${stat.color}`} />
                         </div>
+                        <p className="text-xs text-muted-foreground font-medium leading-tight overflow-hidden text-ellipsis whitespace-nowrap" title={displayTitle}>{displayTitle}</p>
                       </div>
-                      <div className="flex-grow mb-3">
-                        <p className="font-display text-2xl font-bold mb-1">{tomorrowAppointments.length}</p>
-                        <p className="serif-body text-xs text-muted-foreground">
-                          clients with appointments tomorrow
-                        </p>
-                        <Badge variant="secondary" className="text-xs mt-1 handwritten-accent">
-                          Ready to send
-                        </Badge>
-                      </div>
-                      <Button size="sm" variant="outline" asChild className="w-full mt-auto mediterranean-card">
-                        <Link href={stat.href}>
-                          <Mail className="w-3 h-3 mr-1" />
-                          Send Reminders
-                        </Link>
-                      </Button>
                       
-                      {/* Organic background decoration */}
-                      <div className="absolute top-0 right-0 w-16 h-16 bg-gradient-to-br from-primary/5 to-accent/5 blob-shape opacity-50"></div>
+                      {/* Row 2: Stat value (perfectly centered) */}
+                      <div className="flex-1 flex flex-col items-center justify-center min-h-0">
+                        <p className="text-2xl font-bold text-center leading-none">{displayValue}</p>
+                        {stat.badge && (
+                          <Badge variant="outline" className="text-xs text-red-600 border-red-600 mt-1">
+                            {stat.badge}
+                          </Badge>
+                        )}
+                      </div>
+                      
+                      {/* Row 3: Button at bottom */}
+                      <div className="flex-shrink-0 mt-2">
+                        <Button size="sm" variant="outline" asChild className="w-full h-7 text-xs">
+                          <Link href={stat.href}>
+                            {stat.title === "Daily Reminder Emails" && <Mail className="w-3 h-3 mr-1" />}
+                            {buttonText}
+                          </Link>
+                        </Button>
+                      </div>
                     </CardContent>
                   </Card>
-                  
-                  {/* Floating organic decoration */}
-                  {index === 2 && <FloatingOrganic className="absolute -top-4 -right-4 opacity-20" size="small" delay={1.5} />}
-                </div>
-              );
-            }
-            
-            // Regular stat tiles
-            return (
-              <div key={index} className="relative h-full">
-                <Card className="mediterranean-card hover:shadow-xl transition-all duration-500 border-0 floating-element h-full">
-                  <CardContent className="p-4 flex flex-col h-full relative min-h-[180px]">
-                    <div className="flex items-center justify-between mb-3">
-                      <h3 className="font-display text-sm text-muted-foreground">{stat.title}</h3>
-                      <div className={`w-8 h-8 blob-shape flex items-center justify-center ${stat.bgColor} floating-element`}>
-                        <Icon className={`w-4 h-4 ${stat.color}`} />
+                );
+              })}
+            </div>
+          </div>
+
+          {/* Quick Actions */}
+          <div className="lg:col-span-1 h-36">
+            <h3 className="text-base font-semibold mb-2 flex items-center gap-2">
+              <FileText className="w-4 h-4" />
+              Quick Actions
+            </h3>
+            <div className="grid grid-cols-2 gap-2 h-full">
+              {quickActions.map((action, index) => {
+                const Icon = action.icon;
+                return (
+                  <Button
+                    key={index}
+                    variant="outline"
+                    size="default"
+                    className="h-full p-3 flex items-center gap-3 justify-start bg-gradient-to-r from-white to-slate-50 dark:from-slate-700 dark:to-slate-600 border-slate-300 dark:border-slate-500 hover:from-indigo-50 hover:to-blue-50 dark:hover:from-slate-600 dark:hover:to-slate-500 transition-all duration-300"
+                    asChild
+                  >
+                    <Link href={action.href}>
+                      <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${action.color} flex-shrink-0`}>
+                        <Icon className="w-4 h-4 text-white" />
                       </div>
-                    </div>
-                    <div className="flex-grow mb-3">
-                      <p className="font-display text-2xl font-bold mb-1">{stat.value}</p>
-                      {stat.subtitle && (
-                        <p className="serif-body text-xs text-muted-foreground">{stat.subtitle}</p>
-                      )}
-                      {stat.badge && (
-                        <Badge variant="outline" className="text-xs text-red-600 border-red-600 mt-1 handwritten-accent">
-                          {stat.badge}
-                        </Badge>
-                      )}
-                    </div>
-                    <Button size="sm" variant="outline" asChild className="w-full mt-auto mediterranean-card">
-                      <Link href={stat.href}>View Details</Link>
-                    </Button>
-                    
-                    {/* Organic background decoration */}
-                    <div className="absolute top-0 right-0 w-16 h-16 bg-gradient-to-br from-primary/5 to-accent/5 blob-shape opacity-50"></div>
-                  </CardContent>
-                </Card>
-                
-                {/* Floating organic decorations */}
-                {index === 0 && <FloatingOrganic className="absolute -top-4 -left-4 opacity-20" size="small" delay={0.5} />}
-                {index === 4 && <FloatingOrganic className="absolute -bottom-4 -right-4 opacity-20" size="small" delay={2.5} />}
-              </div>
-            );
-          })}
+                      <span className="text-sm font-medium text-left leading-tight">{action.title}</span>
+                    </Link>
+                  </Button>
+                );
+              })}
+            </div>
+          </div>
         </div>
 
-        {/* Main Content Grid */}
-        <div className="grid lg:grid-cols-3 gap-8 lg:items-stretch">
-          {/* Recent Activity */}
-          <div className="lg:col-span-2 grid grid-rows-2 gap-8">
-            {/* Appointments Overview Calendar */}
+        {/* Main Content - Calendar + Messages */}
+        <div className="grid lg:grid-cols-3 gap-3">
+          {/* Calendar - Left Side (66%) */}
+          <div className="lg:col-span-2">
             <AppointmentsCalendar appointments={appointments || []} />
+          </div>
 
-            {/* Recent Messages */}
-            <Card>
-              <CardHeader className="flex flex-row items-center justify-between">
-                <CardTitle className="flex items-center gap-2">
-                  <MessageCircle className="w-5 h-5" />
-                  Recent Messages
+          {/* Messages - Right Side (33%) */}
+          <div className="lg:col-span-1">
+            <Card className="h-full flex flex-col bg-white dark:bg-slate-800 border-2 border-slate-300 dark:border-slate-500">
+              <CardHeader className="flex flex-row items-center justify-between pb-2 flex-shrink-0 bg-slate-50 dark:bg-slate-700 rounded-t-lg border-b-2 border-slate-300 dark:border-slate-500">
+                <CardTitle className="flex items-center gap-2 text-sm text-slate-800 dark:text-slate-200">
+                  <MessageCircle className="w-4 h-4 text-slate-600 dark:text-slate-400" />
+                  Messages ({recentMessages.length})
                 </CardTitle>
-                <Button variant="outline" size="sm" asChild>
-                  <Link href="/admin/messages">View All</Link>
+                <Button variant="outline" size="sm" className="border-slate-300 text-slate-700 hover:bg-slate-100 dark:border-slate-500 dark:text-slate-300 dark:hover:bg-slate-900/20" asChild>
+                  <Link href="/admin/messages">All</Link>
                 </Button>
               </CardHeader>
-              <CardContent>
+              <CardContent className="flex-1 flex flex-col">
                 {recentMessages.length > 0 ? (
-                  <div className="space-y-4">
+                  <div className="space-y-1 flex-1 overflow-y-auto pr-2">
                     {recentMessages.map((message) => (
-                      <div key={message.id} className="flex items-start space-x-3 p-3 bg-gray-50 dark:bg-gray-800 rounded-lg">
-                        <div className="w-8 h-8 bg-primary-100 dark:bg-primary-900/30 rounded-full flex items-center justify-center">
-                          <MessageCircle className="w-4 h-4 text-primary-600 dark:text-primary-400" />
+                      <div key={message.id} className="flex items-start gap-2 p-1 hover:bg-gray-50 dark:hover:bg-gray-800 rounded-md transition-colors cursor-pointer">
+                        <div className="w-5 h-5 bg-primary-100 dark:bg-primary-900/30 rounded-full flex items-center justify-center flex-shrink-0">
+                          <MessageCircle className="w-2 h-2 text-primary-600 dark:text-primary-400" />
                         </div>
                         <div className="flex-1 min-w-0">
-                          <p className="text-sm font-medium">{getSenderName(message)}</p>
-                          <p className="text-sm text-muted-foreground truncate">{message.text}</p>
-                          <p className="text-xs text-muted-foreground mt-1">
-                            {(() => {
-                              try {
-                                let date;
-                                if (message.createdAt instanceof Date) {
-                                  date = message.createdAt;
-                                } else if (message.createdAt && typeof message.createdAt === 'object' && 'toDate' in message.createdAt) {
-                                  date = (message.createdAt as any).toDate();
-                                } else {
-                                  date = new Date();
+                          <div className="flex items-center justify-between mb-1">
+                            <span className="text-xs font-medium truncate">{getSenderName(message)}</span>
+                            <span className="text-xs text-muted-foreground flex-shrink-0">
+                              {(() => {
+                                try {
+                                  let date;
+                                  if (message.createdAt instanceof Date) {
+                                    date = message.createdAt;
+                                  } else if (message.createdAt && typeof message.createdAt === 'object' && 'toDate' in message.createdAt) {
+                                    date = (message.createdAt as any).toDate();
+                                  } else {
+                                    date = new Date();
+                                  }
+                                  return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+                                } catch (error) {
+                                  return 'Recent';
                                 }
-                                return date.toLocaleDateString();
-                              } catch (error) {
-                                return 'Recent';
-                              }
-                            })()}
-                          </p>
+                              })()}
+                            </span>
+                          </div>
+                          <p className="text-xs text-muted-foreground line-clamp-2">{message.text}</p>
                         </div>
                       </div>
                     ))}
                   </div>
                 ) : (
-                  <div className="text-center py-8">
-                    <MessageCircle className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
-                    <p className="text-muted-foreground">No recent messages</p>
+                  <div className="flex-1 flex items-center justify-center">
+                    <div className="text-center">
+                      <MessageCircle className="w-8 h-8 text-muted-foreground mx-auto mb-2" />
+                      <p className="text-muted-foreground text-sm">No messages</p>
+                      <Button size="sm" className="mt-3" asChild>
+                        <Link href="/admin/messages">Start Chat</Link>
+                      </Button>
+                    </div>
                   </div>
                 )}
-              </CardContent>
-            </Card>
-          </div>
-
-          {/* Quick Actions Sidebar */}
-          <div className="space-y-8">
-            {/* Quick Actions */}
-            <Card>
-              <CardHeader>
-                <CardTitle>Quick Actions</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-3">
-                  {quickActions.map((action, index) => {
-                    const Icon = action.icon;
-                    return (
-                      <Button
-                        key={index}
-                        variant="outline"
-                        className="w-full justify-start h-auto p-4"
-                        asChild
-                      >
-                        <Link href={action.href}>
-                          <div className={`w-8 h-8 rounded-lg flex items-center justify-center mr-3 ${action.color}`}>
-                            <Icon className="w-4 h-4 text-white" />
-                          </div>
-                          <div className="text-left">
-                            <p className="font-medium">{action.title}</p>
-                            <p className="text-xs text-muted-foreground">{action.description}</p>
-                          </div>
-                        </Link>
-                      </Button>
-                    );
-                  })}
-                </div>
-              </CardContent>
-            </Card>
-
-            {/* Practice Stats */}
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <TrendingUp className="w-5 h-5" />
-                  Practice Overview
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-4">
-                  <div className="flex justify-between items-center">
-                    <span className="text-sm text-muted-foreground">Total Clients</span>
-                    <span className="font-semibold">{clientUsers}</span>
-                  </div>
-                  <div className="flex justify-between items-center">
-                    <span className="text-sm text-muted-foreground">This Month</span>
-                    <span className="font-semibold">{thisMonthAppointments} appointments</span>
-                  </div>
-                  <div className="flex justify-between items-center">
-                    <span className="text-sm text-muted-foreground">Pending Reviews</span>
-                    <span className="font-semibold">{pendingAppointments}</span>
-                  </div>
-                  <div className="flex justify-between items-center">
-                    <span className="text-sm text-muted-foreground">Unread Messages</span>
-                    <span className="font-semibold">{unreadMessages}</span>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-
-            {/* System Status */}
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <CheckCircle className="w-5 h-5 text-green-500" />
-                  System Status
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-3">
-                  <div className="flex items-center justify-between">
-                    <span className="text-sm">Firebase Connection</span>
-                    <Badge className="bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-400">
-                      Healthy
-                    </Badge>
-                  </div>
-                  <div className="flex items-center justify-between">
-                    <span className="text-sm">Email Service</span>
-                    <Badge className="bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-400">
-                      Active
-                    </Badge>
-                  </div>
-                  <div className="flex items-center justify-between">
-                    <span className="text-sm">Storage</span>
-                    <Badge className="bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-400">
-                      Available
-                    </Badge>
-                  </div>
-                </div>
               </CardContent>
             </Card>
           </div>

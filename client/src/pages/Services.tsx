@@ -158,23 +158,23 @@ export default function Services() {
       {/* Content Container - Full height with proper spacing for footer overlay */}
       <div className="min-h-screen pt-16 pb-20">
         {/* Main content section */}
-        <section className="flex flex-col justify-center px-4 h-full">
-          <div className="max-w-6xl mx-auto w-full">
+        <section className="px-4 py-4">
+          <div className="max-w-7xl mx-auto w-full">
             {/* Header Section */}
-            <div className="text-center mb-4 flex-shrink-0">
-              <div className="inline-flex items-center justify-center w-10 h-10 bg-white/15 backdrop-blur-sm rounded-full mb-2">
+            <div className="text-center mb-6">
+              <div className="inline-flex items-center justify-center w-10 h-10 bg-white/15 backdrop-blur-sm rounded-full mb-3">
                 <Leaf className="h-5 w-5 text-white" />
               </div>
-              <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold mb-2 leading-tight text-white font-serif">
+              <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold mb-3 leading-tight text-white font-serif">
                 Nutrition Services
               </h1>
-              <p className="text-xs sm:text-sm text-white/90 max-w-xl mx-auto leading-relaxed">
+              <p className="text-sm text-white/90 max-w-xl mx-auto leading-relaxed">
                 Transform your health with evidence-based nutrition guidance tailored to your unique needs and lifestyle.
               </p>
             </div>
 
             {/* Services Grid */}
-            <div className="grid lg:grid-cols-3 gap-3 mb-4 flex-shrink-0">
+            <div className="grid lg:grid-cols-3 gap-4 mb-6">
               {services.map((service, index) => (
                 <Card key={index} className={`relative border-0 bg-white/15 backdrop-blur-sm hover:bg-white/25 transition-all duration-300 rounded-xl ${service.popular ? 'ring-2 ring-yellow-400/50' : ''}`}>
                   {service.popular && (
@@ -184,20 +184,20 @@ export default function Services() {
                       </Badge>
                     </div>
                   )}
-                  <CardContent className="p-3 text-white">
-                    <div className={`inline-flex items-center justify-center w-8 h-8 bg-gradient-to-br ${service.color} rounded-xl mb-2`}>
+                  <CardContent className="p-4 text-white h-full flex flex-col">
+                    <div className={`inline-flex items-center justify-center w-8 h-8 bg-gradient-to-br ${service.color} rounded-xl mb-3`}>
                       <service.icon className="h-4 w-4 text-white" />
                     </div>
                     
-                    <h3 className="text-sm font-bold mb-1">
+                    <h3 className="text-sm font-bold mb-2">
                       {service.title}
                     </h3>
                     
-                    <p className="text-white/80 mb-2 leading-relaxed text-xs">
+                    <p className="text-white/80 mb-3 leading-relaxed text-xs flex-grow">
                       {service.description}
                     </p>
                     
-                    <div className="flex items-center justify-between mb-2">
+                    <div className="flex items-center justify-between mb-3">
                       <div className="text-xs text-white/70">
                         Duration: {service.duration}
                       </div>
@@ -206,17 +206,20 @@ export default function Services() {
                       </div>
                     </div>
                     
-                    <ul className="space-y-1 mb-2">
-                      {service.features.slice(0, 2).map((feature, featureIndex) => (
-                        <li key={featureIndex} className="flex items-center gap-1 text-xs">
-                          <CheckCircle className="h-3 w-3 text-green-400 flex-shrink-0" />
+                    <ul className="space-y-1 mb-4 flex-grow">
+                      {service.features.slice(0, 3).map((feature, featureIndex) => (
+                        <li key={featureIndex} className="flex items-start gap-2 text-xs">
+                          <CheckCircle className="h-3 w-3 text-green-400 flex-shrink-0 mt-0.5" />
                           <span className="text-white/90">{feature}</span>
                         </li>
                       ))}
+                      {service.features.length > 3 && (
+                        <li className="text-xs text-white/60 italic">+ {service.features.length - 3} more features</li>
+                      )}
                     </ul>
                     
                     <Button 
-                      className="w-full bg-white text-gray-900 hover:bg-gray-100 font-medium text-xs py-1 h-7"
+                      className="w-full bg-white text-gray-900 hover:bg-gray-100 font-medium text-xs py-2 h-auto"
                       onClick={() => handleServicePlanSelection(service.id as any)}
                     >
                       {service.id === "program" ? "Start Program" : "Book Now"}
@@ -228,9 +231,10 @@ export default function Services() {
             </div>
 
             {/* CTA Section */}
-            <div className="text-center flex-shrink-0">
+            <div className="text-center">
+              <h3 className="text-base font-bold text-white mb-3">Not sure which option is right for you?</h3>
               <Link href="/appointment">
-                <Button size="sm" className="bg-white text-gray-900 hover:bg-gray-100 px-3 py-1.5 text-xs font-semibold">
+                <Button size="sm" className="bg-white text-gray-900 hover:bg-gray-100 px-4 py-2 text-xs font-semibold">
                   Book Your Consultation
                   <ArrowRight className="ml-1 h-3 w-3" />
                 </Button>

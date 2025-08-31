@@ -83,30 +83,30 @@ export function AppointmentsCalendar({ appointments }: AppointmentsCalendarProps
   };
 
   return (
-    <Card>
-      <CardHeader className="flex flex-row items-center justify-between">
-        <CardTitle className="flex items-center gap-2">
-          <Calendar className="w-5 h-5" />
+    <Card className="bg-white dark:bg-slate-800 border-2 border-slate-300 dark:border-slate-500">
+      <CardHeader className="flex flex-row items-center justify-between pb-3 bg-slate-50 dark:bg-slate-700 rounded-t-lg border-b-2 border-slate-300 dark:border-slate-500">
+        <CardTitle className="flex items-center gap-2 text-base text-slate-800 dark:text-slate-200">
+          <Calendar className="w-4 h-4 text-slate-600 dark:text-slate-400" />
           Appointments Overview
         </CardTitle>
         <div className="flex items-center gap-2">
-          <Button variant="outline" size="sm" onClick={handlePrevMonth}>
+          <Button variant="outline" size="sm" onClick={handlePrevMonth} className="border-slate-300 text-slate-700 hover:bg-slate-100 dark:border-slate-500 dark:text-slate-300 dark:hover:bg-slate-900/20">
             <ChevronLeft className="w-4 h-4" />
           </Button>
-          <span className="font-medium min-w-[140px] text-center">
+          <span className="font-medium min-w-[140px] text-center text-slate-700 dark:text-slate-300">
             {format(currentMonth, 'MMMM yyyy')}
           </span>
-          <Button variant="outline" size="sm" onClick={handleNextMonth}>
+          <Button variant="outline" size="sm" onClick={handleNextMonth} className="border-slate-300 text-slate-700 hover:bg-slate-100 dark:border-slate-500 dark:text-slate-300 dark:hover:bg-slate-900/20">
             <ChevronRight className="w-4 h-4" />
           </Button>
         </div>
       </CardHeader>
       <CardContent>
         {/* Calendar Grid */}
-        <div className="grid grid-cols-7 gap-1 mb-4">
+        <div className="grid grid-cols-7 gap-1 mb-2">
           {/* Day headers */}
           {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map(day => (
-            <div key={day} className="p-2 text-center text-sm font-medium text-muted-foreground">
+            <div key={day} className="p-1 text-center text-xs font-medium text-muted-foreground">
               {day}
             </div>
           ))}
@@ -123,13 +123,13 @@ export function AppointmentsCalendar({ appointments }: AppointmentsCalendarProps
                 key={dateKey}
                 className={`
                   min-h-[80px] p-1 border rounded-lg transition-colors
-                  ${isCurrentMonth ? 'bg-white dark:bg-gray-800' : 'bg-gray-50 dark:bg-gray-900'}
-                  ${isCurrentDay ? 'ring-2 ring-primary' : ''}
-                  hover:bg-gray-50 dark:hover:bg-gray-700
+                  ${isCurrentMonth ? 'bg-white dark:bg-slate-800' : 'bg-gray-50 dark:bg-slate-900'}
+                  ${isCurrentDay ? 'ring-2 ring-slate-400 bg-slate-100 dark:bg-slate-700' : ''}
+                  hover:bg-slate-50 dark:hover:bg-slate-700 border-slate-300 dark:border-slate-500
                 `}
               >
                 <div className={`
-                  text-sm font-medium mb-1
+                  text-xs font-medium mb-1
                   ${isCurrentMonth ? 'text-foreground' : 'text-muted-foreground'}
                   ${isCurrentDay ? 'text-primary font-bold' : ''}
                 `}>
@@ -239,13 +239,13 @@ export function AppointmentsCalendar({ appointments }: AppointmentsCalendarProps
         </div>
 
         {/* Legend */}
-        <div className="flex flex-wrap gap-3 pt-4 border-t">
-          <div className="text-sm font-medium text-muted-foreground">Status:</div>
+        <div className="flex flex-wrap gap-2 pt-2 border-t">
+          <div className="text-xs font-medium text-muted-foreground">Status:</div>
           {Object.entries(statusConfig).map(([status, config]) => {
             const StatusIcon = config.icon;
             return (
               <div key={status} className="flex items-center gap-1">
-                <div className={`w-3 h-3 rounded border ${config.color}`}></div>
+                <div className={`w-2 h-2 rounded border ${config.color}`}></div>
                 <span className="text-xs text-muted-foreground">{config.label}</span>
               </div>
             );

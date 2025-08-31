@@ -64,13 +64,13 @@ function Layout({ children }: { children: React.ReactNode }) {
   const isHomePage = location === "/";
   
   return (
-    <div className="min-h-screen flex flex-col relative">
+    <div className="min-h-screen relative">
       <Header />
-      <main className="flex-1 relative">
+      <main className="relative">
         {children}
       </main>
       {!isHomePage && (
-        <div className="absolute bottom-0 left-0 right-0 z-10">
+        <div className="fixed bottom-0 left-0 right-0 z-50">
           <Footer overlay={true} />
         </div>
       )}

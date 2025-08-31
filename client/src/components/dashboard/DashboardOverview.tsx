@@ -226,9 +226,9 @@ export function DashboardOverview() {
   ];
 
   return (
-    <div className="space-y-8 relative">
+    <div className="space-y-6 relative">
       {/* Welcome Section with Organic Design */}
-      <div className="relative overflow-hidden mediterranean-card p-8 text-white bg-gradient-to-br from-primary to-accent warm-glow">
+      <div className="relative overflow-hidden mediterranean-card p-6 text-white bg-gradient-to-br from-primary to-accent warm-glow">
         {isAdminViewingClient && (
           <div className="mb-4 bg-yellow-500/20 border border-yellow-400/30 rounded-lg p-3 floating-element">
             <p className="text-sm text-yellow-100">
@@ -238,12 +238,12 @@ export function DashboardOverview() {
         )}
 
         <div className="relative z-10">
-          <div className="doodle-arrow mb-2">
-            <h1 className="font-display text-3xl font-bold mb-2 handwritten-accent">
+          <div className="doodle-arrow mb-1">
+            <h1 className="font-display text-2xl font-bold mb-1 handwritten-accent">
               Welcome back, {user?.name}!
             </h1>
           </div>
-          <p className="serif-body text-xl text-primary-100 leading-relaxed">
+          <p className="serif-body text-lg text-primary-100 leading-relaxed">
             Here's your nutrition journey overview
           </p>
         </div>
@@ -267,7 +267,7 @@ export function DashboardOverview() {
       <SubscriptionBillingWidget user={user} />
 
       {/* Quick Stats Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-4">
         {quickStats.map((stat, index) => {
           const Icon = stat.icon;
           return (
@@ -275,7 +275,7 @@ export function DashboardOverview() {
               key={index}
               className="hover:shadow-lg transition-shadow duration-200"
             >
-              <CardContent className="p-6">
+              <CardContent className="p-4">
                 <div className="flex items-center justify-between mb-4">
                   <h3 className="font-semibold text-sm text-muted-foreground">
                     {stat.title}
@@ -307,7 +307,7 @@ export function DashboardOverview() {
       </div>
 
       {/* Recent Activity & Quick Actions */}
-      <div className="grid lg:grid-cols-3 gap-8 lg:items-stretch">
+      <div className="grid lg:grid-cols-3 gap-6 lg:items-stretch">
         {/* Recent Messages */}
         <div className="lg:col-span-2">
           <Card className="h-full">
@@ -320,7 +320,7 @@ export function DashboardOverview() {
                 <Link href="/dashboard/messages">View All</Link>
               </Button>
             </CardHeader>
-            <CardContent className="h-80">
+            <CardContent className="h-64">
               {messages && messages.length > 0 ? (
                 <div className="h-full overflow-y-auto space-y-4 pr-2">
                   {messages.slice(0, 6).map((message) => (
@@ -368,7 +368,7 @@ export function DashboardOverview() {
             <CardHeader>
               <CardTitle>Quick Actions</CardTitle>
             </CardHeader>
-            <CardContent className="h-80">
+            <CardContent className="h-64">
               <div className="h-full overflow-y-auto space-y-1 pr-1">
                 {quickActions.map((action, index) => {
                   const Icon = action.icon;
@@ -422,54 +422,48 @@ export function DashboardOverview() {
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="grid md:grid-cols-3 gap-4">
-            <div className="p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
-              <h4 className="font-semibold text-blue-800 dark:text-blue-200 mb-2">
+          <div className="grid md:grid-cols-3 gap-3">
+            <div className="p-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
+              <h4 className="font-semibold text-blue-800 dark:text-blue-200 mb-1">
                 Hydration
               </h4>
-              <p className="text-sm text-blue-600 dark:text-blue-300">
+              <p className="text-sm text-blue-600 dark:text-blue-300 mb-2">
                 Aim for 2.5L daily
               </p>
-              <div className="mt-2">
-                <Badge
-                  variant="outline"
-                  className="border-blue-200 text-blue-700"
-                >
-                  Daily Goal
-                </Badge>
-              </div>
+              <Badge
+                variant="outline"
+                className="border-blue-200 text-blue-700 text-xs"
+              >
+                Daily Goal
+              </Badge>
             </div>
-            <div className="p-4 bg-green-50 dark:bg-green-900/20 rounded-lg">
-              <h4 className="font-semibold text-green-800 dark:text-green-200 mb-2">
+            <div className="p-3 bg-green-50 dark:bg-green-900/20 rounded-lg">
+              <h4 className="font-semibold text-green-800 dark:text-green-200 mb-1">
                 Exercise
               </h4>
-              <p className="text-sm text-green-600 dark:text-green-300">
+              <p className="text-sm text-green-600 dark:text-green-300 mb-2">
                 30 min walks 3x week
               </p>
-              <div className="mt-2">
-                <Badge
-                  variant="outline"
-                  className="border-green-200 text-green-700"
-                >
-                  Weekly Goal
-                </Badge>
-              </div>
+              <Badge
+                variant="outline"
+                className="border-green-200 text-green-700 text-xs"
+              >
+                Weekly Goal
+              </Badge>
             </div>
-            <div className="p-4 bg-purple-50 dark:bg-purple-900/20 rounded-lg">
-              <h4 className="font-semibold text-purple-800 dark:text-purple-200 mb-2">
+            <div className="p-3 bg-purple-50 dark:bg-purple-900/20 rounded-lg">
+              <h4 className="font-semibold text-purple-800 dark:text-purple-200 mb-1">
                 Meal Prep
               </h4>
-              <p className="text-sm text-purple-600 dark:text-purple-300">
+              <p className="text-sm text-purple-600 dark:text-purple-300 mb-2">
                 Prep Sunday meals
               </p>
-              <div className="mt-2">
-                <Badge
-                  variant="outline"
-                  className="border-purple-200 text-purple-700"
-                >
-                  Weekly Task
-                </Badge>
-              </div>
+              <Badge
+                variant="outline"
+                className="border-purple-200 text-purple-700 text-xs"
+              >
+                Weekly Task
+              </Badge>
             </div>
           </div>
         </CardContent>

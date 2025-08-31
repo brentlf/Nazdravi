@@ -3,16 +3,16 @@ import { FloatingOrganic, DoodleConnector } from "@/components/ui/PageTransition
 
 export default function DashboardHome() {
   return (
-    <div className="min-h-screen py-20 bg-gradient-to-br from-background to-muted/30 country-texture relative overflow-hidden">
+    <div className="min-h-screen py-8 bg-gradient-to-br from-background to-muted/30 country-texture relative overflow-hidden">
       <div className="container mx-auto px-4 relative z-10">
         {/* Header with organic design */}
-        <div className="text-center mb-12 relative">
-          <div className="doodle-arrow mb-4">
-            <h1 className="font-display text-3xl md:text-4xl mb-4 text-foreground handwritten-accent">
+        <div className="text-center mb-6 relative">
+          <div className="doodle-arrow mb-2">
+            <h1 className="font-display text-2xl md:text-3xl mb-2 text-foreground handwritten-accent">
               Welcome to Your Wellness Journey
             </h1>
           </div>
-          <p className="serif-body text-xl text-muted-foreground max-w-2xl mx-auto leading-relaxed">
+          <p className="serif-body text-lg text-muted-foreground max-w-2xl mx-auto leading-relaxed">
             Track your progress, manage appointments, and connect with your nutrition goals
           </p>
           
