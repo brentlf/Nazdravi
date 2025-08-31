@@ -1,4 +1,4 @@
-import { Switch, Route } from "wouter";
+import { Switch, Route, useLocation } from "wouter";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { queryClient } from "./lib/queryClient";
 import { Toaster } from "@/components/ui/toaster";
@@ -60,13 +60,16 @@ import AdminEmailScheduler from "@/pages/admin/AdminEmailScheduler";
 import InvoiceView from "@/pages/invoice/InvoiceView";
 
 function Layout({ children }: { children: React.ReactNode }) {
+  const [location] = useLocation();
+  const isHomePage = location === "/";
+  
   return (
     <div className="min-h-screen flex flex-col">
       <Header />
       <main className="flex-1">
         {children}
       </main>
-      <Footer />
+      {!isHomePage && <Footer />}
     </div>
   );
 }

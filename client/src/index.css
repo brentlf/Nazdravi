@@ -3,59 +3,124 @@
 @import "tailwindcss";
 
 :root {
-  /* Modern Minimalist Color Palette */
-  --primary: 220 13% 18%; /* Deep charcoal */
-  --primary-foreground: 0 0% 100%;
+  /* Light Theme - Warm Neutral Colors */
+  --primary: 25 15% 15%; /* Warm dark brown */
+  --primary-foreground: 0 0% 98%; /* Off-white */
   
-  /* Background Colors - Clean whites with subtle warmth */
-  --background: 0 0% 99%; /* Off-white with warmth */
-  --foreground: 220 13% 18%; /* Deep charcoal text */
+  /* Background Colors - Warm whites and creams */
+  --background: 35 20% 98%; /* Warm off-white */
+  --foreground: 25 15% 15%; /* Warm dark brown text */
   
-  /* Clean UI Colors */
-  --muted: 220 9% 96%; /* Very light gray */
-  --muted-foreground: 220 9% 46%; /* Medium gray */
+  /* UI Colors with warmth */
+  --muted: 35 15% 94%; /* Warm light gray */
+  --muted-foreground: 25 10% 45%; /* Warm medium gray */
   --popover: 0 0% 100%; /* Pure white */
-  --popover-foreground: 220 13% 18%;
-  --card: 0 0% 100%; /* Pure white cards */
-  --card-foreground: 220 13% 18%;
-  --border: 220 9% 91%; /* Light gray border */
-  --input: 220 9% 96%; /* Light gray input */
-  --secondary: 220 9% 94%; /* Light gray */
-  --secondary-foreground: 220 13% 18%;
-  --accent: 220 13% 18%; /* Deep charcoal accent */
-  --accent-foreground: 0 0% 100%;
-  --destructive: 0 84% 60%; /* Modern red */
+  --popover-foreground: 25 15% 15%;
+  --card: 35 20% 99%; /* Warm white cards */
+  --card-foreground: 25 15% 15%;
+  --border: 35 15% 88%; /* Warm light gray border */
+  --input: 35 15% 94%; /* Warm light gray input */
+  --secondary: 35 15% 92%; /* Warm light gray */
+  --secondary-foreground: 25 15% 15%;
+  --accent: 25 15% 15%; /* Warm dark brown accent */
+  --accent-foreground: 0 0% 98%;
+  --destructive: 0 72% 51%; /* Warm red */
   --destructive-foreground: 0 0% 98%;
-  --ring: 220 13% 18%;
+  --ring: 25 15% 15%;
   --radius: 0.75rem;
   
   /* Custom colors for enhanced design */
   --success: 142 76% 36%; /* Green */
   --warning: 38 92% 50%; /* Amber */
   --info: 199 89% 48%; /* Blue */
+  
+  /* Additional warm neutral colors */
+  --warm-50: 35 20% 98%; /* Warmest background */
+  --warm-100: 35 15% 94%; /* Warm light */
+  --warm-200: 35 15% 88%; /* Warm lighter */
+  --warm-300: 35 10% 78%; /* Warm medium */
+  --warm-400: 25 10% 65%; /* Warm medium-dark */
+  --warm-500: 25 15% 45%; /* Warm dark */
+  --warm-600: 25 15% 35%; /* Warm darker */
+  --warm-700: 25 15% 25%; /* Warm darkest */
+  --warm-800: 25 15% 18%; /* Warm charcoal */
+  --warm-900: 25 15% 12%; /* Warm black */
 }
 
 .dark {
-  /* Sophisticated Dark Theme */
-  --background: 220 13% 9%; /* Deep charcoal */
-  --foreground: 0 0% 96%; /* Light gray text */
-  --muted: 220 9% 15%; /* Dark gray muted */
-  --muted-foreground: 220 9% 65%; /* Medium gray */
-  --popover: 220 13% 11%; /* Dark charcoal popover */
-  --popover-foreground: 0 0% 96%;
-  --card: 220 13% 13%; /* Dark charcoal card */
-  --card-foreground: 0 0% 96%;
-  --border: 220 9% 25%; /* Dark gray border */
-  --input: 220 9% 18%; /* Dark gray input */
-  --primary: 0 0% 96%; /* Light gray for dark mode */
-  --primary-foreground: 220 13% 9%;
-  --secondary: 220 9% 20%; /* Dark gray secondary */
+  /* Sophisticated Dark Theme - Rich and Deep */
+  --background: 220 15% 8%; /* Deep blue-tinted charcoal */
+  --foreground: 0 0% 95%; /* Soft white text */
+  
+  /* Rich dark UI colors */
+  --muted: 220 10% 18%; /* Deep muted */
+  --muted-foreground: 220 10% 70%; /* Light muted text */
+  --popover: 220 15% 10%; /* Deep popover */
+  --popover-foreground: 0 0% 95%;
+  --card: 220 15% 12%; /* Deep card */
+  --card-foreground: 0 0% 95%;
+  --border: 220 10% 22%; /* Deep border */
+  --input: 220 10% 18%; /* Deep input */
+  
+  /* Primary colors for dark mode */
+  --primary: 0 0% 95%; /* Light primary */
+  --primary-foreground: 220 15% 8%;
+  --secondary: 220 10% 20%; /* Deep secondary */
   --secondary-foreground: 0 0% 90%;
-  --accent: 0 0% 96%; /* Light accent */
-  --accent-foreground: 220 13% 9%;
-  --destructive: 0 84% 60%; /* Modern red */
+  --accent: 0 0% 95%; /* Light accent */
+  --accent-foreground: 220 15% 8%;
+  
+  /* Enhanced dark mode colors */
+  --destructive: 0 84% 60%; /* Bright red */
   --destructive-foreground: 0 0% 95%;
-  --ring: 0 0% 96%;
+  --ring: 0 0% 95%;
+  
+  /* Additional dark theme colors */
+  --dark-50: 220 15% 8%; /* Darkest background */
+  --dark-100: 220 10% 12%; /* Darker */
+  --dark-200: 220 10% 18%; /* Dark */
+  --dark-300: 220 10% 25%; /* Medium dark */
+  --dark-400: 220 10% 35%; /* Medium */
+  --dark-500: 220 10% 50%; /* Medium light */
+  --dark-600: 220 10% 65%; /* Light */
+  --dark-700: 220 10% 80%; /* Lighter */
+  --dark-800: 220 10% 90%; /* Lightest */
+  --dark-900: 0 0% 95%; /* Pure white */
+}
+
+/* System theme transition support */
+@media (prefers-color-scheme: light) {
+  :root {
+    /* System light theme - slightly different from manual light */
+    --background: 35 25% 99%; /* Even warmer system light */
+    --card: 35 25% 100%; /* Warmer system cards */
+    --muted: 35 20% 96%; /* Warmer system muted */
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    /* System dark theme - slightly different from manual dark */
+    --background: 220 18% 6%; /* Slightly different system dark */
+    --card: 220 18% 10%; /* Slightly different system cards */
+    --muted: 220 12% 16%; /* Slightly different system muted */
+  }
+}
+
+/* Theme transition classes */
+.theme-transitioning {
+  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.theme-transitioning *,
+.theme-transitioning *::before,
+.theme-transitioning *::after {
+  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease !important;
+}
+
+/* Light theme specific class */
+.light {
+  /* Additional light theme overrides if needed */
 }
 
 @layer base {
@@ -72,6 +137,7 @@
     font-feature-settings: "rlig" 1, "calt" 1;
     line-height: 1.7;
     letter-spacing: -0.01em;
+    transition: background-color 0.3s ease, color 0.3s ease;
   }
   
   /* Playfair Display for elegant headers */
@@ -81,6 +147,7 @@
     line-height: 1.2;
     color: hsl(var(--foreground));
     letter-spacing: -0.02em;
+    transition: color 0.3s ease;
   }
   
   h1 { 
@@ -126,6 +193,7 @@
     line-height: 1.7;
     margin-bottom: 1.5rem;
     color: hsl(var(--muted-foreground));
+    transition: color 0.3s ease;
   }
   
   /* Smooth scrolling */
@@ -138,9 +206,30 @@
     outline: 2px solid hsl(var(--primary));
     outline-offset: 2px;
   }
+  
+  /* Theme transition for all elements */
+  *, *::before, *::after {
+    transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease;
+  }
+  
+  /* Improved button and interactive element transitions */
+  button, a, input, textarea, select {
+    transition: all 0.2s ease;
+  }
+  
+  button:hover, a:hover {
+    transform: translateY(-1px);
+  }
+  
+  button:active, a:active {
+    transform: translateY(0);
+  }
 }
 
-/* Custom utility classes */
+@layer components {
+  /* Custom component styles can go here */
+}
+
 @layer utilities {
   .text-balance {
     text-wrap: balance;
@@ -159,11 +248,91 @@
     border: 1px solid rgba(255, 255, 255, 0.2);
   }
   
+  .glass-effect-dark {
+    background: rgba(0, 0, 0, 0.2);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+  }
+  
   .shadow-soft {
     box-shadow: 0 4px 25px rgba(0, 0, 0, 0.08);
   }
   
   .shadow-elegant {
     box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+  }
+  
+  .shadow-dark {
+    box-shadow: 0 4px 25px rgba(0, 0, 0, 0.3);
+  }
+  
+  .shadow-elegant-dark {
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+  }
+  
+  /* Warm theme specific utilities */
+  .bg-warm-gradient {
+    background: linear-gradient(135deg, hsl(var(--warm-50)), hsl(var(--warm-100)));
+  }
+  
+  .bg-warm-subtle {
+    background: hsl(var(--warm-50));
+  }
+  
+  .text-warm-primary {
+    color: hsl(var(--warm-700));
+  }
+  
+  .border-warm-subtle {
+    border-color: hsl(var(--warm-200));
+  }
+  
+  /* Dark theme specific utilities */
+  .bg-dark-gradient {
+    background: linear-gradient(135deg, hsl(var(--dark-50)), hsl(var(--dark-100)));
+  }
+  
+  .bg-dark-subtle {
+    background: hsl(var(--dark-100));
+  }
+  
+  .text-dark-primary {
+    color: hsl(var(--dark-800));
+  }
+  
+  .border-dark-subtle {
+    border-color: hsl(var(--dark-200));
+  }
+  
+  /* Theme-aware utilities */
+  .theme-aware-bg {
+    background-color: hsl(var(--background));
+  }
+  
+  .theme-aware-text {
+    color: hsl(var(--foreground));
+  }
+  
+  .theme-aware-border {
+    border-color: hsl(var(--border));
+  }
+  
+  .theme-aware-card {
+    background-color: hsl(var(--card));
+    color: hsl(var(--card-foreground));
+  }
+  
+  /* Enhanced hover effects */
+  .hover-lift {
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+  
+  .hover-lift:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+  }
+  
+  .dark .hover-lift:hover {
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
   }
 }

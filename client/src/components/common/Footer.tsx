@@ -1,196 +1,90 @@
 import { Link } from "wouter";
-import {
-  Leaf,
-  Mail,
-  Phone,
-  MapPin,
-  Facebook,
-  Instagram,
-  Twitter,
-  Heart,
-} from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { useLanguage } from "@/contexts/LanguageContext";
+import { Heart, Mail, Phone } from "lucide-react";
 
-export function Footer() {
-  const { t } = useLanguage();
+interface FooterProps {
+  overlay?: boolean;
+}
 
-  const currentYear = new Date().getFullYear();
-
-  const quickLinks = [
-    { name: t("home"), href: "/" },
-    { name: t("about"), href: "/about" },
-    { name: t("services"), href: "/services" },
-    { name: t("blog"), href: "/blog" },
-    { name: t("resources"), href: "/resources" },
-  ];
-
-  const services = [
-    { name: t("initial-consultation", "home"), href: "/services#initial" },
-    { name: t("followup-sessions", "home"), href: "/services#followup" },
-    { name: t("complete-program", "home"), href: "/services#program" },
-    { name: t("meal-planning", "home"), href: "/services#meal-planning" },
-    { name: t("progress-tracking", "home"), href: "/services#progress" },
-  ];
-
+export function Footer({ overlay = false }: FooterProps) {
   return (
-    <footer className="bg-background border-t border-border/40">
-      <div className="container mx-auto px-6 py-16">
-        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-12">
-          {/* Company Info */}
-          <div className="lg:col-span-1">
-            <div className="flex items-center space-x-3 mb-8">
-              <div className="w-10 h-10 bg-primary rounded-xl flex items-center justify-center">
-                <Leaf className="h-6 w-6 text-primary-foreground" />
-              </div>
-              <span className="font-bold text-xl text-primary tracking-tight">
-                Nazdravi
+    <footer className={`w-full transition-all duration-300 ${
+      overlay 
+        ? "bg-transparent text-white border-white/20" 
+        : "bg-background text-foreground border-border/40"
+    } border-t`}>
+      <div className="container mx-auto px-6 py-3">
+        {/* Single minimalistic row with logo, contact, and essential links */}
+        <div className="flex flex-col sm:flex-row items-center justify-between gap-3">
+          {/* Logo and branding */}
+          <div className="flex items-center space-x-3">
+            <div className={`w-6 h-6 rounded-lg flex items-center justify-center ${
+              overlay ? "bg-white/20" : "bg-primary"
+            }`}>
+              <span className={`text-xs font-bold ${
+                overlay ? "text-white" : "text-primary-foreground"
+              }`}>
+                N
               </span>
             </div>
-            <p className="text-muted-foreground mb-8 leading-relaxed text-base">
-              {t("footer-description", "home")}
-            </p>
-            <div className="flex space-x-3">
-              <Button
-                variant="ghost"
-                size="icon"
-                className="h-10 w-10 rounded-lg hover:bg-muted/80 transition-all duration-300"
-              >
-                <Facebook className="h-5 w-5" />
-              </Button>
-              <Button
-                variant="ghost"
-                size="icon"
-                className="h-10 w-10 rounded-lg hover:bg-muted/80 transition-all duration-300"
-              >
-                <Instagram className="h-5 w-5" />
-              </Button>
-              <Button
-                variant="ghost"
-                size="icon"
-                className="h-10 w-10 rounded-lg hover:bg-muted/80 transition-all duration-300"
-              >
-                <Twitter className="h-5 w-5" />
-              </Button>
-            </div>
+            <span className={`font-semibold text-sm ${
+              overlay ? "text-white" : "text-primary"
+            }`}>
+              Nazdravi
+            </span>
           </div>
 
-          {/* Quick Links */}
-          <div>
-            <h3 className="font-semibold text-lg mb-6 text-foreground">
-              {t("quick-links", "home")}
-            </h3>
-            <ul className="space-y-4">
-              {quickLinks.map((link) => (
-                <li key={link.href}>
-                  <Link
-                    href={link.href}
-                    className="text-muted-foreground hover:text-foreground transition-all duration-300 hover:translate-x-1 inline-block"
-                  >
-                    {link.name}
-                  </Link>
-                </li>
-              ))}
-            </ul>
+          {/* Essential links */}
+          <div className="flex items-center space-x-6">
+            <Link href="/privacy" className={`text-sm hover:opacity-80 transition-opacity ${
+              overlay ? "text-white/70 hover:text-white" : "text-muted-foreground hover:text-foreground"
+            }`}>
+              Privacy
+            </Link>
+            <Link href="/terms" className={`text-sm hover:opacity-80 transition-opacity ${
+              overlay ? "text-white/70 hover:text-white" : "text-muted-foreground hover:text-foreground"
+            }`}>
+              Terms
+            </Link>
+            <Link href="/contact" className={`text-sm hover:opacity-80 transition-opacity ${
+              overlay ? "text-white/70 hover:text-white" : "text-muted-foreground hover:text-foreground"
+            }`}>
+              Contact
+            </Link>
           </div>
 
-          {/* Services */}
-          <div>
-            <h3 className="font-semibold text-lg mb-6 text-foreground">{t("services")}</h3>
-            <ul className="space-y-4">
-              {services.map((service) => (
-                <li key={service.href}>
-                  <Link
-                    href={service.href}
-                    className="text-muted-foreground hover:text-foreground transition-all duration-300 hover:translate-x-1 inline-block"
-                  >
-                    {service.name}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          {/* Contact Info */}
-          <div>
-            <h3 className="font-semibold text-lg mb-6 text-foreground">
-              {t("contact", "home")}
-            </h3>
-            <div className="space-y-4">
-              <div className="flex items-start space-x-3">
-                <Mail className="h-5 w-5 text-primary mt-0.5 flex-shrink-0" />
-                <div>
-                  <p className="text-muted-foreground text-sm">
-                    {t("email", "home")}
-                  </p>
-                  <a
-                    href="mailto:info@nazdravi.com"
-                    className="text-foreground hover:text-primary transition-colors duration-300"
-                  >
-                    info@nazdravi.com
-                  </a>
-                </div>
+          {/* Contact info and copyright */}
+          <div className="flex items-center space-x-4">
+            {/* Contact info */}
+            <div className="flex items-center space-x-3">
+              <div className="flex items-center gap-1">
+                <Mail className={`h-3 w-3 ${
+                  overlay ? "text-white/60" : "text-muted-foreground"
+                }`} />
+                <span className={`text-xs hidden sm:inline ${
+                  overlay ? "text-white/70" : "text-muted-foreground"
+                }`}>
+                  info@nazdravi.com
+                </span>
               </div>
-              <div className="flex items-start space-x-3">
-                <Phone className="h-5 w-5 text-primary mt-0.5 flex-shrink-0" />
-                <div>
-                  <p className="text-muted-foreground text-sm">
-                    {t("phone", "home")}
-                  </p>
-                  <a
-                    href="tel:+1234567890"
-                    className="text-foreground hover:text-primary transition-colors duration-300"
-                  >
-                    +1 (234) 567-890
-                  </a>
-                </div>
-              </div>
-              <div className="flex items-start space-x-3">
-                <MapPin className="h-5 w-5 text-primary mt-0.5 flex-shrink-0" />
-                <div>
-                  <p className="text-muted-foreground text-sm">
-                    {t("location", "home")}
-                  </p>
-                  <p className="text-foreground">
-                    {t("address", "home")}
-                  </p>
-                </div>
+              <div className="flex items-center gap-1">
+                <Phone className={`h-3 w-3 ${
+                  overlay ? "text-white/60" : "text-muted-foreground"
+                }`} />
+                <span className={`text-xs hidden sm:inline ${
+                  overlay ? "text-white/70" : "text-muted-foreground"
+                }`}>
+                  +420 123 456 789
+                </span>
               </div>
             </div>
-          </div>
-        </div>
 
-        {/* Bottom section */}
-        <div className="border-t border-border/40 mt-12 pt-8">
-          <div className="flex flex-col md:flex-row items-center justify-between gap-4">
-            <p className="text-muted-foreground text-sm">
-              © {currentYear} Nazdravi. {t("all-rights-reserved", "home")}
-            </p>
-            <div className="flex items-center space-x-6 text-sm">
-              <Link
-                href="/privacy-policy"
-                className="text-muted-foreground hover:text-foreground transition-colors duration-300"
-              >
-                {t("privacy-policy", "home")}
-              </Link>
-              <Link
-                href="/terms-of-service"
-                className="text-muted-foreground hover:text-foreground transition-colors duration-300"
-              >
-                {t("terms-of-service", "home")}
-              </Link>
-              <Link
-                href="/cookie-policy"
-                className="text-muted-foreground hover:text-foreground transition-colors duration-300"
-              >
-                {t("cookie-policy", "home")}
-              </Link>
+            {/* Copyright */}
+            <div className={`flex items-center gap-1 text-xs ${
+              overlay ? "text-white/70" : "text-muted-foreground"
+            }`}>
+              <span>© 2024</span>
+              <Heart className="h-2.5 w-2.5 fill-current" />
             </div>
-          </div>
-          <div className="text-center mt-6">
-            <p className="text-muted-foreground text-sm flex items-center justify-center gap-2">
-              {t("made-with", "home")} <Heart className="h-4 w-4 text-red-500" /> {t("by", "home")} Nazdravi
-            </p>
           </div>
         </div>
       </div>

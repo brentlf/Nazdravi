@@ -37,16 +37,28 @@ export function Header() {
     }
   };
 
+  const isHomePage = location === "/";
+
   return (
-    <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/80 backdrop-blur-xl supports-[backdrop-filter]:bg-background/60">
+    <header className={`${
+      isHomePage 
+        ? "absolute top-0 left-0 right-0 z-50 border-white/20 bg-transparent text-white" 
+        : "sticky top-0 z-50 border-border/40 bg-background/80 backdrop-blur-xl supports-[backdrop-filter]:bg-background/60 text-foreground"
+    } w-full border-b transition-all duration-300`}>
       <div className="container mx-auto flex h-20 items-center justify-between px-6">
         {/* Logo */}
         <Link href="/">
           <div className="flex items-center space-x-3 cursor-pointer group">
-            <div className="w-10 h-10 bg-primary rounded-xl flex items-center justify-center transition-all duration-300 group-hover:scale-110 group-hover:shadow-lg">
-              <Leaf className="h-6 w-6 text-primary-foreground" />
+            <div className={`w-10 h-10 rounded-xl flex items-center justify-center transition-all duration-300 group-hover:scale-110 group-hover:shadow-lg ${
+              isHomePage ? "bg-white/20 backdrop-blur-sm" : "bg-primary"
+            }`}>
+              <Leaf className={`h-6 w-6 ${
+                isHomePage ? "text-white" : "text-primary-foreground"
+              }`} />
             </div>
-            <span className="font-bold text-xl text-primary tracking-tight">
+            <span className={`font-bold text-xl tracking-tight ${
+              isHomePage ? "text-white" : "text-primary"
+            }`}>
               Nazdravi
             </span>
           </div>
@@ -58,15 +70,21 @@ export function Header() {
             <Link
               key={item.href}
               href={item.href}
-              className={`relative text-sm font-medium transition-all duration-300 hover:text-primary ${
-                isActive(item.href)
+              className={`relative text-sm font-medium transition-all duration-300 ${
+                isHomePage
+                  ? isActive(item.href)
+                    ? "text-white"
+                    : "text-white/80 hover:text-white"
+                  : isActive(item.href)
                   ? "text-primary"
                   : "text-muted-foreground hover:text-foreground"
               }`}
             >
               {item.name}
               {isActive(item.href) && (
-                <span className="absolute -bottom-2 left-0 w-full h-0.5 bg-primary rounded-full"></span>
+                <span className={`absolute -bottom-2 left-0 w-full h-0.5 rounded-full ${
+                  isHomePage ? "bg-white" : "bg-primary"
+                }`}></span>
               )}
             </Link>
           ))}
@@ -80,10 +98,14 @@ export function Header() {
           {user ? (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="ghost" className="relative h-10 w-10 rounded-full hover:bg-muted/80">
+                <Button variant="ghost" className={`relative h-10 w-10 rounded-full hover:bg-muted/80 ${
+                  isHomePage ? "text-white hover:bg-white/20" : ""
+                }`}>
                   <Avatar className="h-10 w-10">
                     <AvatarImage src={user.photoURL} alt={user.name} />
-                    <AvatarFallback className="bg-primary text-primary-foreground font-semibold">
+                    <AvatarFallback className={`font-semibold ${
+                      isHomePage ? "bg-white/20 text-white" : "bg-primary text-primary-foreground"
+                    }`}>
                       {user.name.slice(0, 2).toUpperCase()}
                     </AvatarFallback>
                   </Avatar>
@@ -138,12 +160,20 @@ export function Header() {
           ) : (
             <div className="flex items-center space-x-3">
               <Link href="/login">
-                <Button variant="ghost" className="font-medium hover:bg-muted/80">
+                <Button variant="ghost" className={`font-medium ${
+                  isHomePage 
+                    ? "text-white hover:bg-white/20" 
+                    : "hover:bg-muted/80"
+                }`}>
                   Sign In
                 </Button>
               </Link>
               <Link href="/register">
-                <Button className="font-medium shadow-soft hover:shadow-elegant transition-all duration-300">
+                <Button className={`font-medium shadow-soft hover:shadow-elegant transition-all duration-300 ${
+                  isHomePage 
+                    ? "bg-white/20 text-white hover:bg-white/30 border-white/30" 
+                    : ""
+                }`}>
                   Get Started
                 </Button>
               </Link>
@@ -156,7 +186,9 @@ export function Header() {
               <Button
                 variant="ghost"
                 size="icon"
-                className="lg:hidden h-10 w-10"
+                className={`lg:hidden h-10 w-10 ${
+                  isHomePage ? "text-white hover:bg-white/20" : ""
+                }`}
                 onClick={() => setIsOpen(true)}
               >
                 <Menu className="h-5 w-5" />
