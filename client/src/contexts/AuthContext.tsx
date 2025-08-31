@@ -87,17 +87,23 @@ export function AuthProvider({ children }: AuthProviderProps) {
           if (userDoc.exists()) {
             const userData = userDoc.data();
             
-            // Check if current user should be admin
-            const shouldBeAdmin = await checkAdminStatus(firebaseUser.email);
-            const currentRole = shouldBeAdmin ? "admin" : (userData.role || "client");
+            // Only auto-promote to admin if user doesn't already have a role set
+            // This respects manual role changes made by admins
+            let currentRole = userData.role || "client";
             
-            // Update role in Firestore if it needs to change
-            if (shouldBeAdmin && userData.role !== "admin") {
-              await setDoc(doc(db, "users", firebaseUser.uid), {
-                ...userData,
-                role: "admin",
-                updatedAt: new Date()
-              }, { merge: true });
+            // Only check for auto-admin promotion if the user doesn't have a role yet
+            // or if they're currently a client and should be auto-promoted
+            if (!userData.role) {
+              const shouldBeAdmin = await checkAdminStatus(firebaseUser.email);
+              if (shouldBeAdmin) {
+                currentRole = "admin";
+                // Update role in Firestore for new admin
+                await setDoc(doc(db, "users", firebaseUser.uid), {
+                  ...userData,
+                  role: "admin",
+                  updatedAt: new Date()
+                }, { merge: true });
+              }
             }
             
             setUser({
