@@ -66,7 +66,7 @@ export default function AdminClientView() {
 
   if (loading) {
     return (
-      <div className="h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-900">
+      <div className="h-[calc(100vh-5rem-4rem)] flex items-center justify-center bg-gray-50 dark:bg-gray-900">
         <Card className="w-full max-w-4xl mx-4">
           <CardContent className="p-6">
             <div className="animate-pulse space-y-3">
@@ -81,7 +81,7 @@ export default function AdminClientView() {
   }
 
   return (
-    <div className="h-screen flex flex-col bg-gray-50 dark:bg-gray-900 overflow-hidden">
+    <div className="h-[calc(100vh-5rem-4rem)] flex flex-col bg-gray-50 dark:bg-gray-900 overflow-hidden">
       {/* Compact Header */}
       <div className="flex-none px-4 py-2 border-b bg-white dark:bg-gray-800">
         <div className="flex items-center justify-between max-w-7xl mx-auto">
