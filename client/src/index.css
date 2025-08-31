@@ -14,7 +14,7 @@
   /* UI Colors with warmth */
   --muted: 35 15% 94%; /* Warm light gray */
   --muted-foreground: 25 10% 45%; /* Warm medium gray */
-  --popover: 0 0% 100%; /* Pure white */
+  --popover: 35 20% 99%; /* Warm off-white, same as card */
   --popover-foreground: 25 15% 15%;
   --card: 35 20% 99%; /* Warm white cards */
   --card-foreground: 25 15% 15%;
@@ -118,10 +118,7 @@
   transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease !important;
 }
 
-/* Light theme specific class */
-.light {
-  /* Additional light theme overrides if needed */
-}
+/* Light theme specific class - currently inherits from :root */
 
 @layer base {
   * {
