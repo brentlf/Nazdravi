@@ -7,9 +7,13 @@ export interface TimeSlot {
   available: boolean;
 }
 
+// Default time slots for fallback scenarios
+const defaultSlots = ["09:00", "10:00", "11:00", "13:00", "14:00", "15:00", "16:00", "17:00"];
+
 export function useAvailableSlots(selectedDate: string) {
   const [availableSlots, setAvailableSlots] = useState<TimeSlot[]>([]);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   // Enhanced scheduling rules: day-specific time slots
   const getTimeSlotsByDay = (date: string): string[] => {
@@ -43,6 +47,8 @@ export function useAvailableSlots(selectedDate: string) {
 
     const fetchAvailableSlots = async () => {
       setLoading(true);
+      setError(null);
+      
       try {
         // Get existing appointments for the selected date
         const appointmentsRef = collection(db, "appointments");
@@ -90,7 +96,8 @@ export function useAvailableSlots(selectedDate: string) {
         setAvailableSlots(slots);
       } catch (error) {
         console.error("Error fetching available slots:", error);
-        // Fallback to all slots available if error
+        setError("Failed to load available time slots");
+        // Fallback to default slots if error
         setAvailableSlots(defaultSlots.map(time => ({ time, available: true })));
       } finally {
         setLoading(false);
@@ -100,5 +107,5 @@ export function useAvailableSlots(selectedDate: string) {
     fetchAvailableSlots();
   }, [selectedDate]);
 
-  return { availableSlots, loading };
+  return { availableSlots, loading, error };
 }

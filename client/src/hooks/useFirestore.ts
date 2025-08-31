@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { 
   collection, 
   query, 
@@ -11,128 +11,284 @@ import {
   doc, 
   getDocs,
   DocumentData,
-  QueryConstraint
+  QueryConstraint,
+  FirestoreError
 } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 
+export interface FirestoreHookResult<T> {
+  data: T[];
+  loading: boolean;
+  error: string | null;
+  refetch: () => Promise<void>;
+}
+
+export interface FirestoreDocumentResult<T> {
+  data: T | null;
+  loading: boolean;
+  error: string | null;
+  refetch: () => Promise<void>;
+}
+
+export interface FirestoreActionsResult {
+  add: (data: any) => Promise<string>;
+  update: (documentId: string, data: any) => Promise<void>;
+  remove: (documentId: string) => Promise<void>;
+  loading: boolean;
+  error: string | null;
+}
+
 export function useFirestoreCollection<T = DocumentData>(
   collectionName: string,
-  constraints: QueryConstraint[] = []
-) {
+  constraints: QueryConstraint[] = [],
+  options: {
+    retryAttempts?: number;
+    retryDelay?: number;
+    onError?: (error: FirestoreError) => void;
+  } = {}
+): FirestoreHookResult<T> {
   const [data, setData] = useState<T[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const unsubscribeRef = useRef<(() => void) | null>(null);
+  const retryCountRef = useRef(0);
+  
+  const { retryAttempts = 3, retryDelay = 1000, onError } = options;
+
+  const fetchData = useCallback(async () => {
+    if (!collectionName) return;
+
+    try {
+      setLoading(true);
+      setError(null);
+      
+      const q = query(collection(db, collectionName), ...constraints);
+      
+      const unsubscribe = onSnapshot(
+        q,
+        (snapshot) => {
+          const items = snapshot.docs.map(doc => ({
+            id: doc.id,
+            ...doc.data()
+          })) as T[];
+          setData(items);
+          setLoading(false);
+          setError(null);
+          retryCountRef.current = 0; // Reset retry count on success
+        },
+        (err: FirestoreError) => {
+          console.error(`Firestore error in ${collectionName}:`, err);
+          setError(err.message);
+          setLoading(false);
+          
+          // Call custom error handler if provided
+          if (onError) {
+            onError(err);
+          }
+          
+          // Implement retry logic for transient errors
+          if (retryCountRef.current < retryAttempts && 
+              (err.code === 'unavailable' || err.code === 'deadline-exceeded')) {
+            retryCountRef.current++;
+            setTimeout(() => {
+              console.log(`Retrying ${collectionName} query (attempt ${retryCountRef.current})`);
+              fetchData();
+            }, retryDelay * retryCountRef.current);
+          }
+        }
+      );
+
+      // Store unsubscribe function
+      if (unsubscribeRef.current) {
+        unsubscribeRef.current();
+      }
+      unsubscribeRef.current = unsubscribe;
+
+    } catch (err) {
+      const errorMessage = err instanceof Error ? err.message : 'Unknown error occurred';
+      setError(errorMessage);
+      setLoading(false);
+      console.error(`Error setting up ${collectionName} listener:`, err);
+    }
+  }, [collectionName, JSON.stringify(constraints), retryAttempts, retryDelay, onError]);
 
   useEffect(() => {
-    const q = query(collection(db, collectionName), ...constraints);
-    
-    const unsubscribe = onSnapshot(
-      q,
-      (snapshot) => {
-        const items = snapshot.docs.map(doc => ({
-          id: doc.id,
-          ...doc.data()
-        })) as T[];
-        setData(items);
-        setLoading(false);
-        setError(null);
-      },
-      (err) => {
-        setError(err.message);
-        setLoading(false);
+    fetchData();
+
+    // Cleanup function
+    return () => {
+      if (unsubscribeRef.current) {
+        unsubscribeRef.current();
+        unsubscribeRef.current = null;
       }
-    );
+    };
+  }, [fetchData]);
 
-    return unsubscribe;
-  }, [collectionName, JSON.stringify(constraints)]);
+  const refetch = useCallback(async () => {
+    retryCountRef.current = 0;
+    await fetchData();
+  }, [fetchData]);
 
-  return { data, loading, error };
+  return { data, loading, error, refetch };
 }
 
 export function useFirestoreDocument<T = DocumentData>(
   collectionName: string,
-  documentId: string | null
-) {
+  documentId: string | null,
+  options: {
+    retryAttempts?: number;
+    retryDelay?: number;
+    onError?: (error: FirestoreError) => void;
+  } = {}
+): FirestoreDocumentResult<T> {
   const [data, setData] = useState<T | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const unsubscribeRef = useRef<(() => void) | null>(null);
+  const retryCountRef = useRef(0);
+  
+  const { retryAttempts = 3, retryDelay = 1000, onError } = options;
 
-  useEffect(() => {
-    if (!documentId) {
+  const fetchDocument = useCallback(async () => {
+    if (!documentId || !collectionName) {
       setLoading(false);
       return;
     }
 
-    const unsubscribe = onSnapshot(
-      doc(db, collectionName, documentId),
-      (doc) => {
-        if (doc.exists()) {
-          setData({ id: doc.id, ...doc.data() } as T);
-        } else {
-          setData(null);
+    try {
+      setLoading(true);
+      setError(null);
+      
+      const unsubscribe = onSnapshot(
+        doc(db, collectionName, documentId),
+        (docSnapshot) => {
+          if (docSnapshot.exists()) {
+            setData({ id: docSnapshot.id, ...docSnapshot.data() } as T);
+          } else {
+            setData(null);
+          }
+          setLoading(false);
+          setError(null);
+          retryCountRef.current = 0;
+        },
+        (err: FirestoreError) => {
+          console.error(`Firestore error in ${collectionName}/${documentId}:`, err);
+          setError(err.message);
+          setLoading(false);
+          
+          if (onError) {
+            onError(err);
+          }
+          
+          if (retryCountRef.current < retryAttempts && 
+              (err.code === 'unavailable' || err.code === 'deadline-exceeded')) {
+            retryCountRef.current++;
+            setTimeout(() => {
+              console.log(`Retrying ${collectionName}/${documentId} (attempt ${retryCountRef.current})`);
+              fetchDocument();
+            }, retryDelay * retryCountRef.current);
+          }
         }
-        setLoading(false);
-        setError(null);
-      },
-      (err) => {
-        setError(err.message);
-        setLoading(false);
+      );
+
+      if (unsubscribeRef.current) {
+        unsubscribeRef.current();
       }
-    );
+      unsubscribeRef.current = unsubscribe;
 
-    return unsubscribe;
-  }, [collectionName, documentId]);
+    } catch (err) {
+      const errorMessage = err instanceof Error ? err.message : 'Unknown error occurred';
+      setError(errorMessage);
+      setLoading(false);
+      console.error(`Error setting up ${collectionName}/${documentId} listener:`, err);
+    }
+  }, [collectionName, documentId, retryAttempts, retryDelay, onError]);
 
-  return { data, loading, error };
+  useEffect(() => {
+    fetchDocument();
+
+    return () => {
+      if (unsubscribeRef.current) {
+        unsubscribeRef.current();
+        unsubscribeRef.current = null;
+      }
+    };
+  }, [fetchDocument]);
+
+  const refetch = useCallback(async () => {
+    retryCountRef.current = 0;
+    await fetchDocument();
+  }, [fetchDocument]);
+
+  return { data, loading, error, refetch };
 }
 
-export function useFirestoreActions(collectionName: string) {
+export function useFirestoreActions(collectionName: string): FirestoreActionsResult {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const add = async (data: any) => {
+  const add = async (data: any): Promise<string> => {
+    if (!collectionName) {
+      throw new Error('Collection name is required');
+    }
+
     setLoading(true);
     setError(null);
+    
     try {
       const docRef = await addDoc(collection(db, collectionName), {
         ...data,
-        createdAt: new Date()
+        createdAt: new Date(),
+        updatedAt: new Date()
       });
-      setLoading(false);
       return docRef.id;
-    } catch (err: any) {
-      setError(err.message);
-      setLoading(false);
+    } catch (err) {
+      const errorMessage = err instanceof Error ? err.message : 'Failed to add document';
+      setError(errorMessage);
       throw err;
+    } finally {
+      setLoading(false);
     }
   };
 
-  const update = async (documentId: string, data: any) => {
+  const update = async (documentId: string, data: any): Promise<void> => {
+    if (!collectionName || !documentId) {
+      throw new Error('Collection name and document ID are required');
+    }
+
     setLoading(true);
     setError(null);
+    
     try {
       await updateDoc(doc(db, collectionName, documentId), {
         ...data,
         updatedAt: new Date()
       });
-      setLoading(false);
-    } catch (err: any) {
-      setError(err.message);
-      setLoading(false);
+    } catch (err) {
+      const errorMessage = err instanceof Error ? err.message : 'Failed to update document';
+      setError(errorMessage);
       throw err;
+    } finally {
+      setLoading(false);
     }
   };
 
-  const remove = async (documentId: string) => {
+  const remove = async (documentId: string): Promise<void> => {
+    if (!collectionName || !documentId) {
+      throw new Error('Collection name and document ID are required');
+    }
+
     setLoading(true);
     setError(null);
+    
     try {
       await deleteDoc(doc(db, collectionName, documentId));
-      setLoading(false);
-    } catch (err: any) {
-      setError(err.message);
-      setLoading(false);
+    } catch (err) {
+      const errorMessage = err instanceof Error ? err.message : 'Failed to delete document';
+      setError(errorMessage);
       throw err;
+    } finally {
+      setLoading(false);
     }
   };
 

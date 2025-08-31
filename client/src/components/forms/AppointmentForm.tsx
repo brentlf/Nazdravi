@@ -72,8 +72,8 @@ export function AppointmentForm() {
   const preSelectedPlan = urlParams.get('plan') as "pay-as-you-go" | "complete-program" | null;
   const { add, loading } = useFirestoreActions("appointments");
   
-  // Get available time slots for selected date
-  const { availableSlots, loading: slotsLoading } = useAvailableSlots(selectedDate);
+  // Get available time slots for selected date with error handling
+  const { availableSlots, loading: slotsLoading, error: slotsError } = useAvailableSlots(selectedDate);
 
   const form = useForm<AppointmentFormData>({
     resolver: zodResolver(appointmentSchema),
@@ -588,7 +588,13 @@ export function AppointmentForm() {
                       )}
                     </FormLabel>
                     {selectedDate ? (
-                      availableSlots.length > 0 ? (
+                      slotsError ? (
+                        <div className="p-4 text-center text-red-600 bg-red-50 dark:bg-red-900/20 rounded-lg border border-red-200 dark:border-red-800">
+                          <AlertCircle className="w-6 h-6 mx-auto mb-2" />
+                          <p className="text-sm">Error loading time slots</p>
+                          <p className="text-xs">Please try selecting a different date</p>
+                        </div>
+                      ) : availableSlots.length > 0 ? (
                         <div className="grid grid-cols-2 gap-2 mt-3">
                           {availableSlots.map((slot) => (
                             <Button

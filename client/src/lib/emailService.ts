@@ -1,28 +1,23 @@
 // Email Service Integration for Vee Nutrition
-import { apiRequest } from "./queryClient";
+import { getFunctions, httpsCallable } from 'firebase/functions';
+import app from './firebase';
 
-interface EmailNotificationService {
-  sendWelcomeEmail: (email: string, name: string) => Promise<void>;
-  sendAppointmentConfirmation: (email: string, name: string, date: string, time: string, type: string) => Promise<void>;
-  sendRescheduleRequest: (adminEmail: string, clientName: string, clientEmail: string, originalDate: string, originalTime: string, reason?: string) => Promise<void>;
-  sendAppointmentReminder: (email: string, name: string, date: string, time: string, type: string) => Promise<void>;
-  sendHealthUpdateNotification: (adminEmail: string, clientName: string, clientEmail: string, chronicConditions: string, medications: string) => Promise<void>;
-  sendPreferencesUpdateNotification: (adminEmail: string, clientName: string, clientEmail: string, language: string, location: string) => Promise<void>;
-  sendInvoiceGenerated: (email: string, name: string, amount: number, invoiceId: string) => Promise<void>;
-  sendPaymentReminder: (email: string, name: string, amount: number, invoiceNumber: string, paymentUrl: string) => Promise<void>;
-  sendLateRescheduleNotice: (email: string, name: string, date: string, time: string) => Promise<void>;
-  sendNoShowNotice: (email: string, name: string, date: string, time: string, penaltyAmount: number) => Promise<void>;
-  sendAppointmentCancelled: (email: string, name: string, date: string, time: string, reason?: string) => Promise<void>;
-}
+const functions = getFunctions(app);
 
-class EmailService implements EmailNotificationService {
-  async sendWelcomeEmail(email: string, name: string): Promise<void> {
+// Callable functions for emails
+const sendWelcomeEmailFunction = httpsCallable(functions, 'sendWelcomeEmail');
+const sendAppointmentConfirmationFunction = httpsCallable(functions, 'sendAppointmentConfirmation');
+const sendInvoiceEmailFunction = httpsCallable(functions, 'sendInvoiceEmail');
+
+export class EmailService {
+  async sendWelcomeEmail(email: string, name: string): Promise<boolean> {
     try {
-      await apiRequest('POST', '/api/emails/welcome', { email, name });
-      console.log('Welcome email sent successfully');
+      const result = await sendWelcomeEmailFunction({ email, name });
+      console.log('Welcome email sent:', result);
+      return true;
     } catch (error) {
-      console.error('Failed to send welcome email:', error);
-      throw error;
+      console.error('Error sending welcome email:', error);
+      return false;
     }
   }
 
@@ -31,286 +26,49 @@ class EmailService implements EmailNotificationService {
     name: string, 
     date: string, 
     time: string, 
-    type: string
-  ): Promise<void> {
+    meetingUrl?: string,
+    appointmentType?: string
+  ): Promise<boolean> {
     try {
-      await apiRequest('POST', '/api/emails/appointment-confirmation', { email, name, date, time, type });
-      console.log('Appointment confirmation email sent successfully');
+      const result = await sendAppointmentConfirmationFunction({ 
+        email, 
+        name, 
+        date, 
+        time, 
+        meetingUrl, 
+        appointmentType 
+      });
+      console.log('Appointment confirmation sent:', result);
+      return true;
     } catch (error) {
-      console.error('Failed to send appointment confirmation email:', error);
-      throw error;
+      console.error('Error sending appointment confirmation:', error);
+      return false;
     }
   }
 
-  async sendRescheduleRequest(
+  async sendInvoiceEmail(
     email: string,
     name: string,
-    originalDate: string,
-    originalTime: string,
-    newDate: string,
-    newTime: string
-  ): Promise<void> {
+    invoiceNumber: string,
+    amount: number,
+    dueDate?: string,
+    pdfUrl?: string
+  ): Promise<boolean> {
     try {
-      await apiRequest('POST', '/api/emails/reschedule-request', {
+      const result = await sendInvoiceEmailFunction({
         email,
         name,
-        originalDate,
-        originalTime,
-        newDate,
-        newTime,
-      });
-      console.log('Reschedule request email sent successfully');
-    } catch (error) {
-      console.error('Failed to send reschedule request email:', error);
-      throw error;
-    }
-  }
-
-  async sendAppointmentReminder(
-    email: string,
-    name: string,
-    date: string,
-    time: string,
-    type: string
-  ): Promise<void> {
-    try {
-      await apiRequest('POST', '/api/emails/appointment-reminder', { email, name, date, time, type });
-      console.log('Appointment reminder email sent successfully');
-    } catch (error) {
-      console.error('Failed to send appointment reminder email:', error);
-      throw error;
-    }
-  }
-
-  async sendDailyReminders(appointments: Array<{
-    email: string;
-    name: string;
-    date: string;
-    timeslot: string;
-    type: string;
-  }>): Promise<{ successful: number; failed: number }> {
-    try {
-      const response = await apiRequest('POST', '/api/emails/daily-reminders', { appointments });
-      const data = await response.json();
-      console.log('Daily reminders sent successfully');
-      return data;
-    } catch (error) {
-      console.error('Failed to send daily reminders:', error);
-      throw error;
-    }
-  }
-
-  async sendHealthUpdateNotification(
-    adminEmail: string,
-    clientName: string,
-    clientEmail: string,
-    chronicConditions: string,
-    medications: string
-  ): Promise<void> {
-    try {
-      await apiRequest('POST', '/api/emails/health-update', {
-        adminEmail,
-        clientName,
-        clientEmail,
-        chronicConditions,
-        medications,
-      });
-      console.log('Health update notification sent successfully');
-    } catch (error) {
-      console.error('Failed to send health update notification:', error);
-      throw error;
-    }
-  }
-
-  async sendPreferencesUpdateNotification(
-    adminEmail: string,
-    clientName: string,
-    clientEmail: string,
-    language: string,
-    location: string
-  ): Promise<void> {
-    try {
-      await apiRequest('POST', '/api/emails/preferences-update', {
-        adminEmail,
-        clientName,
-        clientEmail,
-        language,
-        location,
-      });
-      console.log('Preferences update notification sent successfully');
-    } catch (error) {
-      console.error('Failed to send preferences update notification:', error);
-      throw error;
-    }
-  }
-
-  async sendInvoiceGenerated(email: string, name: string, amount: number, invoiceId: string): Promise<void> {
-    try {
-      await apiRequest('POST', '/api/emails/invoice-generated', { email, name, amount, invoiceId });
-      console.log('Invoice generated email sent successfully');
-    } catch (error) {
-      console.error('Failed to send invoice generated email:', error);
-      throw error;
-    }
-  }
-
-  async sendPaymentReminder(email: string, name: string, amount: number, invoiceNumber: string, paymentUrl: string): Promise<void> {
-    try {
-      await apiRequest('POST', '/api/emails/payment-reminder', { email, name, amount, invoiceNumber, paymentUrl });
-      console.log('Payment reminder email sent successfully');
-    } catch (error) {
-      console.error('Failed to send payment reminder email:', error);
-      throw error;
-    }
-  }
-
-  async sendLateRescheduleNotice(email: string, name: string, date: string, time: string): Promise<void> {
-    try {
-      await apiRequest('POST', '/api/emails/late-reschedule', { email, name, date, time });
-      console.log('Late reschedule notice email sent successfully');
-    } catch (error) {
-      console.error('Failed to send late reschedule notice email:', error);
-      throw error;
-    }
-  }
-
-  async sendNoShowNotice(email: string, name: string, date: string, time: string, penaltyAmount: number): Promise<void> {
-    try {
-      await apiRequest('POST', '/api/emails/no-show', { email, name, date, time, penaltyAmount });
-      console.log('No-show notice email sent successfully');
-    } catch (error) {
-      console.error('Failed to send no-show notice email:', error);
-      throw error;
-    }
-  }
-
-  async sendAppointmentCancelled(email: string, name: string, date: string, time: string, reason?: string): Promise<void> {
-    try {
-      await apiRequest('POST', '/api/emails/appointment-cancelled', { email, name, date, time, reason });
-      console.log('Appointment cancelled email sent successfully');
-    } catch (error) {
-      console.error('Failed to send appointment cancelled email:', error);
-      throw error;
-    }
-  }
-
-  // Admin notification methods
-  async sendAdminNewAppointment(
-    clientName: string,
-    clientEmail: string,
-    appointmentType: string,
-    date: string,
-    time: string,
-    isTest: boolean = false
-  ): Promise<void> {
-    try {
-      await apiRequest('POST', '/api/emails/admin/new-appointment', {
-        name: clientName,
-        email: clientEmail,
-        type: appointmentType,
-        date: date,
-        timeslot: time,
-        isTest: isTest
-      });
-      console.log('Admin new appointment notification sent successfully');
-    } catch (error) {
-      console.error('Failed to send admin new appointment notification:', error);
-      throw error;
-    }
-  }
-
-  async sendAdminHealthUpdate(
-    clientName: string,
-    clientEmail: string,
-    updateType: string,
-    isTest: boolean = false
-  ): Promise<void> {
-    try {
-      await apiRequest('POST', '/api/emails/admin/health-update', {
-        clientName,
-        clientEmail,
-        updateType,
-        isTest: isTest
-      });
-      console.log('Admin health update notification sent successfully');
-    } catch (error) {
-      console.error('Failed to send admin health update notification:', error);
-      throw error;
-    }
-  }
-
-  async sendAdminPaymentReceived(
-    clientName: string,
-    amount: number,
-    invoiceId: string,
-    paymentMethod: string,
-    isTest: boolean = false
-  ): Promise<void> {
-    try {
-      await apiRequest('POST', '/api/emails/admin/payment-received', {
-        clientName,
+        invoiceNumber,
         amount,
-        invoiceId,
-        paymentMethod,
-        isTest: isTest
+        dueDate,
+        pdfUrl
       });
-      console.log('Admin payment received notification sent successfully');
+      console.log('Invoice email sent:', result);
+      return true;
     } catch (error) {
-      console.error('Failed to send admin payment received notification:', error);
-      throw error;
+      console.error('Error sending invoice email:', error);
+      return false;
     }
-  }
-
-  async sendAdminPlanUpgrade(
-    clientName: string,
-    planType: string,
-    previousPlan: string,
-    isTest: boolean = false
-  ): Promise<void> {
-    try {
-      await apiRequest('POST', '/api/emails/admin/plan-upgrade', {
-        clientName,
-        planType,
-        previousPlan,
-        isTest: isTest
-      });
-      console.log('Admin plan upgrade notification sent successfully');
-    } catch (error) {
-      console.error('Failed to send admin plan upgrade notification:', error);
-      throw error;
-    }
-  }
-
-  async sendAdminClientMessage(
-    clientName: string,
-    clientEmail: string,
-    messageType: string,
-    urgency: string,
-    isTest: boolean = false
-  ): Promise<void> {
-    try {
-      await apiRequest('POST', '/api/emails/admin/client-message', {
-        clientName,
-        clientEmail,
-        messageType,
-        urgency,
-        isTest: isTest
-      });
-      console.log('Admin client message notification sent successfully');
-    } catch (error) {
-      console.error('Failed to send admin client message notification:', error);
-      throw error;
-    }
-  }
-
-  async sendAdminRescheduleRequest(clientName: string, clientEmail: string, originalDate: string, originalTime: string, reason?: string): Promise<void> {
-    await apiRequest("POST", "/api/emails/admin/reschedule-request", {
-      clientName,
-      clientEmail,
-      originalDate,
-      originalTime,
-      reason
-    });
   }
 }
 

@@ -24,33 +24,48 @@ import { Appointment, Message, Progress } from "@/types";
 import type { Invoice } from "@shared/firebase-schema";
 import ServicePlanStatusWidget from "./ServicePlanStatusWidget";
 import SubscriptionBillingWidget from "./SubscriptionBillingWidget";
-import { where, orderBy, limit } from "firebase/firestore";
+import { where, orderBy, limit, or } from "firebase/firestore";
 
 export function DashboardOverview() {
   const { effectiveUser: user, isAdminViewingClient } = useAuth();
 
-  // Try multiple approaches to find appointments - remove status filter first
-  const { data: appointmentsByUserId } = useFirestoreCollection<Appointment>(
+  // Single optimized query for appointments using OR conditions
+  const { data: appointments, loading: appointmentsLoading, error: appointmentsError } = useFirestoreCollection<Appointment>(
     "appointments",
-    user?.uid ? [where("userId", "==", user.uid)] : [],
+    user?.uid ? [
+      or(
+        where("userId", "==", user.uid),
+        where("email", "==", user.email || "")
+      ),
+      orderBy("date", "desc"),
+      limit(10)
+    ] : [],
   );
 
-  const { data: appointmentsByEmail } = useFirestoreCollection<Appointment>(
-    "appointments",
-    user?.email ? [where("email", "==", user.email)] : [],
-  );
-
-  // Also try searching by user field (some might use this instead)
-  const { data: appointmentsByUser } = useFirestoreCollection<Appointment>(
-    "appointments",
-    user?.uid ? [where("user", "==", user.uid)] : [],
-  );
-
-  // Fetch messages from the user's chat room (remove orderBy temporarily)
+  // Fetch messages from the user's chat room
   const chatRoom = user ? `${user.uid}_admin` : "";
-  const { data: messages } = useFirestoreCollection<Message>(
+  const { data: messages, loading: messagesLoading, error: messagesError } = useFirestoreCollection<Message>(
     "messages",
-    chatRoom ? [where("chatRoom", "==", chatRoom)] : [],
+    chatRoom ? [where("chatRoom", "==", chatRoom), orderBy("createdAt", "desc"), limit(6)] : [],
+  );
+
+  // Fetch progress entries
+  const { data: progressEntries, loading: progressLoading, error: progressError } = useFirestoreCollection<Progress>(
+    "progress",
+    user?.uid ? [where("userId", "==", user.uid), orderBy("createdAt", "desc"), limit(10)] : [],
+  );
+
+  // Fetch client's invoices
+  const { data: invoices, loading: invoicesLoading, error: invoicesError } = useFirestoreCollection<Invoice>(
+    "invoices",
+    user?.uid ? [
+      or(
+        where("userId", "==", user.uid),
+        where("clientEmail", "==", user.email || "")
+      ),
+      orderBy("createdAt", "desc"),
+      limit(10)
+    ] : [],
   );
 
   // Count unread messages (messages TO the user that haven't been read)
@@ -58,88 +73,62 @@ export function DashboardOverview() {
     message.toUser === user?.uid && (message.read === false || message.read === undefined)
   )?.length || 0;
 
-  const { data: progressEntries } = useFirestoreCollection<Progress>(
-    "progress",
-    user?.uid ? [where("userId", "==", user.uid)] : [],
-  );
-
-  // Fetch client's invoices by multiple identifiers
-  const { data: invoicesByUserId } = useFirestoreCollection<Invoice>(
-    "invoices",
-    user?.uid ? [where("userId", "==", user.uid)] : [],
-  );
-
-  const { data: invoicesByEmail } = useFirestoreCollection<Invoice>(
-    "invoices",
-    user?.email ? [where("clientEmail", "==", user.email)] : [],
-  );
-
-  // Combine and deduplicate invoices
-  const allUserInvoices = [
-    ...(invoicesByUserId || []),
-    ...(invoicesByEmail || []),
-  ];
-
-  const invoices = allUserInvoices.filter(
-    (invoice, index, self) =>
-      index ===
-      self.findIndex((i) => i.invoiceNumber === invoice.invoiceNumber),
-  );
-
-  // Combine all appointment sources
-  const allAppointments = [
-    ...(appointmentsByUserId || []),
-    ...(appointmentsByEmail || []),
-    ...(appointmentsByUser || []),
-  ];
-
-  // Remove duplicates and get effective appointments
-  const effectiveAppointments = allAppointments.filter(
-    (apt, index, self) => index === self.findIndex((a) => a.id === apt.id),
-  );
-
-  // Debug logging for appointments
-  console.log("Dashboard Appointments Debug:", {
-    userId: user?.uid,
-    userEmail: user?.email,
-    appointmentsByUserId: appointmentsByUserId?.length || 0,
-    appointmentsByEmail: appointmentsByEmail?.length || 0,
-    appointmentsByUser: appointmentsByUser?.length || 0,
-    totalAppointments: effectiveAppointments?.length || 0,
-  });
-
-  // Handle both date formats (Timestamp and string) and time field variations
-  const processedAppointments = effectiveAppointments?.map((apt) => ({
+  // Process appointments data
+  const processedAppointments = appointments?.map((apt) => ({
     ...apt,
     date: (apt.date as any)?.seconds
       ? new Date((apt.date as any).seconds * 1000).toISOString().split("T")[0]
       : apt.date,
     timeslot: apt.timeslot || (apt as any).time || "Time TBD",
-  }));
+  })) || [];
 
-  const nextAppointment = processedAppointments?.[0];
-  const unreadMessages =
-    messages?.filter(
-      (msg) =>
-        msg.toUser === user?.uid &&
-        (msg.read === false || msg.read === undefined),
-    ).length || 0;
+  const nextAppointment = processedAppointments[0];
   const latestProgress = progressEntries?.[0];
-  const pendingInvoices =
-    invoices?.filter((invoice) => invoice.status === "pending").length || 0;
+  const pendingInvoices = invoices?.filter((invoice) => invoice.status === "pending").length || 0;
 
   // Calculate weight change this month
   const currentMonth = new Date().toISOString().slice(0, 7);
-  const thisMonthEntries =
-    progressEntries?.filter(
-      (entry) => entry.date.startsWith(currentMonth) && entry.weightKg,
-    ) || [];
+  const thisMonthEntries = progressEntries?.filter(
+    (entry) => entry.date.startsWith(currentMonth) && entry.weightKg,
+  ) || [];
 
-  const weightChange =
-    thisMonthEntries.length >= 2
-      ? (thisMonthEntries[0].weightKg || 0) -
-        (thisMonthEntries[thisMonthEntries.length - 1].weightKg || 0)
-      : 0;
+  const weightChange = thisMonthEntries.length >= 2
+    ? (thisMonthEntries[0].weightKg || 0) - (thisMonthEntries[thisMonthEntries.length - 1].weightKg || 0)
+    : 0;
+
+  // Handle loading states
+  const isLoading = appointmentsLoading || messagesLoading || progressLoading || invoicesLoading;
+  const hasErrors = appointmentsError || messagesError || progressError || invoicesError;
+
+  if (isLoading) {
+    return (
+      <div className="space-y-8 relative">
+        <div className="animate-pulse space-y-4">
+          <div className="h-32 bg-gray-200 dark:bg-gray-700 rounded-lg"></div>
+          <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-6">
+            {[...Array(5)].map((_, i) => (
+              <div key={i} className="h-32 bg-gray-200 dark:bg-gray-700 rounded-lg"></div>
+            ))}
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (hasErrors) {
+    return (
+      <div className="space-y-8 relative">
+        <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-6">
+          <h3 className="text-lg font-semibold text-red-800 dark:text-red-200 mb-2">
+            Error Loading Dashboard
+          </h3>
+          <p className="text-red-600 dark:text-red-300">
+            There was an error loading your dashboard data. Please refresh the page or contact support if the problem persists.
+          </p>
+        </div>
+      </div>
+    );
+  }
 
   const quickStats = [
     {
@@ -184,7 +173,7 @@ export function DashboardOverview() {
     },
     {
       title: "Messages",
-      value: unreadMessages.toString(),
+      value: unreadCount.toString(),
       subtitle: "Unread",
       icon: MessageCircle,
       color: "text-primary-600",
@@ -205,13 +194,6 @@ export function DashboardOverview() {
   ];
 
   const quickActions = [
-    /*{
-      title: "Log Progress",
-      description: "Update your weight and water intake",
-      icon: Target,
-      href: "/dashboard/progress",
-      color: "bg-green-500 hover:bg-green-600"
-    },*/
     {
       title: "Book Appointment",
       description: "Schedule your next consultation",
@@ -234,13 +216,6 @@ export function DashboardOverview() {
       href: "/dashboard/plan",
       color: "bg-purple-500 hover:bg-purple-600",
     },
-    /*{
-      title: "Pay Invoices",
-      description: "View and pay outstanding invoices",
-      icon: Receipt,
-      href: "/dashboard/invoices",
-      color: "bg-orange-500 hover:bg-orange-600"
-    },*/
     {
       title: "Profile Settings",
       description: "Manage your account and health info",

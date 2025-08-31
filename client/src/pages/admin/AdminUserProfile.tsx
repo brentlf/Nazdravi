@@ -566,7 +566,7 @@ function AdminUserProfile() {
                       <div>
                         <p className="text-sm font-medium">Health Goals</p>
                         <p className="text-sm text-muted-foreground">
-                          {preEvaluationForm.healthGoals?.length ? preEvaluationForm.healthGoals.join(', ') : 'Not specified'}
+                          {Array.isArray(preEvaluationForm.healthGoals) && preEvaluationForm.healthGoals.length ? preEvaluationForm.healthGoals.join(', ') : 'Not specified'}
                         </p>
                       </div>
                       <div>
@@ -609,19 +609,19 @@ function AdminUserProfile() {
                       <div>
                         <p className="text-sm font-medium">Medical Conditions</p>
                         <p className="text-sm text-muted-foreground">
-                          {preEvaluationForm.medicalConditions?.length ? preEvaluationForm.medicalConditions.join(', ') : 'None reported'}
+                          {Array.isArray(preEvaluationForm.medicalConditions) && preEvaluationForm.medicalConditions.length ? preEvaluationForm.medicalConditions.join(', ') : 'None reported'}
                         </p>
                       </div>
                       <div>
-                        <p className="text-sm font-medium">Medications</p>
+                        <p className="text-sm font-medium">Current Medications</p>
                         <p className="text-sm text-muted-foreground">
-                          {preEvaluationForm.medications?.length ? preEvaluationForm.medications.join(', ') : 'None reported'}
+                          {Array.isArray(preEvaluationForm.medications) && preEvaluationForm.medications.length ? preEvaluationForm.medications.join(', ') : 'None reported'}
                         </p>
                       </div>
                       <div>
                         <p className="text-sm font-medium">Allergies</p>
                         <p className="text-sm text-muted-foreground">
-                          {preEvaluationForm.allergies?.length ? preEvaluationForm.allergies.join(', ') : 'None reported'}
+                          {Array.isArray(preEvaluationForm.allergies) && preEvaluationForm.allergies.length ? preEvaluationForm.allergies.join(', ') : 'None reported'}
                         </p>
                       </div>
                     </div>
@@ -634,7 +634,7 @@ function AdminUserProfile() {
                       <div>
                         <p className="text-sm font-medium">Dietary Restrictions</p>
                         <p className="text-sm text-muted-foreground">
-                          {preEvaluationForm.dietaryRestrictions?.length ? preEvaluationForm.dietaryRestrictions.join(', ') : 'None specified'}
+                          {Array.isArray(preEvaluationForm.dietaryRestrictions) && preEvaluationForm.dietaryRestrictions.length ? preEvaluationForm.dietaryRestrictions.join(', ') : 'None specified'}
                         </p>
                       </div>
                       <div>
@@ -665,7 +665,7 @@ function AdminUserProfile() {
                       <div>
                         <p className="text-sm font-medium">Preferred Meal Times</p>
                         <p className="text-sm text-muted-foreground">
-                          {preEvaluationForm.preferredMealTimes?.length ? preEvaluationForm.preferredMealTimes.join(', ') : 'Not specified'}
+                          {Array.isArray(preEvaluationForm.preferredMealTimes) && preEvaluationForm.preferredMealTimes.length ? preEvaluationForm.preferredMealTimes.join(', ') : 'Not specified'}
                         </p>
                       </div>
                     </div>

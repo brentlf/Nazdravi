@@ -1,7 +1,11 @@
-import { createContext, useContext, ReactNode } from "react";
+import { createContext, useContext, useState, useEffect, ReactNode } from "react";
+import { getCurrentLanguage, setLanguage as setLanguageStorage } from "@/lib/globalTranslationFunction";
+import type { Language } from "@/types";
 
 interface LanguageContextType {
-  t: (key: string, namespace?: string, params?: Record<string, string>) => string;
+  language: Language;
+  setLanguage: (lang: Language) => void;
+  t: (key: string, params?: Record<string, string>) => string;
 }
 
 const LanguageContext = createContext<LanguageContextType | undefined>(undefined);
@@ -18,22 +22,44 @@ interface LanguageProviderProps {
   children: ReactNode;
 }
 
-// Simple function to convert kebab-case keys to readable English
-function keyToEnglish(key: string): string {
-  return key
-    .split('-')
-    .map(word => word.charAt(0).toUpperCase() + word.slice(1))
-    .join(' ');
-}
-
 export function LanguageProvider({ children }: LanguageProviderProps) {
-  // Simple translation function that converts keys to readable English
-  const t = (key: string, namespace?: string, params?: Record<string, string>) => {
-    // Convert kebab-case keys to readable English
-    return keyToEnglish(key);
+  const [language, setLanguageState] = useState<Language>(getCurrentLanguage());
+
+  const handleSetLanguage = (lang: Language) => {
+    try {
+      setLanguageState(lang);
+      setLanguageStorage(lang);
+      
+      // Update document language attribute for accessibility
+      document.documentElement.lang = lang;
+      
+      // Trigger a custom event for components that need to react to language changes
+      window.dispatchEvent(new CustomEvent('languageChanged', { detail: { language: lang } }));
+    } catch (error) {
+      console.error('Failed to set language:', error);
+    }
   };
 
+  const t = (key: string, params?: Record<string, string>): string => {
+    try {
+      if (params) {
+        return require('@/lib/globalTranslationFunction').gtWithParams(key, params, language);
+      }
+      return require('@/lib/globalTranslationFunction').gt(key, language);
+    } catch (error) {
+      console.error('Translation error:', error);
+      return key;
+    }
+  };
+
+  useEffect(() => {
+    // Set initial document language
+    document.documentElement.lang = language;
+  }, [language]);
+
   const value: LanguageContextType = {
+    language,
+    setLanguage: handleSetLanguage,
     t,
   };
 
