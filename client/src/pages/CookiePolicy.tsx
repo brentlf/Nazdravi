@@ -32,7 +32,7 @@ export default function CookiePolicy() {
                 Cookies are small text files that are placed on your computer or mobile device when you 
                 visit our website. They help us provide you with a better experience by remembering your 
                 preferences, keeping you logged in, and analyzing how you use our services. We use cookies 
-                and similar technologies to enhance your experience with Vee Nutrition services.
+                and similar technologies to enhance your experience with Nazdravi services.
               </p>
             </CardContent>
           </Card>
@@ -240,9 +240,9 @@ export default function CookiePolicy() {
                 If you have any questions about our use of cookies or this Cookie Policy, please contact us:
               </p>
               <div className="space-y-2 text-muted-foreground">
-                <p><strong>Email:</strong> cookies@veenutrition.com</p>
-                <p><strong>Privacy Officer:</strong> privacy@veenutrition.com</p>
-                <p><strong>Address:</strong> Vee Nutrition Practice</p>
+                <p><strong>Email:</strong> cookies@nazdravi.com</p>
+                <p><strong>Privacy Officer:</strong> privacy@nazdravi.com</p>
+                <p><strong>Address:</strong> Nazdravi Practice</p>
               </div>
             </CardContent>
           </Card>

@@ -23,11 +23,11 @@ export const sendWelcomeEmail = functions.https.onCall(async (data, context) => 
 
     // Send email via Resend
     const result = await resend.emails.send({
-      from: 'VeeNutrition <noreply@veenutrition.com>',
+      from: 'Nazdravi <noreply@nazdravi.com>',
       to: [email],
-      subject: 'Welcome to VeeNutrition!',
+      subject: 'Welcome to Nazdravi!',
       html: `
-        <h1>Welcome to VeeNutrition, ${name}!</h1>
+        <h1>Welcome to Nazdravi, ${name}!</h1>
         <p>Thank you for joining our nutrition consulting platform.</p>
         <p>We're excited to help you on your health journey!</p>
       `
@@ -68,9 +68,9 @@ export const sendAppointmentConfirmation = functions.https.onCall(async (data, c
     }
 
     const result = await resend.emails.send({
-      from: 'VeeNutrition <noreply@veenutrition.com>',
+      from: 'Nazdravi <noreply@nazdravi.com>',
       to: [email],
-      subject: 'Appointment Confirmation - VeeNutrition',
+      subject: 'Appointment Confirmation - Nazdravi',
       html: `
         <h1>Appointment Confirmed!</h1>
         <p>Hi ${name},</p>
@@ -117,9 +117,9 @@ export const sendInvoiceEmail = functions.https.onCall(async (data, context) => 
     }
 
     const result = await resend.emails.send({
-      from: 'VeeNutrition <noreply@veenutrition.com>',
+      from: 'Nazdravi <noreply@nazdravi.com>',
       to: [email],
-      subject: `Invoice #${invoiceNumber} - VeeNutrition`,
+      subject: `Invoice #${invoiceNumber} - Nazdravi`,
       html: `
         <h1>Invoice #${invoiceNumber}</h1>
         <p>Hi ${name},</p>
@@ -127,7 +127,7 @@ export const sendInvoiceEmail = functions.https.onCall(async (data, context) => 
         <p><strong>Amount:</strong> €${amount}</p>
         <p><strong>Due Date:</strong> ${dueDate || 'Due upon receipt'}</p>
         ${pdfUrl ? `<p><a href="${pdfUrl}" target="_blank">Download Invoice PDF</a></p>` : ''}
-        <p>Thank you for choosing VeeNutrition!</p>
+        <p>Thank you for choosing Nazdravi!</p>
       `
     });
 
@@ -185,7 +185,7 @@ export const api = functions.https.onRequest(async (req, res) => {
   if (path === '/api/test') {
     res.json({
       success: true,
-      message: 'VeeNutrition API is working!',
+      message: 'Nazdravi API is working!',
       timestamp: new Date().toISOString()
     });
     return;
@@ -193,7 +193,7 @@ export const api = functions.https.onRequest(async (req, res) => {
 
   // Default response
   res.json({
-    message: 'VeeNutrition API',
+    message: 'Nazdravi API',
     endpoints: ['/api/health', '/api/test'],
     functions: ['sendWelcomeEmail', 'sendAppointmentConfirmation', 'sendInvoiceEmail'],
     timestamp: new Date().toISOString()
@@ -211,9 +211,9 @@ async function sendAppointmentEmailInternal(data: {
 }) {
   try {
     const result = await resend.emails.send({
-      from: 'VeeNutrition <noreply@veenutrition.com>',
+      from: 'Nazdravi <noreply@nazdravi.com>',
       to: [data.email],
-      subject: 'Appointment Confirmation - VeeNutrition',
+      subject: 'Appointment Confirmation - Nazdravi',
       html: `
         <h1>Appointment Confirmed!</h1>
         <p>Hi ${data.name},</p>
@@ -261,9 +261,9 @@ async function sendInvoiceEmailInternal(data: {
 }) {
   try {
     const result = await resend.emails.send({
-      from: 'VeeNutrition <noreply@veenutrition.com>',
+      from: 'Nazdravi <noreply@nazdravi.com>',
       to: [data.email],
-      subject: `Invoice #${data.invoiceNumber} - VeeNutrition`,
+      subject: `Invoice #${data.invoiceNumber} - Nazdravi`,
       html: `
         <h1>Invoice #${data.invoiceNumber}</h1>
         <p>Hi ${data.name},</p>
@@ -271,7 +271,7 @@ async function sendInvoiceEmailInternal(data: {
         <p><strong>Amount:</strong> €${data.amount}</p>
         <p><strong>Due Date:</strong> ${data.dueDate || 'Due upon receipt'}</p>
         ${data.pdfUrl ? `<p><a href="${data.pdfUrl}" target="_blank">Download Invoice PDF</a></p>` : ''}
-        <p>Thank you for choosing VeeNutrition!</p>
+        <p>Thank you for choosing Nazdravi!</p>
       `
     });
 

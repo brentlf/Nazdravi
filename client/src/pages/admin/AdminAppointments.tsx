@@ -502,7 +502,7 @@ export default function AdminAppointments() {
         // Send reschedule notification to admin
         try {
           await emailService.sendRescheduleRequest(
-            'admin@veenutrition.com', // Configure your admin email
+            'admin@nazdravi.com', // Configure your admin email
             appointment.name,
             appointment.email,
             appointment.date,

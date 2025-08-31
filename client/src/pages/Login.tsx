@@ -99,7 +99,7 @@ export default function Login() {
                 <Leaf className="h-6 w-6 text-white" />
               </div>
               <span className="font-bold text-2xl text-primary-600 dark:text-primary-400">
-                Vee Nutrition
+                Nazdravi
               </span>
             </div>
           </Link>

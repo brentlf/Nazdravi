@@ -12,7 +12,7 @@ export default function Legal() {
             Legal Information
           </h1>
           <p className="text-lg text-muted-foreground">
-            Important legal information for Vee Nutrition clients
+            Important legal information for Nazdravi clients
           </p>
         </div>
 
@@ -48,7 +48,7 @@ export default function Legal() {
               <div>
                 <h3 className="font-semibold mb-2">Practice Details</h3>
                 <div className="text-sm space-y-1">
-                  <p><strong>Practice Name:</strong> Vee Nutrition</p>
+                  <p><strong>Practice Name:</strong> Nazdravi</p>
                   <p><strong>Address:</strong> [PRACTICE_ADDRESS], Netherlands</p>
                   <p><strong>KvK Number:</strong> [KVK_NUMBER]</p>
                   <p><strong>VAT Status:</strong> Healthcare services are VAT-exempt in the Netherlands. VAT at 21% may apply to non-care products.</p>
@@ -174,7 +174,7 @@ export default function Legal() {
 
         {/* Footer */}
         <div className="mt-12 pt-8 border-t text-center text-sm text-muted-foreground">
-          <p>© 2024 Vee Nutrition. All rights reserved.</p>
+          <p>© 2024 Nazdravi. All rights reserved.</p>
           <p className="mt-2">
             For complete terms and conditions, privacy policy, and detailed legal information, 
             please see our <a href="/terms" className="text-[#A5CBA4] hover:underline">Terms & Conditions</a> and 

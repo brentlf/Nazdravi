@@ -42,7 +42,7 @@ class ResendEmailService {
 
     return new Promise((resolve) => {
       const postData = JSON.stringify({
-        from: 'Vee Nutrition <info@veenutrition.com>',
+        from: 'Nazdravi <info@nazdravi.com>',
         to: [`${params.toName || ''} <${params.to}>`],
         subject: params.subject,
         html: params.html,
@@ -117,18 +117,18 @@ class ResendEmailService {
 
   getAccountConfirmationTemplate(name: string): EmailTemplate {
     return {
-      subject: 'Welcome to Vee Nutrition - Account Created Successfully',
+      subject: 'Welcome to Nazdravi - Account Created Successfully',
       html: `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; background-color: #f8faf8;">
           <div style="background-color: white; padding: 30px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
             <div style="text-align: center; margin-bottom: 30px;">
-              <h1 style="color: #A5CBA4; margin: 0;">🌿 Vee Nutrition</h1>
+              <h1 style="color: #A5CBA4; margin: 0;">🌿 Nazdravi</h1>
             </div>
             
             <h2 style="color: #333; margin-bottom: 20px;">Welcome ${name}!</h2>
             
             <p style="color: #666; line-height: 1.6; margin-bottom: 20px;">
-              Thank you for creating your account with Vee Nutrition. Your journey to better health and nutrition starts here!
+              Thank you for creating your account with Nazdravi. Your journey to better health and nutrition starts here!
             </p>
             
             <div style="background-color: #f0f8f0; padding: 20px; border-radius: 8px; margin: 20px 0;">
@@ -152,24 +152,24 @@ class ResendEmailService {
             </p>
             
             <div style="border-top: 1px solid #eee; padding-top: 20px; margin-top: 30px; text-align: center; color: #999; font-size: 14px;">
-              <p>Vee Nutrition | Transforming Lives Through Nutrition</p>
-              <p>Email: info@veenutrition.com</p>
+              <p>Nazdravi | Transforming Lives Through Nutrition</p>
+              <p>Email: info@nazdravi.com</p>
             </div>
           </div>
         </div>
       `,
-      text: `Welcome to Vee Nutrition, ${name}! Your account has been created successfully. Visit your dashboard to get started with your nutrition journey.`
+      text: `Welcome to Nazdravi, ${name}! Your account has been created successfully. Visit your dashboard to get started with your nutrition journey.`
     };
   }
 
   getAppointmentConfirmationTemplate(name: string, date: string, time: string, type: string): EmailTemplate {
     return {
-      subject: 'Appointment Confirmed - Vee Nutrition',
+      subject: 'Appointment Confirmed - Nazdravi',
       html: `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; background-color: #f8faf8;">
           <div style="background-color: white; padding: 30px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
             <div style="text-align: center; margin-bottom: 30px;">
-              <h1 style="color: #A5CBA4; margin: 0;">🌿 Vee Nutrition</h1>
+              <h1 style="color: #A5CBA4; margin: 0;">🌿 Nazdravi</h1>
             </div>
             
             <h2 style="color: #333; margin-bottom: 20px;">Appointment Confirmed</h2>
@@ -209,7 +209,7 @@ class ResendEmailService {
             </div>
             
             <div style="border-top: 1px solid #eee; padding-top: 20px; margin-top: 30px; text-align: center; color: #999; font-size: 14px;">
-              <p>Vee Nutrition | Your Health, Our Priority</p>
+              <p>Nazdravi | Your Health, Our Priority</p>
               <p>Questions? Reply to this email or message us through your dashboard</p>
             </div>
           </div>
@@ -221,12 +221,12 @@ class ResendEmailService {
 
   getAppointmentReminderTemplate(name: string, date: string, time: string, type: string): EmailTemplate {
     return {
-      subject: 'Appointment Reminder - Tomorrow at Vee Nutrition',
+      subject: 'Appointment Reminder - Tomorrow at Nazdravi',
       html: `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; background-color: #f8faf8;">
           <div style="background-color: white; padding: 30px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
             <div style="text-align: center; margin-bottom: 30px;">
-              <h1 style="color: #A5CBA4; margin: 0;">🌿 Vee Nutrition</h1>
+              <h1 style="color: #A5CBA4; margin: 0;">🌿 Nazdravi</h1>
             </div>
             
             <h2 style="color: #333; margin-bottom: 20px;">⏰ Appointment Reminder</h2>
@@ -256,7 +256,7 @@ class ResendEmailService {
             </p>
             
             <div style="border-top: 1px solid #eee; padding-top: 20px; margin-top: 30px; text-align: center; color: #999; font-size: 14px;">
-              <p>Vee Nutrition | Your Wellness Partner</p>
+              <p>Nazdravi | Your Wellness Partner</p>
               <p>Looking forward to seeing you tomorrow!</p>
             </div>
           </div>
@@ -273,7 +273,7 @@ class ResendEmailService {
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; background-color: #f8faf8;">
           <div style="background-color: white; padding: 30px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
             <div style="text-align: center; margin-bottom: 30px;">
-              <h1 style="color: #A5CBA4; margin: 0;">🌿 Vee Nutrition</h1>
+              <h1 style="color: #A5CBA4; margin: 0;">🌿 Nazdravi</h1>
             </div>
             
             <h2 style="color: #333; margin-bottom: 20px;">💰 Payment Reminder</h2>
@@ -305,8 +305,8 @@ class ResendEmailService {
             </p>
             
             <div style="border-top: 1px solid #eee; padding-top: 20px; margin-top: 30px; text-align: center; color: #999; font-size: 14px;">
-              <p>Vee Nutrition | Transforming Lives Through Nutrition</p>
-              <p>Email: info@veenutrition.com</p>
+              <p>Nazdravi | Transforming Lives Through Nutrition</p>
+              <p>Email: info@nazdravi.com</p>
             </div>
           </div>
         </div>
@@ -322,7 +322,7 @@ You can pay online at: ${paymentUrl}
 If you have any questions, please contact us.
 
 Best regards,
-Vee Nutrition Team`
+Nazdravi Team`
     };
   }
 
@@ -333,7 +333,7 @@ Vee Nutrition Team`
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; background-color: #f8faf8;">
           <div style="background-color: white; padding: 30px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
             <div style="text-align: center; margin-bottom: 30px;">
-              <h1 style="color: #A5CBA4; margin: 0;">🌿 Vee Nutrition</h1>
+              <h1 style="color: #A5CBA4; margin: 0;">🌿 Nazdravi</h1>
             </div>
             
             <h2 style="color: #333; margin-bottom: 20px;">🔄 Reschedule Request</h2>
@@ -370,7 +370,7 @@ Vee Nutrition Team`
             ` : ''}
             
             <div style="border-top: 1px solid #eee; padding-top: 20px; margin-top: 30px; text-align: center; color: #999; font-size: 14px;">
-              <p>Vee Nutrition Admin Dashboard</p>
+              <p>Nazdravi Admin Dashboard</p>
               <p>Please respond to this request promptly</p>
             </div>
           </div>
@@ -384,12 +384,12 @@ Vee Nutrition Team`
 
   getVeeRescheduleRequestTemplate(name: string, date: string, time: string, reason: string): EmailTemplate {
     return {
-      subject: `Reschedule Request from Vee Nutrition`,
+      subject: `Reschedule Request from Nazdravi`,
       html: `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; background-color: #f8faf8;">
           <div style="background-color: white; padding: 30px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
             <div style="text-align: center; margin-bottom: 30px;">
-              <h1 style="color: #A5CBA4; margin: 0;">🌿 Vee Nutrition</h1>
+              <h1 style="color: #A5CBA4; margin: 0;">🌿 Nazdravi</h1>
             </div>
             
             <h2 style="color: #333; margin-bottom: 20px;">Reschedule Request</h2>
@@ -417,8 +417,8 @@ Vee Nutrition Team`
             </div>
             
             <div style="border-top: 1px solid #eee; padding-top: 20px; margin-top: 30px; text-align: center; color: #999; font-size: 14px;">
-              <p>Vee Nutrition | Transforming Lives Through Nutrition</p>
-              <p>Email: info@veenutrition.com</p>
+              <p>Nazdravi | Transforming Lives Through Nutrition</p>
+              <p>Email: info@nazdravi.com</p>
             </div>
           </div>
         </div>
@@ -429,12 +429,12 @@ Vee Nutrition Team`
 
   getRescheduleConfirmationTemplate(name: string, newDate: string, newTime: string, type: string): EmailTemplate {
     return {
-      subject: 'Reschedule Confirmed - Vee Nutrition',
+      subject: 'Reschedule Confirmed - Nazdravi',
       html: `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; background-color: #f8faf8;">
           <div style="background-color: white; padding: 30px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
             <div style="text-align: center; margin-bottom: 30px;">
-              <h1 style="color: #A5CBA4; margin: 0;">🌿 Vee Nutrition</h1>
+              <h1 style="color: #A5CBA4; margin: 0;">🌿 Nazdravi</h1>
             </div>
             
             <h2 style="color: #333; margin-bottom: 20px;">✅ Reschedule Confirmed</h2>
@@ -451,7 +451,7 @@ Vee Nutrition Team`
             </div>
             
             <div style="border-top: 1px solid #eee; padding-top: 20px; margin-top: 30px; text-align: center; color: #999; font-size: 14px;">
-              <p>Vee Nutrition | Your Health, Our Priority</p>
+              <p>Nazdravi | Your Health, Our Priority</p>
               <p>We look forward to seeing you at your new appointment time!</p>
             </div>
           </div>
@@ -463,12 +463,12 @@ Vee Nutrition Team`
 
   getInvoiceGeneratedTemplate(name: string, amount: number, invoiceId: string): EmailTemplate {
     return {
-      subject: 'Session Complete - Invoice Ready - Vee Nutrition',
+      subject: 'Session Complete - Invoice Ready - Nazdravi',
       html: `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; background-color: #f8faf8;">
           <div style="background-color: white; padding: 30px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
             <div style="text-align: center; margin-bottom: 30px;">
-              <h1 style="color: #A5CBA4; margin: 0;">🌿 Vee Nutrition</h1>
+              <h1 style="color: #A5CBA4; margin: 0;">🌿 Nazdravi</h1>
             </div>
             
             <h2 style="color: #333; margin-bottom: 20px;">💳 Invoice Ready</h2>
@@ -491,7 +491,7 @@ Vee Nutrition Team`
             </div>
             
             <div style="border-top: 1px solid #eee; padding-top: 20px; margin-top: 30px; text-align: center; color: #999; font-size: 14px;">
-              <p>Vee Nutrition | Your Health, Our Priority</p>
+              <p>Nazdravi | Your Health, Our Priority</p>
               <p>Payment is typically due within 7 days of session completion</p>
             </div>
           </div>
@@ -503,12 +503,12 @@ Vee Nutrition Team`
 
   getLateRescheduleTemplate(name: string, date: string, time: string): EmailTemplate {
     return {
-      subject: 'Late Reschedule Notice - €5 Fee Applied - Vee Nutrition',
+      subject: 'Late Reschedule Notice - €5 Fee Applied - Nazdravi',
       html: `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; background-color: #f8faf8;">
           <div style="background-color: white; padding: 30px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
             <div style="text-align: center; margin-bottom: 30px;">
-              <h1 style="color: #A5CBA4; margin: 0;">🌿 Vee Nutrition</h1>
+              <h1 style="color: #A5CBA4; margin: 0;">🌿 Nazdravi</h1>
             </div>
             
             <h2 style="color: #333; margin-bottom: 20px;">⏰ Late Reschedule Fee Applied</h2>
@@ -532,7 +532,7 @@ Vee Nutrition Team`
             </p>
             
             <div style="border-top: 1px solid #eee; padding-top: 20px; margin-top: 30px; text-align: center; color: #999; font-size: 14px;">
-              <p>Vee Nutrition | Your Health, Our Priority</p>
+              <p>Nazdravi | Your Health, Our Priority</p>
               <p>To avoid future fees, please reschedule at least 4 working hours in advance</p>
             </div>
           </div>
@@ -544,12 +544,12 @@ Vee Nutrition Team`
 
   getNoShowPenaltyTemplate(name: string, date: string, time: string, penaltyAmount: number): EmailTemplate {
     return {
-      subject: 'Missed Appointment - No-Show Penalty Applied - Vee Nutrition',
+      subject: 'Missed Appointment - No-Show Penalty Applied - Nazdravi',
       html: `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; background-color: #f8faf8;">
           <div style="background-color: white; padding: 30px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
             <div style="text-align: center; margin-bottom: 30px;">
-              <h1 style="color: #A5CBA4; margin: 0;">🌿 Vee Nutrition</h1>
+              <h1 style="color: #A5CBA4; margin: 0;">🌿 Nazdravi</h1>
             </div>
             
             <h2 style="color: #333; margin-bottom: 20px;">❌ Missed Appointment Notice</h2>
@@ -579,7 +579,7 @@ Vee Nutrition Team`
             </div>
             
             <div style="border-top: 1px solid #eee; padding-top: 20px; margin-top: 30px; text-align: center; color: #999; font-size: 14px;">
-              <p>Vee Nutrition | Your Health, Our Priority</p>
+              <p>Nazdravi | Your Health, Our Priority</p>
               <p>Please contact us if you have questions about this penalty</p>
             </div>
           </div>
@@ -591,12 +591,12 @@ Vee Nutrition Team`
 
   getAppointmentCancelledTemplate(name: string, date: string, time: string, reason?: string): EmailTemplate {
     return {
-      subject: 'Appointment Cancelled - Vee Nutrition',
+      subject: 'Appointment Cancelled - Nazdravi',
       html: `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; background-color: #f8faf8;">
           <div style="background-color: white; padding: 30px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
             <div style="text-align: center; margin-bottom: 30px;">
-              <h1 style="color: #A5CBA4; margin: 0;">🌿 Vee Nutrition</h1>
+              <h1 style="color: #A5CBA4; margin: 0;">🌿 Nazdravi</h1>
             </div>
             
             <h2 style="color: #333; margin-bottom: 20px;">❌ Appointment Cancelled</h2>
@@ -626,7 +626,7 @@ Vee Nutrition Team`
             </div>
             
             <div style="border-top: 1px solid #eee; padding-top: 20px; margin-top: 30px; text-align: center; color: #999; font-size: 14px;">
-              <p>Vee Nutrition | Your Health, Our Priority</p>
+              <p>Nazdravi | Your Health, Our Priority</p>
               <p>Questions? Reply to this email or contact us through your dashboard</p>
             </div>
           </div>
@@ -638,12 +638,12 @@ Vee Nutrition Team`
 
   getClientMessageTemplate(clientName: string, messageContent: string): EmailTemplate {
     return {
-      subject: `New Message from Vee Nutrition`,
+      subject: `New Message from Nazdravi`,
       html: `
       <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; background-color: #f8faf8;">
         <div style="background-color: white; padding: 30px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
           <div style="text-align: center; margin-bottom: 30px;">
-            <h1 style="color: #A5CBA4; margin: 0;">🌿 Vee Nutrition</h1>
+            <h1 style="color: #A5CBA4; margin: 0;">🌿 Nazdravi</h1>
           </div>
           
           <h2 style="color: #333; margin-bottom: 20px;">💬 New Message</h2>
@@ -653,11 +653,11 @@ Vee Nutrition Team`
           </p>
           
           <p style="color: #666; line-height: 1.6; margin-bottom: 20px;">
-            You have received a new message from Vee Nutrition. Please log in to your client portal to view and respond.
+            You have received a new message from Nazdravi. Please log in to your client portal to view and respond.
           </p>
           
           <div style="text-align: center; margin: 30px 0;">
-            <a href="https://app.veenutrition.com/dashboard/messages" style="background-color: #A5CBA4; color: white; padding: 12px 30px; text-decoration: none; border-radius: 5px; display: inline-block; font-weight: bold;">View Message</a>
+            <a href="https://app.nazdravi.com/dashboard/messages" style="background-color: #A5CBA4; color: white; padding: 12px 30px; text-decoration: none; border-radius: 5px; display: inline-block; font-weight: bold;">View Message</a>
           </div>
           
           <p style="color: #666; line-height: 1.6; margin-bottom: 20px;">
@@ -665,20 +665,20 @@ Vee Nutrition Team`
           </p>
           
           <div style="border-top: 1px solid #eee; padding-top: 20px; margin-top: 30px; text-align: center; color: #999; font-size: 14px;">
-            <p>Vee Nutrition | Transforming Lives Through Nutrition</p>
-            <p>Email: info@veenutrition.com</p>
+            <p>Nazdravi | Transforming Lives Through Nutrition</p>
+            <p>Email: info@nazdravi.com</p>
           </div>
         </div>
       </div>
       `,
       text: `Dear ${clientName},
 
-You have received a new message from Vee Nutrition.
+You have received a new message from Nazdravi.
 
-Please log in to your client portal to view and respond: https://app.veenutrition.com/dashboard/messages
+Please log in to your client portal to view and respond: https://app.nazdravi.com/dashboard/messages
 
 Best regards,
-Vee Nutrition Team`
+Nazdravi Team`
     };
   }
 
@@ -696,7 +696,7 @@ Vee Nutrition Team`
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; background-color: #f8faf8;">
           <div style="background-color: white; padding: 30px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
             <div style="text-align: center; margin-bottom: 30px;">
-              <h1 style="color: #A5CBA4; margin: 0;">🌿 Vee Nutrition Admin</h1>
+              <h1 style="color: #A5CBA4; margin: 0;">🌿 Nazdravi Admin</h1>
             </div>
             
             <h2 style="color: #333; margin-bottom: 20px;">📅 New Appointment Request</h2>
@@ -721,7 +721,7 @@ Vee Nutrition Team`
             </div>
             
             <div style="border-top: 1px solid #eee; padding-top: 20px; margin-top: 30px; text-align: center; color: #999; font-size: 14px;">
-              <p>Vee Nutrition Admin Dashboard</p>
+              <p>Nazdravi Admin Dashboard</p>
               <p>Please confirm or reschedule this appointment promptly</p>
             </div>
           </div>
@@ -738,7 +738,7 @@ Vee Nutrition Team`
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; background-color: #f8faf8;">
           <div style="background-color: white; padding: 30px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
             <div style="text-align: center; margin-bottom: 30px;">
-              <h1 style="color: #A5CBA4; margin: 0;">🌿 Vee Nutrition Admin</h1>
+              <h1 style="color: #A5CBA4; margin: 0;">🌿 Nazdravi Admin</h1>
             </div>
             
             <h2 style="color: #333; margin-bottom: 20px;">🏥 Health Information Update</h2>
@@ -761,7 +761,7 @@ Vee Nutrition Team`
             </div>
             
             <div style="border-top: 1px solid #eee; padding-top: 20px; margin-top: 30px; text-align: center; color: #999; font-size: 14px;">
-              <p>Vee Nutrition Admin Dashboard</p>
+              <p>Nazdravi Admin Dashboard</p>
               <p>Please review the updated health information</p>
             </div>
           </div>
@@ -778,10 +778,10 @@ Vee Nutrition Team`
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; background-color: #f8faf8;">
           <div style="background-color: white; padding: 30px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
             <div style="text-align: center; margin-bottom: 30px;">
-              <h1 style="color: #A5CBA4; margin: 0;">🌿 Vee Nutrition Admin</h1>
+              <h1 style="color: #A5CBA4; margin: 0;">🌿 Nazdravi Admin</h1>
             </div>
             
-            <h2 style="color: #333; margin-bottom: 20px;">💰 Payment Received</h2>
+            <h2 style="color: #333; margin-bottom: 20px;">�� Payment Received</h2>
             
             <div style="background-color: #d4edda; padding: 20px; border-radius: 8px; margin: 20px 0; border-left: 4px solid #28a745;">
               <h3 style="color: #155724; margin-top: 0;">Payment Details</h3>
@@ -798,7 +798,7 @@ Vee Nutrition Team`
             </div>
             
             <div style="border-top: 1px solid #eee; padding-top: 20px; margin-top: 30px; text-align: center; color: #999; font-size: 14px;">
-              <p>Vee Nutrition Admin Dashboard</p>
+              <p>Nazdravi Admin Dashboard</p>
               <p>Payment has been successfully processed</p>
             </div>
           </div>
@@ -815,7 +815,7 @@ Vee Nutrition Team`
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; background-color: #f8faf8;">
           <div style="background-color: white; padding: 30px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
             <div style="text-align: center; margin-bottom: 30px;">
-              <h1 style="color: #A5CBA4; margin: 0;">🌿 Vee Nutrition Admin</h1>
+              <h1 style="color: #A5CBA4; margin: 0;">🌿 Nazdravi Admin</h1>
             </div>
             
             <h2 style="color: #333; margin-bottom: 20px;">⬆️ Service Plan Upgrade</h2>
@@ -838,7 +838,7 @@ Vee Nutrition Team`
             </div>
             
             <div style="border-top: 1px solid #eee; padding-top: 20px; margin-top: 30px; text-align: center; color: #999; font-size: 14px;">
-              <p>Vee Nutrition Admin Dashboard</p>
+              <p>Nazdravi Admin Dashboard</p>
               <p>Client's service level has been updated</p>
             </div>
           </div>
@@ -855,7 +855,7 @@ Vee Nutrition Team`
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; background-color: #f8faf8;">
           <div style="background-color: white; padding: 30px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
             <div style="text-align: center; margin-bottom: 30px;">
-              <h1 style="color: #A5CBA4; margin: 0;">🌿 Vee Nutrition Admin</h1>
+              <h1 style="color: #A5CBA4; margin: 0;">🌿 Nazdravi Admin</h1>
             </div>
             
             <h2 style="color: #333; margin-bottom: 20px;">💬 New Client Message</h2>
@@ -875,7 +875,7 @@ Vee Nutrition Team`
             </div>
             
             <div style="border-top: 1px solid #eee; padding-top: 20px; margin-top: 30px; text-align: center; color: #999; font-size: 14px;">
-              <p>Vee Nutrition Admin Dashboard</p>
+              <p>Nazdravi Admin Dashboard</p>
               <p>Please respond to this message promptly</p>
             </div>
           </div>
@@ -1041,11 +1041,11 @@ export const onAppointmentCreated = functions.firestore
       const template = emailService.getAdminNewAppointmentTemplate(normalizedAppointment);
       console.log('📧 Admin notification template generated');
       console.log('📋 Subject:', template.subject);
-      console.log('📬 Sending to admin: admin@veenutrition.com');
+      console.log('📬 Sending to admin: admin@nazdravi.com');
       
       // Send email directly using Resend instead of queuing for Firebase extension
       const emailSent = await emailService.sendEmail({
-        to: 'admin@veenutrition.com',
+        to: 'admin@nazdravi.com',
         toName: 'Admin Team',
         subject: template.subject,
         html: template.html,
@@ -1117,8 +1117,8 @@ export const onClientRescheduleRequest = functions.firestore
         console.log('📧 Admin reschedule notification template generated');
         
         const adminEmailSent = await emailService.sendEmail({
-          to: 'admin@veenutrition.com',
-          toName: 'Vee Nutrition Admin',
+          to: 'admin@nazdravi.com',
+          toName: 'Nazdravi Admin',
           subject: adminTemplate.subject,
           html: adminTemplate.html,
           text: adminTemplate.text
@@ -1157,7 +1157,7 @@ export const onVeeRescheduleRequest = functions.firestore
       const clientName = after.clientName || after.name || after.userName || 'Client';
       const clientEmail = after.clientEmail || after.email || after.userEmail;
       const appointmentTime = after.time || after.timeslot;
-      const rescheduleReason = after.rescheduleReason || 'Schedule adjustment requested by Vee Nutrition';
+      const rescheduleReason = after.rescheduleReason || 'Schedule adjustment requested by Nazdravi';
       
       console.log('👤 Client Name (resolved):', clientName);
       console.log('📧 Client Email (resolved):', clientEmail);
@@ -1598,7 +1598,7 @@ export const processMailQueue = functions.firestore
         default:
           // Use existing data if template type not found
           template = {
-            subject: mailData.subject || 'Notification from Vee Nutrition',
+            subject: mailData.subject || 'Notification from Nazdravi',
             html: mailData.html || '',
             text: mailData.text || ''
           };
@@ -1790,7 +1790,7 @@ export const onMessageCreated = functions.firestore
         if (clientData && clientData.email) {
           const template = emailService.getClientMessageTemplate(
             clientData.name || 'Client',
-            messageData.content || 'New message from Vee Nutrition'
+            messageData.content || 'New message from Nazdravi'
           );
           
           // Send email to client
@@ -1827,15 +1827,15 @@ export const onMessageCreated = functions.firestore
           
           // Send email to admin
           const emailSent = await emailService.sendEmail({
-            to: 'admin@veenutrition.com',
-            toName: 'Vee Nutrition Admin',
+            to: 'admin@nazdravi.com',
+            toName: 'Nazdravi Admin',
             subject: template.subject,
             html: template.html,
             text: template.text
           });
           
           if (emailSent) {
-            console.log('✅ Admin message notification sent to: admin@veenutrition.com');
+            console.log('✅ Admin message notification sent to: admin@nazdravi.com');
           } else {
             console.error('❌ Failed to send admin message notification');
           }
@@ -1988,8 +1988,8 @@ export const onHealthInfoUpdated = functions.firestore
       );
       
       await emailService.sendEmail({
-        to: 'admin@veenutrition.com',
-        toName: 'Vee Nutrition Admin',
+        to: 'admin@nazdravi.com',
+        toName: 'Nazdravi Admin',
         subject: template.subject,
         html: template.html,
         text: template.text
@@ -2030,8 +2030,8 @@ export const onServicePlanUpgrade = functions.firestore
         );
         
         await emailService.sendEmail({
-          to: 'admin@veenutrition.com',
-          toName: 'Vee Nutrition Admin',
+          to: 'admin@nazdravi.com',
+          toName: 'Nazdravi Admin',
           subject: template.subject,
           html: template.html,
           text: template.text
@@ -2103,7 +2103,7 @@ export const processScheduledDowngrades = functions.pubsub
                   <p>Hi ${userData.name || 'there'},</p>
                   <p>Your service plan has been successfully updated to Pay-As-You-Go as scheduled.</p>
                   <p>You can continue booking individual sessions through your dashboard.</p>
-                  <p>Thank you for choosing Vee Nutrition!</p>
+                  <p>Thank you for choosing Nazdravi!</p>
                 </div>
               `,
               text: `Your service plan has been updated to Pay-As-You-Go. Continue booking sessions through your dashboard.`

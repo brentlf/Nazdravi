@@ -1,56 +1,61 @@
-@import url('https://fonts.googleapis.com/css2?family=The+Seasons:wght@400;500;600;700&family=Cinzel:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:wght@400;500;600;700;800;900&display=swap');
 
 @import "tailwindcss";
 
 :root {
-  /* Clean Blue and White Theme */
-  --primary: 215 85% 55%; /* #2563EB - Clean blue */
+  /* Modern Minimalist Color Palette */
+  --primary: 220 13% 18%; /* Deep charcoal */
   --primary-foreground: 0 0% 100%;
   
-  /* Background Colors - Clean whites */
-  --background: 0 0% 100%; /* Pure white */
-  --foreground: 220 15% 20%; /* Dark blue-gray */
+  /* Background Colors - Clean whites with subtle warmth */
+  --background: 0 0% 99%; /* Off-white with warmth */
+  --foreground: 220 13% 18%; /* Deep charcoal text */
   
   /* Clean UI Colors */
-  --muted: 210 20% 96%; /* Very light blue */
-  --muted-foreground: 215 15% 50%; /* Medium blue-gray */
+  --muted: 220 9% 96%; /* Very light gray */
+  --muted-foreground: 220 9% 46%; /* Medium gray */
   --popover: 0 0% 100%; /* Pure white */
-  --popover-foreground: 220 15% 20%;
+  --popover-foreground: 220 13% 18%;
   --card: 0 0% 100%; /* Pure white cards */
-  --card-foreground: 220 15% 20%;
-  --border: 210 20% 90%; /* Light blue border */
-  --input: 210 20% 95%; /* Light blue input */
-  --secondary: 210 15% 94%; /* Light blue-gray */
-  --secondary-foreground: 220 15% 20%;
-  --accent: 200 85% 60%; /* Bright blue accent */
+  --card-foreground: 220 13% 18%;
+  --border: 220 9% 91%; /* Light gray border */
+  --input: 220 9% 96%; /* Light gray input */
+  --secondary: 220 9% 94%; /* Light gray */
+  --secondary-foreground: 220 13% 18%;
+  --accent: 220 13% 18%; /* Deep charcoal accent */
   --accent-foreground: 0 0% 100%;
-  --destructive: 0 65% 55%; /* Red for errors */
+  --destructive: 0 84% 60%; /* Modern red */
   --destructive-foreground: 0 0% 98%;
-  --ring: 215 85% 55%;
-  --radius: 0.5rem;
+  --ring: 220 13% 18%;
+  --radius: 0.75rem;
+  
+  /* Custom colors for enhanced design */
+  --success: 142 76% 36%; /* Green */
+  --warning: 38 92% 50%; /* Amber */
+  --info: 199 89% 48%; /* Blue */
 }
 
 .dark {
-  /* Clean Dark Blue Theme */
-  --background: 220 20% 8%; /* Dark blue-gray */
-  --foreground: 0 0% 95%; /* Light gray text */
-  --muted: 220 15% 15%; /* Dark blue muted */
-  --muted-foreground: 210 10% 65%; /* Medium gray */
-  --popover: 220 20% 10%; /* Dark blue popover */
-  --popover-foreground: 0 0% 95%;
-  --card: 220 18% 12%; /* Dark blue card */
-  --card-foreground: 0 0% 95%;
-  --border: 220 15% 25%; /* Dark blue border */
-  --input: 220 15% 18%; /* Dark blue input */
-  --primary: 215 85% 65%; /* Bright blue for dark mode */
-  --primary-foreground: 0 0% 100%;
-  --secondary: 220 15% 20%; /* Dark blue secondary */
+  /* Sophisticated Dark Theme */
+  --background: 220 13% 9%; /* Deep charcoal */
+  --foreground: 0 0% 96%; /* Light gray text */
+  --muted: 220 9% 15%; /* Dark gray muted */
+  --muted-foreground: 220 9% 65%; /* Medium gray */
+  --popover: 220 13% 11%; /* Dark charcoal popover */
+  --popover-foreground: 0 0% 96%;
+  --card: 220 13% 13%; /* Dark charcoal card */
+  --card-foreground: 0 0% 96%;
+  --border: 220 9% 25%; /* Dark gray border */
+  --input: 220 9% 18%; /* Dark gray input */
+  --primary: 0 0% 96%; /* Light gray for dark mode */
+  --primary-foreground: 220 13% 9%;
+  --secondary: 220 9% 20%; /* Dark gray secondary */
   --secondary-foreground: 0 0% 90%;
-  --accent: 200 85% 70%; /* Bright accent blue */
-  --accent-foreground: 0 0% 100%;
-  --destructive: 0 65% 62%; /* Red for errors */
+  --accent: 0 0% 96%; /* Light accent */
+  --accent-foreground: 220 13% 9%;
+  --destructive: 0 84% 60%; /* Modern red */
   --destructive-foreground: 0 0% 95%;
-  --ring: 215 85% 65%;
+  --ring: 0 0% 96%;
 }
 
 @layer base {
@@ -63,29 +68,102 @@
     color: hsl(var(--foreground));
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    font-family: 'Cinzel', serif;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
     font-feature-settings: "rlig" 1, "calt" 1;
-    line-height: 1.6;
+    line-height: 1.7;
+    letter-spacing: -0.01em;
   }
   
-  /* The Seasons font for all headers */
+  /* Playfair Display for elegant headers */
   h1, h2, h3, h4, h5, h6 {
-    font-family: 'The Seasons', serif;
-    font-weight: 500;
-    line-height: 1.3;
+    font-family: 'Playfair Display', serif;
+    font-weight: 600;
+    line-height: 1.2;
     color: hsl(var(--foreground));
     letter-spacing: -0.02em;
   }
   
-  h1 { font-size: 2.25rem; line-height: 2.5rem; margin-bottom: 1.5rem; font-weight: 700; }
-  h2 { font-size: 1.875rem; line-height: 2.25rem; margin-bottom: 1.25rem; font-weight: 600; }
-  h3 { font-size: 1.5rem; line-height: 2rem; margin-bottom: 1rem; font-weight: 600; }
-  h4 { font-size: 1.25rem; line-height: 1.75rem; margin-bottom: 0.75rem; font-weight: 500; }
-  h5 { font-size: 1.125rem; line-height: 1.5rem; margin-bottom: 0.75rem; font-weight: 500; }
-  h6 { font-size: 1rem; line-height: 1.25rem; margin-bottom: 0.5rem; font-weight: 500; }
+  h1 { 
+    font-size: clamp(2.5rem, 5vw, 4rem); 
+    line-height: 1.1; 
+    margin-bottom: 1.5rem; 
+    font-weight: 700; 
+  }
+  h2 { 
+    font-size: clamp(2rem, 4vw, 3rem); 
+    line-height: 1.2; 
+    margin-bottom: 1.25rem; 
+    font-weight: 600; 
+  }
+  h3 { 
+    font-size: clamp(1.5rem, 3vw, 2rem); 
+    line-height: 1.3; 
+    margin-bottom: 1rem; 
+    font-weight: 600; 
+  }
+  h4 { 
+    font-size: clamp(1.25rem, 2.5vw, 1.5rem); 
+    line-height: 1.4; 
+    margin-bottom: 0.75rem; 
+    font-weight: 500; 
+  }
+  h5 { 
+    font-size: clamp(1.125rem, 2vw, 1.25rem); 
+    line-height: 1.5; 
+    margin-bottom: 0.75rem; 
+    font-weight: 500; 
+  }
+  h6 { 
+    font-size: clamp(1rem, 1.5vw, 1.125rem); 
+    line-height: 1.6; 
+    margin-bottom: 0.5rem; 
+    font-weight: 500; 
+  }
+  
+  /* Enhanced typography for body text */
+  p {
+    font-size: 1.125rem;
+    line-height: 1.7;
+    margin-bottom: 1.5rem;
+    color: hsl(var(--muted-foreground));
+  }
   
   /* Smooth scrolling */
   html {
     scroll-behavior: smooth;
+  }
+  
+  /* Enhanced focus states */
+  *:focus-visible {
+    outline: 2px solid hsl(var(--primary));
+    outline-offset: 2px;
+  }
+}
+
+/* Custom utility classes */
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+  
+  .gradient-text {
+    background: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--accent)));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  
+  .glass-effect {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+  }
+  
+  .shadow-soft {
+    box-shadow: 0 4px 25px rgba(0, 0, 0, 0.08);
+  }
+  
+  .shadow-elegant {
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
   }
 }

@@ -163,8 +163,8 @@ export default function PrivacyPolicy() {
                 If you have any questions about this Privacy Policy or our data practices, please contact us:
               </p>
               <div className="space-y-2 text-muted-foreground">
-                <p><strong>Email:</strong> privacy@veenutrition.com</p>
-                <p><strong>Address:</strong> Vee Nutrition Practice</p>
+                <p><strong>Email:</strong> privacy@nazdravi.com</p>
+                <p><strong>Address:</strong> Nazdravi Practice</p>
                 <p><strong>Phone:</strong> Available through our contact form</p>
               </div>
             </CardContent>

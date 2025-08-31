@@ -300,7 +300,7 @@ export default function PayInvoice() {
               <div className="flex justify-between items-start">
                 <div>
                   <CardTitle className="text-2xl mb-2">Invoice Payment</CardTitle>
-                  <p className="text-muted-foreground">Vee Nutrition Services</p>
+                  <p className="text-muted-foreground">Nazdravi Services</p>
                 </div>
                 <Badge variant="outline" className="text-lg px-3 py-1">
                   {invoice.invoiceNumber}

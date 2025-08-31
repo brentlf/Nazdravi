@@ -73,88 +73,49 @@ export default function Home() {
 
   return (
     <div className="bg-background page-content">
-      {/* Hero Section */}
-<section className="relative overflow-hidden py-16 flex items-center">
-        {/* Full background image */}
-        <div
-          className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-          style={{
-            backgroundImage: `url(${heroImage})`,
-          }}
-        ></div>
+      {/* Hero Section - Matching nazdravi design exactly */}
+      <section className="relative overflow-hidden h-screen flex items-center">
+        {/* Natural orange tree background with soft blur effect */}
+        <div className="absolute inset-0">
+          <div
+            className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+            style={{
+              backgroundImage: `url(${heroImage})`,
+            }}
+          />
+          {/* Soft blur overlay to ensure text readability */}
+          <div className="absolute inset-0 bg-black/20 backdrop-blur-[2px]" />
+        </div>
 
-        <div className="max-w-screen-3xl mx-auto px-6 relative z-2">
-          <div className="grid lg:grid-cols-2 gap-15 items-center">
-            {/* Content */}
-            <div className="space-y-6 relative">
-              <Badge
-                variant="secondary"
-                className="w-fit font-serif-elegant border-0 bg-white/20 text-white floating-element"
+        {/* VB initials positioned to align with the title */}
+        <div className="absolute top-8 left-80 z-20">
+          <div className="text-white text-2xl font-light tracking-widest">
+            VB
+          </div>
+        </div>
+
+        <div className="relative z-10 container mx-auto px-6 h-full flex items-center">
+          <div className="max-w-2xl">
+            {/* Main title "nazdravi" in elegant serif */}
+            <h1 className="text-6xl lg:text-8xl xl:text-9xl font-bold mb-6 leading-tight text-white font-serif">
+              nazdravi
+            </h1>
+            
+            {/* Subtitle "Registered Dietitian" */}
+            <p className="text-xl lg:text-2xl mb-12 text-white font-light tracking-wide">
+              Registered Dietitian
+            </p>
+            
+            {/* BOOK AN APPOINTMENT button */}
+            <Link href="/appointment">
+              <Button 
+                size="lg" 
+                variant="outline"
+                className="text-lg px-8 py-6 border-white/30 text-white hover:bg-white/10 backdrop-blur-sm rounded-lg transition-all duration-300 hover:border-white/50"
               >
-                Nourish Your Best Life
-              </Badge>
-
-              <h1 className="font-display text-4xl md:text-6xl lg:text-7xl xl:text-8xl leading-tight text-white">
-                Discover the Art of
-                <span className="block text-white font-display italic">
-                  Holistic Nutrition
-                </span>
-              </h1>
-
-              <p className="serif-body text-xl text-gray-200 max-w-2xl leading-relaxed">
-                Experience personalized nutrition guidance rooted in
-                Mediterranean wisdom and modern science. Together, we'll
-                cultivate sustainable habits that nourish both body and soul.
-              </p>
-
-              <div className="flex flex-col sm:flex-row gap-4">
-                <Button
-                  size="lg"
-                  asChild
-                  className="border-2 border-primary/30 hover:border-primary hover:bg-blue-600/50 font-serif-elegant warm-glow"
-                >
-                  <Link href="/appointment">
-                    <Calendar className="mr-2 h-5 w-5" />
-                    Begin Your Journey
-                  </Link>
-                </Button>
-                <Button
-                  variant="outline"
-                  size="lg"
-                  asChild
-                  className="border-2 border-primary/30 hover:border-primary hover:bg-blue-500/30 bg-blue-200/70 font-serif-elegant warm-glow"
-                >
-                  <Link href="/about">More about Vee</Link>
-                </Button>
-                <Button
-                  variant="outline"
-                  size="lg"
-                  asChild
-                  className="border-2 border-primary/30 hover:border-primary hover:bg-blue-500/30 bg-blue-200/70 font-serif-elegant warm-glow"
-                >
-                  <Link href="/services">Explore Services</Link>
-                </Button>
-              </div>
-
-              {/* Stats 
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-                {stats.map((stat, index) => {
-                  const Icon = stat.icon;
-                  return (
-                    <div key={index} className="text-center">
-                      <div className="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center mx-auto mb-2">
-                        <Icon className="w-5 h-5 text-white" />
-                      </div>
-                      <div className="text-2xl font-bold text-white">
-                        {stat.number}
-                      </div>
-                      <div className="text-xs text-gray-200">{stat.label}</div>
-                    </div>
-                  );
-                })}
-              </div>
-              */}
-            </div>
+                BOOK AN APPOINTMENT
+              </Button>
+            </Link>
           </div>
         </div>
       </section>

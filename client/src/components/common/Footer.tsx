@@ -7,6 +7,7 @@ import {
   Facebook,
   Instagram,
   Twitter,
+  Heart,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useLanguage } from "@/contexts/LanguageContext";
@@ -33,41 +34,41 @@ export function Footer() {
   ];
 
   return (
-    <footer className="bg-gray-900 text-white">
-      <div className="container mx-auto px-4 py-16">
-        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+    <footer className="bg-background border-t border-border/40">
+      <div className="container mx-auto px-6 py-16">
+        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-12">
           {/* Company Info */}
           <div className="lg:col-span-1">
-            <div className="flex items-center space-x-2 mb-6">
-              <div className="w-8 h-8 bg-primary-500 rounded-lg flex items-center justify-center">
-                <Leaf className="h-5 w-5 text-white" />
+            <div className="flex items-center space-x-3 mb-8">
+              <div className="w-10 h-10 bg-primary rounded-xl flex items-center justify-center">
+                <Leaf className="h-6 w-6 text-primary-foreground" />
               </div>
-              <span className="font-bold text-xl text-primary-400">
-                Vee Nutrition
+              <span className="font-bold text-xl text-primary tracking-tight">
+                Nazdravi
               </span>
             </div>
-            <p className="text-gray-300 mb-6">
+            <p className="text-muted-foreground mb-8 leading-relaxed text-base">
               {t("footer-description", "home")}
             </p>
-            <div className="flex space-x-4">
+            <div className="flex space-x-3">
               <Button
                 variant="ghost"
-                size="sm"
-                className="h-10 w-10 p-0 bg-gray-800 hover:bg-gray-700"
+                size="icon"
+                className="h-10 w-10 rounded-lg hover:bg-muted/80 transition-all duration-300"
               >
                 <Facebook className="h-5 w-5" />
               </Button>
               <Button
                 variant="ghost"
-                size="sm"
-                className="h-10 w-10 p-0 bg-gray-800 hover:bg-gray-700"
+                size="icon"
+                className="h-10 w-10 rounded-lg hover:bg-muted/80 transition-all duration-300"
               >
                 <Instagram className="h-5 w-5" />
               </Button>
               <Button
                 variant="ghost"
-                size="sm"
-                className="h-10 w-10 p-0 bg-gray-800 hover:bg-gray-700"
+                size="icon"
+                className="h-10 w-10 rounded-lg hover:bg-muted/80 transition-all duration-300"
               >
                 <Twitter className="h-5 w-5" />
               </Button>
@@ -76,15 +77,15 @@ export function Footer() {
 
           {/* Quick Links */}
           <div>
-            <h3 className="font-semibold text-lg mb-6">
+            <h3 className="font-semibold text-lg mb-6 text-foreground">
               {t("quick-links", "home")}
             </h3>
-            <ul className="space-y-3">
+            <ul className="space-y-4">
               {quickLinks.map((link) => (
                 <li key={link.href}>
                   <Link
                     href={link.href}
-                    className="text-gray-300 hover:text-primary-400 transition-colors duration-200"
+                    className="text-muted-foreground hover:text-foreground transition-all duration-300 hover:translate-x-1 inline-block"
                   >
                     {link.name}
                   </Link>
@@ -95,13 +96,13 @@ export function Footer() {
 
           {/* Services */}
           <div>
-            <h3 className="font-semibold text-lg mb-6">{t("services")}</h3>
-            <ul className="space-y-3">
+            <h3 className="font-semibold text-lg mb-6 text-foreground">{t("services")}</h3>
+            <ul className="space-y-4">
               {services.map((service) => (
                 <li key={service.href}>
                   <Link
                     href={service.href}
-                    className="text-gray-300 hover:text-primary-400 transition-colors duration-200"
+                    className="text-muted-foreground hover:text-foreground transition-all duration-300 hover:translate-x-1 inline-block"
                   >
                     {service.name}
                   </Link>
@@ -110,50 +111,86 @@ export function Footer() {
             </ul>
           </div>
 
-          {/* Contact */}
+          {/* Contact Info */}
           <div>
-            <h3 className="font-semibold text-lg mb-6">{t("contact")}</h3>
+            <h3 className="font-semibold text-lg mb-6 text-foreground">
+              {t("contact", "home")}
+            </h3>
             <div className="space-y-4">
-              <div className="flex items-center space-x-3">
-                <Mail className="h-5 w-5 text-primary-400" />
-                <span className="text-gray-300">info@veenutrition.com</span>
+              <div className="flex items-start space-x-3">
+                <Mail className="h-5 w-5 text-primary mt-0.5 flex-shrink-0" />
+                <div>
+                  <p className="text-muted-foreground text-sm">
+                    {t("email", "home")}
+                  </p>
+                  <a
+                    href="mailto:info@nazdravi.com"
+                    className="text-foreground hover:text-primary transition-colors duration-300"
+                  >
+                    info@nazdravi.com
+                  </a>
+                </div>
               </div>
-              <div className="flex items-center space-x-3">
-                <Phone className="h-5 w-5 text-primary-400" />
-                <span className="text-gray-300">+31 (0)61 234 5678</span>
+              <div className="flex items-start space-x-3">
+                <Phone className="h-5 w-5 text-primary mt-0.5 flex-shrink-0" />
+                <div>
+                  <p className="text-muted-foreground text-sm">
+                    {t("phone", "home")}
+                  </p>
+                  <a
+                    href="tel:+1234567890"
+                    className="text-foreground hover:text-primary transition-colors duration-300"
+                  >
+                    +1 (234) 567-890
+                  </a>
+                </div>
               </div>
-              <div className="flex items-center space-x-3">
-                <MapPin className="h-5 w-5 text-primary-400" />
-                <span className="text-gray-300">Amsterdam, Netherlands</span>
+              <div className="flex items-start space-x-3">
+                <MapPin className="h-5 w-5 text-primary mt-0.5 flex-shrink-0" />
+                <div>
+                  <p className="text-muted-foreground text-sm">
+                    {t("location", "home")}
+                  </p>
+                  <p className="text-foreground">
+                    {t("address", "home")}
+                  </p>
+                </div>
               </div>
             </div>
           </div>
         </div>
 
-        {/* Bottom Bar */}
-        <div className="border-t border-gray-800 mt-12 pt-8 flex flex-col md:flex-row justify-between items-center">
-          <p className="text-gray-400 text-sm">
-            © {currentYear} Vee Nutrition. {t("all-rights-reserved", "home")}
-          </p>
-          <div className="flex space-x-6 mt-4 md:mt-0">
-            <Link
-              href="/privacy-policy"
-              className="text-gray-400 hover:text-primary-400 text-sm transition-colors duration-200"
-            >
-              {t("privacy-policy", "home")}
-            </Link>
-            <Link
-              href="/terms-of-service"
-              className="text-gray-400 hover:text-primary-400 text-sm transition-colors duration-200"
-            >
-              {t("terms-of-service", "home")}
-            </Link>
-            <Link
-              href="/cookie-policy"
-              className="text-gray-400 hover:text-primary-400 text-sm transition-colors duration-200"
-            >
-              {t("cookie-policy", "home")}
-            </Link>
+        {/* Bottom section */}
+        <div className="border-t border-border/40 mt-12 pt-8">
+          <div className="flex flex-col md:flex-row items-center justify-between gap-4">
+            <p className="text-muted-foreground text-sm">
+              © {currentYear} Nazdravi. {t("all-rights-reserved", "home")}
+            </p>
+            <div className="flex items-center space-x-6 text-sm">
+              <Link
+                href="/privacy-policy"
+                className="text-muted-foreground hover:text-foreground transition-colors duration-300"
+              >
+                {t("privacy-policy", "home")}
+              </Link>
+              <Link
+                href="/terms-of-service"
+                className="text-muted-foreground hover:text-foreground transition-colors duration-300"
+              >
+                {t("terms-of-service", "home")}
+              </Link>
+              <Link
+                href="/cookie-policy"
+                className="text-muted-foreground hover:text-foreground transition-colors duration-300"
+              >
+                {t("cookie-policy", "home")}
+              </Link>
+            </div>
+          </div>
+          <div className="text-center mt-6">
+            <p className="text-muted-foreground text-sm flex items-center justify-center gap-2">
+              {t("made-with", "home")} <Heart className="h-4 w-4 text-red-500" /> {t("by", "home")} Nazdravi
+            </p>
           </div>
         </div>
       </div>

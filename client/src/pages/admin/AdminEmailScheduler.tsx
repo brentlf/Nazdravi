@@ -57,13 +57,13 @@ export default function AdminEmailScheduler() {
     setSending(true);
     try {
       await emailService.sendWelcomeEmail(
-        "info@veenutrition.com",
-        "Vee Nutrition Team"
+        "info@nazdravi.com",
+        "Nazdravi Team"
       );
       
       toast({
         title: "Test welcome email sent!",
-        description: "Check info@veenutrition.com inbox to verify the welcome format.",
+        description: "Check info@nazdravi.com inbox to verify the welcome format.",
       });
     } catch (error) {
       toast({
@@ -80,8 +80,8 @@ export default function AdminEmailScheduler() {
     setSending(true);
     try {
       await emailService.sendAppointmentConfirmation(
-        "info@veenutrition.com",
-        "Vee Nutrition Team",
+        "info@nazdravi.com",
+        "Nazdravi Team",
         tomorrow.toLocaleDateString(),
         "10:00",
         "Initial Consultation"
@@ -89,7 +89,7 @@ export default function AdminEmailScheduler() {
       
       toast({
         title: "Test confirmation email sent!",
-        description: "Check info@veenutrition.com inbox to verify the confirmation format.",
+        description: "Check info@nazdravi.com inbox to verify the confirmation format.",
       });
     } catch (error) {
       toast({
@@ -106,8 +106,8 @@ export default function AdminEmailScheduler() {
     setSending(true);
     try {
       await emailService.sendAppointmentReminder(
-        "info@veenutrition.com",
-        "Vee Nutrition Team",
+        "info@nazdravi.com",
+        "Nazdravi Team",
         tomorrow.toLocaleDateString(),
         "10:00",
         "Initial Consultation"
@@ -115,7 +115,7 @@ export default function AdminEmailScheduler() {
       
       toast({
         title: "Test reminder email sent!",
-        description: "Check info@veenutrition.com inbox to verify the reminder format.",
+        description: "Check info@nazdravi.com inbox to verify the reminder format.",
       });
     } catch (error) {
       toast({
@@ -132,8 +132,8 @@ export default function AdminEmailScheduler() {
     setSending(true);
     try {
       await emailService.sendRescheduleRequest(
-        "info@veenutrition.com",
-        "Vee Nutrition Team",
+        "info@nazdravi.com",
+        "Nazdravi Team",
         tomorrow.toLocaleDateString(),
         "10:00",
         "28/05/2025",
@@ -142,7 +142,7 @@ export default function AdminEmailScheduler() {
       
       toast({
         title: "Test reschedule email sent!",
-        description: "Check info@veenutrition.com inbox to verify the reschedule format.",
+        description: "Check info@nazdravi.com inbox to verify the reschedule format.",
       });
     } catch (error) {
       toast({
@@ -159,15 +159,15 @@ export default function AdminEmailScheduler() {
     setSending(true);
     try {
       await emailService.sendInvoiceGenerated(
-        "info@veenutrition.com",
-        "Vee Nutrition Team",
+        "info@nazdravi.com",
+        "Nazdravi Team",
         95.00,
         "INV-TEST123"
       );
       
       toast({
         title: "Test invoice email sent!",
-        description: "Check info@veenutrition.com inbox to verify the invoice format.",
+        description: "Check info@nazdravi.com inbox to verify the invoice format.",
       });
     } catch (error) {
       toast({
@@ -184,16 +184,16 @@ export default function AdminEmailScheduler() {
     setSending(true);
     try {
       await emailService.sendPaymentReminder(
-        "info@veenutrition.com",
-        "Vee Nutrition Team",
+        "info@nazdravi.com",
+        "Nazdravi Team",
         95.00,
         "INV-TEST123",
-        "https://payment.veenutrition.com/test"
+        "https://payment.nazdravi.com/test"
       );
       
       toast({
         title: "Test payment reminder sent!",
-        description: "Check info@veenutrition.com inbox to verify the payment reminder format.",
+        description: "Check info@nazdravi.com inbox to verify the payment reminder format.",
       });
     } catch (error) {
       toast({
@@ -210,15 +210,15 @@ export default function AdminEmailScheduler() {
     setSending(true);
     try {
       await emailService.sendLateRescheduleNotice(
-        "info@veenutrition.com",
-        "Vee Nutrition Team",
+        "info@nazdravi.com",
+        "Nazdravi Team",
         tomorrow.toLocaleDateString(),
         "10:00"
       );
       
       toast({
         title: "Test late reschedule notice sent!",
-        description: "Check info@veenutrition.com inbox to verify the late reschedule format.",
+        description: "Check info@nazdravi.com inbox to verify the late reschedule format.",
       });
     } catch (error) {
       toast({
@@ -235,8 +235,8 @@ export default function AdminEmailScheduler() {
     setSending(true);
     try {
       await emailService.sendNoShowNotice(
-        "info@veenutrition.com",
-        "Vee Nutrition Team",
+        "info@nazdravi.com",
+        "Nazdravi Team",
         tomorrow.toLocaleDateString(),
         "10:00",
         47.50
@@ -244,7 +244,7 @@ export default function AdminEmailScheduler() {
       
       toast({
         title: "Test no-show notice sent!",
-        description: "Check info@veenutrition.com inbox to verify the no-show format.",
+        description: "Check info@nazdravi.com inbox to verify the no-show format.",
       });
     } catch (error) {
       toast({
@@ -261,8 +261,8 @@ export default function AdminEmailScheduler() {
     setSending(true);
     try {
       await emailService.sendAppointmentCancelled(
-        "info@veenutrition.com",
-        "Vee Nutrition Team",
+        "info@nazdravi.com",
+        "Nazdravi Team",
         tomorrow.toLocaleDateString(),
         "10:00",
         "Schedule conflict - please reschedule"
@@ -270,7 +270,7 @@ export default function AdminEmailScheduler() {
       
       toast({
         title: "Test cancellation email sent!",
-        description: "Check info@veenutrition.com inbox to verify the cancellation format.",
+        description: "Check info@nazdravi.com inbox to verify the cancellation format.",
       });
     } catch (error) {
       toast({
@@ -296,10 +296,10 @@ export default function AdminEmailScheduler() {
         true
       );
       
-      toast({
-        title: "Test admin new appointment notification sent!",
-        description: "Check info@veenutrition.com inbox to verify the notification format.",
-      });
+              toast({
+          title: "Test admin new appointment notification sent!",
+          description: "Check info@nazdravi.com inbox to verify the notification format.",
+        });
     } catch (error) {
       toast({
         title: "Test email failed",
@@ -321,10 +321,10 @@ export default function AdminEmailScheduler() {
         true
       );
       
-      toast({
-        title: "Test admin health update notification sent!",
-        description: "Check info@veenutrition.com inbox to verify the notification format.",
-      });
+              toast({
+          title: "Test admin health update notification sent!",
+          description: "Check info@nazdravi.com inbox to verify the notification format.",
+        });
     } catch (error) {
       toast({
         title: "Test email failed",
@@ -349,7 +349,7 @@ export default function AdminEmailScheduler() {
       
       toast({
         title: "Test admin payment notification sent!",
-        description: "Check info@veenutrition.com inbox to verify the notification format.",
+        description: "Check info@nazdravi.com inbox to verify the notification format.",
       });
     } catch (error) {
       toast({
@@ -374,7 +374,7 @@ export default function AdminEmailScheduler() {
       
       toast({
         title: "Test admin plan upgrade notification sent!",
-        description: "Check info@veenutrition.com inbox to verify the notification format.",
+        description: "Check info@nazdravi.com inbox to verify the notification format.",
       });
     } catch (error) {
       toast({
@@ -400,7 +400,7 @@ export default function AdminEmailScheduler() {
       
       toast({
         title: "Test admin reschedule request notification sent!",
-        description: "Check info@veenutrition.com inbox to verify the notification format.",
+        description: "Check info@nazdravi.com inbox to verify the notification format.",
       });
     } catch (error) {
       toast({
@@ -426,7 +426,7 @@ export default function AdminEmailScheduler() {
       
       toast({
         title: "Test admin client message notification sent!",
-        description: "Check info@veenutrition.com inbox to verify the notification format.",
+        description: "Check info@nazdravi.com inbox to verify the notification format.",
       });
     } catch (error) {
       toast({
@@ -529,7 +529,7 @@ export default function AdminEmailScheduler() {
                 Client Email Automation Rules
               </CardTitle>
               <p className="text-sm text-muted-foreground mt-2">
-                Automated emails sent to clients from <strong>info@veenutrition.com</strong> based on their actions and appointment status
+                Automated emails sent to clients from <strong>info@nazdravi.com</strong> based on their actions and appointment status
               </p>
             </CardHeader>
             <CardContent>
@@ -711,7 +711,7 @@ export default function AdminEmailScheduler() {
                 Admin Email Notifications
               </CardTitle>
               <p className="text-sm text-muted-foreground mt-2">
-                Automated notifications sent to <strong>admin@veenutrition.com</strong> when clients take actions requiring attention
+                Automated notifications sent to <strong>admin@nazdravi.com</strong> when clients take actions requiring attention
               </p>
             </CardHeader>
             <CardContent>
@@ -853,13 +853,13 @@ export default function AdminEmailScheduler() {
                     <span className="font-medium">Service:</span> MailerLite
                   </div>
                   <div>
-                    <span className="font-medium">From Email:</span> info@veenutrition.com
+                    <span className="font-medium">From Email:</span> info@nazdravi.com
                   </div>
                   <div>
-                    <span className="font-medium">From Name:</span> Vee Nutrition
+                    <span className="font-medium">From Name:</span> Nazdravi
                   </div>
                   <div>
-                    <span className="font-medium">Admin Email:</span> admin@veenutrition.com
+                    <span className="font-medium">Admin Email:</span> admin@nazdravi.com
                   </div>
                 </div>
               </div>

@@ -1,4 +1,4 @@
-# 🚀 VeeNutrition Firebase Deployment Guide
+# 🚀 Nazdravi Firebase Deployment Guide
 
 This guide covers the complete migration from Express.js to Firebase Functions and deployment to Firebase Hosting.
 
@@ -329,4 +329,5 @@ firebase logout && firebase login
 
 **Last Updated**: December 2024  
 **Version**: 1.0.0  
-**Maintainer**: VeeNutrition Development Team
+**Maintainer**: Nazdravi Development Team
+

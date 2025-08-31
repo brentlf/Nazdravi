@@ -65,7 +65,7 @@ export default function Register() {
     try {
       await signUp(data.email, data.password, data.name);
       toast({
-        title: "Welcome to Vee Nutrition!",
+        title: "Welcome to Nazdravi!",
         description: "Your account has been created successfully.",
       });
     } catch (error: any) {
@@ -104,7 +104,7 @@ export default function Register() {
                 <Leaf className="h-6 w-6 text-white" />
               </div>
               <span className="font-bold text-2xl text-primary-600 dark:text-primary-400">
-                Vee Nutrition
+                Nazdravi
               </span>
             </div>
           </Link>
@@ -114,7 +114,7 @@ export default function Register() {
           <CardHeader className="space-y-1">
             <CardTitle className="text-2xl font-bold text-center">Create your account</CardTitle>
             <CardDescription className="text-center">
-              Join Vee Nutrition to start your personalized health journey
+              Join Nazdravi to start your personalized health journey
             </CardDescription>
           </CardHeader>
           

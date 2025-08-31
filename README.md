@@ -1,4 +1,4 @@
-# VeeNutrition - Pure Firebase Architecture
+# Nazdravi - Pure Firebase Architecture
 
 A comprehensive nutrition consulting services platform built with **React + Firebase** - no Express server needed! 🚀
 

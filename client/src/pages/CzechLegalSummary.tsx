@@ -181,7 +181,7 @@ export default function CzechLegalSummary() {
 
         {/* Footer */}
         <div className="mt-12 pt-8 border-t text-center text-sm text-muted-foreground">
-          <p>© 2024 Vee Nutrition. Všechna práva vyhrazena.</p>
+          <p>© 2024 Nazdravi. Všechna práva vyhrazena.</p>
           <p className="mt-2">
             Toto je zkrácený souhrn v českém jazyce. Úplné právní informace jsou k dispozici v anglickém jazyce.
           </p>

@@ -38,33 +38,36 @@ export function Header() {
   };
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-      <div className="container mx-auto flex h-16 items-center justify-between px-4">
+    <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/80 backdrop-blur-xl supports-[backdrop-filter]:bg-background/60">
+      <div className="container mx-auto flex h-20 items-center justify-between px-6">
         {/* Logo */}
         <Link href="/">
-          <div className="flex items-center space-x-2 cursor-pointer">
-            <div className="w-8 h-8 bg-primary-500 rounded-lg flex items-center justify-center">
-              <Leaf className="h-5 w-5 text-white" />
+          <div className="flex items-center space-x-3 cursor-pointer group">
+            <div className="w-10 h-10 bg-primary rounded-xl flex items-center justify-center transition-all duration-300 group-hover:scale-110 group-hover:shadow-lg">
+              <Leaf className="h-6 w-6 text-primary-foreground" />
             </div>
-            <span className="font-bold text-xl text-primary-600 dark:text-primary-400">
-              Vee Nutrition
+            <span className="font-bold text-xl text-primary tracking-tight">
+              Nazdravi
             </span>
           </div>
         </Link>
 
         {/* Desktop Navigation */}
-        <nav className="hidden md:flex items-center space-x-8">
+        <nav className="hidden lg:flex items-center space-x-10">
           {navigation.map((item) => (
             <Link
               key={item.href}
               href={item.href}
-              className={`text-sm font-medium transition-colors hover:text-primary ${
+              className={`relative text-sm font-medium transition-all duration-300 hover:text-primary ${
                 isActive(item.href)
                   ? "text-primary"
-                  : "text-muted-foreground"
+                  : "text-muted-foreground hover:text-foreground"
               }`}
             >
               {item.name}
+              {isActive(item.href) && (
+                <span className="absolute -bottom-2 left-0 w-full h-0.5 bg-primary rounded-full"></span>
+              )}
             </Link>
           ))}
         </nav>
@@ -77,19 +80,25 @@ export function Header() {
           {user ? (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="ghost" className="relative h-8 w-8 rounded-full">
-                  <Avatar className="h-8 w-8">
+                <Button variant="ghost" className="relative h-10 w-10 rounded-full hover:bg-muted/80">
+                  <Avatar className="h-10 w-10">
                     <AvatarImage src={user.photoURL} alt={user.name} />
-                    <AvatarFallback>
+                    <AvatarFallback className="bg-primary text-primary-foreground font-semibold">
                       {user.name.slice(0, 2).toUpperCase()}
                     </AvatarFallback>
                   </Avatar>
                 </Button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent className="w-56" align="end" forceMount>
-                <div className="flex items-center justify-start gap-2 p-2">
+              <DropdownMenuContent className="w-64 p-2" align="end" forceMount>
+                <div className="flex items-center justify-start gap-3 p-3">
+                  <Avatar className="h-12 w-12">
+                    <AvatarImage src={user.photoURL} alt={user.name} />
+                    <AvatarFallback className="bg-primary text-primary-foreground font-semibold">
+                      {user.name.slice(0, 2).toUpperCase()}
+                    </AvatarFallback>
+                  </Avatar>
                   <div className="flex flex-col space-y-1 leading-none">
-                    <p className="font-medium">{user.name}</p>
+                    <p className="font-semibold text-foreground">{user.name}</p>
                     <p className="w-[200px] truncate text-sm text-muted-foreground">
                       {user.email}
                     </p>
@@ -99,99 +108,112 @@ export function Header() {
                 {user.role === "admin" ? (
                   <>
                     <DropdownMenuItem asChild>
-                      <Link href="/admin">
-                        <User className="mr-2 h-4 w-4" />
-                        Admin Panel
+                      <Link href="/admin" className="flex items-center gap-2 p-2 rounded-lg hover:bg-muted/80">
+                        <User className="h-4 w-4" />
+                        Admin Dashboard
                       </Link>
                     </DropdownMenuItem>
-                    <DropdownMenuItem asChild>
-                      <Link href="/admin-client-view">
-                        <User className="mr-2 h-4 w-4" />
-                        View Client Dashboard
-                      </Link>
-                    </DropdownMenuItem>
+                    <DropdownMenuSeparator />
                   </>
                 ) : (
                   <>
                     <DropdownMenuItem asChild>
-                      <Link href="/dashboard">
-                        <User className="mr-2 h-4 w-4" />
+                      <Link href="/dashboard" className="flex items-center gap-2 p-2 rounded-lg hover:bg-muted/80">
+                        <User className="h-4 w-4" />
                         Dashboard
                       </Link>
                     </DropdownMenuItem>
-                    <DropdownMenuItem asChild>
-                      <Link href="/dashboard/profile">
-                        <User className="mr-2 h-4 w-4" />
-                        Profile Settings
-                      </Link>
-                    </DropdownMenuItem>
+                    <DropdownMenuSeparator />
                   </>
                 )}
-                <DropdownMenuItem onClick={handleSignOut}>
-                  <LogOut className="mr-2 h-4 w-4" />
-                  Logout
+                <DropdownMenuItem
+                  onClick={handleSignOut}
+                  className="flex items-center gap-2 p-2 rounded-lg hover:bg-muted/80 text-destructive focus:text-destructive"
+                >
+                  <LogOut className="h-4 w-4" />
+                  Sign Out
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
           ) : (
-            <div className="hidden md:flex items-center space-x-2">
-              <Button variant="ghost" size="sm" asChild>
-                <Link href="/login">
-                  <LogIn className="mr-2 h-4 w-4" />
-                  Login
-                </Link>
-              </Button>
-              <Button size="sm" asChild>
-                <Link href="/appointment">
-                  <Calendar className="mr-2 h-4 w-4" />
-                  Book Consultation
-                </Link>
-              </Button>
+            <div className="flex items-center space-x-3">
+              <Link href="/login">
+                <Button variant="ghost" className="font-medium hover:bg-muted/80">
+                  Sign In
+                </Button>
+              </Link>
+              <Link href="/register">
+                <Button className="font-medium shadow-soft hover:shadow-elegant transition-all duration-300">
+                  Get Started
+                </Button>
+              </Link>
             </div>
           )}
 
-          {/* Mobile menu */}
+          {/* Mobile menu button */}
           <Sheet open={isOpen} onOpenChange={setIsOpen}>
-            <SheetTrigger asChild className="md:hidden">
-              <Button variant="ghost" size="sm">
-                {isOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+            <SheetTrigger asChild>
+              <Button
+                variant="ghost"
+                size="icon"
+                className="lg:hidden h-10 w-10"
+                onClick={() => setIsOpen(true)}
+              >
+                <Menu className="h-5 w-5" />
+                <span className="sr-only">Toggle menu</span>
               </Button>
             </SheetTrigger>
-            <SheetContent side="right" className="w-72">
-              <nav className="flex flex-col space-y-4 mt-6">
-                {navigation.map((item) => (
-                  <Link
-                    key={item.href}
-                    href={item.href}
+            <SheetContent side="right" className="w-[300px] sm:w-[400px]">
+              <div className="flex flex-col h-full">
+                <div className="flex items-center justify-between mb-8">
+                  <div className="flex items-center space-x-3">
+                    <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
+                      <Leaf className="h-5 w-5 text-primary-foreground" />
+                    </div>
+                    <span className="font-bold text-lg text-primary">Nazdravi</span>
+                  </div>
+                  <Button
+                    variant="ghost"
+                    size="icon"
                     onClick={() => setIsOpen(false)}
-                    className={`text-sm font-medium transition-colors hover:text-primary ${
-                      isActive(item.href)
-                        ? "text-primary"
-                        : "text-muted-foreground"
-                    }`}
+                    className="h-8 w-8"
                   >
-                    {item.name}
-                  </Link>
-                ))}
+                    <X className="h-4 w-4" />
+                  </Button>
+                </div>
                 
+                <nav className="flex-1 space-y-2">
+                  {navigation.map((item) => (
+                    <Link
+                      key={item.href}
+                      href={item.href}
+                      onClick={() => setIsOpen(false)}
+                      className={`block px-4 py-3 rounded-lg text-base font-medium transition-colors ${
+                        isActive(item.href)
+                          ? "bg-primary text-primary-foreground"
+                          : "text-muted-foreground hover:text-foreground hover:bg-muted/80"
+                      }`}
+                    >
+                      {item.name}
+                    </Link>
+                  ))}
+                </nav>
+
                 {!user && (
-                  <>
-                    <hr className="my-4" />
-                    <Button variant="ghost" size="sm" asChild>
-                      <Link href="/login" onClick={() => setIsOpen(false)}>
-                        <LogIn className="mr-2 h-4 w-4" />
-                        Login
-                      </Link>
-                    </Button>
-                    <Button size="sm" asChild>
-                      <Link href="/appointment" onClick={() => setIsOpen(false)}>
-                        <Calendar className="mr-2 h-4 w-4" />
-                        Book Consultation
-                      </Link>
-                    </Button>
-                  </>
+                  <div className="pt-6 border-t border-border/40 space-y-3">
+                    <Link href="/login" onClick={() => setIsOpen(false)}>
+                      <Button variant="outline" className="w-full justify-center">
+                        Sign In
+                      </Button>
+                    </Link>
+                    <Link href="/register" onClick={() => setIsOpen(false)}>
+                      <Button className="w-full justify-center shadow-soft">
+                        Get Started
+                      </Button>
+                    </Link>
+                  </div>
                 )}
-              </nav>
+              </div>
             </SheetContent>
           </Sheet>
         </div>

@@ -47,7 +47,7 @@ export default function AdminHome() {
   // Helper function to get sender name
   const getSenderName = (message: Message) => {
     if (message.fromUser === "admin") {
-      return "Vee Nutrition";
+              return "Nazdravi";
     }
     
     // Find the user who sent the message

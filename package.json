@@ -1,6 +1,6 @@
 {
-  "name": "veenutrition",
-  "description": "VeeNutrition - Comprehensive nutrition consulting services platform",
+  "name": "nazdravi",
+  "description": "Nazdravi - Comprehensive nutrition consulting services platform",
   "keywords": [
     "nutrition",
     "consulting",
@@ -8,7 +8,7 @@
     "wellness",
     "firebase"
   ],
-  "author": "VeeNutrition Team",
+  "author": "Nazdravi Team",
   "version": "1.0.0",
   "type": "module",
   "scripts": {

@@ -256,7 +256,7 @@ export default function DashboardProfile() {
       // Notify admin of health info changes
       try {
         await emailService.sendHealthUpdateNotification(
-          "admin@veenutrition.com",
+          "admin@nazdravi.com",
           user?.name || "Client",
           user?.email || "",
           data.chronicConditions,
@@ -525,7 +525,7 @@ export default function DashboardProfile() {
       // Notify admin of preference changes
       try {
         await emailService.sendPreferencesUpdateNotification(
-          "admin@veenutrition.com",
+          "admin@nazdravi.com",
           user?.name || "Client",
           user?.email || "",
           data.preferredLanguage,

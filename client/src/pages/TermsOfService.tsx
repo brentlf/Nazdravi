@@ -29,7 +29,7 @@ export default function TermsOfService() {
             </CardHeader>
             <CardContent>
               <p className="text-muted-foreground">
-                By accessing and using Vee Nutrition services, you accept and agree to be bound by the 
+                By accessing and using Nazdravi services, you accept and agree to be bound by the 
                 terms and provision of this agreement. If you do not agree to these terms, you should 
                 not use our services. These terms apply to all visitors, users, and others who access 
                 or use our nutrition consultation services.
@@ -46,7 +46,7 @@ export default function TermsOfService() {
             </CardHeader>
             <CardContent className="space-y-4">
               <p className="text-muted-foreground">
-                Vee Nutrition provides professional nutrition consultation services, including but not limited to:
+                Nazdravi provides professional nutrition consultation services, including but not limited to:
               </p>
               <ul className="list-disc list-inside space-y-2 text-muted-foreground">
                 <li>Individual nutrition consultations and assessments</li>
@@ -68,7 +68,7 @@ export default function TermsOfService() {
             </CardHeader>
             <CardContent className="space-y-4">
               <p className="text-muted-foreground">
-                <strong>Important:</strong> The information and services provided by Vee Nutrition are for 
+                <strong>Important:</strong> The information and services provided by Nazdravi are for 
                 educational and informational purposes only and are not intended as medical advice, diagnosis, 
                 or treatment.
               </p>
@@ -166,7 +166,7 @@ export default function TermsOfService() {
             <CardContent>
               <p className="text-muted-foreground">
                 All content provided through our services, including meal plans, educational materials, 
-                and recommendations, remains the intellectual property of Vee Nutrition. You may use 
+                and recommendations, remains the intellectual property of Nazdravi. You may use 
                 this content for personal purposes only and may not redistribute, sell, or modify it 
                 without our express written permission.
               </p>
@@ -182,7 +182,7 @@ export default function TermsOfService() {
             </CardHeader>
             <CardContent>
               <p className="text-muted-foreground">
-                To the fullest extent permitted by law, Vee Nutrition shall not be liable for any 
+                To the fullest extent permitted by law, Nazdravi shall not be liable for any 
                 indirect, incidental, special, or consequential damages arising from your use of our 
                 services. Our total liability shall not exceed the amount paid by you for the specific 
                 service giving rise to the claim.
@@ -234,8 +234,8 @@ export default function TermsOfService() {
                 If you have any questions about these Terms of Service, please contact us:
               </p>
               <div className="space-y-2 text-muted-foreground">
-                <p><strong>Email:</strong> terms@veenutrition.com</p>
-                <p><strong>Address:</strong> Vee Nutrition Practice</p>
+                <p><strong>Email:</strong> terms@nazdravi.com</p>
+                <p><strong>Address:</strong> Nazdravi Practice</p>
                 <p><strong>Phone:</strong> Available through our contact form</p>
               </div>
             </CardContent>
