@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link, useLocation } from "wouter";
-import { Menu, X, Leaf, Calendar, LogIn, LogOut, User } from "lucide-react";
+import { Menu, X, Leaf, LogOut, User } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import {
@@ -37,11 +37,12 @@ export function Header() {
     }
   };
 
-  const isHomePage = location === "/";
+  const overlayHeaderRoutes = ["/", "/about", "/services", "/blog", "/appointment"];
+  const isOverlayHeader = overlayHeaderRoutes.includes(location);
 
   return (
     <header className={`${
-      isHomePage 
+      isOverlayHeader 
         ? "absolute top-0 left-0 right-0 z-50 border-white/20 bg-transparent text-white" 
         : "sticky top-0 z-50 border-border/40 bg-background/80 backdrop-blur-xl supports-[backdrop-filter]:bg-background/60 text-foreground"
     } w-full border-b transition-all duration-300`}>
@@ -50,14 +51,14 @@ export function Header() {
         <Link href="/">
           <div className="flex items-center space-x-3 cursor-pointer group">
             <div className={`w-10 h-10 rounded-xl flex items-center justify-center transition-all duration-300 group-hover:scale-110 group-hover:shadow-lg ${
-              isHomePage ? "bg-white/20 backdrop-blur-sm" : "bg-primary"
+              isOverlayHeader ? "bg-white/20 backdrop-blur-sm" : "bg-primary"
             }`}>
               <Leaf className={`h-6 w-6 ${
-                isHomePage ? "text-white" : "text-primary-foreground"
+                isOverlayHeader ? "text-white" : "text-primary-foreground"
               }`} />
             </div>
             <span className={`font-bold text-xl tracking-tight ${
-              isHomePage ? "text-white" : "text-primary"
+              isOverlayHeader ? "text-white" : "text-primary"
             }`}>
               Nazdravi
             </span>
@@ -71,7 +72,7 @@ export function Header() {
               key={item.href}
               href={item.href}
               className={`relative text-sm font-medium transition-all duration-300 ${
-                isHomePage
+                isOverlayHeader
                   ? isActive(item.href)
                     ? "text-white"
                     : "text-white/80 hover:text-white"
@@ -83,7 +84,7 @@ export function Header() {
               {item.name}
               {isActive(item.href) && (
                 <span className={`absolute -bottom-2 left-0 w-full h-0.5 rounded-full ${
-                  isHomePage ? "bg-white" : "bg-primary"
+                  isOverlayHeader ? "bg-white" : "bg-primary"
                 }`}></span>
               )}
             </Link>
@@ -99,12 +100,12 @@ export function Header() {
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button variant="ghost" className={`relative h-10 w-10 rounded-full hover:bg-muted/80 ${
-                  isHomePage ? "text-white hover:bg-white/20" : ""
+                  isOverlayHeader ? "text-white hover:bg-white/20" : ""
                 }`}>
                   <Avatar className="h-10 w-10">
                     <AvatarImage src={user.photoURL} alt={user.name} />
                     <AvatarFallback className={`font-semibold ${
-                      isHomePage ? "bg-white/20 text-white" : "bg-primary text-primary-foreground"
+                      isOverlayHeader ? "bg-white/20 text-white" : "bg-primary text-primary-foreground"
                     }`}>
                       {user.name.slice(0, 2).toUpperCase()}
                     </AvatarFallback>
@@ -161,7 +162,7 @@ export function Header() {
             <div className="flex items-center space-x-3">
               <Link href="/login">
                 <Button variant="ghost" className={`font-medium ${
-                  isHomePage 
+                  isOverlayHeader 
                     ? "text-white hover:bg-white/20" 
                     : "hover:bg-muted/80"
                 }`}>
@@ -170,7 +171,7 @@ export function Header() {
               </Link>
               <Link href="/register">
                 <Button className={`font-medium shadow-soft hover:shadow-elegant transition-all duration-300 ${
-                  isHomePage 
+                  isOverlayHeader 
                     ? "bg-white/20 text-white hover:bg-white/30 border-white/30" 
                     : ""
                 }`}>
@@ -187,7 +188,7 @@ export function Header() {
                 variant="ghost"
                 size="icon"
                 className={`lg:hidden h-10 w-10 ${
-                  isHomePage ? "text-white hover:bg-white/20" : ""
+                  isOverlayHeader ? "text-white hover:bg-white/20" : ""
                 }`}
                 onClick={() => setIsOpen(true)}
               >

@@ -1,6 +1,6 @@
 import { Link } from "wouter";
-import { Footer } from "@/components/common/Footer";
 import { Button } from "@/components/ui/button";
+import { Footer } from "@/components/common/Footer";
 
 export default function Home() {
   return (

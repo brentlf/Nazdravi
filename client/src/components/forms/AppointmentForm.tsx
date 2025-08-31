@@ -239,34 +239,34 @@ export function AppointmentForm() {
   }
 
   return (
-    <div className="bg-white dark:bg-gray-900 rounded-2xl shadow-2xl overflow-hidden">
+    <div className="bg-white dark:bg-gray-900 rounded-xl shadow-lg overflow-hidden">
       {/* Form Header */}
-      <div className="bg-primary-500 px-8 py-6">
-        <h3 className="text-xl font-semibold text-white">Schedule Your Appointment</h3>
-        <p className="text-primary-100 mt-2">
+      <div className="bg-primary-500 px-4 py-3">
+        <h3 className="text-base font-semibold text-white">Schedule Your Appointment</h3>
+        <p className="text-primary-100 mt-1 text-xs">
           Fill out the form below and we'll get back to you within 24 hours
         </p>
       </div>
 
       {/* Form Content */}
-      <div className="p-8">
+      <div className="p-4">
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-3">
             {/* Personal Information */}
-            <div className="grid md:grid-cols-2 gap-6">
+            <div className="grid md:grid-cols-2 gap-3">
               <FormField
                 control={form.control}
                 name="name"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className="flex items-center gap-2">
-                      <User className="h-4 w-4" />
+                    <FormLabel className="flex items-center gap-1 text-xs">
+                      <User className="h-3 w-3" />
                       Full Name *
                     </FormLabel>
                     <FormControl>
-                      <Input {...field} placeholder="Enter your full name" />
+                      <Input {...field} placeholder="Enter your full name" className="h-8 text-xs" />
                     </FormControl>
-                    <FormMessage />
+                    <FormMessage className="text-xs" />
                   </FormItem>
                 )}
               />
@@ -276,8 +276,8 @@ export function AppointmentForm() {
                 name="email"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className="flex items-center gap-2">
-                      <Mail className="h-4 w-4" />
+                    <FormLabel className="flex items-center gap-1 text-xs">
+                      <Mail className="h-3 w-3" />
                       Email Address *
                     </FormLabel>
                     <FormControl>
@@ -287,11 +287,11 @@ export function AppointmentForm() {
                         placeholder="your.email@example.com"
                         readOnly
                         disabled
-                        className="bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400"
+                        className="h-8 text-xs bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400"
                       />
                     </FormControl>
                     <p className="text-xs text-muted-foreground">Using your account email address</p>
-                    <FormMessage />
+                    <FormMessage className="text-xs" />
                   </FormItem>
                 )}
               />
@@ -302,14 +302,14 @@ export function AppointmentForm() {
               name="phone"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className="flex items-center gap-2">
-                    <Phone className="h-4 w-4" />
+                  <FormLabel className="flex items-center gap-1 text-xs">
+                    <Phone className="h-3 w-3" />
                     Phone Number *
                   </FormLabel>
                   <FormControl>
-                    <Input {...field} type="tel" placeholder="+31 6 12345678" />
+                    <Input {...field} type="tel" placeholder="+31 6 12345678" className="h-8 text-xs" />
                   </FormControl>
-                  <FormMessage />
+                  <FormMessage className="text-xs" />
                 </FormItem>
               )}
             />
@@ -320,35 +320,35 @@ export function AppointmentForm() {
               name="type"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Consultation Type *</FormLabel>
+                  <FormLabel className="text-xs">Consultation Type *</FormLabel>
                   <FormControl>
                     <RadioGroup
                       onValueChange={field.onChange}
                       defaultValue={field.value}
-                      className="grid md:grid-cols-2 gap-4 mt-3"
+                      className="grid md:grid-cols-2 gap-2 mt-2"
                     >
                       <div className="relative">
                         <RadioGroupItem value="Initial" id="initial" className="peer sr-only" />
                         <Label
                           htmlFor="initial"
                           className={`
-                            flex items-center justify-between p-4 border-2 rounded-lg cursor-pointer transition-all duration-200
+                            flex items-center justify-between p-2 border-2 rounded-lg cursor-pointer transition-all duration-200
                             ${field.value === "Initial" 
                               ? "border-blue-500 bg-blue-50 dark:bg-blue-900/20 ring-2 ring-blue-500/20" 
                               : "border-gray-200 dark:border-gray-600 hover:border-gray-300"
                             }
                           `}
                         >
-                          <div className="flex items-center space-x-3">
-                            <Calendar className="h-5 w-5 text-primary-500" />
+                          <div className="flex items-center space-x-2">
+                            <Calendar className="h-4 w-4 text-primary-500" />
                             <div>
-                              <p className="font-medium">Initial Consultation</p>
-                              <p className="text-sm text-muted-foreground">60 minutes - €89</p>
+                              <p className="font-medium text-xs">Initial Consultation</p>
+                              <p className="text-xs text-muted-foreground">60 minutes - €89</p>
                             </div>
                           </div>
                           {field.value === "Initial" && (
-                            <div className="w-5 h-5 bg-blue-500 rounded-full flex items-center justify-center">
-                              <div className="w-2 h-2 bg-white rounded-full"></div>
+                            <div className="w-4 h-4 bg-blue-500 rounded-full flex items-center justify-center">
+                              <div className="w-1.5 h-1.5 bg-white rounded-full"></div>
                             </div>
                           )}
                         </Label>
@@ -358,30 +358,30 @@ export function AppointmentForm() {
                         <Label
                           htmlFor="followup"
                           className={`
-                            flex items-center justify-between p-4 border-2 rounded-lg cursor-pointer transition-all duration-200
+                            flex items-center justify-between p-2 border-2 rounded-lg cursor-pointer transition-all duration-200
                             ${field.value === "Follow-up" 
                               ? "border-blue-500 bg-blue-50 dark:bg-blue-900/20 ring-2 ring-blue-500/20" 
                               : "border-gray-200 dark:border-gray-600 hover:border-gray-300"
                             }
                           `}
                         >
-                          <div className="flex items-center space-x-3">
-                            <Clock className="h-5 w-5 text-primary-500" />
+                          <div className="flex items-center space-x-2">
+                            <Clock className="h-4 w-4 text-primary-500" />
                             <div>
-                              <p className="font-medium">Follow-up Session</p>
-                              <p className="text-sm text-muted-foreground">30 minutes - €49</p>
+                              <p className="font-medium text-xs">Follow-up Session</p>
+                              <p className="text-xs text-muted-foreground">30 minutes - €49</p>
                             </div>
                           </div>
                           {field.value === "Follow-up" && (
-                            <div className="w-5 h-5 bg-blue-500 rounded-full flex items-center justify-center">
-                              <div className="w-2 h-2 bg-white rounded-full"></div>
+                            <div className="w-4 h-4 bg-blue-500 rounded-full flex items-center justify-center">
+                              <div className="w-1.5 h-1.5 bg-white rounded-full"></div>
                             </div>
                           )}
                         </Label>
                       </div>
                     </RadioGroup>
                   </FormControl>
-                  <FormMessage />
+                  <FormMessage className="text-xs" />
                 </FormItem>
               )}
             />
@@ -392,15 +392,15 @@ export function AppointmentForm() {
               name="servicePlan"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className="flex items-center gap-2">
-                    <CreditCard className="h-4 w-4" />
+                  <FormLabel className="flex items-center gap-1 text-xs">
+                    <CreditCard className="h-3 w-3" />
                     Service Plan *
                   </FormLabel>
                   <FormControl>
                     <RadioGroup
                       onValueChange={field.onChange}
                       defaultValue={field.value}
-                      className="grid gap-4 mt-3"
+                      className="grid md:grid-cols-2 gap-2 mt-2"
                     >
                       <div className="relative">
                         <RadioGroupItem 
@@ -412,7 +412,7 @@ export function AppointmentForm() {
                         <Label
                           htmlFor="payasyougo"
                           className={`
-                            flex items-center justify-between p-4 border-2 rounded-lg transition-all duration-200
+                            flex items-center justify-between p-2 border-2 rounded-lg transition-all duration-200
                             ${userData?.servicePlan === "complete-program" 
                               ? "border-gray-300 dark:border-gray-700 bg-gray-100 dark:bg-gray-800 cursor-not-allowed opacity-60" 
                               : field.value === "pay-as-you-go"
@@ -421,24 +421,24 @@ export function AppointmentForm() {
                             }
                           `}
                         >
-                          <div className="flex items-center space-x-3">
-                            <DollarSign className={`h-5 w-5 ${userData?.servicePlan === "complete-program" ? "text-gray-400" : "text-blue-500"}`} />
+                          <div className="flex items-center space-x-2">
+                            <DollarSign className={`h-4 w-4 ${userData?.servicePlan === "complete-program" ? "text-gray-400" : "text-blue-500"}`} />
                             <div>
-                              <p className={`font-medium ${userData?.servicePlan === "complete-program" ? "text-gray-500 dark:text-gray-400" : ""}`}>
+                              <p className={`font-medium text-xs ${userData?.servicePlan === "complete-program" ? "text-gray-500 dark:text-gray-400" : ""}`}>
                                 Pay As You Go
                               </p>
-                              <p className="text-sm text-muted-foreground">
+                              <p className="text-xs text-muted-foreground">
                                 {userData?.servicePlan === "complete-program" ? "Not available - Complete Program active" : "Individual session billing - €89/session"}
                               </p>
                             </div>
                           </div>
                           <div className="flex items-center gap-2">
                             {field.value === "pay-as-you-go" && userData?.servicePlan !== "complete-program" && (
-                              <div className="w-5 h-5 bg-blue-500 rounded-full flex items-center justify-center">
-                                <div className="w-2 h-2 bg-white rounded-full"></div>
+                              <div className="w-4 h-4 bg-blue-500 rounded-full flex items-center justify-center">
+                                <div className="w-1.5 h-1.5 bg-white rounded-full"></div>
                               </div>
                             )}
-                            <Badge variant={userData?.servicePlan === "complete-program" ? "secondary" : "outline"}>
+                            <Badge variant={userData?.servicePlan === "complete-program" ? "secondary" : "outline"} className="text-xs">
                               {userData?.servicePlan === "complete-program" ? "Disabled" : "Per Session"}
                             </Badge>
                           </div>
@@ -449,7 +449,7 @@ export function AppointmentForm() {
                         <Label
                           htmlFor="completeprogram"
                           className={`
-                            flex items-center justify-between p-4 border-2 rounded-lg cursor-pointer transition-all duration-200
+                            flex items-center justify-between p-2 border-2 rounded-lg cursor-pointer transition-all duration-200
                             ${userData?.servicePlan === "complete-program"
                               ? "border-green-500 bg-green-50 dark:bg-green-900/20 ring-2 ring-green-500/20"
                               : field.value === "complete-program"
@@ -458,16 +458,16 @@ export function AppointmentForm() {
                             }
                           `}
                         >
-                          <div className="flex items-center space-x-3">
-                            <Crown className={`h-5 w-5 ${userData?.servicePlan === "complete-program" || field.value === "complete-program" ? "text-green-600" : "text-purple-500"}`} />
+                          <div className="flex items-center space-x-2">
+                            <Crown className={`h-4 w-4 ${userData?.servicePlan === "complete-program" || field.value === "complete-program" ? "text-green-600" : "text-purple-500"}`} />
                             <div>
-                              <p className={`font-medium ${userData?.servicePlan === "complete-program" || field.value === "complete-program" ? "text-green-800 dark:text-green-200" : ""}`}>
+                              <p className={`font-medium text-xs ${userData?.servicePlan === "complete-program" || field.value === "complete-program" ? "text-green-800 dark:text-green-200" : ""}`}>
                                 Complete Program
                                 {userData?.servicePlan === "complete-program" && (
-                                  <span className="ml-2 text-green-600 font-semibold">✓ ACTIVE</span>
+                                  <span className="ml-2 text-green-600 font-semibold text-xs">✓ ACTIVE</span>
                                 )}
                               </p>
-                              <p className={`text-sm ${userData?.servicePlan === "complete-program" || field.value === "complete-program" ? "text-green-700 dark:text-green-300" : "text-muted-foreground"}`}>
+                              <p className={`text-xs ${userData?.servicePlan === "complete-program" || field.value === "complete-program" ? "text-green-700 dark:text-green-300" : "text-muted-foreground"}`}>
                                 {userData?.servicePlan === "complete-program" 
                                   ? "Currently enrolled - unlimited consultations" 
                                   : "Monthly billing - €299/month unlimited consultations"
@@ -477,15 +477,15 @@ export function AppointmentForm() {
                           </div>
                           <div className="flex items-center gap-2">
                             {(field.value === "complete-program" || userData?.servicePlan === "complete-program") && (
-                              <div className="w-5 h-5 bg-green-500 rounded-full flex items-center justify-center">
-                                <div className="w-2 h-2 bg-white rounded-full"></div>
+                              <div className="w-4 h-4 bg-green-500 rounded-full flex items-center justify-center">
+                                <div className="w-1.5 h-1.5 bg-white rounded-full"></div>
                               </div>
                             )}
-                            <Badge className={
+                            <Badge className={`text-xs ${
                               userData?.servicePlan === "complete-program" || field.value === "complete-program"
                                 ? "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300"
                                 : "bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-300"
-                            }>
+                            }`}>
                               {userData?.servicePlan === "complete-program" ? "Active" : field.value === "complete-program" ? "Selected" : "Monthly"}
                             </Badge>
                           </div>
@@ -496,33 +496,33 @@ export function AppointmentForm() {
                   
                   {/* Billing Information */}
                   {userData?.servicePlan === "complete-program" && (
-                    <Alert className="mt-3 bg-green-50 dark:bg-green-900/20 border-green-200 dark:border-green-800">
-                      <Crown className="h-4 w-4 text-green-600" />
-                      <AlertDescription className="text-green-700 dark:text-green-300">
+                    <Alert className="mt-2 bg-green-50 dark:bg-green-900/20 border-green-200 dark:border-green-800">
+                      <Crown className="h-3 w-3 text-green-600" />
+                      <AlertDescription className="text-green-700 dark:text-green-300 text-xs">
                         <strong>Complete Program Active:</strong> You won't be billed for this appointment. Your program includes unlimited consultations until {userData.programEndDate ? new Date(userData.programEndDate.toDate()).toLocaleDateString() : "program end"}.
                       </AlertDescription>
                     </Alert>
                   )}
                   
                   {form.watch("servicePlan") === "complete-program" && userData?.servicePlan !== "complete-program" && (
-                    <Alert className="mt-3 bg-purple-50 dark:bg-purple-900/20 border-purple-200 dark:border-purple-800">
-                      <AlertCircle className="h-4 w-4 text-purple-600" />
-                      <AlertDescription className="text-purple-700 dark:text-purple-300">
+                    <Alert className="mt-2 bg-purple-50 dark:bg-purple-900/20 border-purple-200 dark:border-purple-800">
+                      <AlertCircle className="h-3 w-3 text-purple-600" />
+                      <AlertDescription className="text-purple-700 dark:text-purple-300 text-xs">
                         <strong>Upgrade to Complete Program:</strong> You'll be billed monthly (€250/month) starting after this appointment. Includes unlimited consultations for 3 months.
                       </AlertDescription>
                     </Alert>
                   )}
                   
                   {form.watch("servicePlan") === "pay-as-you-go" && (
-                    <Alert className="mt-3 bg-blue-50 dark:bg-blue-900/20 border-blue-200 dark:border-blue-800">
-                      <DollarSign className="h-4 w-4 text-blue-600" />
-                      <AlertDescription className="text-blue-700 dark:text-blue-300">
+                    <Alert className="mt-2 bg-blue-50 dark:bg-blue-900/20 border-blue-200 dark:border-blue-800">
+                      <DollarSign className="h-3 w-3 text-blue-600" />
+                      <AlertDescription className="text-blue-700 dark:text-blue-300 text-xs">
                         <strong>Pay As You Go:</strong> You'll be billed per session. Initial consultation: €89, Follow-up sessions: €49.
                       </AlertDescription>
                     </Alert>
                   )}
                   
-                  <FormMessage />
+                  <FormMessage className="text-xs" />
                 </FormItem>
               )}
             />
@@ -533,30 +533,30 @@ export function AppointmentForm() {
               name="goals"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className="flex items-center gap-2">
-                    <Target className="h-4 w-4" />
+                  <FormLabel className="flex items-center gap-1 text-xs">
+                    <Target className="h-3 w-3" />
                     What are your nutrition goals? *
                   </FormLabel>
                   <FormControl>
                     <Textarea
                       {...field}
-                      rows={4}
                       placeholder="Tell us about your goals, dietary preferences, and what you'd like to achieve..."
+                      className="min-h-[60px] text-xs resize-none"
                     />
                   </FormControl>
-                  <FormMessage />
+                  <FormMessage className="text-xs" />
                 </FormItem>
               )}
             />
 
             {/* Preferred Date & Time */}
-            <div className="grid md:grid-cols-2 gap-6">
+            <div className="grid md:grid-cols-2 gap-3">
               <FormField
                 control={form.control}
                 name="date"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Preferred Date</FormLabel>
+                    <FormLabel className="text-xs">Preferred Date *</FormLabel>
                     <FormControl>
                       <Input 
                         {...field} 
@@ -568,9 +568,10 @@ export function AppointmentForm() {
                           // Reset time slot when date changes
                           form.setValue("timeslot", "");
                         }}
+                        className="h-8 text-xs"
                       />
                     </FormControl>
-                    <FormMessage />
+                    <FormMessage className="text-xs" />
                   </FormItem>
                 )}
               />
@@ -580,8 +581,8 @@ export function AppointmentForm() {
                 name="timeslot"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className="flex items-center gap-2">
-                      <Clock className="h-4 w-4" />
+                    <FormLabel className="flex items-center gap-1 text-xs">
+                      <Clock className="h-3 w-3" />
                       Available Time Slots
                       {slotsLoading && selectedDate && (
                         <span className="text-xs text-muted-foreground">(Loading...)</span>
@@ -589,68 +590,59 @@ export function AppointmentForm() {
                     </FormLabel>
                     {selectedDate ? (
                       slotsError ? (
-                        <div className="p-4 text-center text-red-600 bg-red-50 dark:bg-red-900/20 rounded-lg border border-red-200 dark:border-red-800">
-                          <AlertCircle className="w-6 h-6 mx-auto mb-2" />
-                          <p className="text-sm">Error loading time slots</p>
+                        <div className="p-2 text-center text-red-600 bg-red-50 dark:bg-red-900/20 rounded-lg border border-red-200 dark:border-red-800">
+                          <AlertCircle className="w-4 h-4 mx-auto mb-1" />
+                          <p className="text-xs">Error loading time slots</p>
                           <p className="text-xs">Please try selecting a different date</p>
                         </div>
                       ) : availableSlots.length > 0 ? (
-                        <div className="grid grid-cols-2 gap-2 mt-3">
-                          {availableSlots.map((slot) => (
-                            <Button
-                              key={slot.time}
-                              type="button"
-                              variant={field.value === slot.time ? "default" : "outline"}
-                              disabled={!slot.available}
-                              onClick={() => field.onChange(slot.time)}
-                              className={`h-12 text-sm ${
-                                !slot.available 
-                                  ? 'opacity-50 cursor-not-allowed bg-gray-100 text-gray-400' 
-                                  : field.value === slot.time
-                                  ? 'bg-primary-500 text-white'
-                                  : 'hover:bg-primary-50'
-                              }`}
-                            >
-                              {slot.time}
-                              {!slot.available && (
-                                <span className="ml-1 text-xs">(Booked)</span>
-                              )}
-                            </Button>
-                          ))}
-                        </div>
+                        <Select onValueChange={field.onChange} defaultValue={field.value}>
+                          <SelectTrigger className="h-8 text-xs">
+                            <SelectValue placeholder="Select a time slot" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            {slotsLoading ? (
+                              <SelectItem value="loading" disabled>Loading...</SelectItem>
+                            ) : slotsError ? (
+                              <SelectItem value="error" disabled>Error loading slots</SelectItem>
+                            ) : availableSlots.length === 0 ? (
+                              <SelectItem value="no-slots" disabled>No available slots</SelectItem>
+                            ) : (
+                              availableSlots.map((slot) => (
+                                <SelectItem key={slot.time} value={slot.time} className="text-xs">
+                                  {slot.time}
+                                </SelectItem>
+                              ))
+                            )}
+                          </SelectContent>
+                        </Select>
                       ) : (
-                        <div className="p-4 text-center text-muted-foreground bg-gray-50 dark:bg-gray-800 rounded-lg">
-                          <AlertCircle className="w-6 h-6 mx-auto mb-2" />
-                          <p className="text-sm">No available slots for this date</p>
+                        <div className="p-2 text-center text-muted-foreground bg-gray-50 dark:bg-gray-800 rounded-lg">
+                          <AlertCircle className="w-4 h-4 mx-auto mb-1" />
+                          <p className="text-xs">No available slots for this date</p>
                           <p className="text-xs">Please select a different date</p>
                         </div>
                       )
                     ) : (
-                      <div className="p-4 text-center text-muted-foreground bg-gray-50 dark:bg-gray-800 rounded-lg">
-                        <Calendar className="w-6 h-6 mx-auto mb-2" />
-                        <p className="text-sm">Please select a date first</p>
+                      <div className="p-2 text-center text-muted-foreground bg-gray-50 dark:bg-gray-800 rounded-lg">
+                        <Calendar className="w-4 h-4 mx-auto mb-1" />
+                        <p className="text-xs">Please select a date first</p>
                       </div>
                     )}
-                    <FormMessage />
+                    <FormMessage className="text-xs" />
                   </FormItem>
                 )}
               />
             </div>
 
             {/* Submit Button */}
-            <div className="pt-6">
-              <Button
-                type="submit"
-                disabled={loading}
-                className="w-full py-4 bg-primary-500 hover:bg-primary-600 text-white font-semibold rounded-xl transition-all duration-200"
-                size="lg"
-              >
-                {loading ? "Booking..." : "Book My Consultation"}
-              </Button>
-              <p className="text-sm text-muted-foreground text-center mt-3">
-                We'll confirm your appointment within 24 hours
-              </p>
-            </div>
+            <Button 
+              type="submit" 
+              disabled={loading} 
+              className="w-full h-8 text-xs font-medium"
+            >
+              {loading ? "Submitting..." : "Request Appointment"}
+            </Button>
           </form>
         </Form>
       </div>

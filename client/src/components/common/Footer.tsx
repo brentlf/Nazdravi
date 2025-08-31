@@ -9,7 +9,7 @@ export function Footer({ overlay = false }: FooterProps) {
   return (
     <footer className={`w-full transition-all duration-300 ${
       overlay 
-        ? "bg-transparent text-white border-white/20" 
+        ? "bg-black/60 backdrop-blur-sm text-white border-white/20" 
         : "bg-background text-foreground border-border/40"
     } border-t`}>
       <div className="container mx-auto px-6 py-3">
