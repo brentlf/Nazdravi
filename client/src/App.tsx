@@ -64,7 +64,7 @@ function Layout({ children }: { children: React.ReactNode }) {
   const isHomePage = location === "/";
   
   return (
-    <div className="min-h-screen relative">
+    <div className="min-h-screen relative bg-background text-foreground">
       <Header />
       <main className="relative">
         {children}
@@ -74,6 +74,7 @@ function Layout({ children }: { children: React.ReactNode }) {
           <Footer overlay={true} />
         </div>
       )}
+
     </div>
   );
 }

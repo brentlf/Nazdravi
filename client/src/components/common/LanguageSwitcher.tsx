@@ -30,7 +30,7 @@ export function LanguageSwitcher() {
           <ChevronDown className="h-3 w-3" />
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="end" className="w-40">
+      <DropdownMenuContent align="end" className="w-40 !bg-white border-2">
         {languages.map((lang) => (
           <DropdownMenuItem
             key={lang.code}

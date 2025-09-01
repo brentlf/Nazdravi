@@ -158,10 +158,10 @@ export default function AdminHome() {
   ];
 
   return (
-    <div className="h-[calc(100vh-5rem)] py-2 bg-gradient-to-br from-slate-50 via-blue-50/30 to-indigo-50/40 dark:from-slate-900 dark:via-slate-800/50 dark:to-slate-700/30 relative overflow-hidden">
-      <div className="container mx-auto px-4 relative z-10 h-full overflow-y-auto">
+    <div className="h-[calc(100vh-8rem)] bg-gradient-to-br from-background via-background to-muted/10 relative overflow-hidden">
+      <div className="container mx-auto px-6 py-4 relative z-10 h-full flex flex-col">
         {/* Header with Navigation and Organic Design */}
-        <div className="mb-3 relative">
+        <div className="mb-2 relative">
           <div className="flex items-center justify-between">
             <div className="relative">
               <div className="doodle-arrow mb-1">
@@ -196,7 +196,7 @@ export default function AdminHome() {
         </div>
 
         {/* Top Section - Stats + Quick Actions */}
-        <div className="grid lg:grid-cols-3 gap-3 mb-3">
+        <div className="grid lg:grid-cols-3 gap-3 mb-2">
           {/* Stats Cards */}
           <div className="lg:col-span-2">
             <h3 className="text-base font-semibold mb-2 flex items-center gap-2">
@@ -239,36 +239,52 @@ export default function AdminHome() {
                 }
 
                 return (
-                  <Card key={index} className="bg-gradient-to-br from-white to-slate-50/50 dark:from-slate-800 dark:to-slate-700 border-2 border-slate-300 dark:border-slate-500 hover:border-indigo-400 dark:hover:border-indigo-500 hover:shadow-xl hover:shadow-indigo-200/20 dark:hover:shadow-indigo-900/20 transition-all duration-300 flex-1 min-w-0 h-36">
-                    <CardContent className="p-3 flex flex-col h-full">
-                      {/* Row 1: Header with icon and title */}
-                      <div className="flex items-center gap-2 mb-2 flex-shrink-0">
-                        <div className={`w-5 h-5 rounded flex items-center justify-center ${stat.bgColor} flex-shrink-0`}>
-                          <Icon className={`w-3 h-3 ${stat.color}`} />
+                  <Card key={index} className="group relative overflow-hidden bg-gradient-to-br from-card via-card/95 to-muted/30 border hover:border-primary/20 hover:shadow-lg hover:shadow-primary/5 transition-all duration-300 h-36">
+                    <CardContent className="p-3 flex flex-col h-full relative z-10">
+                      {/* Header with icon and title */}
+                      <div className="flex items-center gap-3 mb-3">
+                        <div className={`w-8 h-8 rounded-xl flex items-center justify-center ${stat.bgColor} shadow-sm transition-transform duration-300 group-hover:scale-110`}>
+                          <Icon className={`w-4 h-4 ${stat.color}`} />
                         </div>
-                        <p className="text-xs text-muted-foreground font-medium leading-tight overflow-hidden text-ellipsis whitespace-nowrap" title={displayTitle}>{displayTitle}</p>
+                        <div className="flex-1 min-w-0">
+                          <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide leading-tight overflow-hidden text-ellipsis whitespace-nowrap" title={displayTitle}>
+                            {displayTitle}
+                          </p>
+                        </div>
                       </div>
                       
-                      {/* Row 2: Stat value (perfectly centered) */}
-                      <div className="flex-1 flex flex-col items-center justify-center min-h-0">
-                        <p className="text-2xl font-bold text-center leading-none">{displayValue}</p>
-                        {stat.badge && (
-                          <Badge variant="outline" className="text-xs text-red-600 border-red-600 mt-1">
-                            {stat.badge}
-                          </Badge>
-                        )}
+                      {/* Main value display */}
+                      <div className="flex-1 flex flex-col justify-center">
+                        <div className="text-center">
+                          <p className="text-3xl font-bold text-foreground leading-none mb-1 transition-colors duration-300 group-hover:text-primary">
+                            {displayValue}
+                          </p>
+                          {stat.badge && (
+                            <Badge variant="outline" className="text-xs text-destructive border-destructive/30 bg-destructive/5">
+                              {stat.badge}
+                            </Badge>
+                          )}
+                        </div>
                       </div>
                       
-                      {/* Row 3: Button at bottom */}
-                      <div className="flex-shrink-0 mt-2">
-                        <Button size="sm" variant="outline" asChild className="w-full h-7 text-xs">
+                      {/* Action button */}
+                      <div className="pt-3">
+                        <Button 
+                          size="sm" 
+                          variant="ghost" 
+                          asChild 
+                          className="w-full h-8 text-xs font-medium hover:bg-primary/10 hover:text-primary transition-all duration-300"
+                        >
                           <Link href={stat.href}>
-                            {stat.title === "Daily Reminder Emails" && <Mail className="w-3 h-3 mr-1" />}
+                            {stat.title === "Daily Reminder Emails" && <Mail className="w-3 h-3 mr-1.5" />}
                             {buttonText}
                           </Link>
                         </Button>
                       </div>
                     </CardContent>
+                    
+                    {/* Subtle background decoration */}
+                    <div className="absolute inset-0 bg-gradient-to-br from-transparent via-transparent to-primary/[0.02] opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                   </Card>
                 );
               })}
@@ -289,14 +305,14 @@ export default function AdminHome() {
                     key={index}
                     variant="outline"
                     size="default"
-                    className="h-full p-3 flex items-center gap-3 justify-start bg-gradient-to-r from-white to-slate-50 dark:from-slate-700 dark:to-slate-600 border-slate-300 dark:border-slate-500 hover:from-indigo-50 hover:to-blue-50 dark:hover:from-slate-600 dark:hover:to-slate-500 transition-all duration-300"
+                    className="group h-full p-3 flex items-center gap-2 justify-start bg-gradient-to-r from-card to-muted/30 hover:from-primary/5 hover:to-primary/10 hover:border-primary/20 transition-all duration-300"
                     asChild
                   >
                     <Link href={action.href}>
-                      <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${action.color} flex-shrink-0`}>
+                      <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${action.color} flex-shrink-0 transition-transform duration-300 group-hover:scale-110`}>
                         <Icon className="w-4 h-4 text-white" />
                       </div>
-                      <span className="text-sm font-medium text-left leading-tight">{action.title}</span>
+                      <span className="text-sm font-medium text-left leading-tight group-hover:text-primary transition-colors duration-300">{action.title}</span>
                     </Link>
                   </Button>
                 );
@@ -306,35 +322,44 @@ export default function AdminHome() {
         </div>
 
         {/* Main Content - Calendar + Messages */}
-        <div className="grid lg:grid-cols-3 gap-3">
+        <div className="grid lg:grid-cols-3 gap-3 flex-1">
           {/* Calendar - Left Side (66%) */}
-          <div className="lg:col-span-2">
+          <div className="lg:col-span-2 h-full">
             <AppointmentsCalendar appointments={appointments || []} />
           </div>
 
           {/* Messages - Right Side (33%) */}
-          <div className="lg:col-span-1">
-            <Card className="h-full flex flex-col bg-white dark:bg-slate-800 border-2 border-slate-300 dark:border-slate-500">
-              <CardHeader className="flex flex-row items-center justify-between pb-2 flex-shrink-0 bg-slate-50 dark:bg-slate-700 rounded-t-lg border-b-2 border-slate-300 dark:border-slate-500">
-                <CardTitle className="flex items-center gap-2 text-sm text-slate-800 dark:text-slate-200">
-                  <MessageCircle className="w-4 h-4 text-slate-600 dark:text-slate-400" />
+          <div className="lg:col-span-1 h-full">
+            <Card className="h-full flex flex-col bg-gradient-to-br from-card via-card/95 to-muted/20 border hover:border-primary/20 transition-all duration-300 shadow-sm">
+              <CardHeader className="flex flex-row items-center justify-between pb-4 flex-shrink-0 bg-gradient-to-r from-muted/20 to-muted/10 rounded-t-lg border-b border-border/50">
+                <CardTitle className="flex items-center gap-3 text-lg font-semibold text-foreground">
+                  <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center">
+                    <MessageCircle className="w-4 h-4 text-primary" />
+                  </div>
                   Messages ({recentMessages.length})
                 </CardTitle>
-                <Button variant="outline" size="sm" className="border-slate-300 text-slate-700 hover:bg-slate-100 dark:border-slate-500 dark:text-slate-300 dark:hover:bg-slate-900/20" asChild>
+                <Button 
+                  variant="ghost" 
+                  size="sm" 
+                  className="hover:bg-primary/10 hover:text-primary transition-all duration-200 font-medium" 
+                  asChild
+                >
                   <Link href="/admin/messages">All</Link>
                 </Button>
               </CardHeader>
-              <CardContent className="flex-1 flex flex-col">
+              <CardContent className="flex-1 flex flex-col p-3">
                 {recentMessages.length > 0 ? (
-                  <div className="space-y-1 flex-1 overflow-y-auto pr-2">
+                  <div className="space-y-2 flex-1 overflow-y-auto">
                     {recentMessages.map((message) => (
-                      <div key={message.id} className="flex items-start gap-2 p-1 hover:bg-gray-50 dark:hover:bg-gray-800 rounded-md transition-colors cursor-pointer">
-                        <div className="w-5 h-5 bg-primary-100 dark:bg-primary-900/30 rounded-full flex items-center justify-center flex-shrink-0">
-                          <MessageCircle className="w-2 h-2 text-primary-600 dark:text-primary-400" />
+                      <div key={message.id} className="group flex items-start gap-2 p-2 hover:bg-muted/20 rounded-lg transition-all duration-200 cursor-pointer">
+                        <div className="w-6 h-6 bg-gradient-to-br from-primary/20 to-primary/10 rounded-lg flex items-center justify-center flex-shrink-0 group-hover:scale-105 transition-transform duration-200">
+                          <MessageCircle className="w-3 h-3 text-primary" />
                         </div>
                         <div className="flex-1 min-w-0">
                           <div className="flex items-center justify-between mb-1">
-                            <span className="text-xs font-medium truncate">{getSenderName(message)}</span>
+                            <span className="text-xs font-semibold text-foreground truncate group-hover:text-primary transition-colors duration-200">
+                              {getSenderName(message)}
+                            </span>
                             <span className="text-xs text-muted-foreground flex-shrink-0">
                               {(() => {
                                 try {
@@ -353,7 +378,7 @@ export default function AdminHome() {
                               })()}
                             </span>
                           </div>
-                          <p className="text-xs text-muted-foreground line-clamp-2">{message.text}</p>
+                          <p className="text-xs text-muted-foreground line-clamp-2 leading-tight">{message.text}</p>
                         </div>
                       </div>
                     ))}

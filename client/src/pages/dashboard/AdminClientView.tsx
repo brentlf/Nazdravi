@@ -66,12 +66,12 @@ export default function AdminClientView() {
 
   if (loading) {
     return (
-      <div className="h-[calc(100vh-5rem-4rem)] flex items-center justify-center bg-gray-50 dark:bg-gray-900">
+      <div className="h-[calc(100vh-5rem-4rem)] flex items-center justify-center bg-background">
         <Card className="w-full max-w-4xl mx-4">
           <CardContent className="p-6">
             <div className="animate-pulse space-y-3">
               {[...Array(8)].map((_, i) => (
-                <div key={i} className="h-12 bg-gray-200 dark:bg-gray-700 rounded"></div>
+                <div key={i} className="h-12 bg-muted rounded"></div>
               ))}
             </div>
           </CardContent>
@@ -81,9 +81,9 @@ export default function AdminClientView() {
   }
 
   return (
-    <div className="h-[calc(100vh-5rem-4rem)] flex flex-col bg-gray-50 dark:bg-gray-900 overflow-hidden">
+    <div className="h-[calc(100vh-5rem-4rem)] flex flex-col bg-background overflow-hidden">
       {/* Compact Header */}
-      <div className="flex-none px-4 py-2 border-b bg-white dark:bg-gray-800">
+      <div className="flex-none px-4 py-2 border-b bg-card">
         <div className="flex items-center justify-between max-w-7xl mx-auto">
           <div className="flex items-center gap-3">
             <Button variant="ghost" size="sm" asChild>
@@ -107,7 +107,7 @@ export default function AdminClientView() {
         <div className="max-w-7xl mx-auto w-full h-full flex flex-col px-4 py-2">
           {/* Compact Search and Controls */}
           <div className="flex-none mb-2">
-            <div className="flex gap-3 items-center p-3 bg-white dark:bg-gray-800 rounded-lg border">
+            <div className="flex gap-3 items-center p-3 bg-card rounded-lg border">
               <div className="flex-1 relative">
                 <Search className="absolute left-2 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                 <Input
@@ -121,7 +121,16 @@ export default function AdminClientView() {
                 <SelectTrigger className="w-20 h-9">
                   <SelectValue />
                 </SelectTrigger>
-                <SelectContent>
+                <SelectContent 
+                  className="admin-select-content"
+                  style={{
+                    backgroundColor: 'hsl(var(--popover))',
+                    color: 'hsl(var(--popover-foreground))',
+                    borderColor: 'hsl(var(--border))',
+                    opacity: 1,
+                    backdropFilter: 'none'
+                  }}
+                >
                   <SelectItem value="8">8</SelectItem>
                   <SelectItem value="12">12</SelectItem>
                   <SelectItem value="16">16</SelectItem>
@@ -132,13 +141,13 @@ export default function AdminClientView() {
           </div>
 
           {/* Table Container */}
-          <div className="flex-1 bg-white dark:bg-gray-800 rounded-lg border overflow-hidden flex flex-col min-h-0">
+          <div className="flex-1 bg-card rounded-lg border overflow-hidden flex flex-col min-h-0">
             {paginatedClients.length > 0 ? (
               <>
                 {/* Table with fixed height */}
                 <div className="flex-1 overflow-auto min-h-0">
                   <Table>
-                    <TableHeader className="sticky top-0 bg-white dark:bg-gray-800 z-10">
+                    <TableHeader className="sticky top-0 bg-card z-10">
                       <TableRow className="border-b">
                         <TableHead className="w-10 py-2"></TableHead>
                         <TableHead className="py-2">Name</TableHead>
@@ -150,7 +159,7 @@ export default function AdminClientView() {
                     </TableHeader>
                     <TableBody>
                       {paginatedClients.map((client) => (
-                        <TableRow key={client.uid} className="hover:bg-gray-50 dark:hover:bg-gray-700 border-b">
+                        <TableRow key={client.uid} className="hover:bg-muted/50 border-b">
                           <TableCell className="py-2">
                             <Avatar className="h-6 w-6">
                               <AvatarImage src={client.photoURL} alt={client.name} />
@@ -190,7 +199,7 @@ export default function AdminClientView() {
 
                 {/* Compact Pagination */}
                 {totalPages > 1 && (
-                  <div className="flex-none border-t px-4 py-2 bg-gray-50 dark:bg-gray-800/50">
+                  <div className="flex-none border-t px-4 py-2 bg-muted/30">
                     <div className="flex items-center justify-between">
                       <div className="text-xs text-muted-foreground">
                         {startIndex + 1}-{Math.min(startIndex + itemsPerPage, filteredClients.length)} of {filteredClients.length}

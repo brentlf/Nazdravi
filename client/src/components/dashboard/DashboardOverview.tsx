@@ -12,6 +12,8 @@ import {
   Users,
   Receipt,
   User,
+  Crown,
+  Mail,
 } from "lucide-react";
 import { Link } from "wouter";
 import {
@@ -204,7 +206,7 @@ export function DashboardOverview() {
     {
       title: "Send Message",
       description: "Ask your nutritionist a question",
-      icon: MessageCircle,
+      icon: Mail,
       href: "/dashboard/messages",
       color: "bg-primary-500 hover:bg-primary-600",
       badge: unreadCount > 0 ? unreadCount : undefined,
@@ -226,11 +228,11 @@ export function DashboardOverview() {
   ];
 
   return (
-    <div className="space-y-6 relative">
-      {/* Welcome Section with Organic Design */}
-      <div className="relative overflow-hidden mediterranean-card p-6 text-white bg-gradient-to-br from-primary to-accent warm-glow">
+    <div className="space-y-3 relative h-full flex flex-col">
+      {/* Compact Welcome Section */}
+      <div className="relative overflow-hidden mediterranean-card p-4 text-white bg-gradient-to-br from-primary to-accent warm-glow flex-shrink-0">
         {isAdminViewingClient && (
-          <div className="mb-4 bg-yellow-500/20 border border-yellow-400/30 rounded-lg p-3 floating-element">
+          <div className="mb-3 bg-yellow-500/20 border border-yellow-400/30 rounded-lg p-2 floating-element">
             <p className="text-sm text-yellow-100">
               Admin View: You are viewing {user?.name}'s dashboard
             </p>
@@ -239,121 +241,156 @@ export function DashboardOverview() {
 
         <div className="relative z-10">
           <div className="doodle-arrow mb-1">
-            <h1 className="font-display text-2xl font-bold mb-1 handwritten-accent">
+            <h1 className="font-display text-lg font-bold mb-1 handwritten-accent">
               Welcome back, {user?.name}!
             </h1>
           </div>
-          <p className="serif-body text-lg text-primary-100 leading-relaxed">
+          <p className="serif-body text-sm text-primary-100 leading-relaxed">
             Here's your nutrition journey overview
           </p>
         </div>
 
         {/* Organic background decorations */}
-        <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-white/10 to-transparent blob-shape"></div>
-        <div className="absolute bottom-0 left-0 w-24 h-24 bg-gradient-to-br from-accent/20 to-transparent blob-shape"></div>
+        <div className="absolute top-0 right-0 w-20 h-20 bg-gradient-to-br from-white/10 to-transparent blob-shape"></div>
+        <div className="absolute bottom-0 left-0 w-16 h-16 bg-gradient-to-br from-accent/20 to-transparent blob-shape"></div>
 
         {/* Floating elements */}
         <FloatingOrganic
           className="absolute -top-4 -right-4 opacity-20"
-          size="medium"
+          size="small"
           delay={1}
         />
       </div>
 
-      {/* Service Plan Status Widget */}
-      <ServicePlanStatusWidget user={user} />
-
-      {/* Subscription Billing Widget for Complete Program Users */}
-      <SubscriptionBillingWidget user={user} />
-
-      {/* Quick Stats Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-4">
-        {quickStats.map((stat, index) => {
-          const Icon = stat.icon;
-          return (
-            <Card
-              key={index}
-              className="hover:shadow-lg transition-shadow duration-200"
-            >
-              <CardContent className="p-4">
-                <div className="flex items-center justify-between mb-4">
-                  <h3 className="font-semibold text-sm text-muted-foreground">
-                    {stat.title}
-                  </h3>
-                  <div
-                    className={`w-10 h-10 rounded-lg flex items-center justify-center ${stat.bgColor}`}
-                  >
-                    <Icon className={`w-5 h-5 ${stat.color}`} />
-                  </div>
-                </div>
-                <div className="space-y-2">
-                  <p className="text-2xl font-bold">{stat.value}</p>
-                  <p className="text-sm text-muted-foreground">
-                    {stat.subtitle}
-                  </p>
-                  <Button
-                    size="sm"
-                    variant="outline"
-                    asChild
-                    className="w-full"
-                  >
-                    <Link href={stat.href}>{stat.action}</Link>
-                  </Button>
-                </div>
-              </CardContent>
-            </Card>
-          );
-        })}
-      </div>
-
-      {/* Recent Activity & Quick Actions */}
-      <div className="grid lg:grid-cols-3 gap-6 lg:items-stretch">
-        {/* Recent Messages */}
-        <div className="lg:col-span-2">
-          <Card className="h-full">
-            <CardHeader className="flex flex-row items-center justify-between">
-              <CardTitle className="flex items-center gap-2">
-                <MessageCircle className="w-5 h-5" />
-                Recent Messages
-              </CardTitle>
-              <Button variant="outline" size="sm" asChild>
-                <Link href="/dashboard/messages">View All</Link>
-              </Button>
-            </CardHeader>
-            <CardContent className="h-64">
-              {messages && messages.length > 0 ? (
-                <div className="h-full overflow-y-auto space-y-4 pr-2">
-                  {messages.slice(0, 6).map((message) => (
-                    <div
-                      key={message.id}
-                      className="flex items-start space-x-3 p-3 bg-gray-50 dark:bg-gray-800 rounded-lg"
-                    >
-                      <div className="w-8 h-8 bg-primary-100 dark:bg-primary-900/30 rounded-full flex items-center justify-center">
-                        <MessageCircle className="w-4 h-4 text-primary-600 dark:text-primary-400" />
+      {/* Optimized Grid Layout - Stats + Program Section */}
+      <div className="grid lg:grid-cols-12 gap-3 flex-shrink-0">
+        {/* Quick Stats - Takes up more space */}
+        <div className="lg:col-span-8">
+          <h3 className="text-sm font-semibold mb-2 flex items-center gap-2 text-muted-foreground">
+            <Target className="w-4 h-4" />
+            Quick Overview
+          </h3>
+          <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-2">
+            {quickStats.map((stat, index) => {
+              const Icon = stat.icon;
+              return (
+                <Card
+                  key={index}
+                  className="group relative overflow-hidden bg-gradient-to-br from-card via-card/95 to-muted/30 border hover:border-primary/20 hover:shadow-lg hover:shadow-primary/5 transition-all duration-300 h-40"
+                >
+                  <CardContent className="p-3 flex flex-col h-full relative z-10">
+                    {/* Fixed Header - 24px height */}
+                    <div className="flex items-center gap-1.5 h-6 flex-shrink-0">
+                      <div className={`w-5 h-5 rounded-md flex items-center justify-center ${stat.bgColor} shadow-sm transition-transform duration-300 group-hover:scale-110`}>
+                        <Icon className={`w-2.5 h-2.5 ${stat.color}`} />
                       </div>
                       <div className="flex-1 min-w-0">
-                        <p className="text-sm font-medium">
-                          {message.fromUser === user?.uid
-                            ? "You"
-                            : "Nutritionist"}
+                        <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide leading-none truncate" title={stat.title}>
+                          {stat.title}
                         </p>
-                        <p className="text-sm text-muted-foreground truncate">
-                          {message.text}
+                      </div>
+                    </div>
+                    
+                    {/* Flexible Content Area - Takes remaining space */}
+                    <div className="flex-1 flex flex-col justify-center py-2">
+                      <div className="text-center">
+                        <p className="text-xl font-bold text-foreground leading-none mb-1 transition-colors duration-300 group-hover:text-primary">
+                          {stat.value}
                         </p>
-                        <p className="text-xs text-muted-foreground mt-1">
-                          {new Date(message.createdAt).toLocaleDateString()}
-                        </p>
+                        {stat.subtitle && (
+                          <p className="text-xs text-muted-foreground leading-tight">
+                            {stat.subtitle}
+                          </p>
+                        )}
+                      </div>
+                    </div>
+                    
+                    {/* Fixed Button Area - 32px height */}
+                    <div className="h-8 flex-shrink-0">
+                      <Button 
+                        size="sm" 
+                        variant="default" 
+                        asChild 
+                        className="w-full h-full text-xs font-medium bg-blue-500 text-white hover:bg-blue-600 transition-all duration-300 shadow-sm"
+                      >
+                        <Link href={stat.href} className="flex items-center justify-center">{stat.action}</Link>
+                      </Button>
+                    </div>
+                  </CardContent>
+                  
+                  {/* Subtle background decoration */}
+                  <div className="absolute inset-0 bg-gradient-to-br from-transparent via-transparent to-primary/[0.02] opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                </Card>
+              );
+            })}
+          </div>
+        </div>
+
+        {/* Program Status - Matches Quick Overview height */}
+        <div className="lg:col-span-4">
+          <h3 className="text-sm font-semibold mb-2 flex items-center gap-2 text-muted-foreground">
+            <Crown className="w-4 h-4" />
+            Program Status
+          </h3>
+          <div className="h-40 flex flex-col gap-2">
+            <div className="flex-1">
+              <ServicePlanStatusWidget user={user} />
+            </div>
+            {/* Only show billing widget for complete program users and make it very compact */}
+            {user?.servicePlan === 'complete-program' && (
+              <div className="h-16 flex-shrink-0">
+                <SubscriptionBillingWidget user={user} />
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+
+      {/* Compact Main Content - Messages + Quick Actions */}
+      <div className="grid lg:grid-cols-3 gap-3 flex-1 min-h-0">
+        {/* Recent Messages */}
+        <div className="lg:col-span-2 min-h-0">
+          <Card className="h-full flex flex-col bg-gradient-to-br from-card via-card/95 to-muted/20 border hover:border-primary/20 transition-all duration-300 shadow-sm">
+            <CardHeader className="flex flex-row items-center justify-between pb-3 flex-shrink-0 bg-gradient-to-r from-muted/20 to-muted/10 rounded-t-lg border-b border-border/50">
+              <CardTitle className="flex items-center gap-2 text-base font-semibold text-foreground">
+                <div className="w-6 h-6 rounded-lg bg-primary/10 flex items-center justify-center">
+                  <MessageCircle className="w-3 h-3 text-primary" />
+                </div>
+                Messages ({messages?.length || 0})
+              </CardTitle>
+              <Button variant="ghost" size="sm" className="hover:bg-primary/10 hover:text-primary transition-all duration-200 font-medium text-xs" asChild>
+                <Link href="/dashboard/messages">All</Link>
+              </Button>
+            </CardHeader>
+            <CardContent className="flex-1 flex flex-col p-3 min-h-0">
+              {messages && messages.length > 0 ? (
+                <div className="space-y-2 flex-1 overflow-y-auto">
+                  {messages.slice(0, 4).map((message) => (
+                    <div key={message.id} className="group flex items-start gap-2 p-2 hover:bg-muted/20 rounded-lg transition-all duration-200 cursor-pointer">
+                      <div className="w-5 h-5 bg-gradient-to-br from-primary/20 to-primary/10 rounded-lg flex items-center justify-center flex-shrink-0 group-hover:scale-105 transition-transform duration-200">
+                        <MessageCircle className="w-2.5 h-2.5 text-primary" />
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center justify-between mb-1">
+                          <span className="text-xs font-semibold text-foreground truncate group-hover:text-primary transition-colors duration-200">
+                            {message.fromUser === user?.uid ? "You" : "Nutritionist"}
+                          </span>
+                          <span className="text-xs text-muted-foreground flex-shrink-0">
+                            {new Date(message.createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
+                          </span>
+                        </div>
+                        <p className="text-xs text-muted-foreground line-clamp-2 leading-tight">{message.text}</p>
                       </div>
                     </div>
                   ))}
                 </div>
               ) : (
-                <div className="flex items-center justify-center h-full text-center">
-                  <div>
-                    <MessageCircle className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
-                    <p className="text-muted-foreground">No messages yet</p>
-                    <Button size="sm" className="mt-4" asChild>
-                      <Link href="/dashboard/messages">Start Conversation</Link>
+                <div className="flex-1 flex items-center justify-center">
+                  <div className="text-center">
+                    <MessageCircle className="w-8 h-8 text-muted-foreground mx-auto mb-2" />
+                    <p className="text-muted-foreground text-sm">No messages</p>
+                    <Button size="sm" className="mt-3" asChild>
+                      <Link href="/dashboard/messages">Start Chat</Link>
                     </Button>
                   </div>
                 </div>
@@ -363,48 +400,46 @@ export function DashboardOverview() {
         </div>
 
         {/* Quick Actions */}
-        <div>
-          <Card className="h-full">
-            <CardHeader>
-              <CardTitle>Quick Actions</CardTitle>
+        <div className="lg:col-span-1 min-h-0">
+          <Card className="h-full flex flex-col bg-gradient-to-br from-card via-card/95 to-muted/20 border hover:border-primary/20 transition-all duration-300 shadow-sm">
+            <CardHeader className="pb-3 flex-shrink-0 bg-gradient-to-r from-muted/20 to-muted/10 rounded-t-lg border-b border-border/50">
+              <CardTitle className="flex items-center gap-2 text-base font-semibold text-foreground">
+                <div className="w-6 h-6 rounded-lg bg-primary/10 flex items-center justify-center">
+                  <Target className="w-3 h-3 text-primary" />
+                </div>
+                Quick Actions
+              </CardTitle>
             </CardHeader>
-            <CardContent className="h-64">
-              <div className="h-full overflow-y-auto space-y-1 pr-1">
+            <CardContent className="flex-1 p-3 flex flex-col">
+              <div className="flex flex-col gap-2 h-full">
                 {quickActions.map((action, index) => {
                   const Icon = action.icon;
                   return (
-                    <Button
+                    <Card
                       key={index}
-                      variant="outline"
-                      className="w-full justify-start h-auto p-4"
-                      asChild
+                      className="group relative overflow-hidden bg-gradient-to-r from-background via-background to-muted/30 border border-border/40 hover:border-primary/20 hover:shadow-lg hover:shadow-primary/5 transition-all duration-300 flex-1"
                     >
-                      <Link href={action.href}>
-                        <div
-                          className={`w-8 h-8 rounded-lg flex items-center justify-center mr-3 ${action.color} relative`}
-                        >
-                          <Icon className="w-4 h-4 text-white" />
-                          {action.badge && (
-                            <div className="absolute -top-2 -right-2 w-5 h-5 bg-red-500 text-white text-xs rounded-full flex items-center justify-center">
-                              {action.badge}
-                            </div>
-                          )}
-                        </div>
-                        <div className="text-left flex-1">
-                          <div className="flex items-center justify-between">
-                            <p className="font-medium">{action.title}</p>
+                      <Link href={action.href} className="block w-full h-full">
+                        <CardContent className="p-3 flex items-center gap-3 h-full">
+                          <div className={`w-7 h-7 rounded-lg flex items-center justify-center ${action.color} flex-shrink-0 transition-all duration-300 group-hover:scale-105 group-hover:shadow-lg relative`}>
+                            <Icon className="w-3.5 h-3.5 text-white" />
                             {action.badge && (
-                              <Badge variant="destructive" className="ml-2 text-xs">
-                                {action.badge}
-                              </Badge>
+                              <div className="absolute -top-1 -right-1 w-4 h-4 bg-red-500 text-white rounded-full flex items-center justify-center text-xs font-bold border-2 border-white">
+                                {action.badge > 9 ? '9+' : action.badge}
+                              </div>
                             )}
                           </div>
-                          <p className="text-xs text-muted-foreground">
-                            {action.description}
-                          </p>
-                        </div>
+                          <div className="flex-1 min-w-0 flex flex-col justify-center">
+                            <p className="text-sm font-medium text-foreground group-hover:text-primary transition-colors duration-300 truncate leading-tight">{action.title}</p>
+                            <p className="text-xs text-muted-foreground leading-tight mt-0.5 truncate">
+                              {action.description}
+                            </p>
+                          </div>
+                        </CardContent>
+                        {/* Subtle background decoration */}
+                        <div className="absolute inset-0 bg-gradient-to-br from-transparent via-transparent to-primary/[0.02] opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                       </Link>
-                    </Button>
+                    </Card>
                   );
                 })}
               </div>
@@ -413,61 +448,8 @@ export function DashboardOverview() {
         </div>
       </div>
 
-      {/* This Week's Goals */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Target className="w-5 h-5" />
-            This Week's Focus
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="grid md:grid-cols-3 gap-3">
-            <div className="p-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
-              <h4 className="font-semibold text-blue-800 dark:text-blue-200 mb-1">
-                Hydration
-              </h4>
-              <p className="text-sm text-blue-600 dark:text-blue-300 mb-2">
-                Aim for 2.5L daily
-              </p>
-              <Badge
-                variant="outline"
-                className="border-blue-200 text-blue-700 text-xs"
-              >
-                Daily Goal
-              </Badge>
-            </div>
-            <div className="p-3 bg-green-50 dark:bg-green-900/20 rounded-lg">
-              <h4 className="font-semibold text-green-800 dark:text-green-200 mb-1">
-                Exercise
-              </h4>
-              <p className="text-sm text-green-600 dark:text-green-300 mb-2">
-                30 min walks 3x week
-              </p>
-              <Badge
-                variant="outline"
-                className="border-green-200 text-green-700 text-xs"
-              >
-                Weekly Goal
-              </Badge>
-            </div>
-            <div className="p-3 bg-purple-50 dark:bg-purple-900/20 rounded-lg">
-              <h4 className="font-semibold text-purple-800 dark:text-purple-200 mb-1">
-                Meal Prep
-              </h4>
-              <p className="text-sm text-purple-600 dark:text-purple-300 mb-2">
-                Prep Sunday meals
-              </p>
-              <Badge
-                variant="outline"
-                className="border-purple-200 text-purple-700 text-xs"
-              >
-                Weekly Task
-              </Badge>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
+
     </div>
   );
 }
+

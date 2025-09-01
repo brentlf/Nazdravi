@@ -14,7 +14,7 @@
   /* UI Colors with warmth */
   --muted: 35 15% 94%; /* Warm light gray */
   --muted-foreground: 25 10% 45%; /* Warm medium gray */
-  --popover: 35 20% 99%; /* Warm off-white, same as card */
+  --popover: 0 0% 100%; /* Pure white background */
   --popover-foreground: 25 15% 15%;
   --card: 35 20% 99%; /* Warm white cards */
   --card-foreground: 25 15% 15%;
@@ -88,24 +88,8 @@
   --dark-900: 0 0% 95%; /* Pure white */
 }
 
-/* System theme transition support */
-@media (prefers-color-scheme: light) {
-  :root {
-    /* System light theme - slightly different from manual light */
-    --background: 35 25% 99%; /* Even warmer system light */
-    --card: 35 25% 100%; /* Warmer system cards */
-    --muted: 35 20% 96%; /* Warmer system muted */
-  }
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    /* System dark theme - slightly different from manual dark */
-    --background: 220 18% 6%; /* Slightly different system dark */
-    --card: 220 18% 10%; /* Slightly different system cards */
-    --muted: 220 12% 16%; /* Slightly different system muted */
-  }
-}
+/* Note: System theme detection is handled via JavaScript in ThemeContext 
+   to avoid conflicts with manual theme selection */
 
 /* Theme transition classes */
 .theme-transitioning {
@@ -126,8 +110,8 @@
   }
   
   body {
-    background-color: hsl(var(--background));
-    color: hsl(var(--foreground));
+    background-color: hsl(var(--background)) !important;
+    color: hsl(var(--foreground)) !important;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
@@ -135,6 +119,11 @@
     line-height: 1.7;
     letter-spacing: -0.01em;
     transition: background-color 0.3s ease, color 0.3s ease;
+  }
+  
+  /* Ensure root element also gets proper background */
+  html {
+    background-color: hsl(var(--background)) !important;
   }
   
   /* Playfair Display for elegant headers */
@@ -331,5 +320,57 @@
   
   .dark .hover-lift:hover {
     box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
+  }
+  
+  /* Force dropdown backgrounds to be solid */
+  [data-radix-popper-content-wrapper] {
+    backdrop-filter: none !important;
+  }
+  
+  [data-radix-dropdown-menu-content] {
+    background-color: hsl(var(--popover)) !important;
+    opacity: 1 !important;
+    backdrop-filter: none !important;
+    border: 1px solid hsl(var(--border)) !important;
+  }
+  
+  .dark [data-radix-dropdown-menu-content] {
+    background-color: hsl(220 15% 12%) !important;
+    color: hsl(0 0% 95%) !important;
+    border-color: hsl(220 10% 22%) !important;
+  }
+  
+  /* Ensure theme dropdown is never transparent */
+  .theme-dropdown-content {
+    background-color: hsl(var(--popover)) !important;
+    opacity: 1 !important;
+  }
+  
+  .dark .theme-dropdown-content {
+    background-color: hsl(220 15% 12%) !important;
+  }
+  
+  /* Force Select dropdown backgrounds to be solid */
+  [data-radix-select-content] {
+    background-color: hsl(var(--popover)) !important;
+    opacity: 1 !important;
+    backdrop-filter: none !important;
+    border: 1px solid hsl(var(--border)) !important;
+  }
+  
+  .dark [data-radix-select-content] {
+    background-color: hsl(220 15% 12%) !important;
+    color: hsl(0 0% 95%) !important;
+    border-color: hsl(220 10% 22%) !important;
+  }
+  
+  /* Specific class for admin select content */
+  .admin-select-content {
+    background-color: hsl(var(--popover)) !important;
+    opacity: 1 !important;
+  }
+  
+  .dark .admin-select-content {
+    background-color: hsl(220 15% 12%) !important;
   }
 }

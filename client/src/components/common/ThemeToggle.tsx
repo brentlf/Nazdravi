@@ -60,7 +60,14 @@ export function ThemeToggle() {
       </DropdownMenuTrigger>
       <DropdownMenuContent 
         align="end" 
-        className="w-48 animate-in slide-in-from-top-2 duration-200"
+        className="w-48 animate-in slide-in-from-top-2 duration-200 theme-dropdown-content"
+        style={{
+          backgroundColor: 'hsl(var(--popover))',
+          color: 'hsl(var(--popover-foreground))',
+          borderColor: 'hsl(var(--border))',
+          opacity: 1,
+          backdropFilter: 'none'
+        }}
       >
         {themes.map((themeOption) => {
           const Icon = themeOption.icon;
@@ -71,10 +78,10 @@ export function ThemeToggle() {
             <DropdownMenuItem
               key={themeOption.value}
               onClick={() => setTheme(themeOption.value)}
-              className={`cursor-pointer transition-all duration-200 ${
+              className={`cursor-pointer transition-all duration-200 hover:bg-accent hover:text-accent-foreground ${
                 isActive 
-                  ? "bg-primary/10 text-primary border-l-2 border-primary" 
-                  : "hover:bg-accent/5"
+                  ? "bg-accent text-accent-foreground" 
+                  : ""
               } ${isSystemActive ? "ring-1 ring-primary/20" : ""}`}
             >
               <div className="flex items-center w-full">
@@ -94,7 +101,7 @@ export function ThemeToggle() {
         })}
         
         {/* Current theme info */}
-        <div className="px-2 py-1.5 text-xs text-muted-foreground border-t mt-1 pt-1">
+        <div className="px-2 py-1.5 text-xs text-muted-foreground border-t border-border mt-1 pt-1 bg-muted/20">
           Current: {actualTheme === "dark" ? "Dark" : "Light"} mode
           {theme === "system" && " (System)"}
         </div>

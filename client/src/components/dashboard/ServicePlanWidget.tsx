@@ -99,7 +99,7 @@ export default function ServicePlanWidget({ user }: ServicePlanWidgetProps) {
   const status = getStatusMessage();
 
   return (
-    <Card className="bg-gradient-to-br from-white to-gray-50 dark:from-gray-900 dark:to-gray-800 border-2">
+    <Card className="bg-gradient-to-br from-card to-muted/30 border-2">
       <CardHeader className="pb-3">
         <div className="flex items-center justify-between">
           <CardTitle className="text-lg font-semibold flex items-center gap-2">

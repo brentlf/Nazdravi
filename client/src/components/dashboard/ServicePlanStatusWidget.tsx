@@ -29,32 +29,28 @@ export default function ServicePlanStatusWidget({ user }: ServicePlanStatusWidge
       new Date(currentUser.downgradeEffectiveDate as string);
 
     return (
-      <Card className="border-2 border-amber-200 dark:border-amber-800 bg-gradient-to-r from-amber-50 to-orange-50 dark:from-amber-900/20 dark:to-orange-900/20">
-        <CardContent className="p-6">
-          <div className="flex items-start justify-between">
+      <Card className="border-2 border-amber-200 dark:border-amber-800 bg-gradient-to-r from-amber-50 to-orange-50 dark:from-amber-900/20 dark:to-orange-900/20 h-full">
+        <CardContent className="p-3 h-full">
+          <div className="flex items-start justify-between h-full">
             <div className="flex-1">
-              <div className="flex items-center gap-2 mb-3">
-                <Clock className="w-5 h-5 text-amber-600" />
-                <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
+              <div className="flex items-center gap-1 mb-1">
+                <Clock className="w-3 h-3 text-amber-600" />
+                <h3 className="text-sm font-semibold text-gray-900 dark:text-white">
                   Downgrade Scheduled
                 </h3>
-                <Badge variant="outline" className="text-amber-600 border-amber-600">
-                  Complete Program → Pay As You Go
-                </Badge>
               </div>
-              <p className="text-gray-600 dark:text-gray-300 mb-4">
-                Your downgrade is scheduled. Your plan will change to Pay-As-You-Go on {downgradeDate ? downgradeDate.toLocaleDateString() : 'your next billing date'}. 
-                You'll continue enjoying full Complete Program access until then.
+              <p className="text-xs text-gray-600 dark:text-gray-300 mb-1">
+                Changes on {downgradeDate ? downgradeDate.toLocaleDateString() : 'next billing'}
               </p>
-              <div className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400">
-                <CheckCircle className="w-4 h-4 text-green-600" />
-                Current benefits still active until downgrade date
+              <div className="flex items-center gap-1 text-xs text-gray-600 dark:text-gray-400">
+                <CheckCircle className="w-2.5 h-2.5 text-green-600" />
+                Benefits active
               </div>
             </div>
-            <div className="ml-6">
-              <Button asChild variant="outline" size="sm">
+            <div className="ml-2">
+              <Button asChild variant="outline" size="sm" className="text-xs h-6">
                 <Link href="/dashboard/profile">
-                  Manage Plan
+                  Manage
                 </Link>
               </Button>
             </div>
@@ -121,33 +117,29 @@ export default function ServicePlanStatusWidget({ user }: ServicePlanStatusWidge
     // Complete Program User Widget
     if (programStatus?.status === 'expired') {
       return (
-        <Card className="border-2 border-orange-200 dark:border-orange-800 bg-gradient-to-r from-orange-50 to-yellow-50 dark:from-orange-900/20 dark:to-yellow-900/20">
-          <CardContent className="p-6">
-            <div className="flex items-start justify-between">
+        <Card className="border-2 border-orange-200 dark:border-orange-800 bg-gradient-to-r from-orange-50 to-yellow-50 dark:from-orange-900/20 dark:to-yellow-900/20 h-full">
+          <CardContent className="p-2">
+            <div className="flex items-start justify-between h-full">
               <div className="flex-1">
-                <div className="flex items-center gap-2 mb-3">
-                  <AlertTriangle className="w-5 h-5 text-orange-600" />
-                  <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
-                    Complete Program Expired
+                <div className="flex items-center gap-1 mb-1">
+                  <AlertTriangle className="w-3 h-3 text-orange-600" />
+                  <h3 className="text-sm font-semibold text-gray-900 dark:text-white">
+                    Program Expired
                   </h3>
-                  <Badge variant="outline" className="text-orange-600 border-orange-600">
-                    Reverted to Pay As You Go
-                  </Badge>
                 </div>
-                <p className="text-gray-600 dark:text-gray-300 mb-4">
-                  Your 3-month Complete Program ended on {programStatus.endDate?.toLocaleDateString() || 'Unknown date'}. 
-                  You've been automatically switched back to Pay As You Go billing.
+                <p className="text-xs text-gray-600 dark:text-gray-300 mb-1">
+                  Ended {programStatus.endDate?.toLocaleDateString() || 'recently'}
                 </p>
-                <div className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400">
-                  <Clock className="w-4 h-4" />
-                  Current Plan: Pay per session billing
+                <div className="flex items-center gap-1 text-xs text-gray-600 dark:text-gray-400">
+                  <Clock className="w-2.5 h-2.5" />
+                  Pay per session
                 </div>
               </div>
-              <div className="ml-6">
-                <Button asChild className="bg-purple-600 hover:bg-purple-700 text-white">
+              <div className="ml-2">
+                <Button asChild className="bg-purple-600 hover:bg-purple-700 text-white text-xs h-6" size="sm">
                   <Link href="/dashboard/profile">
-                    <Crown className="w-4 h-4 mr-1" />
-                    Renew Program
+                    <Crown className="w-2.5 h-2.5 mr-1" />
+                    Renew
                   </Link>
                 </Button>
               </div>
@@ -158,53 +150,51 @@ export default function ServicePlanStatusWidget({ user }: ServicePlanStatusWidge
     } else {
       // Active Complete Program
       return (
-        <Card className="border-2 border-purple-200 dark:border-purple-800 bg-gradient-to-r from-purple-50 to-pink-50 dark:from-purple-900/20 dark:to-pink-900/20">
-          <CardContent className="p-6">
-            <div className="flex items-start justify-between">
+        <Card className="border-2 border-purple-200 dark:border-purple-800 bg-gradient-to-r from-purple-50 to-pink-50 dark:from-purple-900/20 dark:to-pink-900/20 h-full">
+                  <CardContent className="p-3 h-full">
+          <div className="flex flex-col h-full">
+            <div className="flex items-center justify-between mb-2">
+              <div className="flex items-center gap-2">
+                <CheckCircle className="w-4 h-4 text-purple-600" />
+                <h3 className="text-sm font-semibold text-gray-900 dark:text-white">
+                  Complete Program
+                </h3>
+              </div>
+              <Badge className="bg-gradient-to-r from-purple-500 to-pink-500 text-white text-xs">
+                <Crown className="w-2.5 h-2.5 mr-1" />
+                Active
+              </Badge>
+            </div>
+            
+            <div className="flex-1 flex items-center justify-between">
               <div className="flex-1">
-                <div className="flex items-center gap-2 mb-3">
-                  <CheckCircle className="w-5 h-5 text-purple-600" />
-                  <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
-                    Complete Program Active
-                  </h3>
-                  <Badge className="bg-gradient-to-r from-purple-500 to-pink-500 text-white">
-                    <Crown className="w-3 h-3 mr-1" />
-                    Premium
-                  </Badge>
-                </div>
-                <p className="text-gray-600 dark:text-gray-300 mb-4">
-                  Enjoy unlimited consultations and priority support. 
+                <p className="text-sm font-medium text-gray-600 dark:text-gray-300 mb-1">
                   {programStatus?.isExpiring 
-                    ? `Program expires in ${programStatus.daysRemaining} days.`
-                    : `${programStatus?.daysRemaining} days remaining in your program.`
+                    ? `Expires in ${programStatus.daysRemaining} days`
+                    : `${programStatus?.daysRemaining} days remaining`
                   }
                 </p>
-                <div className="grid grid-cols-2 gap-3">
-                  <div className="flex items-center gap-2 text-sm">
-                    <span className="text-green-600 font-medium">✓</span>
-                    <span className="text-gray-600 dark:text-gray-400">Unlimited consultations</span>
-                  </div>
-                  <div className="flex items-center gap-2 text-sm">
-                    <span className="text-green-600 font-medium">✓</span>
-                    <span className="text-gray-600 dark:text-gray-400">Priority booking</span>
-                  </div>
+                <div className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400">
+                  <span className="text-green-600 font-medium">✓</span>
+                  <span>Unlimited consultations & priority support</span>
                 </div>
               </div>
-              <div className="ml-6 text-center">
+              
+              <div className="ml-4 text-center">
                 <div className="text-2xl font-bold text-purple-600 dark:text-purple-400">
                   {programStatus?.daysRemaining}
                 </div>
-                <div className="text-sm text-gray-500">days left</div>
+                <div className="text-xs text-gray-500 mb-2">days left</div>
                 {programStatus?.isExpiring && (
-                  <Button asChild variant="outline" size="sm" className="mt-2">
+                  <Button asChild variant="outline" size="sm" className="text-xs h-6">
                     <Link href="/dashboard/profile">
-                      <Calendar className="w-4 h-4 mr-1" />
                       Extend
                     </Link>
                   </Button>
                 )}
               </div>
             </div>
+          </div>
           </CardContent>
         </Card>
       );
@@ -212,66 +202,31 @@ export default function ServicePlanStatusWidget({ user }: ServicePlanStatusWidge
   } else {
     // Pay As You Go User Widget
     return (
-      <Card className="border-2 border-blue-200 dark:border-blue-800 bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20">
-        <CardContent className="p-6">
+      <Card className="border-2 border-blue-200 dark:border-blue-800 bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 h-full">
+        <CardContent className="p-2 h-full flex flex-col">
           <div className="flex items-start justify-between">
             <div className="flex-1">
-              <div className="flex items-center gap-2 mb-3">
-                <CheckCircle className="w-5 h-5 text-blue-600" />
-                <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
-                  Pay As You Go Plan
+              <div className="flex items-center gap-1 mb-1">
+                <CheckCircle className="w-3 h-3 text-blue-600" />
+                <h3 className="text-sm font-semibold text-gray-900 dark:text-white">
+                  Pay As You Go
                 </h3>
-                <Badge variant="outline" className="text-blue-600 border-blue-600">
-                  Per Session
-                </Badge>
               </div>
-              <p className="text-gray-600 dark:text-gray-300 mb-4">
-                You're currently on our flexible pay-per-session plan. 
-                Upgrade to our Complete Program for unlimited consultations and exclusive benefits.
+              <p className="text-xs text-gray-600 dark:text-gray-300 mb-1">
+                Flexible pay-per-session plan
               </p>
-              <div className="grid grid-cols-2 gap-3">
-                <div className="flex items-center gap-2 text-sm">
-                  <span className="text-blue-600 font-medium">✓</span>
-                  <span className="text-gray-600 dark:text-gray-400">Flexible scheduling</span>
-                </div>
-                <div className="flex items-center gap-2 text-sm">
-                  <span className="text-blue-600 font-medium">✓</span>
-                  <span className="text-gray-600 dark:text-gray-400">Pay per session</span>
-                </div>
+              <div className="flex items-center gap-1 text-xs text-gray-600 dark:text-gray-400">
+                <span className="text-blue-600 font-medium">✓</span>
+                <span>Pay per session</span>
               </div>
             </div>
-            <div className="ml-6">
-              <Button asChild className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white">
+            <div className="ml-2">
+              <Button asChild className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white text-xs h-6" size="sm">
                 <Link href="/dashboard/profile">
-                  <ArrowUp className="w-4 h-4 mr-1" />
-                  Upgrade to Complete
+                  <ArrowUp className="w-2.5 h-2.5 mr-1" />
+                  Upgrade
                 </Link>
               </Button>
-            </div>
-          </div>
-          
-          {/* Upgrade Benefits Preview */}
-          <div className="mt-4 pt-4 border-t border-blue-200 dark:border-blue-700">
-            <h4 className="text-sm font-medium text-gray-900 dark:text-white mb-2">
-              Complete Program Benefits:
-            </h4>
-            <div className="grid grid-cols-2 gap-2">
-              <div className="text-xs text-gray-600 dark:text-gray-400">
-                <Crown className="w-3 h-3 inline mr-1 text-purple-500" />
-                Unlimited consultations
-              </div>
-              <div className="text-xs text-gray-600 dark:text-gray-400">
-                <Calendar className="w-3 h-3 inline mr-1 text-purple-500" />
-                Priority booking
-              </div>
-              <div className="text-xs text-gray-600 dark:text-gray-400">
-                <CheckCircle className="w-3 h-3 inline mr-1 text-purple-500" />
-                Monthly billing
-              </div>
-              <div className="text-xs text-gray-600 dark:text-gray-400">
-                <Clock className="w-3 h-3 inline mr-1 text-purple-500" />
-                3-month program
-              </div>
             </div>
           </div>
         </CardContent>

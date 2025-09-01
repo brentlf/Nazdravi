@@ -229,14 +229,14 @@ export function AppointmentForm() {
   }
 
   return (
-    <div className="bg-white dark:bg-gray-900 rounded-xl shadow-lg overflow-hidden border border-gray-200 dark:border-gray-700">
+    <div className="bg-card rounded-xl shadow-lg overflow-hidden border border-border">
       {/* Form Content */}
       <div className="p-2">
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-2">
             {/* Personal Information - Compact Grid */}
-            <div className="bg-white dark:bg-gray-700 p-2 rounded-lg border border-gray-200 dark:border-gray-600">
-              <h4 className="text-xs font-semibold text-gray-900 dark:text-gray-100 mb-2 flex items-center gap-1">
+            <div className="bg-muted/30 p-2 rounded-lg border border-border">
+              <h4 className="text-xs font-semibold text-foreground mb-2 flex items-center gap-1">
                 <User className="h-3 w-3" />
                 Personal Information
               </h4>
@@ -268,7 +268,7 @@ export function AppointmentForm() {
                           placeholder="your.email@example.com"
                           readOnly
                           disabled
-                          className="h-7 text-xs bg-gray-100 dark:bg-gray-600"
+                          className="h-7 text-xs bg-muted"
                         />
                       </FormControl>
                       <FormMessage className="text-xs" />
@@ -293,11 +293,11 @@ export function AppointmentForm() {
             </div>
 
             {/* Type, Plan & Goals - 3 Column Layout */}
-            <div className="bg-white dark:bg-gray-700 p-2 rounded-lg border border-gray-200 dark:border-gray-600">
+            <div className="bg-muted/30 p-2 rounded-lg border border-border">
               <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
                 {/* Consultation Type */}
                 <div>
-                  <h4 className="text-xs font-semibold text-gray-900 dark:text-gray-100 mb-2 flex items-center gap-1">
+                  <h4 className="text-xs font-semibold text-foreground mb-2 flex items-center gap-1">
                     <Calendar className="h-3 w-3" />
                     Type *
                   </h4>
@@ -334,7 +334,7 @@ export function AppointmentForm() {
 
                 {/* Service Plan */}
                 <div>
-                  <h4 className="text-xs font-semibold text-gray-900 dark:text-gray-100 mb-2 flex items-center gap-1">
+                  <h4 className="text-xs font-semibold text-foreground mb-2 flex items-center gap-1">
                     <Crown className="h-3 w-3" />
                     Plan *
                   </h4>
@@ -394,7 +394,7 @@ export function AppointmentForm() {
 
                 {/* Goals */}
                 <div className="flex flex-col h-full">
-                  <h4 className="text-xs font-semibold text-gray-900 dark:text-gray-100 mb-2 flex items-center gap-1">
+                  <h4 className="text-xs font-semibold text-foreground mb-2 flex items-center gap-1">
                     <Target className="h-3 w-3" />
                     Goals *
                   </h4>
@@ -419,8 +419,8 @@ export function AppointmentForm() {
             </div>
 
             {/* Schedule - 2 Column Layout */}
-            <div className="bg-white dark:bg-gray-700 p-2 rounded-lg border border-gray-200 dark:border-gray-600">
-              <h4 className="text-xs font-semibold text-gray-900 dark:text-gray-100 mb-2 flex items-center gap-1">
+            <div className="bg-muted/30 p-2 rounded-lg border border-border">
+              <h4 className="text-xs font-semibold text-foreground mb-2 flex items-center gap-1">
                 <Calendar className="h-3 w-3" />
                 Schedule *
               </h4>
@@ -466,7 +466,7 @@ export function AppointmentForm() {
                           <SelectTrigger className={`h-7 text-xs ${!selectedDate ? 'bg-gray-100 text-gray-400 cursor-not-allowed' : ''}`}>
                             <SelectValue placeholder={!selectedDate ? "Select date first" : "Select time slot"} />
                           </SelectTrigger>
-                          <SelectContent className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-600">
+                          <SelectContent className="bg-popover border border-border">
                             {slotsLoading ? (
                               <SelectItem value="loading" disabled>Loading...</SelectItem>
                             ) : slotsError ? (

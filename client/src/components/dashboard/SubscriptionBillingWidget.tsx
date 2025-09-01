@@ -203,24 +203,24 @@ export default function SubscriptionBillingWidget({ user }: SubscriptionBillingW
   }
 
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle className="flex items-center gap-2">
-          <CreditCard className="w-5 h-5" />
+    <Card className="h-full">
+      <CardHeader className="pb-3">
+        <CardTitle className="flex items-center gap-2 text-base">
+          <CreditCard className="w-4 h-4" />
           Complete Program Billing
         </CardTitle>
       </CardHeader>
-      <CardContent className="space-y-4">
-        {/* Program Overview */}
-        <div className="bg-gradient-to-r from-purple-50 to-pink-50 dark:from-purple-900/20 dark:to-pink-900/20 p-4 rounded-lg">
+      <CardContent className="space-y-3 pt-0">
+        {/* Compact Program Overview */}
+        <div className="bg-gradient-to-r from-purple-50 to-pink-50 dark:from-purple-900/20 dark:to-pink-900/20 p-3 rounded-lg">
           <div className="flex items-center justify-between">
             <div>
-              <h4 className="font-medium text-purple-800 dark:text-purple-200">3-Month Complete Program</h4>
-              <p className="text-sm text-purple-600 dark:text-purple-300">
-                Billed in advance: Day 1, End of Month 1, End of Month 2
+              <h4 className="font-medium text-purple-800 dark:text-purple-200 text-sm">3-Month Complete Program</h4>
+              <p className="text-xs text-purple-600 dark:text-purple-300">
+                Billed in advance: Day 1, Month 1, Month 2
               </p>
             </div>
-            <Badge className="bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-200">
+            <Badge className="bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-200 text-xs">
               €150/month
             </Badge>
           </div>
@@ -235,24 +235,21 @@ export default function SubscriptionBillingWidget({ user }: SubscriptionBillingW
                 <AlertTriangle className="h-4 w-4 text-red-600" />
                 <AlertDescription>
                   <div className="space-y-2">
-                    <p className="font-medium text-red-800 dark:text-red-200">
+                    <p className="font-medium text-red-800 dark:text-red-200 text-sm">
                       {billingStatus.overdueInvoices.length} overdue payment{billingStatus.overdueInvoices.length > 1 ? 's' : ''}
                     </p>
                     {billingStatus.overdueInvoices.map((invoice, index) => (
                       <div key={index} className="flex items-center justify-between bg-white dark:bg-gray-800 p-2 rounded">
                         <div className="flex items-center gap-2">
-                          <Clock className="w-4 h-4 text-red-500" />
-                          <span className="text-sm font-medium">
+                          <Clock className="w-3 h-3 text-red-500" />
+                          <span className="text-xs font-medium">
                             {getBillingCycleLabel(invoice.billingCycle)}
-                          </span>
-                          <span className="text-sm text-muted-foreground">
-                            Due: {formatDate(invoice.dueDate)}
                           </span>
                         </div>
                         <div className="flex items-center gap-2">
-                          <span className="font-medium">€{invoice.amount}</span>
-                          <Button size="sm" className="bg-red-600 hover:bg-red-700">
-                            Pay Now
+                          <span className="font-medium text-sm">€{invoice.amount}</span>
+                          <Button size="sm" className="bg-red-600 hover:bg-red-700 text-xs">
+                            Pay
                           </Button>
                         </div>
                       </div>
@@ -265,19 +262,16 @@ export default function SubscriptionBillingWidget({ user }: SubscriptionBillingW
             {/* Upcoming Invoices */}
             {billingStatus.upcomingInvoices.length > 0 && (
               <div className="space-y-2">
-                <h5 className="font-medium text-sm">Upcoming Billing</h5>
+                <h5 className="font-medium text-xs">Upcoming Billing</h5>
                 {billingStatus.upcomingInvoices.map((invoice, index) => (
-                  <div key={index} className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-800 rounded-lg">
+                  <div key={index} className="flex items-center justify-between p-2 bg-gray-50 dark:bg-gray-800 rounded-lg">
                     <div className="flex items-center gap-2">
-                      <Calendar className="w-4 h-4 text-blue-500" />
-                      <span className="text-sm font-medium">
+                      <Calendar className="w-3 h-3 text-blue-500" />
+                      <span className="text-xs font-medium">
                         {getBillingCycleLabel(invoice.billingCycle)}
                       </span>
-                      <span className="text-sm text-muted-foreground">
-                        Due: {formatDate(invoice.dueDate)}
-                      </span>
                     </div>
-                    <span className="font-medium">€{invoice.amount}</span>
+                    <span className="font-medium text-sm">€{invoice.amount}</span>
                   </div>
                 ))}
               </div>
@@ -289,15 +283,15 @@ export default function SubscriptionBillingWidget({ user }: SubscriptionBillingW
                 <CheckCircle className="h-4 w-4 text-green-600" />
                 <AlertDescription>
                   <div className="space-y-2">
-                    <p className="font-medium text-green-800 dark:text-green-200">
+                    <p className="font-medium text-green-800 dark:text-green-200 text-sm">
                       Monthly subscription active
                     </p>
-                    <p className="text-sm text-green-600 dark:text-green-300">
+                    <p className="text-xs text-green-600 dark:text-green-300">
                       Month {billingStatus.currentCycle || 1} of {billingStatus.maxCycles || 3}
                     </p>
                     {billingStatus.nextBillingDate && (
                       <p className="text-xs text-green-600 dark:text-green-400">
-                        Next billing: {new Date(billingStatus.nextBillingDate).toLocaleDateString()}
+                        Next: {new Date(billingStatus.nextBillingDate).toLocaleDateString()}
                       </p>
                     )}
                     <Button
@@ -307,7 +301,7 @@ export default function SubscriptionBillingWidget({ user }: SubscriptionBillingW
                       disabled={loading}
                       className="mt-2 text-xs"
                     >
-                      Cancel Subscription
+                      Cancel
                     </Button>
                   </div>
                 </AlertDescription>
@@ -345,25 +339,26 @@ export default function SubscriptionBillingWidget({ user }: SubscriptionBillingW
             )}
           </div>
         ) : (
-          <div className="text-center space-y-3">
-            <p className="text-sm text-muted-foreground">
-              Monthly subscription not yet set up
+          <div className="text-center space-y-1">
+            <p className="text-xs text-muted-foreground">
+              Subscription not set up
             </p>
             <Button 
               onClick={generateCompleteProgram}
               disabled={loading}
-              className="bg-purple-600 hover:bg-purple-700"
+              className="bg-purple-600 hover:bg-purple-700 text-xs h-6"
+              size="sm"
             >
-              {loading ? "Starting..." : "Start Monthly Subscription"}
+              {loading ? "Starting..." : "Start Billing"}
             </Button>
           </div>
         )}
 
-        {/* Program Details */}
-        <div className="pt-3 border-t">
-          <div className="grid grid-cols-2 gap-4 text-sm">
+        {/* Compact Program Details */}
+        <div className="pt-2 border-t">
+          <div className="grid grid-cols-2 gap-3 text-xs">
             <div>
-              <p className="text-muted-foreground">Program Start</p>
+              <p className="text-muted-foreground">Start</p>
               <p className="font-medium">
                 {user.programStartDate ? formatDate(
                   user.programStartDate.toDate ? user.programStartDate.toDate() : user.programStartDate
@@ -371,7 +366,7 @@ export default function SubscriptionBillingWidget({ user }: SubscriptionBillingW
               </p>
             </div>
             <div>
-              <p className="text-muted-foreground">Program End</p>
+              <p className="text-muted-foreground">End</p>
               <p className="font-medium">
                 {user.programEndDate ? formatDate(
                   user.programEndDate.toDate ? user.programEndDate.toDate() : user.programEndDate

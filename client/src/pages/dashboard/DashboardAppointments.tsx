@@ -632,8 +632,8 @@ export default function DashboardAppointments() {
 
   if (loading) {
     return (
-      <div className="min-h-screen py-20 bg-gray-50 dark:bg-gray-900">
-        <div className="container mx-auto px-4">
+      <div className="h-[calc(100vh-8rem)] bg-gray-50 dark:bg-gray-900">
+        <div className="container mx-auto px-6 py-4 h-full flex flex-col">
           <div className="grid gap-6">
             {[...Array(3)].map((_, i) => (
               <Card key={i} className="animate-pulse">
@@ -651,30 +651,23 @@ export default function DashboardAppointments() {
   }
 
   return (
-    <div className="min-h-screen py-20 bg-gradient-to-br from-background to-muted/30 country-texture relative overflow-hidden">
-      <div className="container mx-auto px-4 relative z-10">
-        {/* Back to Dashboard Navigation with organic design */}
-        <div className="mb-8 relative">
-          <Link href="/dashboard">
-            <Button variant="ghost" className="flex items-center gap-2 text-sm mediterranean-card floating-element">
-              <ArrowLeft className="w-4 h-4" />
-              Back to Dashboard
-            </Button>
-          </Link>
-          
-          {/* Page header with handwritten accent */}
-          <div className="text-center mt-8 mb-6">
-            <div className="doodle-arrow mb-4">
-              <h1 className="font-display text-3xl md:text-4xl mb-4 text-foreground handwritten-accent">
-                Your Appointments
-              </h1>
+    <div className="h-[calc(100vh-8rem)] bg-gradient-to-br from-background to-muted/30 country-texture relative overflow-hidden">
+      <div className="container mx-auto px-6 py-4 relative z-10 h-full flex flex-col">
+        {/* Compact Header with Back Navigation */}
+        <div className="flex items-center justify-between mb-4 flex-shrink-0">
+          <div className="flex items-center gap-4">
+            <Link href="/dashboard">
+              <Button variant="ghost" size="sm" className="flex items-center gap-2">
+                <ArrowLeft className="w-4 h-4" />
+                Back
+              </Button>
+            </Link>
+            <div>
+              <h1 className="text-xl font-bold text-foreground">Your Appointments</h1>
+              <p className="text-sm text-muted-foreground">
+                Schedule and manage your consultations
+              </p>
             </div>
-            <p className="serif-body text-xl text-muted-foreground max-w-2xl mx-auto leading-relaxed">
-              Schedule consultations and manage your wellness journey
-            </p>
-            
-            {/* Connecting doodle */}
-            <DoodleConnector direction="down" className="absolute -bottom-4 left-1/2 transform -translate-x-1/2 w-24" />
           </div>
         </div>
 
@@ -821,7 +814,9 @@ export default function DashboardAppointments() {
           </Card>
         )}
 
-        <div className="grid lg:grid-cols-2 gap-8 lg:items-stretch">
+        {/* Main Content Area - Flexible */}
+        <div className="flex-1 min-h-0">
+          <div className="grid lg:grid-cols-2 gap-6 h-full">
           {/* My Appointments Section */}
           <div className="flex flex-col h-full">
             <Card className="flex-1 flex flex-col h-full">
@@ -1180,6 +1175,7 @@ export default function DashboardAppointments() {
               </CardContent>
             </Card>
           </div>
+        </div>
         </div>
 
         {/* Pre-Evaluation Form Dialog */}

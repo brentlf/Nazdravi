@@ -112,7 +112,18 @@ export function Header() {
                   </Avatar>
                 </Button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent className="w-64 p-2" align="end" forceMount>
+              <DropdownMenuContent 
+                className="w-64 p-2" 
+                align="end" 
+                forceMount
+                style={{
+                  backgroundColor: 'hsl(var(--popover))',
+                  color: 'hsl(var(--popover-foreground))',
+                  borderColor: 'hsl(var(--border))',
+                  opacity: 1,
+                  backdropFilter: 'none'
+                }}
+              >
                 <div className="flex items-center justify-start gap-3 p-3">
                   <Avatar className="h-12 w-12">
                     <AvatarImage src={user.photoURL} alt={user.name} />

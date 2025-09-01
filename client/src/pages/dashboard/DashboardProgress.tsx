@@ -133,25 +133,23 @@ export default function DashboardProgress() {
   }
 
   return (
-    <div className="min-h-screen py-20 bg-gray-50 dark:bg-gray-900">
-      <div className="container mx-auto px-4">
-        {/* Back to Dashboard Navigation */}
-        <div className="mb-6">
-          <Link href="/dashboard">
-            <Button variant="ghost" className="flex items-center gap-2 text-sm">
-              <ArrowLeft className="w-4 h-4" />
-              Back to Dashboard
-            </Button>
-          </Link>
-        </div>
-
-        {/* Header */}
-        <div className="flex justify-between items-center mb-8">
-          <div>
-            <h1 className="text-3xl font-bold">Progress Tracking</h1>
-            <p className="text-muted-foreground">
-              Monitor your weight, hydration, and overall progress
-            </p>
+    <div className="h-[calc(100vh-8rem)] bg-gray-50 dark:bg-gray-900">
+      <div className="container mx-auto px-6 py-4 h-full flex flex-col">
+        {/* Compact Header with Back Navigation */}
+        <div className="flex items-center justify-between mb-4 flex-shrink-0">
+          <div className="flex items-center gap-4">
+            <Link href="/dashboard">
+              <Button variant="ghost" size="sm" className="flex items-center gap-2">
+                <ArrowLeft className="w-4 h-4" />
+                Back
+              </Button>
+            </Link>
+            <div>
+              <h1 className="text-xl font-bold">Progress Tracking</h1>
+              <p className="text-sm text-muted-foreground">
+                Monitor your weight, hydration, and progress
+              </p>
+            </div>
           </div>
           
           <Dialog open={isAddingProgress} onOpenChange={setIsAddingProgress}>
@@ -270,30 +268,30 @@ export default function DashboardProgress() {
           </Dialog>
         </div>
 
-        {/* Quick Stats */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+        {/* Compact Quick Stats */}
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-4 flex-shrink-0">
           <Card>
-            <CardContent className="p-6">
-              <div className="flex items-center justify-between mb-2">
-                <span className="text-sm font-medium text-muted-foreground">Current Weight</span>
-                <Scale className="w-4 h-4 text-muted-foreground" />
+            <CardContent className="p-3">
+              <div className="flex items-center justify-between mb-1">
+                <span className="text-xs font-medium text-muted-foreground">Current Weight</span>
+                <Scale className="w-3 h-3 text-muted-foreground" />
               </div>
-              <p className="text-2xl font-bold">
+              <p className="text-lg font-bold">
                 {latestEntry?.weightKg ? `${latestEntry.weightKg}kg` : 'No data'}
               </p>
-              <p className="text-xs text-muted-foreground">
-                {latestEntry?.date ? `Last updated: ${new Date(latestEntry.date).toLocaleDateString()}` : ''}
+              <p className="text-xs text-muted-foreground truncate">
+                {latestEntry?.date ? new Date(latestEntry.date).toLocaleDateString() : ''}
               </p>
             </CardContent>
           </Card>
 
           <Card>
-            <CardContent className="p-6">
-              <div className="flex items-center justify-between mb-2">
-                <span className="text-sm font-medium text-muted-foreground">Weight Change</span>
-                <TrendingDown className={`w-4 h-4 ${weightChange < 0 ? 'text-green-500' : 'text-gray-400'}`} />
+            <CardContent className="p-3">
+              <div className="flex items-center justify-between mb-1">
+                <span className="text-xs font-medium text-muted-foreground">Weight Change</span>
+                <TrendingDown className={`w-3 h-3 ${weightChange < 0 ? 'text-green-500' : 'text-gray-400'}`} />
               </div>
-              <p className={`text-2xl font-bold ${weightChange < 0 ? 'text-green-600' : 'text-gray-600'}`}>
+              <p className={`text-lg font-bold ${weightChange < 0 ? 'text-green-600' : 'text-gray-600'}`}>
                 {weightChange !== 0 ? `${weightChange > 0 ? '+' : ''}${weightChange.toFixed(1)}kg` : '0kg'}
               </p>
               <p className="text-xs text-muted-foreground">Total change</p>
@@ -301,12 +299,12 @@ export default function DashboardProgress() {
           </Card>
 
           <Card>
-            <CardContent className="p-6">
-              <div className="flex items-center justify-between mb-2">
-                <span className="text-sm font-medium text-muted-foreground">Avg Water This Month</span>
-                <Droplets className="w-4 h-4 text-blue-500" />
+            <CardContent className="p-3">
+              <div className="flex items-center justify-between mb-1">
+                <span className="text-xs font-medium text-muted-foreground">Avg Water</span>
+                <Droplets className="w-3 h-3 text-blue-500" />
               </div>
-              <p className="text-2xl font-bold text-blue-600">
+              <p className="text-lg font-bold text-blue-600">
                 {avgWaterThisMonth > 0 ? `${avgWaterThisMonth.toFixed(1)}L` : '0L'}
               </p>
               <p className="text-xs text-muted-foreground">
@@ -316,80 +314,45 @@ export default function DashboardProgress() {
           </Card>
 
           <Card>
-            <CardContent className="p-6">
-              <div className="flex items-center justify-between mb-2">
-                <span className="text-sm font-medium text-muted-foreground">Entries This Month</span>
-                <Calendar className="w-4 h-4 text-primary-500" />
+            <CardContent className="p-3">
+              <div className="flex items-center justify-between mb-1">
+                <span className="text-xs font-medium text-muted-foreground">This Month</span>
+                <Calendar className="w-3 h-3 text-primary-500" />
               </div>
-              <p className="text-2xl font-bold text-primary-600">
+              <p className="text-lg font-bold text-primary-600">
                 {entriesThisMonth.length}
               </p>
               <p className="text-xs text-muted-foreground">
-                Keep it up!
+                Entries
               </p>
             </CardContent>
           </Card>
         </div>
 
-        {/* Progress Charts */}
-        {progressEntries && progressEntries.length > 0 ? (
-          <ProgressChart progressData={progressEntries} />
-        ) : (
-          <Card>
-            <CardContent className="p-12 text-center">
-              <Scale className="w-16 h-16 text-muted-foreground mx-auto mb-4" />
-              <h3 className="text-lg font-semibold mb-2">Start tracking your progress</h3>
-              <p className="text-muted-foreground mb-6">
-                Log your first entry to see your progress charts and trends
-              </p>
-              <Button onClick={() => setIsAddingProgress(true)} className="bg-primary-500 hover:bg-primary-600">
-                <Plus className="w-4 h-4 mr-2" />
-                Log Your First Entry
-              </Button>
-            </CardContent>
-          </Card>
-        )}
+        {/* Main Content Area - Flexible */}
+        <div className="flex-1 min-h-0">
+          {progressEntries && progressEntries.length > 0 ? (
+            <div className="h-full">
+              <ProgressChart progressData={progressEntries} />
+            </div>
+          ) : (
+            <Card className="h-full flex items-center justify-center">
+              <CardContent className="text-center">
+                <Scale className="w-12 h-12 text-muted-foreground mx-auto mb-3" />
+                <h3 className="text-base font-semibold mb-2">Start tracking your progress</h3>
+                <p className="text-sm text-muted-foreground mb-4">
+                  Log your first entry to see charts and trends
+                </p>
+                <Button onClick={() => setIsAddingProgress(true)} className="bg-primary-500 hover:bg-primary-600">
+                  <Plus className="w-4 h-4 mr-2" />
+                  Log Your First Entry
+                </Button>
+              </CardContent>
+            </Card>
+          )}
+        </div>
 
-        {/* Recent Entries */}
-        {progressEntries && progressEntries.length > 0 && (
-          <Card className="mt-8">
-            <CardHeader>
-              <CardTitle>Recent Entries</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-4">
-                {progressEntries.slice(0, 10).map((entry) => (
-                  <div key={entry.id} className="flex items-center justify-between p-4 bg-gray-50 dark:bg-gray-800 rounded-lg">
-                    <div className="flex items-center space-x-4">
-                      <div className="text-sm font-medium">
-                        {new Date(entry.date).toLocaleDateString()}
-                      </div>
-                      <div className="flex gap-4">
-                        {entry.weightKg && (
-                          <Badge variant="outline" className="flex items-center gap-1">
-                            <Scale className="w-3 h-3" />
-                            {entry.weightKg}kg
-                          </Badge>
-                        )}
-                        {entry.waterLitres && (
-                          <Badge variant="outline" className="flex items-center gap-1">
-                            <Droplets className="w-3 h-3 text-blue-500" />
-                            {entry.waterLitres}L
-                          </Badge>
-                        )}
-                      </div>
-                    </div>
-                    {entry.notes && (
-                      <p className="text-sm text-muted-foreground max-w-xs truncate">
-                        {entry.notes}
-                      </p>
-                    )}
-                  </div>
-                ))}
-              </div>
-            </CardContent>
-          </Card>
-        )}
+
       </div>
     </div>
   );

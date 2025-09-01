@@ -325,7 +325,7 @@ export default function AdminUsers() {
                               <MoreHorizontal className="h-4 w-4" />
                             </Button>
                           </DropdownMenuTrigger>
-                          <DropdownMenuContent align="end">
+                          <DropdownMenuContent align="end" className="!bg-white border-2">
                             <DropdownMenuItem asChild>
                               <Link href={`/admin/users/${user.uid}`} className="flex w-full">
                                 <Edit className="w-4 h-4 mr-2" />

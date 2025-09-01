@@ -74,101 +74,101 @@ export default function DashboardInvoices() {
   const totalPending = pendingInvoices.reduce((sum, invoice) => sum + (invoice.amount || 0), 0);
 
   return (
-    <div className="min-h-screen py-20 bg-gray-50 dark:bg-gray-900">
-      <div className="container mx-auto px-4">
-        {/* Back to Dashboard */}
-        <div className="mb-6">
-          <Link href="/dashboard">
-            <Button variant="ghost" className="mb-4">
-              <ArrowLeft className="w-4 h-4 mr-2" />
-              Back to Dashboard
-            </Button>
-          </Link>
+    <div className="h-[calc(100vh-8rem)] bg-gray-50 dark:bg-gray-900">
+      <div className="container mx-auto px-6 py-4 h-full flex flex-col">
+        {/* Compact Header with Back Navigation */}
+        <div className="flex items-center justify-between mb-4 flex-shrink-0">
+          <div className="flex items-center gap-4">
+            <Link href="/dashboard">
+              <Button variant="ghost" size="sm">
+                <ArrowLeft className="w-4 h-4 mr-2" />
+                Back
+              </Button>
+            </Link>
+            <div>
+              <h1 className="text-xl font-bold text-gray-900 dark:text-gray-100">My Invoices</h1>
+              <p className="text-sm text-gray-600 dark:text-gray-400">View and pay your consultation invoices</p>
+            </div>
+          </div>
         </div>
 
-        {/* Header */}
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100">My Invoices</h1>
-          <p className="text-gray-600 dark:text-gray-400">View and pay your consultation invoices</p>
-        </div>
-
-        {/* Summary Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+        {/* Compact Summary Cards */}
+        <div className="grid grid-cols-3 gap-3 mb-4 flex-shrink-0">
           <Card>
-            <CardContent className="p-6">
+            <CardContent className="p-3">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm font-medium text-muted-foreground">Total Invoices</p>
-                  <p className="text-2xl font-bold">{invoices?.length || 0}</p>
+                  <p className="text-xs font-medium text-muted-foreground">Total</p>
+                  <p className="text-lg font-bold">{invoices?.length || 0}</p>
                 </div>
-                <Receipt className="w-8 h-8 text-blue-500" />
+                <Receipt className="w-5 h-5 text-blue-500" />
               </div>
             </CardContent>
           </Card>
 
           <Card>
-            <CardContent className="p-6">
+            <CardContent className="p-3">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm font-medium text-muted-foreground">Pending Payment</p>
-                  <p className="text-2xl font-bold">{pendingInvoices.length}</p>
+                  <p className="text-xs font-medium text-muted-foreground">Pending</p>
+                  <p className="text-lg font-bold">{pendingInvoices.length}</p>
                 </div>
-                <CreditCard className="w-8 h-8 text-orange-500" />
+                <CreditCard className="w-5 h-5 text-orange-500" />
               </div>
             </CardContent>
           </Card>
 
           <Card>
-            <CardContent className="p-6">
+            <CardContent className="p-3">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm font-medium text-muted-foreground">Amount Due</p>
-                  <p className="text-2xl font-bold">€{totalPending.toFixed(2)}</p>
+                  <p className="text-xs font-medium text-muted-foreground">Amount Due</p>
+                  <p className="text-lg font-bold">€{totalPending.toFixed(2)}</p>
                 </div>
-                <CreditCard className="w-8 h-8 text-red-500" />
+                <CreditCard className="w-5 h-5 text-red-500" />
               </div>
             </CardContent>
           </Card>
         </div>
 
-        {/* Invoices List */}
-        <Card>
-          <CardHeader>
-            <CardTitle>Invoice History</CardTitle>
+        {/* Main Content - Invoice List */}
+        <Card className="flex-1 min-h-0">
+          <CardHeader className="pb-3">
+            <CardTitle className="text-base">Invoice History</CardTitle>
           </CardHeader>
-          <CardContent className="h-96">
+          <CardContent className="flex-1 p-3">
             {!invoices || invoices.length === 0 ? (
               <div className="flex items-center justify-center h-full text-center">
                 <div>
-                  <Receipt className="w-12 h-12 text-gray-400 mx-auto mb-4" />
-                  <h3 className="text-lg font-medium text-gray-900 dark:text-gray-100 mb-2">
+                  <Receipt className="w-10 h-10 text-gray-400 mx-auto mb-3" />
+                  <h3 className="text-base font-medium text-gray-900 dark:text-gray-100 mb-2">
                     No invoices yet
                   </h3>
-                  <p className="text-gray-600 dark:text-gray-400">
-                    Your consultation invoices will appear here after your sessions
+                  <p className="text-sm text-gray-600 dark:text-gray-400">
+                    Your consultation invoices will appear here
                   </p>
                 </div>
               </div>
             ) : (
-              <div className="h-full overflow-y-auto space-y-4 pr-2">
+              <div className="h-full overflow-y-auto space-y-2">
                 {invoices.map((invoice) => (
                   <div 
                     key={invoice.id}
-                    className="flex items-center justify-between p-4 border rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
+                    className="flex items-center justify-between p-3 border rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
                   >
                     <div className="flex-1">
                       <div className="flex items-center gap-4">
                         <div>
-                          <p className="font-medium text-gray-900 dark:text-gray-100">
+                          <p className="text-sm font-medium text-gray-900 dark:text-gray-100">
                             {invoice.invoiceNumber}
                           </p>
-                          <p className="text-sm text-gray-600 dark:text-gray-400">
+                          <p className="text-xs text-gray-600 dark:text-gray-400 truncate">
                             {invoice.description}
                           </p>
-                          <div className="flex items-center gap-2 mt-1">
-                            <Calendar className="w-4 h-4 text-gray-400" />
-                            <span className="text-sm text-gray-500">
-                              Session: {invoice.sessionDate ? new Date(invoice.sessionDate).toLocaleDateString() : 'N/A'}
+                          <div className="flex items-center gap-1 mt-0.5">
+                            <Calendar className="w-3 h-3 text-gray-400" />
+                            <span className="text-xs text-gray-500">
+                              {invoice.sessionDate ? new Date(invoice.sessionDate).toLocaleDateString() : 'N/A'}
                             </span>
                           </div>
                         </div>
@@ -177,8 +177,8 @@ export default function DashboardInvoices() {
 
                     <div className="flex items-center gap-4">
                       <div className="text-right">
-                        <p className="font-bold text-lg">€{(invoice.amount || 0).toFixed(2)}</p>
-                        <p className="text-sm text-gray-500">
+                        <p className="font-bold text-base">€{(invoice.amount || 0).toFixed(2)}</p>
+                        <p className="text-xs text-gray-500">
                           Due: {invoice.dueDate ? new Date(invoice.dueDate).toLocaleDateString() : 'N/A'}
                         </p>
                       </div>
