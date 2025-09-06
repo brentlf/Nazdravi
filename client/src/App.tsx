@@ -9,7 +9,6 @@ import { LanguageProvider } from "@/contexts/LanguageContext";
 import { Header } from "@/components/common/Header";
 import { Footer } from "@/components/common/Footer";
 import { RouteGuard } from "@/components/common/RouteGuard";
-import { PageTransition } from "@/components/ui/PageTransition";
 import { ErrorBoundary } from "@/components/ui/ErrorBoundary";
 import NotFound from "@/pages/not-found";
 
@@ -19,7 +18,6 @@ import About from "@/pages/About";
 import Services from "@/pages/Services";
 import Blog from "@/pages/Blog";
 import BlogPost from "@/pages/BlogPost";
-import Resources from "@/pages/Resources";
 import Login from "@/pages/Login";
 import Register from "@/pages/Register";
 import Appointment from "@/pages/Appointment";
@@ -64,7 +62,7 @@ function Layout({ children }: { children: React.ReactNode }) {
   const isHomePage = location === "/";
   
   return (
-    <div className="min-h-screen relative bg-background text-foreground">
+    <div className={`min-h-[100svh] relative bg-background text-foreground ${!isHomePage ? "pb-[calc(env(safe-area-inset-bottom)+120px)]" : ""} px-safe`}>
       <Header />
       <main className="relative">
         {children}

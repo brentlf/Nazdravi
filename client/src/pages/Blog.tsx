@@ -135,8 +135,8 @@ export default function Blog() {
 
   if (loading) {
     return (
-      <div className="min-h-screen pt-16 pb-20">
-        <div className="container mx-auto px-6 py-8">
+      <div className="min-h-screen pt-16 pb-safe">
+        <div className="container mx-auto px-4 sm:px-6 px-safe py-8">
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
             {[...Array(6)].map((_, i) => (
               <Card key={i} className="animate-pulse border border-border">
@@ -155,9 +155,9 @@ export default function Blog() {
   }
 
   return (
-    <div className="min-h-screen pt-16 pb-20">
+    <div className="min-h-screen pt-16 pb-safe">
       {/* Main content section */}
-      <section className="px-4 py-8">
+      <section className="px-4 sm:px-6 px-safe py-8">
         <div className="max-w-7xl mx-auto w-full">
           {/* Header Section */}
           <div className="text-center mb-8">

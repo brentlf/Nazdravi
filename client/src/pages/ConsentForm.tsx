@@ -94,12 +94,20 @@ export default function ConsentForm() {
   const isOtherLocation = watchedLocation === "other";
 
   const onSubmit = async (data: ConsentFormData) => {
+    if (!user?.uid) {
+      toast({
+        title: "Please sign in",
+        description: "You need to be signed in to submit the consent form.",
+        variant: "destructive",
+      });
+      return;
+    }
     try {
       // Save consent data to Firebase for compliance
       await saveConsent({
         ...data,
-        userId: user?.uid || 'anonymous',
-        userEmail: user?.email || 'anonymous',
+        userId: user.uid,
+        userEmail: user.email || 'anonymous',
         submittedAt: new Date(),
         ipAddress: 'recorded', // You could capture actual IP if needed
         consentVersion: '1.0',
@@ -164,20 +172,20 @@ export default function ConsentForm() {
   // Show success screen after submission
   if (isSubmitted) {
     return (
-      <div className="min-h-screen py-20 bg-gray-50 dark:bg-gray-900">
+      <div className="min-h-screen py-20 bg-background">
         <div className="container mx-auto px-4 max-w-3xl">
-          <div className="text-center p-8 bg-green-50 dark:bg-green-900/20 rounded-2xl border border-green-200 dark:border-green-800">
+          <div className="text-center p-8 bg-success/10 rounded-2xl border border-success/30">
             <div className="w-16 h-16 bg-green-500 rounded-full flex items-center justify-center mx-auto mb-4">
               <Check className="h-8 w-8 text-white" />
             </div>
-            <h3 className="text-2xl font-bold text-green-800 dark:text-green-200 mb-4">
+            <h3 className="text-2xl font-bold text-foreground mb-4">
               {t("success-title", "consent")}
             </h3>
-            <p className="text-green-600 dark:text-green-300 mb-6 max-w-lg mx-auto">
+            <p className="text-muted-foreground mb-6 max-w-lg mx-auto">
               {t("success-description", "consent")}
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button asChild className="bg-[#A5CBA4] hover:bg-[#95bb94] text-white">
+              <Button asChild className="bg-brand text-brand-foreground hover:brightness-110">
                 <a href="/appointment">
                   <Shield className="w-4 h-4 mr-2" />
                   {t("book-consultation", "consent")}
@@ -195,8 +203,22 @@ export default function ConsentForm() {
     );
   }
 
+  if (!user) {
+    return (
+      <div className="min-h-screen py-20 bg-background">
+        <div className="container mx-auto px-4 max-w-3xl text-center">
+          <h1 className="text-3xl font-bold mb-4">Sign in required</h1>
+          <p className="text-muted-foreground mb-6">Please sign in to complete the consent form.</p>
+          <Button asChild className="bg-brand text-brand-foreground hover:brightness-110">
+            <a href="/login">Go to Login</a>
+          </Button>
+        </div>
+      </div>
+    );
+  }
+
   return (
-    <div className="min-h-screen py-20 bg-gray-50 dark:bg-gray-900">
+    <div className="min-h-screen py-20 bg-background">
       <div className="container mx-auto px-4 max-w-3xl">
         {/* Header */}
         <div className="text-center mb-8">
@@ -215,7 +237,7 @@ export default function ConsentForm() {
                 <Card>
                   <CardHeader>
                     <CardTitle className="flex items-center gap-2">
-                      <Globe className="w-5 h-5 text-[#A5CBA4]" />
+                      <Globe className="w-5 h-5 text-brand" />
                       Service Language & Location
                     </CardTitle>
                   </CardHeader>
@@ -294,7 +316,7 @@ export default function ConsentForm() {
                 <Card>
                   <CardHeader>
                     <CardTitle className="flex items-center gap-2">
-                      <Shield className="w-5 h-5 text-[#A5CBA4]" />
+                      <Shield className="w-5 h-5 text-brand" />
                       Required Consents
                     </CardTitle>
                   </CardHeader>
@@ -435,8 +457,8 @@ export default function ConsentForm() {
                 <div className="flex justify-end">
                   <Button 
                     type="submit"
-                    disabled={loading}
-                    className="bg-[#A5CBA4] hover:bg-[#95bb94] text-white"
+                    disabled={loading || !user}
+                    className="bg-brand text-brand-foreground hover:brightness-110"
                   >
                     {loading ? "Submitting..." : "Complete & Proceed to Booking"}
                   </Button>

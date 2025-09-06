@@ -51,7 +51,7 @@ export function Header() {
         ? "absolute top-0 left-0 right-0 z-50 border-white/20 bg-transparent text-white" 
         : "sticky top-0 z-50 border-border/40 bg-background/80 backdrop-blur-xl supports-[backdrop-filter]:bg-background/60 text-foreground"
     } w-full border-b transition-all duration-300`}>
-      <div className="container mx-auto flex h-20 items-center justify-between px-6">
+      <div className="container mx-auto flex h-20 items-center justify-between px-4 sm:px-6 px-safe">
         {/* Logo */}
         <Link href="/">
           <div className="flex items-center space-x-3 cursor-pointer group">
@@ -97,8 +97,8 @@ export function Header() {
         </nav>
 
         {/* Right side controls */}
-        <div className="flex items-center space-x-4">
-          <ThemeToggle />
+        <div className="flex items-center space-x-4 pr-safe">
+          <ThemeToggle className="tap-target" />
 
           {/* User menu or auth buttons */}
           {user ? (
@@ -203,7 +203,7 @@ export function Header() {
               <Button
                 variant="ghost"
                 size="icon"
-                className={`lg:hidden h-10 w-10 ${
+                className={`lg:hidden h-11 w-11 tap-target-lg ${
                   isOverlayHeader ? "text-white hover:bg-white/20" : ""
                 }`}
                 onClick={() => setIsOpen(true)}
@@ -212,7 +212,7 @@ export function Header() {
                 <span className="sr-only">Toggle menu</span>
               </Button>
             </SheetTrigger>
-            <SheetContent side="right" className="w-[300px] sm:w-[400px]">
+            <SheetContent side="right" className="w-[82vw] max-w-[400px] px-safe pb-safe">
               <div className="flex flex-col h-full">
                 <div className="flex items-center justify-between mb-8">
                   <div className="flex items-center space-x-3">
@@ -225,7 +225,7 @@ export function Header() {
                     variant="ghost"
                     size="icon"
                     onClick={() => setIsOpen(false)}
-                    className="h-8 w-8"
+                    className="h-10 w-10 tap-target"
                   >
                     <X className="h-4 w-4" />
                   </Button>
@@ -237,7 +237,7 @@ export function Header() {
                       key={item.href}
                       href={item.href}
                       onClick={() => setIsOpen(false)}
-                      className={`block px-4 py-3 rounded-lg text-base font-medium transition-colors ${
+                      className={`block px-4 py-4 rounded-lg text-lg font-medium transition-colors tap-target ${
                         isActive(item.href)
                           ? "bg-primary text-primary-foreground"
                           : "text-muted-foreground hover:text-foreground hover:bg-muted/80"
@@ -251,12 +251,12 @@ export function Header() {
                 {!user && (
                   <div className="pt-6 border-t border-border/40 space-y-3">
                     <Link href="/login" onClick={() => setIsOpen(false)}>
-                      <Button variant="outline" className="w-full justify-center">
+                      <Button variant="outline" className="w-full justify-center tap-target">
                         Sign In
                       </Button>
                     </Link>
                     <Link href="/register" onClick={() => setIsOpen(false)}>
-                      <Button className="w-full justify-center shadow-soft">
+                      <Button className="w-full justify-center shadow-soft tap-target">
                         Get Started
                       </Button>
                     </Link>

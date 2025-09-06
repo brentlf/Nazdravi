@@ -144,9 +144,9 @@ export default function Services() {
   ];
 
   return (
-    <div className="min-h-screen pt-16 pb-20">
+    <div className="min-h-screen pt-16 pb-safe">
       {/* Main content section */}
-      <section className="px-4 py-8">
+      <section className="px-4 sm:px-6 px-safe py-8">
         <div className="max-w-7xl mx-auto w-full">
           {/* Header Section */}
           <div className="text-center mb-8">

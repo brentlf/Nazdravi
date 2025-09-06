@@ -59,7 +59,7 @@ export default function DashboardInvoices() {
 
   if (loading) {
     return (
-      <div className="min-h-screen py-20 bg-gray-50 dark:bg-gray-900">
+      <div className="min-h-screen py-20 bg-background">
         <div className="container mx-auto px-4">
           <div className="animate-pulse space-y-4">
             <div className="h-8 bg-gray-200 rounded w-1/4"></div>
@@ -74,7 +74,7 @@ export default function DashboardInvoices() {
   const totalPending = pendingInvoices.reduce((sum, invoice) => sum + (invoice.amount || 0), 0);
 
   return (
-    <div className="h-[calc(100vh-8rem)] bg-gray-50 dark:bg-gray-900">
+    <div className="h-[calc(100vh-8rem)] bg-background">
       <div className="container mx-auto px-6 py-4 h-full flex flex-col">
         {/* Compact Header with Back Navigation */}
         <div className="flex items-center justify-between mb-4 flex-shrink-0">
@@ -86,14 +86,14 @@ export default function DashboardInvoices() {
               </Button>
             </Link>
             <div>
-              <h1 className="text-xl font-bold text-gray-900 dark:text-gray-100">My Invoices</h1>
-              <p className="text-sm text-gray-600 dark:text-gray-400">View and pay your consultation invoices</p>
+              <h1 className="text-xl font-bold text-foreground">My Invoices</h1>
+              <p className="text-sm text-muted-foreground">View and pay your consultation invoices</p>
             </div>
           </div>
         </div>
 
         {/* Compact Summary Cards */}
-        <div className="grid grid-cols-3 gap-3 mb-4 flex-shrink-0">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 mb-4 flex-shrink-0">
           <Card>
             <CardContent className="p-3">
               <div className="flex items-center justify-between">
@@ -101,7 +101,7 @@ export default function DashboardInvoices() {
                   <p className="text-xs font-medium text-muted-foreground">Total</p>
                   <p className="text-lg font-bold">{invoices?.length || 0}</p>
                 </div>
-                <Receipt className="w-5 h-5 text-blue-500" />
+                <Receipt className="w-5 h-5 text-info" />
               </div>
             </CardContent>
           </Card>
@@ -113,7 +113,7 @@ export default function DashboardInvoices() {
                   <p className="text-xs font-medium text-muted-foreground">Pending</p>
                   <p className="text-lg font-bold">{pendingInvoices.length}</p>
                 </div>
-                <CreditCard className="w-5 h-5 text-orange-500" />
+                <CreditCard className="w-5 h-5 text-warning" />
               </div>
             </CardContent>
           </Card>
@@ -125,7 +125,7 @@ export default function DashboardInvoices() {
                   <p className="text-xs font-medium text-muted-foreground">Amount Due</p>
                   <p className="text-lg font-bold">€{totalPending.toFixed(2)}</p>
                 </div>
-                <CreditCard className="w-5 h-5 text-red-500" />
+                <CreditCard className="w-5 h-5 text-destructive" />
               </div>
             </CardContent>
           </Card>
@@ -140,11 +140,11 @@ export default function DashboardInvoices() {
             {!invoices || invoices.length === 0 ? (
               <div className="flex items-center justify-center h-full text-center">
                 <div>
-                  <Receipt className="w-10 h-10 text-gray-400 mx-auto mb-3" />
-                  <h3 className="text-base font-medium text-gray-900 dark:text-gray-100 mb-2">
+                  <Receipt className="w-10 h-10 text-muted-foreground mx-auto mb-3" />
+                  <h3 className="text-base font-medium text-foreground mb-2">
                     No invoices yet
                   </h3>
-                  <p className="text-sm text-gray-600 dark:text-gray-400">
+                  <p className="text-sm text-muted-foreground">
                     Your consultation invoices will appear here
                   </p>
                 </div>
@@ -154,20 +154,20 @@ export default function DashboardInvoices() {
                 {invoices.map((invoice) => (
                   <div 
                     key={invoice.id}
-                    className="flex items-center justify-between p-3 border rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
+                    className="flex items-center justify-between p-3 border rounded-lg hover:bg-muted/50 transition-colors"
                   >
                     <div className="flex-1">
                       <div className="flex items-center gap-4">
                         <div>
-                          <p className="text-sm font-medium text-gray-900 dark:text-gray-100">
+                          <p className="text-sm font-medium text-foreground">
                             {invoice.invoiceNumber}
                           </p>
-                          <p className="text-xs text-gray-600 dark:text-gray-400 truncate">
+                          <p className="text-xs text-muted-foreground truncate">
                             {invoice.description}
                           </p>
                           <div className="flex items-center gap-1 mt-0.5">
-                            <Calendar className="w-3 h-3 text-gray-400" />
-                            <span className="text-xs text-gray-500">
+                            <Calendar className="w-3 h-3 text-muted-foreground" />
+                            <span className="text-xs text-muted-foreground">
                               {invoice.sessionDate ? new Date(invoice.sessionDate).toLocaleDateString() : 'N/A'}
                             </span>
                           </div>
@@ -178,7 +178,7 @@ export default function DashboardInvoices() {
                     <div className="flex items-center gap-4">
                       <div className="text-right">
                         <p className="font-bold text-base">€{(invoice.amount || 0).toFixed(2)}</p>
-                        <p className="text-xs text-gray-500">
+                        <p className="text-xs text-muted-foreground">
                           Due: {invoice.dueDate ? new Date(invoice.dueDate).toLocaleDateString() : 'N/A'}
                         </p>
                       </div>
@@ -190,7 +190,7 @@ export default function DashboardInvoices() {
                           <Button 
                             onClick={() => handlePayInvoice(invoice)}
                             size="sm"
-                            className="bg-green-600 hover:bg-green-700 text-white font-medium shadow-sm"
+                            className="bg-success hover:brightness-110 text-primary-foreground font-medium shadow-sm"
                             disabled={!invoice.paymentUrl}
                           >
                             <CreditCard className="w-4 h-4 mr-2" />

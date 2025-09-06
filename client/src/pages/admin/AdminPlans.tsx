@@ -88,13 +88,13 @@ export default function AdminPlans() {
 
   if (loading) {
     return (
-      <div className="min-h-screen py-20 bg-gray-50 dark:bg-gray-900">
+      <div className="min-h-screen py-20 bg-background">
         <div className="container mx-auto px-4">
           <Card>
             <CardContent className="p-8">
               <div className="animate-pulse space-y-4">
                 {[...Array(5)].map((_, i) => (
-                  <div key={i} className="h-16 bg-gray-200 dark:bg-gray-700 rounded"></div>
+                  <div key={i} className="h-16 bg-muted rounded"></div>
                 ))}
               </div>
             </CardContent>
@@ -105,7 +105,7 @@ export default function AdminPlans() {
   }
 
   return (
-    <div className="min-h-screen py-20 bg-gray-50 dark:bg-gray-900">
+    <div className="min-h-screen py-20 bg-background">
       <div className="container mx-auto px-4">
         {/* Header with Back Navigation */}
         <div className="mb-8">
@@ -137,7 +137,7 @@ export default function AdminPlans() {
               </div>
 
               {/* Upload Button */}
-              <Button className="bg-[#A5CBA4] hover:bg-[#95bb94] text-white">
+              <Button className="bg-brand text-brand-foreground hover:brightness-110">
                 <Upload className="w-4 h-4 mr-2" />
                 Upload New Plan
               </Button>
@@ -173,7 +173,7 @@ export default function AdminPlans() {
                     <TableRow key={plan.id}>
                       <TableCell>
                         <div className="flex items-center space-x-2">
-                          <FileText className="w-4 h-4 text-blue-500" />
+                          <FileText className="w-4 h-4 text-info" />
                           <span className="font-medium">{plan.title}</span>
                         </div>
                       </TableCell>
@@ -256,7 +256,7 @@ export default function AdminPlans() {
                                 </Button>
                                 <Button
                                   onClick={() => selectedPlan && handleDownloadPlan(selectedPlan)}
-                                  className="bg-blue-600 hover:bg-blue-700"
+                                  className="bg-brand text-brand-foreground hover:brightness-110"
                                 >
                                   <Download className="w-4 h-4 mr-2" />
                                   Download Plan
@@ -284,7 +284,7 @@ export default function AdminPlans() {
                 <p className="text-muted-foreground mb-4">
                   {searchTerm ? "No plans match your search criteria." : "Upload your first nutrition plan to get started."}
                 </p>
-                <Button className="bg-[#A5CBA4] hover:bg-[#95bb94] text-white">
+                <Button className="bg-brand text-brand-foreground hover:brightness-110">
                   <Upload className="w-4 h-4 mr-2" />
                   Upload Plan
                 </Button>

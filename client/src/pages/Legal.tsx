@@ -4,11 +4,11 @@ import { Shield, Scale, Globe, FileText, AlertCircle } from "lucide-react";
 
 export default function Legal() {
   return (
-    <div className="min-h-screen py-20 bg-gray-50 dark:bg-gray-900">
+    <div className="min-h-screen py-20 bg-background">
       <div className="container mx-auto px-4 max-w-4xl">
         {/* Header */}
         <div className="text-center mb-12">
-          <h1 className="text-4xl font-bold mb-4 text-gray-900 dark:text-white">
+          <h1 className="text-4xl font-bold mb-4 text-foreground">
             Legal Information
           </h1>
           <p className="text-lg text-muted-foreground">
@@ -17,8 +17,8 @@ export default function Legal() {
         </div>
 
         {/* Language Notice */}
-        <Alert className="mb-8 border-[#A5CBA4] bg-green-50 dark:bg-green-900/20">
-          <Globe className="h-4 w-4 text-[#A5CBA4]" />
+        <Alert className="mb-8 border-brand/30 bg-success/10 dark:bg-success/15">
+          <Globe className="h-4 w-4 text-brand" />
           <AlertDescription className="text-sm">
             <strong>Language Services:</strong> Our nutrition consultations are provided exclusively in English (primary) and Czech (upon request). 
             We confirm that care can only be provided in languages where comprehensive understanding is ensured for patient safety and treatment effectiveness.
@@ -30,7 +30,7 @@ export default function Legal() {
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
-                <Shield className="w-5 h-5 text-[#A5CBA4]" />
+                <Shield className="w-5 h-5 text-brand" />
                 Practice Information
               </CardTitle>
             </CardHeader>
@@ -61,7 +61,7 @@ export default function Legal() {
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
-                <FileText className="w-5 h-5 text-[#A5CBA4]" />
+                <FileText className="w-5 h-5 text-brand" />
                 Service Scope & Eligibility
               </CardTitle>
             </CardHeader>
@@ -125,7 +125,7 @@ export default function Legal() {
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
-                <Scale className="w-5 h-5 text-[#A5CBA4]" />
+                <Scale className="w-5 h-5 text-brand" />
                 Complaints & Dispute Resolution
               </CardTitle>
             </CardHeader>
@@ -136,14 +136,14 @@ export default function Legal() {
                   If you have concerns about our service, please contact our complaints officer:
                 </p>
                 <p className="text-sm font-medium">
-                  Email: <a href="mailto:[COMPLAINTS_EMAIL]" className="text-[#A5CBA4] hover:underline">[COMPLAINTS_EMAIL]</a>
+                  Email: <a href="mailto:[COMPLAINTS_EMAIL]" className="text-link hover:underline">[COMPLAINTS_EMAIL]</a>
                 </p>
               </div>
               
               <div>
                 <h3 className="font-semibold mb-2">External Dispute Resolution</h3>
                 <div className="text-sm space-y-1">
-                  <p><strong>Netherlands:</strong> Dutch Healthcare Disputes Committee - <a href="[DISPUTES_COMMITTEE_URL]" className="text-[#A5CBA4] hover:underline">[DISPUTES_COMMITTEE_URL]</a></p>
+                  <p><strong>Netherlands:</strong> Dutch Healthcare Disputes Committee - <a href="[DISPUTES_COMMITTEE_URL]" className="text-link hover:underline">[DISPUTES_COMMITTEE_URL]</a></p>
                   <p><strong>Czech Clients:</strong> Czech Trade Inspection Authority (ČOI) for consumer disputes</p>
                   <p><strong>Final Resolution:</strong> Dutch courts have jurisdiction for legal disputes</p>
                 </div>
@@ -164,7 +164,7 @@ export default function Legal() {
               </p>
               <a 
                 href="/legal/czech-summary" 
-                className="inline-flex items-center text-[#A5CBA4] hover:underline font-medium"
+                className="inline-flex items-center text-link hover:underline font-medium"
               >
                 View Czech Legal Summary (Právní souhrn v češtině) →
               </a>
@@ -177,8 +177,8 @@ export default function Legal() {
           <p>© 2024 Nazdravi. All rights reserved.</p>
           <p className="mt-2">
             For complete terms and conditions, privacy policy, and detailed legal information, 
-            please see our <a href="/terms" className="text-[#A5CBA4] hover:underline">Terms & Conditions</a> and 
-            <a href="/privacy" className="text-[#A5CBA4] hover:underline ml-1">Privacy Policy</a>.
+            please see our <a href="/terms" className="text-link hover:underline">Terms & Conditions</a> and 
+            <a href="/privacy" className="text-link hover:underline ml-1">Privacy Policy</a>.
           </p>
         </div>
       </div>

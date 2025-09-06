@@ -265,11 +265,11 @@ export default function AdminBlog() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-purple-50 to-pink-50 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900">
+    <div className="min-h-screen bg-background">
       <div className="container mx-auto px-3 py-4">
         {/* Header with Back Navigation */}
         <div className="mb-4">
-          <Button variant="ghost" size="sm" className="mb-3 hover:bg-white/50" asChild>
+          <Button variant="ghost" size="sm" className="mb-3 hover:bg-muted/60" asChild>
             <Link href="/admin">
               <ArrowLeft className="mr-2 h-4 w-4" />
               Back to Admin Dashboard
@@ -277,16 +277,14 @@ export default function AdminBlog() {
           </Button>
           <div className="flex items-center justify-between">
             <div>
-              <h1 className="text-3xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent mb-1">
-                Blog Management
-              </h1>
+              <h1 className="text-3xl font-bold text-foreground mb-1">Blog Management</h1>
               <p className="text-slate-600 dark:text-slate-400 text-base">
                 Create and manage blog posts with image uploads
               </p>
             </div>
             <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
               <DialogTrigger asChild>
-                <Button size="sm" className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 shadow-lg" onClick={openNewPostDialog}>
+                <Button size="sm" className="bg-brand text-brand-foreground hover:brightness-110 shadow-lg" onClick={openNewPostDialog}>
                   <Plus className="w-5 h-5 mr-2" />
                   New Blog Post
                 </Button>
@@ -534,67 +532,67 @@ export default function AdminBlog() {
 
         {/* Statistics Cards */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
-          <Card className="bg-white/70 dark:bg-slate-800/70 border border-slate-200 dark:border-slate-700">
+          <Card className="bg-card/80 border border-border">
             <CardContent className="p-4">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-slate-500 dark:text-slate-400 text-xs">Total Posts</p>
-                  <p className="text-2xl font-semibold text-slate-900 dark:text-slate-100">{blogPosts?.length || 0}</p>
+                  <p className="text-muted-foreground text-xs">Total Posts</p>
+                  <p className="text-2xl font-semibold text-foreground">{blogPosts?.length || 0}</p>
                 </div>
-                <BookOpen className="w-8 h-8 text-slate-400" />
+                <BookOpen className="w-8 h-8 text-muted-foreground" />
               </div>
             </CardContent>
           </Card>
 
-          <Card className="bg-white/70 dark:bg-slate-800/70 border border-slate-200 dark:border-slate-700">
+          <Card className="bg-card/80 border border-border">
             <CardContent className="p-4">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-slate-500 dark:text-slate-400 text-xs">Published</p>
-                  <p className="text-2xl font-semibold text-slate-900 dark:text-slate-100">{publishedCount}</p>
+                  <p className="text-muted-foreground text-xs">Published</p>
+                  <p className="text-2xl font-semibold text-foreground">{publishedCount}</p>
                 </div>
-                <CheckCircle className="w-8 h-8 text-slate-400" />
+                <CheckCircle className="w-8 h-8 text-muted-foreground" />
               </div>
             </CardContent>
           </Card>
 
-          <Card className="bg-white/70 dark:bg-slate-800/70 border border-slate-200 dark:border-slate-700">
+          <Card className="bg-card/80 border border-border">
             <CardContent className="p-4">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-slate-500 dark:text-slate-400 text-xs">Drafts</p>
-                  <p className="text-2xl font-semibold text-slate-900 dark:text-slate-100">{draftCount}</p>
+                  <p className="text-muted-foreground text-xs">Drafts</p>
+                  <p className="text-2xl font-semibold text-foreground">{draftCount}</p>
                 </div>
-                <AlertCircle className="w-8 h-8 text-slate-400" />
+                <AlertCircle className="w-8 h-8 text-muted-foreground" />
               </div>
             </CardContent>
           </Card>
 
-          <Card className="bg-white/70 dark:bg-slate-800/70 border border-slate-200 dark:border-slate-700">
+          <Card className="bg-card/80 border border-border">
             <CardContent className="p-4">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-slate-500 dark:text-slate-400 text-xs">Tags</p>
-                  <p className="text-2xl font-semibold text-slate-900 dark:text-slate-100">{allTags.length}</p>
+                  <p className="text-muted-foreground text-xs">Tags</p>
+                  <p className="text-2xl font-semibold text-foreground">{allTags.length}</p>
                 </div>
-                <Tag className="w-8 h-8 text-slate-400" />
+                <Tag className="w-8 h-8 text-muted-foreground" />
               </div>
             </CardContent>
           </Card>
-          </div>
+        </div>
 
         {/* Filters and Search */}
-        <Card className="mb-6 shadow-lg border-0 bg-white/70 dark:bg-slate-800/70 backdrop-blur-sm">
+        <Card className="mb-6 shadow-lg border border-border bg-card/80 backdrop-blur-sm">
           <CardContent className="p-4">
             <div className="flex flex-col lg:flex-row gap-3 justify-between">
                 <div className="flex flex-col sm:flex-row gap-3 flex-1">
                   <div className="relative flex-1">
-                    <Search className="absolute left-3 top-3 h-4 w-4 text-slate-400" />
+                    <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
                     <Input
                       placeholder="Search blog posts..."
                       value={searchTerm}
                       onChange={(e) => setSearchTerm(e.target.value)}
-                      className="pl-9 border-slate-200 dark:border-slate-700"
+                      className="pl-9 border-border"
                     />
                   </div>
 
@@ -654,11 +652,11 @@ export default function AdminBlog() {
           </Card>
 
           {/* Blog Posts List */}
-          <Card className="shadow-lg border-0 bg-white/70 dark:bg-slate-800/70 backdrop-blur-sm">
+          <Card className="shadow-lg border border-border bg-card/80 backdrop-blur-sm">
             <CardHeader className="pb-4">
               <div className="flex items-center justify-between">
                 <CardTitle className="text-xl">Blog Posts ({filteredPosts.length})</CardTitle>
-                <div className="flex items-center gap-2 text-sm text-slate-600 dark:text-slate-400">
+                <div className="flex items-center gap-2 text-sm text-muted-foreground">
                   <span>{publishedCount} published</span>
                   <span>•</span>
                   <span>{draftCount} drafts</span>
@@ -669,11 +667,11 @@ export default function AdminBlog() {
               {filteredPosts.length > 0 ? (
                 <div className={viewMode === "grid" ? "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" : "space-y-4"}>
                   {filteredPosts.map(post => (
-                    <div key={post.id} className={`group relative ${viewMode === "grid" ? "p-6 border rounded-xl hover:shadow-lg transition-all duration-200 bg-white/50 dark:bg-slate-800/50" : "flex items-start justify-between p-6 border rounded-xl hover:shadow-lg transition-all duration-200 bg-white/50 dark:bg-slate-800/50"}`}>
+                    <div key={post.id} className={`group relative ${viewMode === "grid" ? "p-6 border rounded-xl hover:shadow-lg transition-all duration-200 bg-muted/30" : "flex items-start justify-between p-6 border rounded-xl hover:shadow-lg transition-all duration-200 bg-muted/30"}`}>
                       <div className={`${viewMode === "grid" ? "space-y-4" : "flex items-start space-x-6 flex-1"}`}>
                         {/* Featured Image */}
                         {post.featuredImage && (
-                          <div className={`${viewMode === "grid" ? "w-full h-48" : "w-24 h-24"} bg-slate-200 dark:bg-slate-700 rounded-lg overflow-hidden flex-shrink-0`}>
+                          <div className={`${viewMode === "grid" ? "w-full h-48" : "w-24 h-24"} bg-muted rounded-lg overflow-hidden flex-shrink-0`}>
                             <img 
                               src={post.featuredImage} 
                               alt={post.title}
@@ -685,7 +683,7 @@ export default function AdminBlog() {
                         {/* Post Info */}
                         <div className="flex-1 min-w-0">
                           <div className="flex items-center gap-2 mb-2">
-                            <h3 className="font-semibold text-slate-900 dark:text-slate-100 truncate text-lg">
+                            <h3 className="font-semibold text-foreground truncate text-lg">
                               {post.title}
                             </h3>
                             <Badge variant={post.published ? "default" : "secondary"} className="text-xs">
@@ -697,11 +695,11 @@ export default function AdminBlog() {
                             </Badge>
                           </div>
                           
-                          <p className="text-sm text-slate-600 dark:text-slate-400 mb-3 line-clamp-2">
+                          <p className="text-sm text-muted-foreground mb-3 line-clamp-2">
                             {post.excerpt}
                           </p>
 
-                          <div className="flex flex-wrap items-center gap-2 text-xs text-slate-500 dark:text-slate-400">
+                          <div className="flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
                             <Badge variant="outline" className="text-xs">
                               <Calendar className="w-3 h-3 mr-1" />
                               {new Date(post.createdAt).toLocaleDateString()}
@@ -728,8 +726,7 @@ export default function AdminBlog() {
                             size="sm"
                             variant="outline"
                             onClick={() => window.open(post.mediumUrl || `/blog/${post.slug}`, '_blank')}
-                            disabled={!post.mediumUrl}
-                            className="hover:bg-green-50 dark:hover:bg-green-900/20"
+                            className="hover:bg-muted/60"
                           >
                             <Eye className="w-4 h-4" />
                           </Button>
@@ -737,7 +734,7 @@ export default function AdminBlog() {
                             size="sm"
                             variant="outline"
                             onClick={() => handleEditPost(post)}
-                            className="hover:bg-blue-50 dark:hover:bg-blue-900/20"
+                            className="hover:bg-muted/60"
                           >
                             <Edit className="w-4 h-4" />
                           </Button>
@@ -748,7 +745,7 @@ export default function AdminBlog() {
                               </Button>
                             </DropdownMenuTrigger>
                             <DropdownMenuContent align="end">
-                              <DropdownMenuItem onClick={() => handleDeletePost(post)} className="text-red-600">
+                              <DropdownMenuItem onClick={() => handleDeletePost(post)} className="text-destructive">
                                 <Trash2 className="w-4 h-4 mr-2" />
                                 Delete
                               </DropdownMenuItem>
@@ -761,13 +758,13 @@ export default function AdminBlog() {
                 </div>
               ) : (
                 <div className="text-center py-16">
-                  <div className="w-16 h-16 mx-auto mb-4 bg-slate-100 dark:bg-slate-800 rounded-full flex items-center justify-center">
-                    <BookOpen className="w-8 h-8 text-slate-400" />
+                  <div className="w-16 h-16 mx-auto mb-4 bg-muted rounded-full flex items-center justify-center">
+                    <BookOpen className="w-8 h-8 text-muted-foreground" />
                   </div>
-                  <h3 className="text-lg font-semibold text-slate-900 dark:text-slate-100 mb-2">
+                  <h3 className="text-lg font-semibold text-foreground mb-2">
                     No blog posts found
                   </h3>
-                  <p className="text-slate-600 dark:text-slate-400 mb-6">
+                  <p className="text-muted-foreground mb-6">
                     {searchTerm || selectedLang !== "all" || statusFilter !== "all"
                       ? "No posts match your current filters. Try adjusting your search criteria."
                       : "No blog posts found. Create your first blog post to get started!"
@@ -775,7 +772,7 @@ export default function AdminBlog() {
                   </p>
                   <Button 
                     onClick={openNewPostDialog}
-                    className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700"
+                    className="bg-brand text-brand-foreground hover:brightness-110"
                   >
                     <Plus className="w-4 h-4 mr-2" />
                     Create First Post

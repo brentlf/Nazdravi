@@ -98,6 +98,28 @@ service cloud.firestore {
         get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin';
     }
     
+    // Consent records - users can create/read their own; admins have full access
+    match /consentRecords/{consentId} {
+      allow create: if request.auth != null && 
+        request.resource.data.userId == request.auth.uid;
+      allow read: if request.auth != null && 
+        (resource.data.userId == request.auth.uid || 
+         get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin');
+      allow update, delete: if request.auth != null && 
+        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin';
+    }
+    
+    // Pre-evaluations - users can create/read their own; admins have full access
+    match /preEvaluations/{preEvalId} {
+      allow create: if request.auth != null && 
+        request.resource.data.userId == request.auth.uid;
+      allow read: if request.auth != null && 
+        (resource.data.userId == request.auth.uid || 
+         get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin');
+      allow update, delete: if request.auth != null && 
+        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin';
+    }
+    
     // Default deny all
     match /{document=**} {
       allow read, write: if false;

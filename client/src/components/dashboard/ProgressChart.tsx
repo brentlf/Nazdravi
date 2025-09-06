@@ -80,7 +80,7 @@ export function ProgressChart({ progressData }: ProgressChartProps) {
           <TabsContent value="weight" className="space-y-6">
             {/* Weight Statistics */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <div className="p-4 bg-gray-50 dark:bg-gray-800 rounded-lg">
+              <div className="p-4 bg-muted rounded-lg">
                 <div className="flex items-center justify-between mb-2">
                   <span className="text-sm font-medium text-muted-foreground">Current</span>
                   <Scale className="w-4 h-4 text-muted-foreground" />
@@ -90,7 +90,7 @@ export function ProgressChart({ progressData }: ProgressChartProps) {
                 </p>
               </div>
               
-              <div className="p-4 bg-gray-50 dark:bg-gray-800 rounded-lg">
+              <div className="p-4 bg-muted rounded-lg">
                 <div className="flex items-center justify-between mb-2">
                   <span className="text-sm font-medium text-muted-foreground">Change</span>
                   {weightTrend < 0 ? (
@@ -104,13 +104,13 @@ export function ProgressChart({ progressData }: ProgressChartProps) {
                 <p className={`text-2xl font-bold ${
                   weightTrend < 0 ? 'text-green-600' : 
                   weightTrend > 0 ? 'text-orange-600' : 
-                  'text-gray-600'
+                  'text-muted-foreground'
                 }`}>
                   {weightTrend !== 0 ? `${weightTrend > 0 ? '+' : ''}${weightTrend.toFixed(1)}kg` : '0kg'}
                 </p>
               </div>
 
-              <div className="p-4 bg-gray-50 dark:bg-gray-800 rounded-lg">
+              <div className="p-4 bg-muted rounded-lg">
                 <div className="flex items-center justify-between mb-2">
                   <span className="text-sm font-medium text-muted-foreground">Entries</span>
                   <Badge variant="outline">{weightData.length}</Badge>
@@ -148,7 +148,7 @@ export function ProgressChart({ progressData }: ProgressChartProps) {
                 </ResponsiveContainer>
               </div>
             ) : (
-              <div className="h-80 flex items-center justify-center bg-gray-50 dark:bg-gray-800 rounded-lg">
+              <div className="h-80 flex items-center justify-center bg-muted rounded-lg">
                 <div className="text-center">
                   <Scale className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
                   <p className="text-muted-foreground">No weight data available</p>
@@ -161,36 +161,36 @@ export function ProgressChart({ progressData }: ProgressChartProps) {
           <TabsContent value="water" className="space-y-6">
             {/* Water Statistics */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <div className="p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
+              <div className="p-4 bg-muted rounded-lg">
                 <div className="flex items-center justify-between mb-2">
-                  <span className="text-sm font-medium text-blue-700 dark:text-blue-300">Today</span>
-                  <Droplets className="w-4 h-4 text-blue-500" />
+                  <span className="text-sm font-medium text-muted-foreground">Today</span>
+                  <Droplets className="w-4 h-4 text-info" />
                 </div>
-                <p className="text-2xl font-bold text-blue-600 dark:text-blue-400">
+                <p className="text-2xl font-bold text-foreground">
                   {waterData.length > 0 ? `${waterData[waterData.length - 1].water}L` : '0L'}
                 </p>
               </div>
               
-              <div className="p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
+              <div className="p-4 bg-muted rounded-lg">
                 <div className="flex items-center justify-between mb-2">
-                  <span className="text-sm font-medium text-blue-700 dark:text-blue-300">Average</span>
-                  <Badge variant="outline" className="border-blue-200 text-blue-700">
+                  <span className="text-sm font-medium text-muted-foreground">Average</span>
+                  <Badge variant="outline" className="border-border">
                     Daily
                   </Badge>
                 </div>
-                <p className="text-2xl font-bold text-blue-600 dark:text-blue-400">
+                <p className="text-2xl font-bold text-foreground">
                   {avgWater > 0 ? `${avgWater.toFixed(1)}L` : '0L'}
                 </p>
               </div>
 
-              <div className="p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
+              <div className="p-4 bg-muted rounded-lg">
                 <div className="flex items-center justify-between mb-2">
-                  <span className="text-sm font-medium text-blue-700 dark:text-blue-300">Goal</span>
-                  <Badge variant="outline" className="border-blue-200 text-blue-700">
+                  <span className="text-sm font-medium text-muted-foreground">Goal</span>
+                  <Badge variant="outline" className="border-border">
                     2.5L
                   </Badge>
                 </div>
-                <p className="text-2xl font-bold text-blue-600 dark:text-blue-400">
+                <p className="text-2xl font-bold text-foreground">
                   {avgWater >= 2.5 ? '✓' : `${(2.5 - avgWater).toFixed(1)}L to go`}
                 </p>
               </div>
@@ -216,20 +216,20 @@ export function ProgressChart({ progressData }: ProgressChartProps) {
                     <Line 
                       type="monotone" 
                       dataKey="water" 
-                      stroke="#3B82F6" 
+                      stroke="hsl(var(--info))" 
                       strokeWidth={3}
-                      dot={{ fill: "#3B82F6", strokeWidth: 2, r: 6 }}
-                      activeDot={{ r: 8, stroke: "#3B82F6", strokeWidth: 2 }}
+                      dot={{ fill: "hsl(var(--info))", strokeWidth: 2, r: 6 }}
+                      activeDot={{ r: 8, stroke: "hsl(var(--info))", strokeWidth: 2 }}
                     />
                   </LineChart>
                 </ResponsiveContainer>
               </div>
             ) : (
-              <div className="h-80 flex items-center justify-center bg-blue-50 dark:bg-blue-900/20 rounded-lg">
+              <div className="h-80 flex items-center justify-center bg-muted rounded-lg">
                 <div className="text-center">
-                  <Droplets className="w-12 h-12 text-blue-400 mx-auto mb-4" />
-                  <p className="text-blue-600 dark:text-blue-400">No hydration data available</p>
-                  <p className="text-sm text-blue-500 dark:text-blue-300">Start tracking your water intake</p>
+                  <Droplets className="w-12 h-12 text-info mx-auto mb-4" />
+                  <p className="text-muted-foreground">No hydration data available</p>
+                  <p className="text-sm text-muted-foreground">Start tracking your water intake</p>
                 </div>
               </div>
             )}

@@ -34,6 +34,12 @@
   --warning: 38 92% 50%; /* Amber */
   --info: 199 89% 48%; /* Blue */
   
+  /* Brand and link colors */
+  --brand: 142 35% 52%; /* Soft green brand */
+  --brand-foreground: 0 0% 98%; /* On brand */
+  --link: 142 40% 35%; /* Link color aligned to brand, darker for contrast */
+  --link-foreground: 0 0% 98%;
+  
   /* Additional warm neutral colors */
   --warm-50: 35 20% 98%; /* Warmest background */
   --warm-100: 35 15% 94%; /* Warm light */
@@ -74,6 +80,12 @@
   --destructive: 0 84% 60%; /* Bright red */
   --destructive-foreground: 0 0% 95%;
   --ring: 0 0% 95%;
+  
+  /* Brand and link in dark mode */
+  --brand: 142 45% 55%;
+  --brand-foreground: 0 0% 98%;
+  --link: 142 50% 60%;
+  --link-foreground: 0 0% 10%;
   
   /* Additional dark theme colors */
   --dark-50: 220 15% 8%; /* Darkest background */
@@ -120,10 +132,7 @@
     transition: background-color 0.3s ease, color 0.3s ease;
   }
   
-  /* Remove forced background - let components handle their own backgrounds */
-  html {
-    /* background-color: hsl(var(--background)) !important; */
-  }
+  /* Removed empty html ruleset to satisfy linter */
   
   /* Playfair Display for elegant headers */
   h1, h2, h3, h4, h5, h6 {
@@ -211,11 +220,31 @@
   }
 }
 
-@layer components {
-  /* Custom component styles can go here */
-}
+/* Removed empty @layer components to satisfy linter */
 
 @layer utilities {
+  /* Responsive media helpers */
+  .media-full-bleed img,
+  .media-full-bleed video,
+  .media-full-bleed svg,
+  .prose img,
+  .prose video,
+  .prose svg {
+    max-width: 100%;
+    height: auto;
+  }
+
+  /* Prevent viewport overflow on small devices */
+  .contain-layout {
+    width: 100%;
+    overflow-x: hidden;
+  }
+
+  /* Utility to clamp long words/URLs */
+  .break-anywhere {
+    word-break: break-word;
+    overflow-wrap: anywhere;
+  }
   .text-balance {
     text-wrap: balance;
   }
@@ -377,5 +406,35 @@
   @keyframes subtle-gradient {
     0%, 100% { background-position: 0% 50%; }
     50% { background-position: 100% 50%; }
+  }
+
+  /* Mobile safe-area helpers */
+  .pt-safe { padding-top: max(theme(spacing.4), env(safe-area-inset-top)); }
+  .pb-safe { padding-bottom: max(theme(spacing.4), env(safe-area-inset-bottom)); }
+  .pl-safe { padding-left: max(theme(spacing.4), env(safe-area-inset-left)); }
+  .pr-safe { padding-right: max(theme(spacing.4), env(safe-area-inset-right)); }
+  .px-safe {
+    padding-left: max(theme(spacing.4), env(safe-area-inset-left));
+    padding-right: max(theme(spacing.4), env(safe-area-inset-right));
+  }
+  .py-safe {
+    padding-top: max(theme(spacing.4), env(safe-area-inset-top));
+    padding-bottom: max(theme(spacing.4), env(safe-area-inset-bottom));
+  }
+
+  /* Touch-friendly tap targets */
+  .tap-target { min-width: 44px; min-height: 44px; }
+  .tap-target-lg { min-width: 48px; min-height: 48px; }
+
+  /* Mobile edge padding utility */
+  .mobile-edge-padding {
+    padding-left: max(theme(spacing.4), env(safe-area-inset-left));
+    padding-right: max(theme(spacing.4), env(safe-area-inset-right));
+  }
+
+  /* Visibility helpers */
+  @media (max-width: 640px) {
+    .hide-on-mobile { display: none !important; }
+    .show-on-mobile { display: block !important; }
   }
 }

@@ -181,7 +181,7 @@ export default function AdminAvailability() {
   }, [currentPage, totalPages]);
 
   return (
-    <div className="min-h-screen py-20 bg-gray-50 dark:bg-gray-900">
+    <div className="min-h-screen py-20 bg-background">
       <div className="container mx-auto px-4">
         {/* Header with Back Navigation */}
         <div className="mb-8">
@@ -202,7 +202,7 @@ export default function AdminAvailability() {
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
-                <Plus className="w-5 h-5 text-[#A5CBA4]" />
+                <Plus className="w-5 h-5 text-brand" />
                 Block Time Slots
               </CardTitle>
             </CardHeader>
@@ -227,7 +227,7 @@ export default function AdminAvailability() {
                       variant={selectedTimes.includes(time) ? "default" : "outline"}
                       size="sm"
                       onClick={() => handleTimeToggle(time)}
-                      className={selectedTimes.includes(time) ? "bg-red-500 hover:bg-red-600" : ""}
+                      className={selectedTimes.includes(time) ? "bg-destructive hover:brightness-110" : ""}
                     >
                       {time}
                     </Button>
@@ -247,7 +247,7 @@ export default function AdminAvailability() {
 
               <Button 
                 onClick={handleSubmit}
-                className="w-full bg-[#A5CBA4] hover:bg-[#95bb94] text-white"
+                className="w-full bg-brand text-brand-foreground hover:brightness-110"
                 disabled={!selectedDate || selectedTimes.length === 0}
               >
                 <Save className="w-4 h-4 mr-2" />
@@ -260,7 +260,7 @@ export default function AdminAvailability() {
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
-                <Calendar className="w-5 h-5 text-[#A5CBA4]" />
+                <Calendar className="w-5 h-5 text-brand" />
                 Current Blocked Times
               </CardTitle>
             </CardHeader>
@@ -340,7 +340,7 @@ export default function AdminAvailability() {
               {loading ? (
                 <div className="space-y-4">
                   {[...Array(3)].map((_, i) => (
-                    <div key={i} className="h-16 bg-gray-200 dark:bg-gray-700 rounded animate-pulse"></div>
+                    <div key={i} className="h-16 bg-muted rounded animate-pulse"></div>
                   ))}
                 </div>
               ) : paginatedSlots && paginatedSlots.length > 0 ? (
@@ -355,7 +355,7 @@ export default function AdminAvailability() {
                           </p>
                           <div className="flex flex-wrap gap-1 mt-2">
                             {slot.timeslots.map((time) => (
-                              <span key={time} className="bg-red-100 text-red-800 text-xs px-2 py-1 rounded">
+                              <span key={time} className="bg-destructive/20 text-destructive text-xs px-2 py-1 rounded">
                                 {time}
                               </span>
                             ))}
@@ -370,7 +370,7 @@ export default function AdminAvailability() {
                           variant="outline"
                           size="sm"
                           onClick={() => handleRemoveSlot(slot.id!)}
-                          className="text-red-600 hover:text-red-700"
+                          className="text-destructive hover:brightness-110"
                         >
                           <Trash2 className="w-4 h-4" />
                         </Button>

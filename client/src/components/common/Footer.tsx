@@ -12,9 +12,9 @@ export function Footer({ overlay = false }: FooterProps) {
         ? "bg-black/60 backdrop-blur-sm text-white border-white/20" 
         : "bg-background text-foreground border-border/40"
     } border-t`}>
-      <div className="container mx-auto px-6 py-3">
+      <div className="container mx-auto px-4 sm:px-6 px-safe py-2 sm:py-3 pb-safe">
         {/* Single minimalistic row with logo, contact, and essential links */}
-        <div className="flex flex-col sm:flex-row items-center justify-between gap-3">
+        <div className="flex flex-col sm:flex-row items-center justify-between gap-2 sm:gap-3">
           {/* Logo and branding */}
           <div className="flex items-center space-x-3">
             <div className={`w-6 h-6 rounded-lg flex items-center justify-center ${
@@ -34,7 +34,7 @@ export function Footer({ overlay = false }: FooterProps) {
           </div>
 
           {/* Essential links */}
-          <div className="flex items-center space-x-6">
+          <div className="hidden sm:flex items-center space-x-6">
             <Link href="/privacy" className={`text-sm hover:opacity-80 transition-opacity ${
               overlay ? "text-white/70 hover:text-white" : "text-muted-foreground hover:text-foreground"
             }`}>
@@ -53,7 +53,7 @@ export function Footer({ overlay = false }: FooterProps) {
           </div>
 
           {/* Contact info and copyright */}
-          <div className="flex items-center space-x-4">
+          <div className="hidden sm:flex items-center space-x-4">
             {/* Contact info */}
             <div className="flex items-center space-x-3">
               <div className="flex items-center gap-1">
@@ -85,6 +85,10 @@ export function Footer({ overlay = false }: FooterProps) {
               <span>© 2024</span>
               <Heart className="h-2.5 w-2.5 fill-current" />
             </div>
+          </div>
+          {/* Mobile-only condensed copyright */}
+          <div className={`sm:hidden mt-1 text-xs ${overlay ? "text-white/70" : "text-muted-foreground"}`}>
+            © 2024
           </div>
         </div>
       </div>

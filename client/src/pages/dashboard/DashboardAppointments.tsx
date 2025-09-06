@@ -121,12 +121,12 @@ export default function DashboardAppointments() {
   // Check if user has completed consent form from Firebase
   const { data: consentRecords } = useFirestoreCollection("consentRecords", [
     where("userId", "==", user?.uid || "")
-  ]);
+  ], { enabled: !!user?.uid });
 
   // Check if user has completed pre-evaluation form
   const { data: preEvaluationRecords } = useFirestoreCollection("preEvaluations", [
     where("userId", "==", user?.uid || "")
-  ]);
+  ], { enabled: !!user?.uid });
 
   useEffect(() => {
     if (user?.uid && consentRecords) {

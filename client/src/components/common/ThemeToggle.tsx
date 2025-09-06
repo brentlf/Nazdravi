@@ -1,5 +1,6 @@
 import { Sun, Moon, Monitor } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -30,7 +31,7 @@ const themes: { value: Theme; label: string; icon: any; description: string }[] 
   },
 ];
 
-export function ThemeToggle() {
+export function ThemeToggle({ className = "" }: { className?: string }) {
   const { theme, setTheme, actualTheme } = useTheme();
 
   const getCurrentIcon = () => {
@@ -48,7 +49,7 @@ export function ThemeToggle() {
         <Button 
           variant="ghost" 
           size="sm" 
-          className="h-9 w-9 p-0 relative group transition-all duration-300 hover:bg-accent/10"
+          className={cn("h-9 w-9 p-0 relative group transition-all duration-300 hover:bg-accent/10", className)}
           aria-label="Toggle theme"
         >
           <CurrentIcon className="h-4 w-4 transition-all duration-300 group-hover:scale-110" />

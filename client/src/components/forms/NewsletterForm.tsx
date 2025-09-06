@@ -67,10 +67,10 @@ export function NewsletterForm() {
 
   if (isSubmitted) {
     return (
-      <div className="text-center p-8 bg-white/10 backdrop-blur-sm rounded-2xl">
-        <Gift className="h-12 w-12 text-white mx-auto mb-4" />
-        <h3 className="text-xl font-semibold text-white mb-2">Thank you!</h3>
-        <p className="text-white/90">
+      <div className="text-center p-8 bg-card backdrop-blur-sm rounded-2xl border border-border">
+        <Gift className="h-12 w-12 text-brand mx-auto mb-4" />
+        <h3 className="text-xl font-semibold text-foreground mb-2">Thank you!</h3>
+        <p className="text-muted-foreground">
           Check your email for the free meal planning guide.
         </p>
       </div>
@@ -92,17 +92,17 @@ export function NewsletterForm() {
                       {...field}
                       type="email"
                       placeholder={t("email-address", "home")}
-                      className="bg-white border-fill text-gray-900 placeholder:text-gray-500"
+                      className="bg-card text-foreground placeholder:text-muted-foreground"
                     />
                   </FormControl>
-                  <FormMessage className="text-white/90" />
+                  <FormMessage className="text-destructive" />
                 </FormItem>
               )}
             />
             <Button
               type="submit"
               disabled={loading}
-              className="text-white hover:bg-blue-200 font-semibold bg-blue-600"
+              className="bg-brand text-brand-foreground hover:brightness-110 font-semibold"
             >
               {loading ? (
                 "Subscribing..."
@@ -117,19 +117,19 @@ export function NewsletterForm() {
         </form>
       </Form>
       {/* Free Resource Incentive */}
-      <div className="mt-8 backdrop-blur-sm rounded-2xl p-6 bg-[#f7f2ed]">
-        <div className="flex items-center justify-center space-x-3 mb-3 text-[#000000]">
-          <Gift className="w-6 h-6 text-blue-800" />
-          <h3 className="text-lg font-semibold text-blue-900">
+      <div className="mt-8 backdrop-blur-sm rounded-2xl p-6 bg-card border border-border">
+        <div className="flex items-center justify-center space-x-3 mb-3 text-foreground">
+          <Gift className="w-6 h-6 text-brand" />
+          <h3 className="text-lg font-semibold text-foreground">
             {t("free-bonus", "home")}
           </h3>
         </div>
-        <p className="text-sm text-center text-[#050000e6]">
+        <p className="text-sm text-center text-muted-foreground">
           Sign up for our newsletter today and get a free meal-plan guide to
           kick-start your health journey!
         </p>
       </div>
-      <p className="text-white/80 text-sm mt-4 text-center">
+      <p className="text-muted-foreground text-sm mt-4 text-center">
         {t("privacy-notice", "home")}
       </p>
     </div>

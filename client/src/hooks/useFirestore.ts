@@ -45,6 +45,7 @@ export function useFirestoreCollection<T = DocumentData>(
     retryAttempts?: number;
     retryDelay?: number;
     onError?: (error: FirestoreError) => void;
+    enabled?: boolean;
   } = {}
 ): FirestoreHookResult<T> {
   const [data, setData] = useState<T[]>([]);
@@ -53,10 +54,18 @@ export function useFirestoreCollection<T = DocumentData>(
   const unsubscribeRef = useRef<(() => void) | null>(null);
   const retryCountRef = useRef(0);
   
-  const { retryAttempts = 3, retryDelay = 1000, onError } = options;
+  const { retryAttempts = 3, retryDelay = 1000, onError, enabled = true } = options;
 
   const fetchData = useCallback(async () => {
     if (!collectionName) return;
+    if (!enabled) {
+      if (unsubscribeRef.current) {
+        unsubscribeRef.current();
+        unsubscribeRef.current = null;
+      }
+      setLoading(false);
+      return;
+    }
 
     try {
       setLoading(true);
@@ -110,7 +119,7 @@ export function useFirestoreCollection<T = DocumentData>(
       setLoading(false);
       console.error(`Error setting up ${collectionName} listener:`, err);
     }
-  }, [collectionName, JSON.stringify(constraints), retryAttempts, retryDelay, onError]);
+  }, [collectionName, JSON.stringify(constraints), retryAttempts, retryDelay, onError, enabled]);
 
   useEffect(() => {
     fetchData();
@@ -139,6 +148,7 @@ export function useFirestoreDocument<T = DocumentData>(
     retryAttempts?: number;
     retryDelay?: number;
     onError?: (error: FirestoreError) => void;
+    enabled?: boolean;
   } = {}
 ): FirestoreDocumentResult<T> {
   const [data, setData] = useState<T | null>(null);
@@ -147,11 +157,20 @@ export function useFirestoreDocument<T = DocumentData>(
   const unsubscribeRef = useRef<(() => void) | null>(null);
   const retryCountRef = useRef(0);
   
-  const { retryAttempts = 3, retryDelay = 1000, onError } = options;
+  const { retryAttempts = 3, retryDelay = 1000, onError, enabled = true } = options;
 
   const fetchDocument = useCallback(async () => {
     if (!documentId || !collectionName) {
       setLoading(false);
+      return;
+    }
+    if (!enabled) {
+      if (unsubscribeRef.current) {
+        unsubscribeRef.current();
+        unsubscribeRef.current = null;
+      }
+      setLoading(false);
+      setData(null);
       return;
     }
 
@@ -202,7 +221,7 @@ export function useFirestoreDocument<T = DocumentData>(
       setLoading(false);
       console.error(`Error setting up ${collectionName}/${documentId} listener:`, err);
     }
-  }, [collectionName, documentId, retryAttempts, retryDelay, onError]);
+  }, [collectionName, documentId, retryAttempts, retryDelay, onError, enabled]);
 
   useEffect(() => {
     fetchDocument();

@@ -586,11 +586,11 @@ export default function AdminEmailScheduler() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-indigo-50 to-purple-50 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900">
+    <div className="min-h-screen bg-background">
       <div className="container mx-auto px-3 py-4">
         {/* Header with Back Navigation */}
         <div className="mb-4">
-          <Button variant="ghost" size="sm" className="mb-3 hover:bg-white/50" asChild>
+          <Button variant="ghost" size="sm" className="mb-3 hover:bg-muted/60" asChild>
             <Link href="/admin">
               <ArrowLeft className="mr-2 h-4 w-4" />
               Back to Admin Dashboard
@@ -598,9 +598,7 @@ export default function AdminEmailScheduler() {
           </Button>
           <div className="flex items-center justify-between">
             <div>
-              <h1 className="text-3xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent mb-1">
-                Email Automation
-              </h1>
+              <h1 className="text-3xl font-bold text-foreground mb-1">Email Automation</h1>
               <p className="text-slate-600 dark:text-slate-400 text-base">
                 Manage automated email reminders and notifications
               </p>
@@ -610,7 +608,7 @@ export default function AdminEmailScheduler() {
                 <Settings className="w-5 h-5 mr-2" />
                 Settings
               </Button>
-              <Button size="sm" className="bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 shadow-lg">
+              <Button size="sm" className="bg-brand text-brand-foreground hover:brightness-110 shadow-lg">
                 <Zap className="w-5 h-5 mr-2" />
                 Quick Actions
               </Button>
@@ -620,75 +618,75 @@ export default function AdminEmailScheduler() {
 
         {/* Statistics Cards */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
-          <Card className="bg-white/70 dark:bg-slate-800/70 border border-slate-200 dark:border-slate-700">
+          <Card className="bg-card/80 border border-border">
             <CardContent className="p-4">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-slate-500 dark:text-slate-400 text-xs">Total Automations</p>
-                  <p className="text-2xl font-semibold text-slate-900 dark:text-slate-100">{emailStats.totalAutomations}</p>
+                  <p className="text-muted-foreground text-xs">Total Automations</p>
+                  <p className="text-2xl font-semibold text-foreground">{emailStats.totalAutomations}</p>
                 </div>
-                <Activity className="w-8 h-8 text-slate-400" />
+                <Activity className="w-8 h-8 text-muted-foreground" />
               </div>
             </CardContent>
           </Card>
 
-          <Card className="bg-white/70 dark:bg-slate-800/70 border border-slate-200 dark:border-slate-700">
+          <Card className="bg-card/80 border border-border">
             <CardContent className="p-4">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-slate-500 dark:text-slate-400 text-xs">Active Rules</p>
-                  <p className="text-2xl font-semibold text-slate-900 dark:text-slate-100">{emailStats.activeAutomations}</p>
+                  <p className="text-muted-foreground text-xs">Active Rules</p>
+                  <p className="text-2xl font-semibold text-foreground">{emailStats.activeAutomations}</p>
                 </div>
-                <CheckCircle className="w-8 h-8 text-slate-400" />
+                <CheckCircle className="w-8 h-8 text-muted-foreground" />
               </div>
             </CardContent>
           </Card>
 
-          <Card className="bg-white/70 dark:bg-slate-800/70 border border-slate-200 dark:border-slate-700">
+          <Card className="bg-card/80 border border-border">
             <CardContent className="p-4">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-slate-500 dark:text-slate-400 text-xs">Emails Sent Today</p>
-                  <p className="text-2xl font-semibold text-slate-900 dark:text-slate-100">{emailStats.emailsSentToday}</p>
+                  <p className="text-muted-foreground text-xs">Emails Sent Today</p>
+                  <p className="text-2xl font-semibold text-foreground">{emailStats.emailsSentToday}</p>
                 </div>
-                <Mail className="w-8 h-8 text-slate-400" />
+                <Mail className="w-8 h-8 text-muted-foreground" />
               </div>
             </CardContent>
           </Card>
 
-          <Card className="bg-white/70 dark:bg-slate-800/70 border border-slate-200 dark:border-slate-700">
+          <Card className="bg-card/80 border border-border">
             <CardContent className="p-4">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-slate-500 dark:text-slate-400 text-xs">Success Rate</p>
-                  <p className="text-2xl font-semibold text-slate-900 dark:text-slate-100">{emailStats.successRate}%</p>
+                  <p className="text-muted-foreground text-xs">Success Rate</p>
+                  <p className="text-2xl font-semibold text-foreground">{emailStats.successRate}%</p>
                 </div>
-                <BarChart3 className="w-8 h-8 text-slate-400" />
+                <BarChart3 className="w-8 h-8 text-muted-foreground" />
               </div>
             </CardContent>
           </Card>
         </div>
 
         {/* Daily Batch Operations */}
-        <Card className="mb-8 shadow-lg border-0 bg-white/70 dark:bg-slate-800/70 backdrop-blur-sm">
+        <Card className="mb-8 shadow-lg border border-border bg-card/80 backdrop-blur-sm">
           <CardHeader>
             <CardTitle className="flex items-center gap-2 text-xl">
               <Send className="w-6 h-6" />
               Daily Batch Operations
             </CardTitle>
-            <p className="text-slate-600 dark:text-slate-400 mt-2">
+            <p className="text-muted-foreground mt-2">
               Manual triggers for batch email operations and daily maintenance
             </p>
           </CardHeader>
           <CardContent className="space-y-6">
-            <div className="flex items-center justify-between p-6 bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 rounded-xl border border-blue-200 dark:border-blue-800">
+            <div className="flex items-center justify-between p-6 bg-muted/40 rounded-xl border border-border">
               <div className="flex items-center gap-4">
-                <div className="w-12 h-12 bg-blue-100 dark:bg-blue-900/30 rounded-full flex items-center justify-center">
-                  <Bell className="w-6 h-6 text-blue-600" />
+                <div className="w-12 h-12 bg-muted rounded-full flex items-center justify-center">
+                  <Bell className="w-6 h-6 text-info" />
                 </div>
                 <div>
                   <h3 className="font-semibold text-lg">Tomorrow's Appointment Reminders</h3>
-                  <p className="text-slate-600 dark:text-slate-400">
+                  <p className="text-muted-foreground">
                     {tomorrow.toLocaleDateString()} - {tomorrowAppointments.length} confirmed appointments
                   </p>
                 </div>
@@ -703,14 +701,14 @@ export default function AdminEmailScheduler() {
                 <h4 className="font-medium text-lg">Reminder Recipients:</h4>
                 <div className="grid gap-3 max-h-48 overflow-y-auto">
                   {tomorrowAppointments.map((apt) => (
-                    <div key={apt.id} className="flex items-center justify-between p-4 bg-slate-50 dark:bg-slate-800/50 rounded-lg border">
+                    <div key={apt.id} className="flex items-center justify-between p-4 bg-muted/40 rounded-lg border border-border">
                       <div className="flex items-center gap-3">
-                        <div className="w-8 h-8 bg-blue-100 dark:bg-blue-900/30 rounded-full flex items-center justify-center">
-                          <UserCheck className="w-4 h-4 text-blue-600" />
+                        <div className="w-8 h-8 bg-muted rounded-full flex items-center justify-center">
+                          <UserCheck className="w-4 h-4 text-info" />
                         </div>
                         <div>
                           <p className="font-medium">{apt.name}</p>
-                          <p className="text-sm text-slate-600 dark:text-slate-400">
+                          <p className="text-sm text-muted-foreground">
                             {apt.type} at {apt.timeslot}
                           </p>
                         </div>
@@ -726,7 +724,7 @@ export default function AdminEmailScheduler() {
               <Button
                 onClick={handleSendDailyReminders}
                 disabled={sending || tomorrowAppointments.length === 0}
-                className="flex-1 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700"
+                className="flex-1 bg-brand text-brand-foreground hover:brightness-110"
                 size="lg"
               >
                 <Send className="w-5 h-5 mr-2" />
@@ -746,17 +744,17 @@ export default function AdminEmailScheduler() {
         </Card>
 
         {/* Search and Filters */}
-        <Card className="mb-8 shadow-lg border-0 bg-white/70 dark:bg-slate-800/70 backdrop-blur-sm">
+        <Card className="mb-8 shadow-lg border border-border bg-card/80 backdrop-blur-sm">
           <CardContent className="p-6">
             <div className="flex flex-col lg:flex-row gap-4 justify-between">
               <div className="flex flex-col sm:flex-row gap-4 flex-1">
                 <div className="relative flex-1">
-                  <Search className="absolute left-3 top-3 h-4 w-4 text-slate-400" />
+                  <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
                   <Input
                     placeholder="Search email automations..."
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
-                    className="pl-9 border-slate-200 dark:border-slate-700"
+                    className="pl-9 border-border"
                   />
                 </div>
 
@@ -789,13 +787,13 @@ export default function AdminEmailScheduler() {
         {/* Email Automation Rules */}
         <div className="grid gap-8">
           {/* Client Email Automations */}
-          <Card className="shadow-lg border-0 bg-white/70 dark:bg-slate-800/70 backdrop-blur-sm">
+          <Card className="shadow-lg border border-border bg-card/80 backdrop-blur-sm">
             <CardHeader>
               <CardTitle className="flex items-center gap-2 text-xl">
                 <Users className="w-6 h-6" />
                 Client Email Automation Rules
               </CardTitle>
-              <p className="text-slate-600 dark:text-slate-400 mt-2">
+              <p className="text-muted-foreground mt-2">
                 Automated emails sent to clients from <strong>info@veenutrition.com</strong> based on their actions and appointment status
               </p>
             </CardHeader>
@@ -804,20 +802,20 @@ export default function AdminEmailScheduler() {
                 {clientEmailRules.map((rule) => {
                   const IconComponent = rule.icon;
                   return (
-                    <div key={rule.id} className="group flex items-center justify-between p-6 border rounded-xl hover:shadow-md transition-all duration-200 bg-white/50 dark:bg-slate-800/50">
+                    <div key={rule.id} className="group flex items-center justify-between p-6 border rounded-xl hover:shadow-md transition-all duration-200 bg-muted/30">
                       <div className="flex items-center gap-4">
-                        <div className={`w-12 h-12 ${rule.bgColor} rounded-full flex items-center justify-center`}>
-                          <IconComponent className={`w-6 h-6 ${rule.color}`} />
+                        <div className={`w-12 h-12 bg-muted rounded-full flex items-center justify-center`}>
+                          <IconComponent className={`w-6 h-6 text-foreground`} />
                         </div>
                         <div className="flex-1">
                           <h4 className="font-semibold text-lg">{rule.name}</h4>
-                          <p className="text-slate-600 dark:text-slate-400 mt-1">
+                          <p className="text-muted-foreground mt-1">
                             {rule.description}
                           </p>
                         </div>
                       </div>
                       <div className="flex items-center gap-3">
-                        <Badge className={`${rule.bgColor} ${rule.color} border-0`}>
+                        <Badge variant="secondary">
                           {rule.status === "active" ? "Active" : "Inactive"}
                         </Badge>
                         <Button 
@@ -825,7 +823,7 @@ export default function AdminEmailScheduler() {
                           size="sm" 
                           onClick={rule.testFunction} 
                           disabled={sending}
-                          className="hover:bg-blue-50 dark:hover:bg-blue-900/20"
+                          className="hover:bg-muted/60"
                         >
                           <Mail className="w-4 h-4 mr-2" />
                           Test

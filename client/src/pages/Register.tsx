@@ -103,9 +103,9 @@ export default function Register() {
       />
       
       {/* Elegant overlay for better form readability */}
-      <div className="absolute inset-0 bg-gradient-to-br from-black/30 via-black/20 to-black/40" />
+      <div className="absolute inset-0 bg-gradient-to-br from-black/30 via-black/20 to-black/40 dark:from-black/50 dark:via-black/40 dark:to-black/60" />
       
-      <div className="relative z-10 min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+      <div className="relative z-10 min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8 px-safe pb-safe">
         <div className="max-w-md w-full space-y-8">
           {/* Sophisticated Header */}
           <div className="text-center space-y-4">
@@ -129,7 +129,7 @@ export default function Register() {
             </div>
           </div>
 
-          <Card className="backdrop-blur-xl bg-white/95 dark:bg-gray-900/95 border-white/20 shadow-2xl">
+          <Card className="backdrop-blur-xl bg-card/95 border border-border shadow-2xl">
             <CardHeader className="space-y-3 pb-6">
               <CardTitle className="text-2xl font-semibold text-center text-foreground" style={{fontFamily: 'Playfair Display, serif'}}>
                 Create your account

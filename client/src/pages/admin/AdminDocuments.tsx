@@ -238,11 +238,11 @@ export default function AdminDocuments() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900">
+    <div className="min-h-screen bg-background">
       <div className="container mx-auto px-3 py-4">
         {/* Header with Back Navigation */}
         <div className="mb-4">
-          <Button variant="ghost" size="sm" className="mb-3 hover:bg-white/50" asChild>
+          <Button variant="ghost" size="sm" className="mb-3 hover:bg-muted/60" asChild>
             <Link href="/admin">
               <ArrowLeft className="mr-2 h-4 w-4" />
               Back to Admin Dashboard
@@ -250,16 +250,14 @@ export default function AdminDocuments() {
           </Button>
           <div className="flex items-center justify-between">
             <div>
-              <h1 className="text-3xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent mb-1">
-                Client Documents
-              </h1>
+              <h1 className="text-3xl font-bold text-foreground mb-1">Client Documents</h1>
               <p className="text-slate-600 dark:text-slate-400 text-base">
                 Upload and manage nutritional plans and documents for your clients
               </p>
             </div>
             <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
               <DialogTrigger asChild>
-                <Button size="sm" className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 shadow-lg">
+                <Button size="sm" className="bg-brand text-brand-foreground hover:brightness-110 shadow-lg">
                   <Plus className="w-5 h-5 mr-2" />
                   Upload Document
                 </Button>
@@ -361,7 +359,7 @@ export default function AdminDocuments() {
                   <Button 
                     onClick={handleUploadDocument} 
                     disabled={uploading}
-                    className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700"
+                    className="bg-brand text-brand-foreground hover:brightness-110"
                   >
                     {uploading ? (
                       <>
@@ -385,7 +383,7 @@ export default function AdminDocuments() {
           {/* Sidebar - Client Selection & Filters */}
           <div className="xl:col-span-1 space-y-6">
             {/* Client Selection */}
-            <Card className="shadow-lg border-0 bg-white/70 dark:bg-slate-800/70 backdrop-blur-sm">
+            <Card className="shadow-lg border border-border bg-card/80 backdrop-blur-sm">
               <CardHeader className="pb-4">
                 <CardTitle className="flex items-center gap-2 text-lg">
                   <User className="w-5 h-5" />
@@ -394,12 +392,12 @@ export default function AdminDocuments() {
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="relative">
-                  <Search className="absolute left-3 top-3 h-4 w-4 text-slate-400" />
+                  <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
                   <Input
                     placeholder="Search clients..."
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
-                    className="pl-9 border-slate-200 dark:border-slate-700"
+                    className="pl-9 border-border"
                   />
                 </div>
 
@@ -484,7 +482,7 @@ export default function AdminDocuments() {
 
           {/* Main Content - Documents List */}
           <div className="xl:col-span-3">
-            <Card className="shadow-lg border-0 bg-white/70 dark:bg-slate-800/70 backdrop-blur-sm">
+            <Card className="shadow-lg border border-border bg-card/80 backdrop-blur-sm">
               <CardHeader className="pb-4">
                 <div className="flex items-center justify-between">
                   <div>
@@ -494,7 +492,7 @@ export default function AdminDocuments() {
                         : "All Client Documents"
                       }
                     </CardTitle>
-                    <p className="text-slate-600 dark:text-slate-400 mt-1">
+                    <p className="text-muted-foreground mt-1">
                       {clientDocuments.length} document{clientDocuments.length !== 1 ? 's' : ''} found
                     </p>
                   </div>
@@ -520,18 +518,18 @@ export default function AdminDocuments() {
                 {clientDocuments.length > 0 ? (
                   <div className={viewMode === "grid" ? "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4" : "space-y-4"}>
                     {clientDocuments.map(doc => (
-                      <div key={doc.id} className={`group relative ${viewMode === "grid" ? "p-4 border rounded-xl hover:shadow-md transition-all duration-200 bg-white/50 dark:bg-slate-800/50" : "flex items-center justify-between p-4 border rounded-xl hover:shadow-md transition-all duration-200 bg-white/50 dark:bg-slate-800/50"}`}>
+                      <div key={doc.id} className={`group relative ${viewMode === "grid" ? "p-4 border rounded-xl hover:shadow-md transition-all duration-200 bg-muted/30" : "flex items-center justify-between p-4 border rounded-xl hover:shadow-md transition-all duration-200 bg-muted/30"}`}>
                         <div className={`${viewMode === "grid" ? "space-y-3" : "flex items-start space-x-4 flex-1"}`}>
                           <div className="flex items-center gap-3">
                             <div className="text-2xl">
                               {getFileTypeIcon(doc.fileType || "")}
                             </div>
                             <div className="flex-1 min-w-0">
-                              <h3 className="font-semibold text-slate-900 dark:text-slate-100 truncate">
+                              <h3 className="font-semibold text-foreground truncate">
                                 {doc.title}
                               </h3>
                               {viewMode === "grid" && (
-                                <p className="text-sm text-slate-600 dark:text-slate-400 mt-1 line-clamp-2">
+                                <p className="text-sm text-muted-foreground mt-1 line-clamp-2">
                                   {doc.description}
                                 </p>
                               )}
@@ -539,12 +537,12 @@ export default function AdminDocuments() {
                           </div>
                           
                           {viewMode === "list" && (
-                            <p className="text-sm text-slate-600 dark:text-slate-400 mb-2 line-clamp-1">
+                            <p className="text-sm text-muted-foreground mb-2 line-clamp-1">
                               {doc.description}
                             </p>
                           )}
 
-                          <div className="flex flex-wrap items-center gap-2 text-xs text-slate-500 dark:text-slate-400">
+                          <div className="flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
                             <Badge variant="outline" className="text-xs">
                               <User className="w-3 h-3 mr-1" />
                               {getClientName(doc.userId)}
@@ -573,7 +571,7 @@ export default function AdminDocuments() {
                               size="sm"
                               variant="outline"
                               onClick={() => handleDownloadDocument(doc)}
-                              className="hover:bg-blue-50 dark:hover:bg-blue-900/20"
+                              className="hover:bg-muted/60"
                             >
                               <Download className="w-4 h-4" />
                             </Button>
@@ -581,7 +579,7 @@ export default function AdminDocuments() {
                               size="sm"
                               variant="outline"
                               onClick={() => window.open(doc.downloadURL, '_blank')}
-                              className="hover:bg-green-50 dark:hover:bg-green-900/20"
+                              className="hover:bg-muted/60"
                             >
                               <Eye className="w-4 h-4" />
                             </Button>
@@ -592,7 +590,7 @@ export default function AdminDocuments() {
                                 </Button>
                               </DropdownMenuTrigger>
                               <DropdownMenuContent align="end">
-                                <DropdownMenuItem onClick={() => handleDeleteDocument(doc)} className="text-red-600">
+                                <DropdownMenuItem onClick={() => handleDeleteDocument(doc)} className="text-destructive">
                                   <Trash2 className="w-4 h-4 mr-2" />
                                   Delete
                                 </DropdownMenuItem>
@@ -619,7 +617,7 @@ export default function AdminDocuments() {
                     </p>
                     <Button 
                       onClick={() => setDialogOpen(true)}
-                      className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700"
+                      className="bg-brand text-brand-foreground hover:brightness-110"
                     >
                       <Plus className="w-4 h-4 mr-2" />
                       Upload Document

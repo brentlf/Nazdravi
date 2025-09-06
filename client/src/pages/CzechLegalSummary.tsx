@@ -6,7 +6,7 @@ import { Link } from "wouter";
 
 export default function CzechLegalSummary() {
   return (
-    <div className="min-h-screen py-20 bg-gray-50 dark:bg-gray-900">
+    <div className="min-h-screen py-20 bg-background">
       <div className="container mx-auto px-4 max-w-4xl">
         {/* Back Button */}
         <div className="mb-6">
@@ -20,7 +20,7 @@ export default function CzechLegalSummary() {
 
         {/* Header */}
         <div className="text-center mb-12">
-          <h1 className="text-4xl font-bold mb-4 text-gray-900 dark:text-white">
+          <h1 className="text-4xl font-bold mb-4 text-foreground">
             🇨🇿 Právní souhrn
           </h1>
           <p className="text-lg text-muted-foreground">
@@ -33,7 +33,7 @@ export default function CzechLegalSummary() {
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
-                <Scale className="w-5 h-5 text-[#A5CBA4]" />
+                <Scale className="w-5 h-5 text-brand" />
                 Právní informace
               </CardTitle>
             </CardHeader>
@@ -82,7 +82,7 @@ export default function CzechLegalSummary() {
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
-                <AlertCircle className="w-5 h-5 text-amber-500" />
+                <AlertCircle className="w-5 h-5 text-warning" />
                 Reklamace a řešení sporů
               </CardTitle>
             </CardHeader>
@@ -125,8 +125,8 @@ export default function CzechLegalSummary() {
             </CardHeader>
             <CardContent className="space-y-4">
               
-              <Alert className="border-red-200 bg-red-50 dark:bg-red-900/20">
-                <AlertCircle className="h-4 w-4 text-red-600" />
+              <Alert className="border-destructive/30 bg-destructive/10 dark:bg-destructive/15">
+                <AlertCircle className="h-4 w-4 text-destructive" />
                 <AlertDescription>
                   <strong>Nouzové služby:</strong> Tato služba neposkytuje pohotovostní péči. 
                   V případě zdravotní nouze kontaktujte okamžitě místní číslo pohotovosti.
@@ -149,7 +149,7 @@ export default function CzechLegalSummary() {
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
-                <FileText className="w-5 h-5 text-[#A5CBA4]" />
+                <FileText className="w-5 h-5 text-brand" />
                 Úplná dokumentace
               </CardTitle>
             </CardHeader>
@@ -159,17 +159,17 @@ export default function CzechLegalSummary() {
               </p>
               <div className="space-y-2">
                 <p>
-                  <a href="/terms" className="text-[#A5CBA4] hover:underline font-medium">
+                  <a href="/terms" className="text-link hover:underline font-medium">
                     → Obchodní podmínky (Terms & Conditions)
                   </a>
                 </p>
                 <p>
-                  <a href="/privacy" className="text-[#A5CBA4] hover:underline font-medium">
+                  <a href="/privacy" className="text-link hover:underline font-medium">
                     → Zásady ochrany osobních údajů (Privacy Policy)
                   </a>
                 </p>
                 <p>
-                  <a href="/legal" className="text-[#A5CBA4] hover:underline font-medium">
+                  <a href="/legal" className="text-link hover:underline font-medium">
                     → Úplné právní informace (Full Legal Information)
                   </a>
                 </p>
