@@ -41,12 +41,22 @@ export default function AdminEmailScheduler() {
   const handleTestWelcomeEmail = async () => {
     setSending(true);
     try {
-      // Mock implementation - replace with actual email service call
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
+      // @ts-ignore
+      const { addDoc, collection, serverTimestamp } = await import('firebase/firestore');
+      // @ts-ignore
+      const { db } = await import('@/lib/firebase');
+      await addDoc(collection(db as any, 'mail'), {
+        to: 'test@example.com',
+        toName: 'Test User',
+        type: 'welcome',
+        subject: 'Welcome to Nazdravi',
+        status: 'pending',
+        timestamp: serverTimestamp(),
+        data: { name: 'Test User' }
+      });
       toast({
-        title: "Test welcome email sent!",
-        description: "Check info@nazdravi.com inbox to verify the welcome format.",
+        title: "Test welcome email queued!",
+        description: "Queue will send shortly.",
       });
     } catch (error) {
       toast({
@@ -62,10 +72,22 @@ export default function AdminEmailScheduler() {
   const handleTestConfirmationEmail = async () => {
     setSending(true);
     try {
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      // @ts-ignore
+      const { addDoc, collection, serverTimestamp } = await import('firebase/firestore');
+      // @ts-ignore
+      const { db } = await import('@/lib/firebase');
+      await addDoc(collection(db as any, 'mail'), {
+        to: 'test@example.com',
+        toName: 'Test User',
+        type: 'appointment-confirmation',
+        subject: 'Appointment Confirmation - Nazdravi',
+        status: 'pending',
+        timestamp: serverTimestamp(),
+        data: { name: 'Test User', date: '2025-01-15', time: '10:00', type: 'Consultation', meetingUrl: 'https://meet.google.com/test' }
+      });
       toast({
-        title: "Test confirmation email sent!",
-        description: "Check info@nazdravi.com inbox to verify the confirmation format.",
+        title: "Test confirmation email queued!",
+        description: "Queue will send shortly.",
       });
     } catch (error) {
       toast({
@@ -81,10 +103,23 @@ export default function AdminEmailScheduler() {
   const handleTestReminderEmail = async () => {
     setSending(true);
     try {
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      // Enqueue via Firestore mail queue processed by Cloud Function
+      // @ts-ignore
+      const { addDoc, collection, serverTimestamp } = await import('firebase/firestore');
+      // @ts-ignore
+      const { db } = await import('@/lib/firebase');
+      await addDoc(collection(db as any, 'mail'), {
+        to: 'test@example.com',
+        toName: 'Test User',
+        type: 'appointment-reminder',
+        subject: 'Test Appointment Reminder',
+        status: 'pending',
+        timestamp: serverTimestamp(),
+        data: { name: 'Test User', date: '2025-01-01', time: '10:00', type: 'Consultation' }
+      });
       toast({
-        title: "Test reminder email sent!",
-        description: "Check info@nazdravi.com inbox to verify the reminder format.",
+        title: "Test reminder email queued!",
+        description: "Check test@example.com after the queue processes.",
       });
     } catch (error) {
       toast({
@@ -103,7 +138,7 @@ export default function AdminEmailScheduler() {
       await new Promise(resolve => setTimeout(resolve, 1000));
       toast({
         title: "Test reschedule email sent!",
-        description: "Check info@nazdravi.com inbox to verify the reschedule format.",
+        description: "Check test@example.com inbox to verify the reschedule format.",
       });
     } catch (error) {
       toast({
@@ -119,10 +154,22 @@ export default function AdminEmailScheduler() {
   const handleTestInvoiceEmail = async () => {
     setSending(true);
     try {
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      // @ts-ignore
+      const { addDoc, collection, serverTimestamp } = await import('firebase/firestore');
+      // @ts-ignore
+      const { db } = await import('@/lib/firebase');
+      await addDoc(collection(db as any, 'mail'), {
+        to: 'test@example.com',
+        toName: 'Test User',
+        type: 'payment-reminder',
+        subject: 'Invoice Ready - Nazdravi',
+        status: 'pending',
+        timestamp: serverTimestamp(),
+        data: { name: 'Test User', amount: 150, invoiceNumber: 'INV-001', paymentUrl: 'https://veenutrition.com/pay-invoice/INV-001' }
+      });
       toast({
-        title: "Test invoice email sent!",
-        description: "Check info@nazdravi.com inbox to verify the invoice format.",
+        title: "Test invoice email queued!",
+        description: "Queue will send shortly.",
       });
     } catch (error) {
       toast({
@@ -141,7 +188,7 @@ export default function AdminEmailScheduler() {
       await new Promise(resolve => setTimeout(resolve, 1000));
       toast({
         title: "Test payment reminder sent!",
-        description: "Check info@nazdravi.com inbox to verify the payment reminder format.",
+        description: "Check test@example.com inbox to verify the payment reminder format.",
       });
     } catch (error) {
       toast({
@@ -160,7 +207,7 @@ export default function AdminEmailScheduler() {
       await new Promise(resolve => setTimeout(resolve, 1000));
       toast({
         title: "Test late reschedule notice sent!",
-        description: "Check info@nazdravi.com inbox to verify the late reschedule format.",
+        description: "Check test@example.com inbox to verify the late reschedule format.",
       });
     } catch (error) {
       toast({
@@ -179,7 +226,7 @@ export default function AdminEmailScheduler() {
       await new Promise(resolve => setTimeout(resolve, 1000));
       toast({
         title: "Test no-show notice sent!",
-        description: "Check info@nazdravi.com inbox to verify the no-show format.",
+        description: "Check test@example.com inbox to verify the no-show format.",
       });
     } catch (error) {
       toast({
@@ -198,7 +245,7 @@ export default function AdminEmailScheduler() {
       await new Promise(resolve => setTimeout(resolve, 1000));
       toast({
         title: "Test cancellation email sent!",
-        description: "Check info@nazdravi.com inbox to verify the cancellation format.",
+        description: "Check test@example.com inbox to verify the cancellation format.",
       });
     } catch (error) {
       toast({
@@ -217,7 +264,7 @@ export default function AdminEmailScheduler() {
       await new Promise(resolve => setTimeout(resolve, 1000));
       toast({
         title: "Test admin new appointment notification sent!",
-        description: "Check info@nazdravi.com inbox to verify the notification format.",
+        description: "Check test@example.com inbox to verify the notification format.",
       });
     } catch (error) {
       toast({
@@ -236,7 +283,7 @@ export default function AdminEmailScheduler() {
       await new Promise(resolve => setTimeout(resolve, 1000));
       toast({
         title: "Test admin health update notification sent!",
-        description: "Check info@nazdravi.com inbox to verify the notification format.",
+        description: "Check test@example.com inbox to verify the notification format.",
       });
     } catch (error) {
       toast({
@@ -255,7 +302,7 @@ export default function AdminEmailScheduler() {
       await new Promise(resolve => setTimeout(resolve, 1000));
       toast({
         title: "Test admin payment notification sent!",
-        description: "Check info@nazdravi.com inbox to verify the notification format.",
+        description: "Check test@example.com inbox to verify the notification format.",
       });
     } catch (error) {
       toast({
@@ -274,7 +321,7 @@ export default function AdminEmailScheduler() {
       await new Promise(resolve => setTimeout(resolve, 1000));
       toast({
         title: "Test admin plan upgrade notification sent!",
-        description: "Check info@nazdravi.com inbox to verify the notification format.",
+        description: "Check test@example.com inbox to verify the notification format.",
       });
     } catch (error) {
       toast({
@@ -293,7 +340,7 @@ export default function AdminEmailScheduler() {
       await new Promise(resolve => setTimeout(resolve, 1000));
       toast({
         title: "Test admin reschedule request notification sent!",
-        description: "Check info@nazdravi.com inbox to verify the notification format.",
+        description: "Check test@example.com inbox to verify the notification format.",
       });
     } catch (error) {
       toast({
@@ -749,7 +796,7 @@ export default function AdminEmailScheduler() {
                 Client Email Automation Rules
               </CardTitle>
               <p className="text-slate-600 dark:text-slate-400 mt-2">
-                Automated emails sent to clients from <strong>info@nazdravi.com</strong> based on their actions and appointment status
+                Automated emails sent to clients from <strong>info@veenutrition.com</strong> based on their actions and appointment status
               </p>
             </CardHeader>
             <CardContent>
@@ -799,7 +846,7 @@ export default function AdminEmailScheduler() {
                 Admin Email Notifications
               </CardTitle>
               <p className="text-slate-600 dark:text-slate-400 mt-2">
-                Automated notifications sent to <strong>admin@nazdravi.com</strong> when clients take actions requiring attention
+                Automated notifications sent to <strong>admin@veenutrition.com</strong> when clients take actions requiring attention
               </p>
             </CardHeader>
             <CardContent>
@@ -855,7 +902,7 @@ export default function AdminEmailScheduler() {
                   <div className="flex items-center gap-3">
                     <div className="w-3 h-3 bg-green-500 rounded-full animate-pulse"></div>
                     <span className="font-semibold text-green-800 dark:text-green-200 text-lg">
-                      MailerLite Connected
+                      Resend Connected
                     </span>
                   </div>
                   <p className="text-green-700 dark:text-green-300 mt-2">
@@ -869,11 +916,11 @@ export default function AdminEmailScheduler() {
                     <div className="space-y-3">
                       <div className="flex justify-between items-center p-3 bg-slate-50 dark:bg-slate-800/50 rounded-lg">
                         <span className="font-medium">Service Provider:</span>
-                        <Badge variant="outline">MailerLite</Badge>
+                        <Badge variant="outline">Resend</Badge>
                       </div>
                       <div className="flex justify-between items-center p-3 bg-slate-50 dark:bg-slate-800/50 rounded-lg">
                         <span className="font-medium">From Email:</span>
-                        <span className="text-slate-600 dark:text-slate-400">info@nazdravi.com</span>
+                        <span className="text-slate-600 dark:text-slate-400">info@veenutrition.com</span>
                       </div>
                       <div className="flex justify-between items-center p-3 bg-slate-50 dark:bg-slate-800/50 rounded-lg">
                         <span className="font-medium">From Name:</span>
@@ -887,11 +934,11 @@ export default function AdminEmailScheduler() {
                     <div className="space-y-3">
                       <div className="flex justify-between items-center p-3 bg-slate-50 dark:bg-slate-800/50 rounded-lg">
                         <span className="font-medium">Admin Email:</span>
-                        <span className="text-slate-600 dark:text-slate-400">admin@nazdravi.com</span>
+                        <span className="text-slate-600 dark:text-slate-400">admin@veenutrition.com</span>
                       </div>
                       <div className="flex justify-between items-center p-3 bg-slate-50 dark:bg-slate-800/50 rounded-lg">
                         <span className="font-medium">Client Emails:</span>
-                        <span className="text-slate-600 dark:text-slate-400">info@nazdravi.com</span>
+                        <span className="text-slate-600 dark:text-slate-400">info@veenutrition.com</span>
                       </div>
                       <div className="flex justify-between items-center p-3 bg-slate-50 dark:bg-slate-800/50 rounded-lg">
                         <span className="font-medium">Status:</span>

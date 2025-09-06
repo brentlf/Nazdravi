@@ -22,309 +22,1868 @@ var __importStar = (this && this.__importStar) || function (mod) {
     __setModuleDefault(result, mod);
     return result;
 };
+var _a, _b, _c, _d, _e, _f;
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.onInvoiceCreated = exports.onAppointmentCreated = exports.api = exports.sendInvoiceEmail = exports.sendAppointmentConfirmation = exports.sendWelcomeEmail = exports.storage = exports.db = void 0;
-const functions = __importStar(require("firebase-functions"));
+exports.processScheduledDowngrades = exports.onServicePlanUpgrade = exports.onHealthInfoUpdated = exports.sendDailyReminders = exports.onInvoiceCreated = exports.onMessageCreated = exports.processMonthlyBilling = exports.resendWebhook = exports.processMailQueue = exports.onLateReschedule = exports.onAppointmentNoShow = exports.onAppointmentCancelled = exports.onConfirmRescheduleRequest = exports.onVeeRescheduleRequest = exports.onClientRescheduleRequest = exports.onAppointmentCreated = exports.onAppointmentConfirmed = exports.onUserCreated = void 0;
+const functions = __importStar(require("firebase-functions/v1"));
 const admin = __importStar(require("firebase-admin"));
-const resend_1 = require("resend");
+const https = __importStar(require("https"));
+const dotenv = __importStar(require("dotenv"));
 // Initialize Firebase Admin
 admin.initializeApp();
-// Initialize Resend
-const resend = new resend_1.Resend(process.env.RESEND_API_KEY);
-// Database and storage exports for other functions
-exports.db = admin.firestore();
-exports.storage = admin.storage();
-// Email service functions
-exports.sendWelcomeEmail = functions.https.onCall(async (data, context) => {
-    var _a, _b;
-    try {
-        const { email, name } = data;
-        if (!email || !name) {
-            throw new functions.https.HttpsError('invalid-argument', 'Missing required fields: email and name');
+dotenv.config();
+// Email address configuration (supports .env and functions:config)
+const FROM_NAME = process.env.FROM_NAME || ((_b = (_a = functions.config()) === null || _a === void 0 ? void 0 : _a.emails) === null || _b === void 0 ? void 0 : _b.from_name) || 'VeeNutrition';
+const FROM_EMAIL = process.env.FROM_EMAIL || ((_d = (_c = functions.config()) === null || _c === void 0 ? void 0 : _c.emails) === null || _d === void 0 ? void 0 : _d.from_email) || 'info@veenutrition.com';
+/* ADMIN_EMAIL reserved for future use */
+void (process.env.ADMIN_EMAIL || ((_f = (_e = functions.config()) === null || _e === void 0 ? void 0 : _e.emails) === null || _f === void 0 ? void 0 : _f.admin_email));
+class ResendEmailService {
+    async sendEmail(params) {
+        var _a;
+        console.log('🔧 DEBUG: ResendEmailService.sendEmail called');
+        console.log('📧 Email params:', {
+            to: params.to,
+            toName: params.toName,
+            subject: params.subject,
+            hasHtml: !!params.html,
+            hasText: !!params.text
+        });
+        const RESEND_API_KEY = (_a = functions.config().resend) === null || _a === void 0 ? void 0 : _a.apikey;
+        if (!RESEND_API_KEY) {
+            console.error('❌ CRITICAL: Resend API key not configured in Firebase Functions config');
+            console.error('💡 Fix: Run "firebase functions:config:set resend.apikey=YOUR_API_KEY"');
+            return false;
         }
-        // Send email via Resend
-        const result = await resend.emails.send({
-            from: 'Nazdravi <noreply@nazdravi.com>',
-            to: [email],
-            subject: 'Welcome to Nazdravi!',
-            html: `
-        <h1>Welcome to Nazdravi, ${name}!</h1>
-        <p>Thank you for joining our nutrition consulting platform.</p>
-        <p>We're excited to help you on your health journey!</p>
-      `
+        console.log('✅ Resend API key found, proceeding with email send');
+        return new Promise((resolve) => {
+            const postData = JSON.stringify({
+                from: `${FROM_NAME} <${FROM_EMAIL}>`,
+                to: [`${params.toName || ''} <${params.to}>`],
+                subject: params.subject,
+                html: params.html,
+                text: params.text || ''
+            });
+            const options = {
+                hostname: 'api.resend.com',
+                port: 443,
+                path: '/emails',
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${RESEND_API_KEY}`,
+                    'Content-Length': Buffer.byteLength(postData)
+                }
+            };
+            const req = https.request(options, (res) => {
+                let responseData = '';
+                res.on('data', (chunk) => {
+                    responseData += chunk;
+                });
+                res.on('end', () => {
+                    console.log('📤 Resend API Response:', {
+                        statusCode: res.statusCode,
+                        responseData: responseData,
+                        emailTo: params.to,
+                        subject: params.subject
+                    });
+                    if (res.statusCode === 200 || res.statusCode === 201) {
+                        console.log(`✅ EMAIL SUCCESS: Sent to ${params.to} - Subject: ${params.subject}`);
+                        resolve(true);
+                    }
+                    else {
+                        console.error(`❌ EMAIL FAILED: Status ${res.statusCode} to ${params.to}`);
+                        console.error('📋 Full response:', responseData);
+                        resolve(false);
+                    }
+                });
+            });
+            req.on('error', (error) => {
+                console.error('Email sending failed:', error);
+                resolve(false);
+            });
+            req.write(postData);
+            req.end();
         });
-        // Log success
-        await exports.db.collection('emailLogs').add({
-            type: 'welcome',
+    }
+    async sendAppointmentReminder(email, name, date, time, type) {
+        const template = this.getAppointmentReminderTemplate(name, date, time, type);
+        return this.sendEmail({
             to: email,
-            status: 'sent',
-            messageId: (_a = result.data) === null || _a === void 0 ? void 0 : _a.id,
-            timestamp: admin.firestore.FieldValue.serverTimestamp()
+            toName: name,
+            subject: template.subject,
+            html: template.html,
+            text: template.text,
         });
-        return { success: true, messageId: (_b = result.data) === null || _b === void 0 ? void 0 : _b.id };
     }
-    catch (error) {
-        console.error('Error sending welcome email:', error);
-        // Log failure
-        await exports.db.collection('emailLogs').add({
-            type: 'welcome',
-            to: data.email,
-            status: 'failed',
-            error: error.message,
-            timestamp: admin.firestore.FieldValue.serverTimestamp()
-        });
-        throw new functions.https.HttpsError('internal', 'Failed to send welcome email');
-    }
-});
-exports.sendAppointmentConfirmation = functions.https.onCall(async (data, context) => {
-    var _a, _b;
-    try {
-        const { email, name, date, time, meetingUrl, appointmentType } = data;
-        if (!email || !name || !date || !time) {
-            throw new functions.https.HttpsError('invalid-argument', 'Missing required fields');
-        }
-        const result = await resend.emails.send({
-            from: 'Nazdravi <noreply@nazdravi.com>',
-            to: [email],
-            subject: 'Appointment Confirmation - Nazdravi',
+    getAccountConfirmationTemplate(name) {
+        return {
+            subject: 'Welcome to VeeNutrition - Account Created Successfully',
             html: `
-        <h1>Appointment Confirmed!</h1>
-        <p>Hi ${name},</p>
-        <p>Your ${appointmentType || 'consultation'} appointment has been confirmed for:</p>
-        <p><strong>Date:</strong> ${date}</p>
-        <p><strong>Time:</strong> ${time}</p>
-        ${meetingUrl ? `<p><strong>Meeting Link:</strong> <a href="${meetingUrl}">${meetingUrl}</a></p>` : ''}
-        <p>We look forward to seeing you!</p>
-      `
-        });
-        // Log success
-        await exports.db.collection('emailLogs').add({
-            type: 'appointment-confirmation',
-            to: email,
-            status: 'sent',
-            messageId: (_a = result.data) === null || _a === void 0 ? void 0 : _a.id,
-            timestamp: admin.firestore.FieldValue.serverTimestamp()
-        });
-        return { success: true, messageId: (_b = result.data) === null || _b === void 0 ? void 0 : _b.id };
+        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; background-color: #f8faf8;">
+          <div style="background-color: white; padding: 30px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
+            <div style="text-align: center; margin-bottom: 30px;">
+              <h1 style="color: #2563eb; margin: 0;">VeeNutrition</h1>
+            </div>
+            
+            <h2 style="color: #333; margin-bottom: 20px;">Welcome ${name}!</h2>
+            
+            <p style="color: #666; line-height: 1.6; margin-bottom: 20px;">
+              Thank you for creating your account with VeeNutrition. Your journey to better health and nutrition starts here!
+            </p>
+            
+            <div style="background-color: #f0f8f0; padding: 20px; border-radius: 8px; margin: 20px 0;">
+              <h3 style="color: #2563eb; margin-top: 0;">What's Next?</h3>
+              <ul style="color: #666; padding-left: 20px;">
+                <li>Complete your health assessment</li>
+                <li>Book your initial consultation</li>
+                <li>Set your nutrition goals</li>
+                <li>Start your personalized plan</li>
+              </ul>
+            </div>
+            
+            <div style="text-align: center; margin: 30px 0;">
+              <a href="https://your-domain.replit.app/dashboard" style="background-color: #A5CBA4; color: white; padding: 12px 25px; text-decoration: none; border-radius: 5px; font-weight: bold;">
+                Access Your Dashboard
+              </a>
+            </div>
+            
+            <p style="color: #666; line-height: 1.6; margin-bottom: 20px;">
+              If you have any questions, feel free to reach out to us. We're here to support you every step of the way.
+            </p>
+            
+            <div style="border-top: 1px solid #eee; padding-top: 20px; margin-top: 30px; text-align: center; color: #999; font-size: 14px;">
+              <p>VeeNutrition | Transforming Lives Through Nutrition</p>
+              <p>Email: ${FROM_EMAIL}</p>
+            </div>
+          </div>
+        </div>
+      `,
+            text: `Welcome to VeeNutrition, ${name}! Your account has been created successfully. Visit your dashboard to get started with your nutrition journey.`
+        };
     }
-    catch (error) {
-        console.error('Error sending appointment confirmation:', error);
-        // Log failure
-        await exports.db.collection('emailLogs').add({
-            type: 'appointment-confirmation',
-            to: data.email,
-            status: 'failed',
-            error: error.message,
-            timestamp: admin.firestore.FieldValue.serverTimestamp()
-        });
-        throw new functions.https.HttpsError('internal', 'Failed to send appointment confirmation');
-    }
-});
-exports.sendInvoiceEmail = functions.https.onCall(async (data, context) => {
-    var _a, _b;
-    try {
-        const { email, name, invoiceNumber, amount, dueDate, pdfUrl } = data;
-        if (!email || !name || !invoiceNumber || !amount) {
-            throw new functions.https.HttpsError('invalid-argument', 'Missing required fields');
-        }
-        const result = await resend.emails.send({
-            from: 'Nazdravi <noreply@nazdravi.com>',
-            to: [email],
-            subject: `Invoice #${invoiceNumber} - Nazdravi`,
+    getAppointmentConfirmationTemplate(name, date, time, type) {
+        return {
+            subject: 'Appointment Confirmed - Nazdravi',
             html: `
-        <h1>Invoice #${invoiceNumber}</h1>
-        <p>Hi ${name},</p>
-        <p>Your invoice is ready:</p>
-        <p><strong>Amount:</strong> €${amount}</p>
-        <p><strong>Due Date:</strong> ${dueDate || 'Due upon receipt'}</p>
-        ${pdfUrl ? `<p><a href="${pdfUrl}" target="_blank">Download Invoice PDF</a></p>` : ''}
-        <p>Thank you for choosing Nazdravi!</p>
-      `
-        });
-        // Log success
-        await exports.db.collection('emailLogs').add({
-            type: 'invoice',
-            to: email,
-            status: 'sent',
-            messageId: (_a = result.data) === null || _a === void 0 ? void 0 : _a.id,
-            timestamp: admin.firestore.FieldValue.serverTimestamp()
-        });
-        return { success: true, messageId: (_b = result.data) === null || _b === void 0 ? void 0 : _b.id };
+        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; background-color: #f8faf8;">
+          <div style="background-color: white; padding: 30px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
+            <div style="text-align: center; margin-bottom: 30px;">
+              <h1 style="color: #A5CBA4; margin: 0;">🌿 Nazdravi</h1>
+            </div>
+            
+            <h2 style="color: #333; margin-bottom: 20px;">Appointment Confirmed</h2>
+            
+            <p style="color: #666; line-height: 1.6; margin-bottom: 20px;">
+              Hi ${name}, your appointment has been confirmed! We're looking forward to meeting with you.
+            </p>
+            
+            <div style="background-color: #A5CBA4; color: white; padding: 25px; border-radius: 8px; margin: 20px 0;">
+              <h3 style="margin: 0 0 15px 0; font-size: 18px;">📅 Appointment Details</h3>
+              <p style="margin: 5px 0; font-size: 16px;"><strong>Type:</strong> ${type}</p>
+              <p style="margin: 5px 0; font-size: 16px;"><strong>Date:</strong> ${date}</p>
+              <p style="margin: 5px 0; font-size: 16px;"><strong>Time:</strong> ${time}</p>
+            </div>
+            
+            <div style="background-color: #f0f8f0; padding: 20px; border-radius: 8px; margin: 20px 0;">
+              <h3 style="color: #A5CBA4; margin-top: 0;">Preparation Tips</h3>
+              <ul style="color: #666; padding-left: 20px;">
+                <li>Keep a food diary for 3 days before your appointment</li>
+                <li>Prepare a list of questions you'd like to discuss</li>
+                <li>Bring any relevant medical reports or test results</li>
+                <li>Have your current medications and supplements list ready</li>
+              </ul>
+            </div>
+            
+            <div style="background-color: #fff3cd; padding: 20px; border-radius: 8px; margin: 20px 0; border-left: 4px solid #ffc107;">
+              <h3 style="color: #856404; margin-top: 0; font-size: 16px;">📋 Cancellation & Reschedule Policy</h3>
+              <ul style="color: #856404; margin: 10px 0; padding-left: 20px; line-height: 1.6;">
+                <li><strong>Free Cancellation:</strong> Cancel or reschedule up to 4 working hours before your appointment</li>
+                <li><strong>Late Reschedule Fee:</strong> €5 penalty applies for changes within 4 working hours</li>
+                <li><strong>No-Show Penalty:</strong> 50% of original appointment cost applies if you miss your appointment</li>
+                <li><strong>Working Hours:</strong> Monday-Friday 9am-10pm, Saturday 9am-12pm (Sunday excluded)</li>
+              </ul>
+              <p style="color: #856404; margin: 10px 0; font-size: 14px; font-style: italic;">
+                Please plan ahead to avoid penalty fees. We understand life happens - just give us enough notice when possible!
+              </p>
+            </div>
+            
+            <div style="border-top: 1px solid #eee; padding-top: 20px; margin-top: 30px; text-align: center; color: #999; font-size: 14px;">
+              <p>Nazdravi | Your Health, Our Priority</p>
+              <p>Questions? Reply to this email or message us through your dashboard</p>
+            </div>
+          </div>
+        </div>
+      `,
+            text: `Appointment Confirmed! Hi ${name}, your ${type} appointment is confirmed for ${date} at ${time}. Please keep a food diary and prepare any questions.`
+        };
     }
-    catch (error) {
-        console.error('Error sending invoice email:', error);
-        // Log failure
-        await exports.db.collection('emailLogs').add({
-            type: 'invoice',
-            to: data.email,
-            status: 'failed',
-            error: error.message,
-            timestamp: admin.firestore.FieldValue.serverTimestamp()
-        });
-        throw new functions.https.HttpsError('internal', 'Failed to send invoice email');
-    }
-});
-// HTTP endpoints for webhooks and direct calls
-exports.api = functions.https.onRequest(async (req, res) => {
-    // Enable CORS
-    res.set('Access-Control-Allow-Origin', '*');
-    res.set('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
-    res.set('Access-Control-Allow-Headers', 'Content-Type');
-    if (req.method === 'OPTIONS') {
-        res.status(204).send('');
-        return;
-    }
-    const { path } = req;
-    // Health check
-    if (path === '/api/health') {
-        res.json({
-            status: 'healthy',
-            timestamp: new Date().toISOString(),
-            environment: 'production'
-        });
-        return;
-    }
-    // Test endpoint
-    if (path === '/api/test') {
-        res.json({
-            success: true,
-            message: 'Nazdravi API is working!',
-            timestamp: new Date().toISOString()
-        });
-        return;
-    }
-    // Default response
-    res.json({
-        message: 'Nazdravi API',
-        endpoints: ['/api/health', '/api/test'],
-        functions: ['sendWelcomeEmail', 'sendAppointmentConfirmation', 'sendInvoiceEmail'],
-        timestamp: new Date().toISOString()
-    });
-});
-// Internal email functions for triggers (not exposed as callable)
-async function sendAppointmentEmailInternal(data) {
-    var _a, _b;
-    try {
-        const result = await resend.emails.send({
-            from: 'Nazdravi <noreply@nazdravi.com>',
-            to: [data.email],
-            subject: 'Appointment Confirmation - Nazdravi',
+    getAppointmentReminderTemplate(name, date, time, type) {
+        return {
+            subject: 'Appointment Reminder - Tomorrow at Nazdravi',
             html: `
-        <h1>Appointment Confirmed!</h1>
-        <p>Hi ${data.name},</p>
-        <p>Your ${data.appointmentType || 'consultation'} appointment has been confirmed for:</p>
-        <p><strong>Date:</strong> ${data.date}</p>
-        <p><strong>Time:</strong> ${data.time}</p>
-        ${data.meetingUrl ? `<p><strong>Meeting Link:</strong> <a href="${data.meetingUrl}">${data.meetingUrl}</a></p>` : ''}
-        <p>We look forward to seeing you!</p>
-      `
-        });
-        // Log success
-        await exports.db.collection('emailLogs').add({
-            type: 'appointment-confirmation',
-            to: data.email,
-            status: 'sent',
-            messageId: (_a = result.data) === null || _a === void 0 ? void 0 : _a.id,
-            timestamp: admin.firestore.FieldValue.serverTimestamp()
-        });
-        return { success: true, messageId: (_b = result.data) === null || _b === void 0 ? void 0 : _b.id };
+        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; background-color: #f8faf8;">
+          <div style="background-color: white; padding: 30px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
+            <div style="text-align: center; margin-bottom: 30px;">
+              <h1 style="color: #A5CBA4; margin: 0;">🌿 Nazdravi</h1>
+            </div>
+            
+            <h2 style="color: #333; margin-bottom: 20px;">⏰ Appointment Reminder</h2>
+            
+            <p style="color: #666; line-height: 1.6; margin-bottom: 20px;">
+              Hi ${name}, this is a friendly reminder about your upcoming appointment tomorrow.
+            </p>
+            
+            <div style="background-color: #A5CBA4; color: white; padding: 25px; border-radius: 8px; margin: 20px 0; text-align: center;">
+              <h3 style="margin: 0 0 15px 0; font-size: 20px;">📅 Tomorrow's Appointment</h3>
+              <p style="margin: 5px 0; font-size: 18px; font-weight: bold;">${type}</p>
+              <p style="margin: 5px 0; font-size: 16px;">${date} at ${time}</p>
+            </div>
+            
+            <div style="background-color: #d4edda; padding: 20px; border-radius: 8px; margin: 20px 0; border-left: 4px solid #28a745;">
+              <h3 style="color: #155724; margin-top: 0;">📝 Last-Minute Checklist</h3>
+              <ul style="color: #155724; padding-left: 20px; margin: 0;">
+                <li>Review your food diary</li>
+                <li>Prepare any questions</li>
+                <li>Gather relevant documents</li>
+                <li>Check your calendar for conflicts</li>
+              </ul>
+            </div>
+            
+            <p style="color: #666; line-height: 1.6; text-align: center; margin: 20px 0;">
+              We're excited to see you tomorrow and continue your nutrition journey!
+            </p>
+            
+            <div style="border-top: 1px solid #eee; padding-top: 20px; margin-top: 30px; text-align: center; color: #999; font-size: 14px;">
+              <p>Nazdravi | Your Wellness Partner</p>
+              <p>Looking forward to seeing you tomorrow!</p>
+            </div>
+          </div>
+        </div>
+      `,
+            text: `Appointment Reminder: Hi ${name}, your ${type} appointment is tomorrow (${date}) at ${time}. Please review your food diary and prepare any questions.`
+        };
     }
-    catch (error) {
-        console.error('Error sending appointment confirmation:', error);
-        // Log failure
-        await exports.db.collection('emailLogs').add({
-            type: 'appointment-confirmation',
-            to: data.email,
-            status: 'failed',
-            error: error.message,
-            timestamp: admin.firestore.FieldValue.serverTimestamp()
-        });
-        throw error;
+    getPaymentReminderTemplate(name, amount, invoiceNumber, paymentUrl) {
+        return {
+            subject: `Payment Reminder - Invoice ${invoiceNumber}`,
+            html: `
+        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; background-color: #f8faf8;">
+          <div style="background-color: white; padding: 30px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
+            <div style="text-align: center; margin-bottom: 30px;">
+              <h1 style="color: #A5CBA4; margin: 0;">🌿 Nazdravi</h1>
+            </div>
+            
+            <h2 style="color: #333; margin-bottom: 20px;">💰 Payment Reminder</h2>
+            
+            <p style="color: #666; line-height: 1.6; margin-bottom: 20px;">
+              Dear ${name},
+            </p>
+            
+            <p style="color: #666; line-height: 1.6; margin-bottom: 20px;">
+              This is a friendly reminder that payment for your invoice is still pending.
+            </p>
+            
+            <div style="background-color: #fff3cd; padding: 20px; border-radius: 8px; margin: 20px 0; border-left: 4px solid #ffc107;">
+              <h3 style="margin: 0 0 10px 0; color: #856404;">Invoice Details</h3>
+              <p style="margin: 5px 0; color: #856404;"><strong>Invoice Number:</strong> ${invoiceNumber}</p>
+              <p style="margin: 5px 0; color: #856404;"><strong>Amount Due:</strong> €${amount.toFixed(2)}</p>
+            </div>
+
+            <p style="color: #666; line-height: 1.6; margin-bottom: 20px;">
+              You can complete your payment securely using the link below:
+            </p>
+            
+            <div style="text-align: center; margin: 30px 0;">
+              <a href="${paymentUrl}" style="background-color: #A5CBA4; color: white; padding: 12px 30px; text-decoration: none; border-radius: 5px; display: inline-block; font-weight: bold;">Pay Invoice</a>
+            </div>
+
+            <p style="color: #666; line-height: 1.6; margin-bottom: 20px;">
+              If you have any questions about this invoice or need assistance with payment, please don't hesitate to contact us.
+            </p>
+            
+            <div style="border-top: 1px solid #eee; padding-top: 20px; margin-top: 30px; text-align: center; color: #999; font-size: 14px;">
+              <p>Nazdravi | Transforming Lives Through Nutrition</p>
+              <p>Email: info@nazdravi.com</p>
+            </div>
+          </div>
+        </div>
+      `,
+            text: `Payment Reminder - Invoice ${invoiceNumber}
+
+Dear ${name},
+
+This is a friendly reminder that payment for invoice ${invoiceNumber} (€${amount.toFixed(2)}) is still pending.
+
+You can pay online at: ${paymentUrl}
+
+If you have any questions, please contact us.
+
+Best regards,
+Nazdravi Team`
+        };
+    }
+    getRescheduleRequestTemplate(clientName, clientEmail, originalDate, originalTime, reason, isLateReschedule, potentialLateFee) {
+        return {
+            subject: `Reschedule Request from ${clientName}`,
+            html: `
+        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; background-color: #f8faf8;">
+          <div style="background-color: white; padding: 30px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
+            <div style="text-align: center; margin-bottom: 30px;">
+              <h1 style="color: #A5CBA4; margin: 0;">🌿 Nazdravi</h1>
+            </div>
+            
+            <h2 style="color: #333; margin-bottom: 20px;">🔄 Reschedule Request</h2>
+            
+            <p style="color: #666; line-height: 1.6; margin-bottom: 20px;">
+              A client has requested to reschedule their appointment.
+            </p>
+            
+            <div style="background-color: #fff3cd; padding: 20px; border-radius: 8px; margin: 20px 0; border-left: 4px solid #ffc107;">
+              <h3 style="color: #856404; margin-top: 0;">Client Information</h3>
+              <p style="margin: 5px 0; color: #856404;"><strong>Name:</strong> ${clientName}</p>
+              <p style="margin: 5px 0; color: #856404;"><strong>Email:</strong> ${clientEmail}</p>
+            </div>
+            
+            <div style="background-color: #f8d7da; padding: 20px; border-radius: 8px; margin: 20px 0; border-left: 4px solid #dc3545;">
+              <h3 style="color: #721c24; margin-top: 0;">Original Appointment</h3>
+              <p style="margin: 5px 0; color: #721c24;"><strong>Date:</strong> ${originalDate}</p>
+              <p style="margin: 5px 0; color: #721c24;"><strong>Time:</strong> ${originalTime}</p>
+            </div>
+            
+            ${reason ? `
+            <div style="background-color: #d1ecf1; padding: 20px; border-radius: 8px; margin: 20px 0; border-left: 4px solid #17a2b8;">
+              <h3 style="color: #0c5460; margin-top: 0;">Reason for Reschedule</h3>
+              <p style="margin: 0; color: #0c5460;">${reason}</p>
+            </div>
+            ` : ''}
+            
+            ${isLateReschedule ? `
+            <div style="background-color: #f8d7da; padding: 20px; border-radius: 8px; margin: 20px 0; border-left: 4px solid #dc3545;">
+              <h3 style="color: #721c24; margin-top: 0;">⚠️ Late Reschedule Policy</h3>
+              <p style="margin: 0; color: #721c24;"><strong>This reschedule request may be subject to a €${potentialLateFee || 5} late reschedule fee</strong> as it was requested within 4 hours of the appointment time or the new requested time is within 4 hours of now.</p>
+              <p style="margin: 10px 0 0 0; color: #721c24; font-size: 14px;">Admin can decide whether to apply this fee when processing the request.</p>
+            </div>
+            ` : ''}
+            
+            <div style="border-top: 1px solid #eee; padding-top: 20px; margin-top: 30px; text-align: center; color: #999; font-size: 14px;">
+              <p>Nazdravi Admin Dashboard</p>
+              <p>Please respond to this request promptly</p>
+            </div>
+          </div>
+        </div>
+      `,
+            text: `Reschedule request from ${clientName} (${clientEmail}) for appointment on ${originalDate} at ${originalTime}. ${reason ? `Reason: ${reason}` : ''}`
+        };
+    }
+    getVeeRescheduleRequestTemplate(name, date, time, reason) {
+        return {
+            subject: `Reschedule Request from Nazdravi`,
+            html: `
+        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; background-color: #f8faf8;">
+          <div style="background-color: white; padding: 30px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
+            <div style="text-align: center; margin-bottom: 30px;">
+              <h1 style="color: #A5CBA4; margin: 0;">🌿 Nazdravi</h1>
+            </div>
+            
+            <h2 style="color: #333; margin-bottom: 20px;">Reschedule Request</h2>
+            
+            <p style="color: #666; line-height: 1.6; margin-bottom: 20px;">
+              Hi ${name}, we need to reschedule your upcoming appointment due to scheduling changes on our end.
+            </p>
+            
+            <div style="background-color: #e3f2fd; padding: 20px; border-radius: 8px; margin: 20px 0; border-left: 4px solid #2196f3;">
+              <h3 style="color: #1565c0; margin-top: 0;">Current Appointment</h3>
+              <p style="margin: 5px 0;"><strong>Date:</strong> ${date}</p>
+              <p style="margin: 5px 0;"><strong>Time:</strong> ${time}</p>
+              <p style="margin: 5px 0;"><strong>Reason:</strong> ${reason}</p>
+            </div>
+            
+            <p style="color: #666; line-height: 1.6; margin-bottom: 20px;">
+              We sincerely apologize for any inconvenience this may cause. Please contact us to arrange a new appointment time that works for your schedule.
+            </p>
+            
+            <div style="text-align: center; margin: 30px 0;">
+              <a href="https://your-domain.com/dashboard/appointments" 
+                 style="background-color: #A5CBA4; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; display: inline-block; font-weight: bold;">
+                Reschedule Appointment
+              </a>
+            </div>
+            
+            <div style="border-top: 1px solid #eee; padding-top: 20px; margin-top: 30px; text-align: center; color: #999; font-size: 14px;">
+              <p>Nazdravi | Transforming Lives Through Nutrition</p>
+              <p>Email: info@nazdravi.com</p>
+            </div>
+          </div>
+        </div>
+      `,
+            text: `Hi ${name}, we need to reschedule your appointment on ${date} at ${time}. Reason: ${reason}. Please contact us to arrange a new time.`
+        };
+    }
+    getRescheduleConfirmationTemplate(name, newDate, newTime, type) {
+        return {
+            subject: 'Reschedule Confirmed - Nazdravi',
+            html: `
+        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; background-color: #f8faf8;">
+          <div style="background-color: white; padding: 30px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
+            <div style="text-align: center; margin-bottom: 30px;">
+              <h1 style="color: #A5CBA4; margin: 0;">🌿 Nazdravi</h1>
+            </div>
+            
+            <h2 style="color: #333; margin-bottom: 20px;">✅ Reschedule Confirmed</h2>
+            
+            <p style="color: #666; line-height: 1.6; margin-bottom: 20px;">
+              Hi ${name}, your reschedule request has been approved! Here are your new appointment details:
+            </p>
+            
+            <div style="background-color: #A5CBA4; color: white; padding: 25px; border-radius: 8px; margin: 20px 0;">
+              <h3 style="margin: 0 0 15px 0; font-size: 18px;">📅 New Appointment Details</h3>
+              <p style="margin: 5px 0; font-size: 16px;"><strong>Type:</strong> ${type}</p>
+              <p style="margin: 5px 0; font-size: 16px;"><strong>New Date:</strong> ${newDate}</p>
+              <p style="margin: 5px 0; font-size: 16px;"><strong>New Time:</strong> ${newTime}</p>
+            </div>
+            
+            <div style="border-top: 1px solid #eee; padding-top: 20px; margin-top: 30px; text-align: center; color: #999; font-size: 14px;">
+              <p>Nazdravi | Your Health, Our Priority</p>
+              <p>We look forward to seeing you at your new appointment time!</p>
+            </div>
+          </div>
+        </div>
+      `,
+            text: `Reschedule confirmed! Your ${type} appointment has been moved to ${newDate} at ${newTime}.`
+        };
+    }
+    getInvoiceGeneratedTemplate(name, amount, invoiceId) {
+        return {
+            subject: 'Session Complete - Invoice Ready - Nazdravi',
+            html: `
+        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; background-color: #f8faf8;">
+          <div style="background-color: white; padding: 30px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
+            <div style="text-align: center; margin-bottom: 30px;">
+              <h1 style="color: #A5CBA4; margin: 0;">🌿 Nazdravi</h1>
+            </div>
+            
+            <h2 style="color: #333; margin-bottom: 20px;">💳 Invoice Ready</h2>
+            
+            <p style="color: #666; line-height: 1.6; margin-bottom: 20px;">
+              Hi ${name}, thank you for your session! Your invoice is ready for payment.
+            </p>
+            
+            <div style="background-color: #f0f8f0; padding: 20px; border-radius: 8px; margin: 20px 0;">
+              <h3 style="color: #A5CBA4; margin-top: 0;">Invoice Details</h3>
+              <p style="margin: 5px 0; color: #666;"><strong>Invoice ID:</strong> ${invoiceId}</p>
+              <p style="margin: 5px 0; color: #666;"><strong>Amount:</strong> €${amount}</p>
+              <p style="margin: 5px 0; color: #666;"><strong>Payment Methods:</strong> Credit Card, iDEAL</p>
+            </div>
+            
+            <div style="text-align: center; margin: 30px 0;">
+              <a href="https://your-domain.replit.app/dashboard/invoices" style="background-color: #A5CBA4; color: white; padding: 12px 25px; text-decoration: none; border-radius: 5px; font-weight: bold;">
+                View & Pay Invoice
+              </a>
+            </div>
+            
+            <div style="border-top: 1px solid #eee; padding-top: 20px; margin-top: 30px; text-align: center; color: #999; font-size: 14px;">
+              <p>Nazdravi | Your Health, Our Priority</p>
+              <p>Payment is typically due within 7 days of session completion</p>
+            </div>
+          </div>
+        </div>
+      `,
+            text: `Session complete! Your invoice (${invoiceId}) for €${amount} is ready. View and pay at your dashboard.`
+        };
+    }
+    getLateRescheduleTemplate(name, date, time) {
+        return {
+            subject: 'Late Reschedule Notice - €5 Fee Applied - Nazdravi',
+            html: `
+        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; background-color: #f8faf8;">
+          <div style="background-color: white; padding: 30px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
+            <div style="text-align: center; margin-bottom: 30px;">
+              <h1 style="color: #A5CBA4; margin: 0;">🌿 Nazdravi</h1>
+            </div>
+            
+            <h2 style="color: #333; margin-bottom: 20px;">⏰ Late Reschedule Fee Applied</h2>
+            
+            <p style="color: #666; line-height: 1.6; margin-bottom: 20px;">
+              Hi ${name}, your reschedule request for ${date} at ${time} has been processed.
+            </p>
+            
+            <div style="background-color: #fff3cd; padding: 20px; border-radius: 8px; margin: 20px 0; border-left: 4px solid #ffc107;">
+              <h3 style="color: #856404; margin-top: 0;">Late Reschedule Fee</h3>
+              <p style="color: #856404; margin: 10px 0;">
+                Since your reschedule request was made within 4 working hours of your appointment, a €5 late reschedule fee has been applied according to our cancellation policy.
+              </p>
+              <p style="color: #856404; margin: 10px 0; font-size: 14px;">
+                <strong>Fee Amount:</strong> €5.00
+              </p>
+            </div>
+            
+            <p style="color: #666; line-height: 1.6; margin-bottom: 20px;">
+              This fee will be added to your next invoice. We understand that sometimes urgent changes are necessary, and we appreciate your understanding of our policy.
+            </p>
+            
+            <div style="border-top: 1px solid #eee; padding-top: 20px; margin-top: 30px; text-align: center; color: #999; font-size: 14px;">
+              <p>Nazdravi | Your Health, Our Priority</p>
+              <p>To avoid future fees, please reschedule at least 4 working hours in advance</p>
+            </div>
+          </div>
+        </div>
+      `,
+            text: `Late reschedule notice: Your appointment on ${date} at ${time} has been rescheduled. A €5 late reschedule fee applies.`
+        };
+    }
+    getNoShowPenaltyTemplate(name, date, time, penaltyAmount) {
+        return {
+            subject: 'Missed Appointment - No-Show Penalty Applied - Nazdravi',
+            html: `
+        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; background-color: #f8faf8;">
+          <div style="background-color: white; padding: 30px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
+            <div style="text-align: center; margin-bottom: 30px;">
+              <h1 style="color: #A5CBA4; margin: 0;">🌿 Nazdravi</h1>
+            </div>
+            
+            <h2 style="color: #333; margin-bottom: 20px;">❌ Missed Appointment Notice</h2>
+            
+            <p style="color: #666; line-height: 1.6; margin-bottom: 20px;">
+              Hi ${name}, we noticed you missed your scheduled appointment on ${date} at ${time}.
+            </p>
+            
+            <div style="background-color: #f8d7da; padding: 20px; border-radius: 8px; margin: 20px 0; border-left: 4px solid #dc3545;">
+              <h3 style="color: #721c24; margin-top: 0;">No-Show Penalty</h3>
+              <p style="color: #721c24; margin: 10px 0;">
+                According to our cancellation policy, a no-show penalty of 50% of the original appointment cost has been applied.
+              </p>
+              <p style="color: #721c24; margin: 10px 0; font-size: 16px;">
+                <strong>Penalty Amount:</strong> €${penaltyAmount.toFixed(2)}
+              </p>
+            </div>
+            
+            <p style="color: #666; line-height: 1.6; margin-bottom: 20px;">
+              We understand that emergencies happen. If there were extenuating circumstances, please contact us to discuss your situation.
+            </p>
+            
+            <div style="text-align: center; margin: 30px 0;">
+              <a href="https://your-domain.replit.app/dashboard/appointments" style="background-color: #A5CBA4; color: white; padding: 12px 25px; text-decoration: none; border-radius: 5px; font-weight: bold;">
+                Book New Appointment
+              </a>
+            </div>
+            
+            <div style="border-top: 1px solid #eee; padding-top: 20px; margin-top: 30px; text-align: center; color: #999; font-size: 14px;">
+              <p>Nazdravi | Your Health, Our Priority</p>
+              <p>Please contact us if you have questions about this penalty</p>
+            </div>
+          </div>
+        </div>
+      `,
+            text: `Missed appointment notice: You missed your appointment on ${date} at ${time}. A no-show penalty of €${penaltyAmount.toFixed(2)} has been applied.`
+        };
+    }
+    getAppointmentCancelledTemplate(name, date, time, reason) {
+        return {
+            subject: 'Appointment Cancelled - Nazdravi',
+            html: `
+        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; background-color: #f8faf8;">
+          <div style="background-color: white; padding: 30px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
+            <div style="text-align: center; margin-bottom: 30px;">
+              <h1 style="color: #A5CBA4; margin: 0;">🌿 Nazdravi</h1>
+            </div>
+            
+            <h2 style="color: #333; margin-bottom: 20px;">❌ Appointment Cancelled</h2>
+            
+            <p style="color: #666; line-height: 1.6; margin-bottom: 20px;">
+              Hi ${name}, your appointment scheduled for ${date} at ${time} has been cancelled.
+            </p>
+            
+            ${reason ? `
+            <div style="background-color: #d1ecf1; padding: 20px; border-radius: 8px; margin: 20px 0; border-left: 4px solid #17a2b8;">
+              <h3 style="color: #0c5460; margin-top: 0;">Cancellation Reason</h3>
+              <p style="margin: 0; color: #0c5460;">${reason}</p>
+            </div>
+            ` : ''}
+            
+            <div style="background-color: #d4edda; padding: 20px; border-radius: 8px; margin: 20px 0; border-left: 4px solid #28a745;">
+              <h3 style="color: #155724; margin-top: 0;">Rebook Your Appointment</h3>
+              <p style="color: #155724; margin: 0;">
+                We'd love to see you soon! Please book a new appointment at your convenience through your dashboard.
+              </p>
+            </div>
+            
+            <div style="text-align: center; margin: 30px 0;">
+              <a href="https://your-domain.replit.app/dashboard/appointments" style="background-color: #A5CBA4; color: white; padding: 12px 25px; text-decoration: none; border-radius: 5px; font-weight: bold;">
+                Book New Appointment
+              </a>
+            </div>
+            
+            <div style="border-top: 1px solid #eee; padding-top: 20px; margin-top: 30px; text-align: center; color: #999; font-size: 14px;">
+              <p>Nazdravi | Your Health, Our Priority</p>
+              <p>Questions? Reply to this email or contact us through your dashboard</p>
+            </div>
+          </div>
+        </div>
+      `,
+            text: `Appointment cancelled: Your appointment on ${date} at ${time} has been cancelled. ${reason ? `Reason: ${reason}` : ''} Please book a new appointment when convenient.`
+        };
+    }
+    getClientMessageTemplate(clientName, messageContent) {
+        return {
+            subject: `New Message from Nazdravi`,
+            html: `
+      <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; background-color: #f8faf8;">
+        <div style="background-color: white; padding: 30px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
+          <div style="text-align: center; margin-bottom: 30px;">
+            <h1 style="color: #A5CBA4; margin: 0;">🌿 Nazdravi</h1>
+          </div>
+          
+          <h2 style="color: #333; margin-bottom: 20px;">💬 New Message</h2>
+          
+          <p style="color: #666; line-height: 1.6; margin-bottom: 20px;">
+            Dear ${clientName},
+          </p>
+          
+          <p style="color: #666; line-height: 1.6; margin-bottom: 20px;">
+            You have received a new message from Nazdravi. Please log in to your client portal to view and respond.
+          </p>
+          
+          <div style="text-align: center; margin: 30px 0;">
+            <a href="https://app.nazdravi.com/dashboard/messages" style="background-color: #A5CBA4; color: white; padding: 12px 30px; text-decoration: none; border-radius: 5px; display: inline-block; font-weight: bold;">View Message</a>
+          </div>
+          
+          <p style="color: #666; line-height: 1.6; margin-bottom: 20px;">
+            If you have any questions or need assistance, please don't hesitate to reach out.
+          </p>
+          
+          <div style="border-top: 1px solid #eee; padding-top: 20px; margin-top: 30px; text-align: center; color: #999; font-size: 14px;">
+            <p>Nazdravi | Transforming Lives Through Nutrition</p>
+            <p>Email: info@nazdravi.com</p>
+          </div>
+        </div>
+      </div>
+      `,
+            text: `Dear ${clientName},
+
+You have received a new message from Nazdravi.
+
+Please log in to your client portal to view and respond: https://app.nazdravi.com/dashboard/messages
+
+Best regards,
+Nazdravi Team`
+        };
+    }
+    // Admin notification templates
+    getAdminNewAppointmentTemplate(appointmentData) {
+        return {
+            subject: `New Appointment Request - ${appointmentData.clientName}`,
+            html: `
+        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; background-color: #f8faf8;">
+          <div style="background-color: white; padding: 30px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
+            <div style="text-align: center; margin-bottom: 30px;">
+              <h1 style="color: #A5CBA4; margin: 0;">🌿 Nazdravi Admin</h1>
+            </div>
+            
+            <h2 style="color: #333; margin-bottom: 20px;">📅 New Appointment Request</h2>
+            
+            <div style="background-color: #fff3cd; padding: 20px; border-radius: 8px; margin: 20px 0; border-left: 4px solid #ffc107;">
+              <h3 style="color: #856404; margin-top: 0;">Client Information</h3>
+              <p style="margin: 5px 0; color: #856404;"><strong>Name:</strong> ${appointmentData.clientName}</p>
+              <p style="margin: 5px 0; color: #856404;"><strong>Email:</strong> ${appointmentData.clientEmail}</p>
+            </div>
+            
+            <div style="background-color: #d4edda; padding: 20px; border-radius: 8px; margin: 20px 0; border-left: 4px solid #28a745;">
+              <h3 style="color: #155724; margin-top: 0;">Appointment Details</h3>
+              <p style="margin: 5px 0; color: #155724;"><strong>Type:</strong> ${appointmentData.type}</p>
+              <p style="margin: 5px 0; color: #155724;"><strong>Date:</strong> ${appointmentData.date}</p>
+              <p style="margin: 5px 0; color: #155724;"><strong>Time:</strong> ${appointmentData.time}</p>
+            </div>
+            
+            <div style="text-align: center; margin: 30px 0;">
+              <a href="https://your-domain.replit.app/admin/appointments" style="background-color: #A5CBA4; color: white; padding: 12px 25px; text-decoration: none; border-radius: 5px; font-weight: bold;">
+                Manage Appointments
+              </a>
+            </div>
+            
+            <div style="border-top: 1px solid #eee; padding-top: 20px; margin-top: 30px; text-align: center; color: #999; font-size: 14px;">
+              <p>Nazdravi Admin Dashboard</p>
+              <p>Please confirm or reschedule this appointment promptly</p>
+            </div>
+          </div>
+        </div>
+      `,
+            text: `New appointment request from ${appointmentData.clientName} (${appointmentData.clientEmail}) for ${appointmentData.type} on ${appointmentData.date} at ${appointmentData.time}.`
+        };
+    }
+    getAdminHealthUpdateTemplate(clientName, clientEmail, updateType) {
+        return {
+            subject: `Health Information Update - ${clientName}`,
+            html: `
+        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; background-color: #f8faf8;">
+          <div style="background-color: white; padding: 30px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
+            <div style="text-align: center; margin-bottom: 30px;">
+              <h1 style="color: #A5CBA4; margin: 0;">🌿 Nazdravi Admin</h1>
+            </div>
+            
+            <h2 style="color: #333; margin-bottom: 20px;">🏥 Health Information Update</h2>
+            
+            <p style="color: #666; line-height: 1.6; margin-bottom: 20px;">
+              ${clientName} has updated their health information.
+            </p>
+            
+            <div style="background-color: #d1ecf1; padding: 20px; border-radius: 8px; margin: 20px 0; border-left: 4px solid #17a2b8;">
+              <h3 style="color: #0c5460; margin-top: 0;">Update Details</h3>
+              <p style="margin: 5px 0; color: #0c5460;"><strong>Client:</strong> ${clientName}</p>
+              <p style="margin: 5px 0; color: #0c5460;"><strong>Email:</strong> ${clientEmail}</p>
+              <p style="margin: 5px 0; color: #0c5460;"><strong>Update Type:</strong> ${updateType}</p>
+            </div>
+            
+            <div style="text-align: center; margin: 30px 0;">
+              <a href="https://your-domain.replit.app/admin/clients" style="background-color: #A5CBA4; color: white; padding: 12px 25px; text-decoration: none; border-radius: 5px; font-weight: bold;">
+                Review Client Profile
+              </a>
+            </div>
+            
+            <div style="border-top: 1px solid #eee; padding-top: 20px; margin-top: 30px; text-align: center; color: #999; font-size: 14px;">
+              <p>Nazdravi Admin Dashboard</p>
+              <p>Please review the updated health information</p>
+            </div>
+          </div>
+        </div>
+      `,
+            text: `Health information update from ${clientName} (${clientEmail}). Update type: ${updateType}.`
+        };
+    }
+    getAdminPaymentReceivedTemplate(clientName, amount, invoiceId, paymentMethod) {
+        return {
+            subject: `Payment Received - ${clientName} - €${amount}`,
+            html: `
+        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; background-color: #f8faf8;">
+          <div style="background-color: white; padding: 30px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
+            <div style="text-align: center; margin-bottom: 30px;">
+              <h1 style="color: #A5CBA4; margin: 0;">🌿 Nazdravi Admin</h1>
+            </div>
+            
+            <h2 style="color: #333; margin-bottom: 20px;">�� Payment Received</h2>
+            
+            <div style="background-color: #d4edda; padding: 20px; border-radius: 8px; margin: 20px 0; border-left: 4px solid #28a745;">
+              <h3 style="color: #155724; margin-top: 0;">Payment Details</h3>
+              <p style="margin: 5px 0; color: #155724;"><strong>Client:</strong> ${clientName}</p>
+              <p style="margin: 5px 0; color: #155724;"><strong>Amount:</strong> €${amount.toFixed(2)}</p>
+              <p style="margin: 5px 0; color: #155724;"><strong>Invoice ID:</strong> ${invoiceId}</p>
+              <p style="margin: 5px 0; color: #155724;"><strong>Payment Method:</strong> ${paymentMethod}</p>
+            </div>
+            
+            <div style="text-align: center; margin: 30px 0;">
+              <a href="https://your-domain.replit.app/admin/invoices" style="background-color: #A5CBA4; color: white; padding: 12px 25px; text-decoration: none; border-radius: 5px; font-weight: bold;">
+                View Invoice Details
+              </a>
+            </div>
+            
+            <div style="border-top: 1px solid #eee; padding-top: 20px; margin-top: 30px; text-align: center; color: #999; font-size: 14px;">
+              <p>Nazdravi Admin Dashboard</p>
+              <p>Payment has been successfully processed</p>
+            </div>
+          </div>
+        </div>
+      `,
+            text: `Payment received from ${clientName}: €${amount.toFixed(2)} for invoice ${invoiceId} via ${paymentMethod}.`
+        };
+    }
+    getAdminPlanUpgradeTemplate(clientName, planType, previousPlan) {
+        return {
+            subject: `Plan Upgrade - ${clientName} - ${planType}`,
+            html: `
+        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; background-color: #f8faf8;">
+          <div style="background-color: white; padding: 30px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
+            <div style="text-align: center; margin-bottom: 30px;">
+              <h1 style="color: #A5CBA4; margin: 0;">🌿 Nazdravi Admin</h1>
+            </div>
+            
+            <h2 style="color: #333; margin-bottom: 20px;">⬆️ Service Plan Upgrade</h2>
+            
+            <p style="color: #666; line-height: 1.6; margin-bottom: 20px;">
+              ${clientName} has upgraded their service plan.
+            </p>
+            
+            <div style="background-color: #d4edda; padding: 20px; border-radius: 8px; margin: 20px 0; border-left: 4px solid #28a745;">
+              <h3 style="color: #155724; margin-top: 0;">Upgrade Details</h3>
+              <p style="margin: 5px 0; color: #155724;"><strong>Client:</strong> ${clientName}</p>
+              <p style="margin: 5px 0; color: #155724;"><strong>Previous Plan:</strong> ${previousPlan}</p>
+              <p style="margin: 5px 0; color: #155724;"><strong>New Plan:</strong> ${planType}</p>
+            </div>
+            
+            <div style="text-align: center; margin: 30px 0;">
+              <a href="https://your-domain.replit.app/admin/clients" style="background-color: #A5CBA4; color: white; padding: 12px 25px; text-decoration: none; border-radius: 5px; font-weight: bold;">
+                View Client Profile
+              </a>
+            </div>
+            
+            <div style="border-top: 1px solid #eee; padding-top: 20px; margin-top: 30px; text-align: center; color: #999; font-size: 14px;">
+              <p>Nazdravi Admin Dashboard</p>
+              <p>Client's service level has been updated</p>
+            </div>
+          </div>
+        </div>
+      `,
+            text: `Service plan upgrade: ${clientName} upgraded from ${previousPlan} to ${planType}.`
+        };
+    }
+    getAdminClientMessageTemplate(clientName, clientEmail, messageType, urgency) {
+        return {
+            subject: `New Client Message - ${clientName} - ${urgency}`,
+            html: `
+        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; background-color: #f8faf8;">
+          <div style="background-color: white; padding: 30px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
+            <div style="text-align: center; margin-bottom: 30px;">
+              <h1 style="color: #A5CBA4; margin: 0;">🌿 Nazdravi Admin</h1>
+            </div>
+            
+            <h2 style="color: #333; margin-bottom: 20px;">💬 New Client Message</h2>
+            
+            <div style="background-color: ${urgency === 'High' ? '#f8d7da' : urgency === 'Medium' ? '#fff3cd' : '#d4edda'}; padding: 20px; border-radius: 8px; margin: 20px 0; border-left: 4px solid ${urgency === 'High' ? '#dc3545' : urgency === 'Medium' ? '#ffc107' : '#28a745'};">
+              <h3 style="color: ${urgency === 'High' ? '#721c24' : urgency === 'Medium' ? '#856404' : '#155724'}; margin-top: 0;">Message Details</h3>
+              <p style="margin: 5px 0; color: ${urgency === 'High' ? '#721c24' : urgency === 'Medium' ? '#856404' : '#155724'};"><strong>Client:</strong> ${clientName}</p>
+              <p style="margin: 5px 0; color: ${urgency === 'High' ? '#721c24' : urgency === 'Medium' ? '#856404' : '#155724'};"><strong>Email:</strong> ${clientEmail}</p>
+              <p style="margin: 5px 0; color: ${urgency === 'High' ? '#721c24' : urgency === 'Medium' ? '#856404' : '#155724'};"><strong>Message Type:</strong> ${messageType}</p>
+              <p style="margin: 5px 0; color: ${urgency === 'High' ? '#721c24' : urgency === 'Medium' ? '#856404' : '#155724'};"><strong>Urgency:</strong> ${urgency}</p>
+            </div>
+            
+            <div style="text-align: center; margin: 30px 0;">
+              <a href="https://your-domain.replit.app/admin/messages" style="background-color: #A5CBA4; color: white; padding: 12px 25px; text-decoration: none; border-radius: 5px; font-weight: bold;">
+                View Message
+              </a>
+            </div>
+            
+            <div style="border-top: 1px solid #eee; padding-top: 20px; margin-top: 30px; text-align: center; color: #999; font-size: 14px;">
+              <p>Nazdravi Admin Dashboard</p>
+              <p>Please respond to this message promptly</p>
+            </div>
+          </div>
+        </div>
+      `,
+            text: `New ${urgency.toLowerCase()} priority message from ${clientName} (${clientEmail}). Type: ${messageType}.`
+        };
     }
 }
-async function sendInvoiceEmailInternal(data) {
-    var _a, _b;
+const emailService = new ResendEmailService();
+// 1. New User Account Created
+exports.onUserCreated = functions.firestore
+    .document('users/{userId}')
+    .onCreate(async (snap, context) => {
+    const user = snap.data();
+    const userId = context.params.userId;
+    console.log('🔍 DEBUG: NEW USER CREATED TRIGGER');
+    console.log('📧 User Email:', user.email);
+    console.log('👤 User Name:', user.name);
+    console.log('🆔 User ID:', userId);
+    console.log('📋 User Role:', user.role);
+    console.log('🕒 Timestamp:', new Date().toISOString());
     try {
-        const result = await resend.emails.send({
-            from: 'Nazdravi <noreply@nazdravi.com>',
-            to: [data.email],
-            subject: `Invoice #${data.invoiceNumber} - Nazdravi`,
-            html: `
-        <h1>Invoice #${data.invoiceNumber}</h1>
-        <p>Hi ${data.name},</p>
-        <p>Your invoice is ready:</p>
-        <p><strong>Amount:</strong> €${data.amount}</p>
-        <p><strong>Due Date:</strong> ${data.dueDate || 'Due upon receipt'}</p>
-        ${data.pdfUrl ? `<p><a href="${data.pdfUrl}" target="_blank">Download Invoice PDF</a></p>` : ''}
-        <p>Thank you for choosing Nazdravi!</p>
-      `
+        const template = emailService.getAccountConfirmationTemplate(user.name);
+        console.log('📧 Email template generated successfully');
+        console.log('📋 Subject:', template.subject);
+        const mailDoc = await admin.firestore().collection('mail').add({
+            to: [user.email],
+            message: {
+                subject: template.subject,
+                html: template.html,
+                text: template.text,
+            },
+            type: 'account-confirmation',
+            createdAt: admin.firestore.FieldValue.serverTimestamp(),
         });
-        // Log success
-        await exports.db.collection('emailLogs').add({
-            type: 'invoice',
-            to: data.email,
-            status: 'sent',
-            messageId: (_a = result.data) === null || _a === void 0 ? void 0 : _a.id,
-            timestamp: admin.firestore.FieldValue.serverTimestamp()
-        });
-        return { success: true, messageId: (_b = result.data) === null || _b === void 0 ? void 0 : _b.id };
+        console.log('✅ Welcome email queued successfully. Mail ID:', mailDoc.id);
+        console.log('📬 Email will be sent to:', user.email);
     }
     catch (error) {
-        console.error('Error sending invoice email:', error);
-        // Log failure
-        await exports.db.collection('emailLogs').add({
-            type: 'invoice',
-            to: data.email,
-            status: 'failed',
-            error: error.message,
-            timestamp: admin.firestore.FieldValue.serverTimestamp()
-        });
-        throw error;
+        console.error('❌ ERROR in onUserCreated:', error);
+        console.error('📧 Failed to queue welcome email for:', user.email);
     }
-}
-// Firestore triggers for automated emails
+});
+// 2. Appointment Status Changed to Confirmed
+exports.onAppointmentConfirmed = functions.firestore
+    .document('appointments/{appointmentId}')
+    .onUpdate(async (change, context) => {
+    const before = change.before.data();
+    const after = change.after.data();
+    const appointmentId = context.params.appointmentId;
+    console.log('🔍 DEBUG: APPOINTMENT STATUS CHANGE TRIGGER');
+    console.log('🆔 Appointment ID:', appointmentId);
+    console.log('📊 Status Before:', before.status);
+    console.log('📊 Status After:', after.status);
+    console.log('🕒 Timestamp:', new Date().toISOString());
+    if (before.status !== 'confirmed' && after.status === 'confirmed') {
+        console.log('✅ Appointment confirmation detected');
+        // Extract client details - handle different field name variations
+        const clientName = after.clientName || after.name || after.userName || 'Client';
+        const clientEmail = after.clientEmail || after.email || after.userEmail;
+        const appointmentTime = after.time || after.timeslot;
+        const appointmentType = after.type || after.servicePlan || 'consultation';
+        console.log('👤 Client Name (resolved):', clientName);
+        console.log('📧 Client Email (resolved):', clientEmail);
+        console.log('📅 Date:', after.date);
+        console.log('🕐 Time (resolved):', appointmentTime);
+        console.log('📋 Type (resolved):', appointmentType);
+        if (!clientEmail) {
+            console.error('❌ No client email found in appointment data');
+            console.error('📋 Available fields:', Object.keys(after));
+            return;
+        }
+        try {
+            const template = emailService.getAppointmentConfirmationTemplate(clientName, after.date, appointmentTime, appointmentType);
+            console.log('📧 Confirmation template generated');
+            console.log('📋 Subject:', template.subject);
+            // Send email directly using Resend instead of queuing for Firebase extension
+            const emailSent = await emailService.sendEmail({
+                to: clientEmail,
+                toName: clientName,
+                subject: template.subject,
+                html: template.html,
+                text: template.text,
+            });
+            if (emailSent) {
+                console.log('✅ Confirmation email sent successfully via Resend');
+            }
+            else {
+                console.log('❌ Failed to send confirmation email via Resend');
+            }
+            console.log('📬 Email attempted to:', clientEmail);
+        }
+        catch (error) {
+            console.error('❌ ERROR in onAppointmentConfirmed:', error);
+            console.error('📧 Failed to queue confirmation email for:', after.clientEmail);
+        }
+    }
+    else {
+        console.log('ℹ️ Status change detected but not a confirmation');
+    }
+});
+// 3. New Appointment Created - Admin Notification
 exports.onAppointmentCreated = functions.firestore
     .document('appointments/{appointmentId}')
     .onCreate(async (snap, context) => {
-    const appointment = snap.data();
-    if (appointment && appointment.email && appointment.name) {
+    const appointmentData = snap.data();
+    const appointmentId = context.params.appointmentId;
+    console.log('🔍 DEBUG: NEW APPOINTMENT CREATED TRIGGER');
+    console.log('🆔 Appointment ID:', appointmentId);
+    console.log('📋 RAW APPOINTMENT DATA:', JSON.stringify(appointmentData, null, 2));
+    // Extract client details - handle different field name variations
+    const clientName = appointmentData.clientName || appointmentData.name || appointmentData.userName || 'Client';
+    const clientEmail = appointmentData.clientEmail || appointmentData.email || appointmentData.userEmail;
+    const appointmentTime = appointmentData.time || appointmentData.timeslot;
+    console.log('👤 Client Name (resolved):', clientName);
+    console.log('📧 Client Email (resolved):', clientEmail);
+    console.log('📅 Date:', appointmentData.date);
+    console.log('🕐 Time (resolved):', appointmentTime);
+    console.log('📋 Type:', appointmentData.type || appointmentData.servicePlan);
+    console.log('📊 Status:', appointmentData.status);
+    console.log('👤 User ID:', appointmentData.userId);
+    console.log('🕒 Timestamp:', new Date().toISOString());
+    if (!clientEmail) {
+        console.error('❌ No client email found in appointment data');
+        console.error('📋 Available fields:', Object.keys(appointmentData));
+        return;
+    }
+    try {
+        // Create a normalized appointment object for the template
+        const normalizedAppointment = {
+            clientName: clientName || 'Client',
+            clientEmail: clientEmail,
+            type: appointmentData.type || appointmentData.servicePlan || 'consultation',
+            date: appointmentData.date || 'Unknown Date',
+            time: appointmentTime || 'Unknown Time'
+        };
+        const template = emailService.getAdminNewAppointmentTemplate(normalizedAppointment);
+        console.log('📧 Admin notification template generated');
+        console.log('📋 Subject:', template.subject);
+        console.log('📬 Sending to admin: admin@nazdravi.com');
+        // Send email directly using Resend instead of queuing for Firebase extension
+        const emailSent = await emailService.sendEmail({
+            to: 'admin@veenutrition.com',
+            toName: 'Admin Team',
+            subject: template.subject,
+            html: template.html,
+            text: template.text,
+        });
+        if (emailSent) {
+            console.log('✅ Admin notification sent successfully via Resend');
+        }
+        else {
+            console.log('❌ Failed to send admin notification via Resend');
+        }
+        console.log('📬 Admin notification attempted for appointment from:', clientEmail);
+    }
+    catch (error) {
+        console.error('❌ ERROR in onAppointmentCreated:', error);
+        console.error('📧 Failed to queue admin notification for appointment:', appointmentId);
+    }
+});
+// 4. Client Reschedule Request Trigger
+exports.onClientRescheduleRequest = functions.firestore
+    .document('appointments/{appointmentId}')
+    .onUpdate(async (change, context) => {
+    const before = change.before.data();
+    const after = change.after.data();
+    const appointmentId = context.params.appointmentId;
+    console.log('🔍 DEBUG: CLIENT RESCHEDULE REQUEST TRIGGER');
+    console.log('🆔 Appointment ID:', appointmentId);
+    console.log('📊 Status Before:', before.status);
+    console.log('📊 Status After:', after.status);
+    console.log('🕒 Timestamp:', new Date().toISOString());
+    if (before.status !== 'clientRescheduleRequested' && after.status === 'clientRescheduleRequested') {
+        console.log('✅ Client reschedule request detected');
+        const clientName = after.clientName || after.name || after.userName || 'Client';
+        const clientEmail = after.clientEmail || after.email || after.userEmail;
+        const appointmentTime = after.time || after.timeslot;
+        const rescheduleReason = after.rescheduleReason || 'Client requested schedule change';
+        console.log('👤 Client Name (resolved):', clientName);
+        console.log('📧 Client Email (resolved):', clientEmail);
+        console.log('📅 Date:', after.date);
+        console.log('🕐 Time (resolved):', appointmentTime);
+        console.log('📝 Reschedule Reason:', rescheduleReason);
+        if (!clientEmail) {
+            console.error('❌ No client email found in client reschedule request');
+            console.error('📋 Available fields:', Object.keys(after));
+            return;
+        }
         try {
-            // Send confirmation email
-            await sendAppointmentEmailInternal({
-                email: appointment.email,
-                name: appointment.name,
-                date: appointment.date,
-                time: appointment.time,
-                meetingUrl: appointment.meetingUrl,
-                appointmentType: appointment.type
+            // Check if this is a late reschedule
+            const isLateReschedule = after.lateReschedule || false;
+            const potentialLateFee = after.potentialLateFee || 0;
+            // Send admin notification about client reschedule request
+            const adminTemplate = emailService.getRescheduleRequestTemplate(clientName, clientEmail, after.date, appointmentTime, rescheduleReason, isLateReschedule, potentialLateFee);
+            console.log('📧 Admin reschedule notification template generated');
+            const adminEmailSent = await emailService.sendEmail({
+                to: 'admin@veenutrition.com',
+                toName: 'Nazdravi Admin',
+                subject: adminTemplate.subject,
+                html: adminTemplate.html,
+                text: adminTemplate.text
             });
-            console.log(`Appointment confirmation sent for ${appointment.email}`);
+            if (adminEmailSent) {
+                console.log('✅ Admin reschedule notification sent');
+            }
+            else {
+                console.error('❌ Failed to send admin reschedule notification');
+            }
         }
         catch (error) {
-            console.error('Error sending appointment confirmation:', error);
+            console.error('❌ ERROR in onClientRescheduleRequest:', error);
+            console.error('📧 Failed to process client reschedule request emails for:', clientEmail);
         }
     }
 });
+// 5. Vee Reschedule Request Trigger  
+exports.onVeeRescheduleRequest = functions.firestore
+    .document('appointments/{appointmentId}')
+    .onUpdate(async (change, context) => {
+    const before = change.before.data();
+    const after = change.after.data();
+    const appointmentId = context.params.appointmentId;
+    console.log('🔍 DEBUG: VEE RESCHEDULE REQUEST TRIGGER');
+    console.log('🆔 Appointment ID:', appointmentId);
+    console.log('📊 Status Before:', before.status);
+    console.log('📊 Status After:', after.status);
+    console.log('🕒 Timestamp:', new Date().toISOString());
+    if (before.status !== 'veeRescheduleRequest' && after.status === 'veeRescheduleRequest') {
+        console.log('✅ Vee reschedule request detected');
+        const clientName = after.clientName || after.name || after.userName || 'Client';
+        const clientEmail = after.clientEmail || after.email || after.userEmail;
+        const appointmentTime = after.time || after.timeslot;
+        const rescheduleReason = after.rescheduleReason || 'Schedule adjustment requested by Nazdravi';
+        console.log('👤 Client Name (resolved):', clientName);
+        console.log('📧 Client Email (resolved):', clientEmail);
+        console.log('📅 Date:', after.date);
+        console.log('🕐 Time (resolved):', appointmentTime);
+        console.log('📝 Reschedule Reason:', rescheduleReason);
+        if (!clientEmail) {
+            console.error('❌ No client email found in Vee reschedule request');
+            console.error('📋 Available fields:', Object.keys(after));
+            return;
+        }
+        try {
+            // Send client notification about Vee reschedule request
+            const clientTemplate = emailService.getVeeRescheduleRequestTemplate(clientName, after.date, appointmentTime, rescheduleReason);
+            console.log('📧 Client Vee reschedule notification template generated');
+            const clientEmailSent = await emailService.sendEmail({
+                to: clientEmail,
+                toName: clientName,
+                subject: clientTemplate.subject,
+                html: clientTemplate.html,
+                text: clientTemplate.text
+            });
+            if (clientEmailSent) {
+                console.log('✅ Vee reschedule notification sent to client:', clientEmail);
+            }
+            else {
+                console.error('❌ Failed to send Vee reschedule notification to client');
+            }
+        }
+        catch (error) {
+            console.error('❌ ERROR in onVeeRescheduleRequest:', error);
+            console.error('📧 Failed to process Vee reschedule request emails for:', clientEmail);
+        }
+    }
+});
+// 6. Confirm Reschedule Request Trigger
+exports.onConfirmRescheduleRequest = functions.firestore
+    .document('appointments/{appointmentId}')
+    .onUpdate(async (change, context) => {
+    const before = change.before.data();
+    const after = change.after.data();
+    const appointmentId = context.params.appointmentId;
+    console.log('🔍 DEBUG: CONFIRM RESCHEDULE REQUEST TRIGGER');
+    console.log('🆔 Appointment ID:', appointmentId);
+    console.log('📊 Status Before:', before.status);
+    console.log('📊 Status After:', after.status);
+    console.log('🕒 Timestamp:', new Date().toISOString());
+    if (before.status !== 'confirmRescheduleRequest' && after.status === 'confirmRescheduleRequest') {
+        console.log('✅ Confirm reschedule request detected');
+        const clientName = after.clientName || after.name || after.userName || 'Client';
+        const clientEmail = after.clientEmail || after.email || after.userEmail;
+        const appointmentTime = after.time || after.timeslot;
+        console.log('👤 Client Name (resolved):', clientName);
+        console.log('📧 Client Email (resolved):', clientEmail);
+        console.log('📅 Date:', after.date);
+        console.log('🕐 Time (resolved):', appointmentTime);
+        if (!clientEmail) {
+            console.error('❌ No client email found in confirm reschedule request');
+            console.error('📋 Available fields:', Object.keys(after));
+            return;
+        }
+        try {
+            // Send reschedule confirmation to client
+            const clientTemplate = emailService.getRescheduleConfirmationTemplate(clientName, after.date, appointmentTime, after.type || 'consultation');
+            console.log('📧 Client reschedule confirmation template generated');
+            const clientEmailSent = await emailService.sendEmail({
+                to: clientEmail,
+                toName: clientName,
+                subject: clientTemplate.subject,
+                html: clientTemplate.html,
+                text: clientTemplate.text
+            });
+            if (clientEmailSent) {
+                console.log('✅ Reschedule confirmation sent to client:', clientEmail);
+            }
+            else {
+                console.error('❌ Failed to send reschedule confirmation to client');
+            }
+        }
+        catch (error) {
+            console.error('❌ ERROR in onConfirmRescheduleRequest:', error);
+            console.error('📧 Failed to process confirm reschedule emails for:', clientEmail);
+        }
+    }
+});
+// 5. Appointment Cancelled Trigger
+exports.onAppointmentCancelled = functions.firestore
+    .document('appointments/{appointmentId}')
+    .onUpdate(async (change, context) => {
+    const before = change.before.data();
+    const after = change.after.data();
+    const appointmentId = context.params.appointmentId;
+    console.log('🔍 DEBUG: APPOINTMENT CANCELLED TRIGGER');
+    console.log('🆔 Appointment ID:', appointmentId);
+    console.log('📊 Status Before:', before.status);
+    console.log('📊 Status After:', after.status);
+    console.log('🕒 Timestamp:', new Date().toISOString());
+    if (before.status !== 'cancelled' && after.status === 'cancelled') {
+        console.log('✅ Appointment cancellation detected');
+        const clientName = after.clientName || after.name || after.userName || 'Client';
+        const clientEmail = after.clientEmail || after.email || after.userEmail;
+        const appointmentTime = after.time || after.timeslot;
+        const cancelReason = after.cancelReason || 'Administrative cancellation';
+        console.log('👤 Client Name (resolved):', clientName);
+        console.log('📧 Client Email (resolved):', clientEmail);
+        console.log('📅 Date:', after.date);
+        console.log('🕐 Time (resolved):', appointmentTime);
+        console.log('📝 Cancel Reason:', cancelReason);
+        if (!clientEmail) {
+            console.error('❌ No client email found in cancelled appointment');
+            console.error('📋 Available fields:', Object.keys(after));
+            return;
+        }
+        try {
+            const template = emailService.getAppointmentCancelledTemplate(clientName, after.date, appointmentTime, cancelReason);
+            console.log('📧 Cancellation template generated');
+            const emailSent = await emailService.sendEmail({
+                to: clientEmail,
+                toName: clientName,
+                subject: template.subject,
+                html: template.html,
+                text: template.text
+            });
+            if (emailSent) {
+                console.log('✅ Cancellation email sent to client:', clientEmail);
+            }
+            else {
+                console.error('❌ Failed to send cancellation email to client');
+            }
+        }
+        catch (error) {
+            console.error('❌ ERROR in onAppointmentCancelled:', error);
+            console.error('📧 Failed to send cancellation email for:', clientEmail);
+        }
+    }
+});
+// 6. No-Show Penalty Trigger
+exports.onAppointmentNoShow = functions.firestore
+    .document('appointments/{appointmentId}')
+    .onUpdate(async (change, context) => {
+    const before = change.before.data();
+    const after = change.after.data();
+    const appointmentId = context.params.appointmentId;
+    console.log('🔍 DEBUG: NO-SHOW PENALTY TRIGGER');
+    console.log('🆔 Appointment ID:', appointmentId);
+    console.log('📊 Status Before:', before.status);
+    console.log('📊 Status After:', after.status);
+    console.log('🕒 Timestamp:', new Date().toISOString());
+    if (before.status !== 'no-show' && after.status === 'no-show') {
+        console.log('✅ No-show penalty detected');
+        const clientName = after.clientName || after.name || after.userName || 'Client';
+        const clientEmail = after.clientEmail || after.email || after.userEmail;
+        const appointmentTime = after.time || after.timeslot;
+        const penaltyAmount = after.penaltyAmount || 25;
+        console.log('👤 Client Name (resolved):', clientName);
+        console.log('📧 Client Email (resolved):', clientEmail);
+        console.log('📅 Date:', after.date);
+        console.log('🕐 Time (resolved):', appointmentTime);
+        console.log('💰 Penalty Amount:', penaltyAmount);
+        if (!clientEmail) {
+            console.error('❌ No client email found in no-show appointment');
+            console.error('📋 Available fields:', Object.keys(after));
+            return;
+        }
+        try {
+            const template = emailService.getNoShowPenaltyTemplate(clientName, after.date, appointmentTime, penaltyAmount);
+            console.log('📧 No-show penalty template generated');
+            const emailSent = await emailService.sendEmail({
+                to: clientEmail,
+                toName: clientName,
+                subject: template.subject,
+                html: template.html,
+                text: template.text
+            });
+            if (emailSent) {
+                console.log('✅ No-show penalty email sent to client:', clientEmail);
+            }
+            else {
+                console.error('❌ Failed to send no-show penalty email to client');
+            }
+        }
+        catch (error) {
+            console.error('❌ ERROR in onAppointmentNoShow:', error);
+            console.error('📧 Failed to send no-show penalty email for:', clientEmail);
+        }
+    }
+});
+// 7. Late Reschedule Fee Trigger
+exports.onLateReschedule = functions.firestore
+    .document('appointments/{appointmentId}')
+    .onUpdate(async (change, context) => {
+    const before = change.before.data();
+    const after = change.after.data();
+    const appointmentId = context.params.appointmentId;
+    console.log('🔍 DEBUG: LATE RESCHEDULE TRIGGER');
+    console.log('🆔 Appointment ID:', appointmentId);
+    console.log('📊 Late Reschedule Before:', before.lateReschedule);
+    console.log('📊 Late Reschedule After:', after.lateReschedule);
+    console.log('🕒 Timestamp:', new Date().toISOString());
+    if (!before.lateReschedule && after.lateReschedule) {
+        console.log('✅ Late reschedule fee detected');
+        const clientName = after.clientName || after.name || after.userName || 'Client';
+        const clientEmail = after.clientEmail || after.email || after.userEmail;
+        const appointmentTime = after.time || after.timeslot;
+        console.log('👤 Client Name (resolved):', clientName);
+        console.log('📧 Client Email (resolved):', clientEmail);
+        console.log('📅 Date:', after.date);
+        console.log('🕐 Time (resolved):', appointmentTime);
+        if (!clientEmail) {
+            console.error('❌ No client email found in late reschedule');
+            console.error('📋 Available fields:', Object.keys(after));
+            return;
+        }
+        try {
+            const template = emailService.getLateRescheduleTemplate(clientName, after.date, appointmentTime);
+            console.log('📧 Late reschedule template generated');
+            const emailSent = await emailService.sendEmail({
+                to: clientEmail,
+                toName: clientName,
+                subject: template.subject,
+                html: template.html,
+                text: template.text
+            });
+            if (emailSent) {
+                console.log('✅ Late reschedule email sent to client:', clientEmail);
+            }
+            else {
+                console.error('❌ Failed to send late reschedule email to client');
+            }
+        }
+        catch (error) {
+            console.error('❌ ERROR in onLateReschedule:', error);
+            console.error('📧 Failed to send late reschedule email for:', clientEmail);
+        }
+    }
+});
+// 4. Enhanced Mail Queue Processor
+exports.processMailQueue = functions.firestore
+    .document('mail/{mailId}')
+    .onCreate(async (snap, context) => {
+    var _a, _b, _c, _d, _e;
+    const mailData = snap.data();
+    if (mailData.status !== 'pending') {
+        return;
+    }
+    console.log('Processing email from queue:', mailData.to, 'Type:', mailData.type);
+    try {
+        let template;
+        switch (mailData.type) {
+            case 'account-confirmation':
+            case 'welcome':
+                template = emailService.getAccountConfirmationTemplate(((_a = mailData.data) === null || _a === void 0 ? void 0 : _a.name) || mailData.toName || 'Client');
+                break;
+            case 'payment-reminder':
+                template = emailService.getPaymentReminderTemplate(((_b = mailData.data) === null || _b === void 0 ? void 0 : _b.name) || mailData.toName || 'Client', ((_c = mailData.data) === null || _c === void 0 ? void 0 : _c.amount) || 0, ((_d = mailData.data) === null || _d === void 0 ? void 0 : _d.invoiceNumber) || 'Unknown', ((_e = mailData.data) === null || _e === void 0 ? void 0 : _e.paymentUrl) || '#');
+                break;
+            case 'reschedule-confirmation':
+                template = emailService.getRescheduleConfirmationTemplate(mailData.data.name, mailData.data.newDate, mailData.data.newTime, mailData.data.type || 'Consultation');
+                break;
+            case 'no-show-penalty':
+                template = emailService.getNoShowPenaltyTemplate(mailData.data.name, mailData.data.date, mailData.data.time, mailData.data.penaltyAmount);
+                break;
+            case 'appointment-confirmation':
+                template = emailService.getAppointmentConfirmationTemplate(mailData.data.name, mailData.data.date, mailData.data.time, mailData.data.type || 'Consultation');
+                break;
+            case 'appointment-reminder':
+                template = emailService.getAppointmentReminderTemplate(mailData.data.name, mailData.data.date, mailData.data.time, mailData.data.type || 'Consultation');
+                break;
+            case 'reschedule-request':
+                template = emailService.getRescheduleRequestTemplate(mailData.data.name, mailData.data.email || mailData.to, mailData.data.originalDate, mailData.data.originalTime, mailData.data.reason);
+                break;
+            case 'appointment-cancelled':
+                template = emailService.getAppointmentCancelledTemplate(mailData.data.name, mailData.data.date, mailData.data.time, mailData.data.reason);
+                break;
+            case 'late-reschedule':
+                template = emailService.getLateRescheduleTemplate(mailData.data.name, mailData.data.date, mailData.data.time);
+                break;
+            case 'invoice-generated':
+                template = emailService.getInvoiceGeneratedTemplate(mailData.data.name, mailData.data.amount, mailData.data.invoiceId);
+                break;
+            case 'admin-new-appointment':
+                template = emailService.getAdminNewAppointmentTemplate({
+                    clientName: mailData.data.clientName,
+                    clientEmail: mailData.data.clientEmail,
+                    type: mailData.data.appointmentType,
+                    date: mailData.data.date,
+                    time: mailData.data.time
+                });
+                break;
+            case 'admin-health-update':
+                template = emailService.getAdminHealthUpdateTemplate(mailData.data.clientName, mailData.data.clientEmail, mailData.data.updateType);
+                break;
+            case 'admin-payment-received':
+                template = emailService.getAdminPaymentReceivedTemplate(mailData.data.clientName, mailData.data.amount, mailData.data.invoiceId, mailData.data.paymentMethod);
+                break;
+            case 'admin-plan-upgrade':
+                template = emailService.getAdminPlanUpgradeTemplate(mailData.data.clientName, mailData.data.planType, mailData.data.previousPlan);
+                break;
+            case 'admin-client-message':
+                template = emailService.getAdminClientMessageTemplate(mailData.data.clientName, mailData.data.clientEmail, mailData.data.messageType, mailData.data.urgency);
+                break;
+            case 'admin-reschedule-request':
+                template = emailService.getRescheduleRequestTemplate(mailData.data.clientName, mailData.data.clientEmail, mailData.data.originalDate, mailData.data.originalTime, mailData.data.reason);
+                break;
+            default:
+                // Use existing data if template type not found
+                template = {
+                    subject: mailData.subject || 'Notification from Nazdravi',
+                    html: mailData.html || '',
+                    text: mailData.text || ''
+                };
+        }
+        const success = await emailService.sendEmail({
+            to: mailData.to,
+            toName: mailData.toName || 'Client',
+            subject: template.subject,
+            html: template.html,
+            text: template.text
+        });
+        if (success) {
+            await snap.ref.update({
+                status: 'sent',
+                sentAt: admin.firestore.FieldValue.serverTimestamp(),
+                // providerId can be set if Resend returns an id (extend sendEmail to return it later)
+            });
+            console.log('Email sent successfully to', mailData.to);
+        }
+        else {
+            await snap.ref.update({
+                status: 'failed',
+                failedAt: admin.firestore.FieldValue.serverTimestamp(),
+            });
+            console.log('Email failed to', mailData.to);
+        }
+    }
+    catch (error) {
+        console.error('Email sending failed:', error);
+        await snap.ref.update({
+            status: 'failed',
+            error: (error === null || error === void 0 ? void 0 : error.message) || 'Unknown error',
+            failedAt: admin.firestore.FieldValue.serverTimestamp(),
+        });
+    }
+});
+// Resend webhooks to track delivery and opens
+exports.resendWebhook = functions.https.onRequest(async (req, res) => {
+    var _a, _b;
+    try {
+        if (req.method === 'OPTIONS') {
+            res.set('Access-Control-Allow-Origin', '*');
+            res.set('Access-Control-Allow-Methods', 'POST, OPTIONS');
+            res.set('Access-Control-Allow-Headers', 'Content-Type');
+            res.status(204).send('');
+            return;
+        }
+        if (req.method !== 'POST') {
+            res.status(405).json({ error: 'Method not allowed' });
+            return;
+        }
+        const event = req.body;
+        // Expected Resend event payloads: delivered, opened
+        const providerId = ((_a = event === null || event === void 0 ? void 0 : event.data) === null || _a === void 0 ? void 0 : _a.email_id) || ((_b = event === null || event === void 0 ? void 0 : event.data) === null || _b === void 0 ? void 0 : _b.id);
+        const eventType = event === null || event === void 0 ? void 0 : event.type; // 'email.delivered' | 'email.opened'
+        if (!providerId || !eventType) {
+            res.status(400).json({ error: 'Invalid payload' });
+            return;
+        }
+        // Find mail doc by providerId if stored; fallback no-op
+        const dbRef = admin.firestore().collection('mail');
+        const snap = await dbRef.where('providerId', '==', providerId).limit(1).get();
+        if (!snap.empty) {
+            const docRef = snap.docs[0].ref;
+            const status = eventType === 'email.delivered' ? 'delivered' : eventType === 'email.opened' ? 'opened' : undefined;
+            if (status) {
+                await docRef.update({ status, providerEvent: eventType, updatedAt: admin.firestore.FieldValue.serverTimestamp() });
+            }
+        }
+        res.json({ ok: true });
+    }
+    catch (err) {
+        console.error('Resend webhook error:', err);
+        res.status(500).json({ error: 'Internal error' });
+    }
+});
+// 5. Daily Monthly Billing Processor
+exports.processMonthlyBilling = functions.pubsub
+    .schedule('0 9 * * *') // 9 AM daily
+    .timeZone('Europe/Amsterdam')
+    .onRun(async (context) => {
+    var _a;
+    console.log('🔄 Running daily monthly billing processor...');
+    try {
+        // Get all users with Complete Program service plan
+        const usersSnapshot = await admin.firestore()
+            .collection('users')
+            .where('servicePlan', '==', 'complete-program')
+            .where('subscriptionStatus', '==', 'active')
+            .get();
+        const processedUsers = [];
+        const now = new Date();
+        for (const userDoc of usersSnapshot.docs) {
+            const userData = userDoc.data();
+            const userId = userDoc.id;
+            try {
+                const nextBillingDate = (_a = userData.nextBillingDate) === null || _a === void 0 ? void 0 : _a.toDate();
+                const currentCycle = userData.currentBillingCycle || 0;
+                const maxCycles = userData.maxBillingCycles || 3;
+                const plannedDowngrade = userData.plannedDowngrade;
+                // Skip if user has planned downgrade or billing cycle is complete
+                if (plannedDowngrade || currentCycle >= maxCycles || !nextBillingDate) {
+                    continue;
+                }
+                // Check if it's time to generate next month's invoice
+                if (nextBillingDate <= now) {
+                    console.log(`📅 Processing billing for ${userData.name} (${userData.email})`);
+                    // Check if invoice already exists for this billing cycle
+                    const existingInvoices = await admin.firestore()
+                        .collection('invoices')
+                        .where('userId', '==', userId)
+                        .where('invoiceType', '==', 'subscription')
+                        .where('billingCycle', '==', currentCycle + 1)
+                        .get();
+                    if (existingInvoices.empty) {
+                        // Generate next month's invoice directly
+                        const nextCycle = currentCycle + 1;
+                        const billingDate = new Date(nextBillingDate);
+                        // Create subscription invoice
+                        const invoiceData = {
+                            userId,
+                            clientName: userData.name,
+                            clientEmail: userData.email,
+                            month: billingDate.getMonth() + 1,
+                            year: billingDate.getFullYear(),
+                            subscriptionAmount: userData.monthlyAmount || 150,
+                            billingCycle: nextCycle
+                        };
+                        // Add invoice to Firestore
+                        await admin.firestore().collection('invoices').add(Object.assign(Object.assign({}, invoiceData), { invoiceType: 'subscription', status: 'unpaid', totalAmount: invoiceData.subscriptionAmount, subscriptionMonth: invoiceData.month, subscriptionYear: invoiceData.year, dueDate: billingDate, createdAt: admin.firestore.FieldValue.serverTimestamp(), items: [{
+                                    description: `Complete Program - Month ${nextCycle} of 3`,
+                                    amount: invoiceData.subscriptionAmount,
+                                    type: 'subscription'
+                                }] }));
+                        // Update user's billing cycle and next billing date
+                        const followingMonth = new Date(billingDate.getFullYear(), billingDate.getMonth() + 1, billingDate.getDate());
+                        await admin.firestore().collection('users').doc(userId).update({
+                            currentBillingCycle: nextCycle,
+                            nextBillingDate: followingMonth,
+                            updatedAt: admin.firestore.FieldValue.serverTimestamp()
+                        });
+                        processedUsers.push({
+                            userId,
+                            email: userData.email,
+                            name: userData.name,
+                            billingCycle: currentCycle + 1,
+                            status: 'invoice_generated'
+                        });
+                        console.log(`✅ Invoice generated for ${userData.name} - Cycle ${currentCycle + 1}`);
+                    }
+                    else {
+                        console.log(`⏭️ Invoice already exists for ${userData.name} - Cycle ${currentCycle + 1}`);
+                    }
+                }
+            }
+            catch (error) {
+                console.error(`❌ Error processing user ${userId}:`, error);
+                processedUsers.push({
+                    userId,
+                    email: userData.email,
+                    name: userData.name,
+                    status: 'error',
+                    error: error instanceof Error ? error.message : 'Unknown error'
+                });
+            }
+        }
+        // Log summary
+        console.log(`📊 Monthly billing processing complete:`, {
+            totalUsers: usersSnapshot.docs.length,
+            processedUsers: processedUsers.length,
+            successful: processedUsers.filter(u => u.status === 'invoice_generated').length,
+            errors: processedUsers.filter(u => u.status === 'error').length
+        });
+        return { success: true, processedUsers };
+    }
+    catch (error) {
+        console.error('❌ Error in monthly billing processor:', error);
+        return { success: false, error: error instanceof Error ? error.message : 'Unknown error' };
+    }
+});
+// 6. Message Created - Email Notification
+exports.onMessageCreated = functions.firestore
+    .document('messages/{messageId}')
+    .onCreate(async (snap, context) => {
+    var _a;
+    const messageData = snap.data();
+    const messageId = context.params.messageId;
+    console.log('🔍 DEBUG: NEW MESSAGE CREATED TRIGGER');
+    console.log('🆔 Message ID:', messageId);
+    console.log('👤 From User:', messageData.fromUser);
+    console.log('👤 To User:', messageData.toUser);
+    console.log('💬 Message Type:', messageData.messageType);
+    console.log('🔴 Urgency:', messageData.urgency);
+    console.log('📝 Content:', ((_a = messageData.content) === null || _a === void 0 ? void 0 : _a.substring(0, 100)) + '...');
+    console.log('🕒 Timestamp:', new Date().toISOString());
+    try {
+        // Determine who to notify based on message direction
+        if (messageData.fromUser === 'admin' && messageData.toUser !== 'admin') {
+            // Admin sent message to client - notify the client
+            console.log('📧 Admin → Client message, notifying client');
+            // Get client user details
+            const clientDoc = await admin.firestore().collection('users').doc(messageData.toUser).get();
+            const clientData = clientDoc.data();
+            if (clientData && clientData.email) {
+                const template = emailService.getClientMessageTemplate(clientData.name || 'Client', messageData.content || 'New message from Nazdravi');
+                // Send email to client
+                const emailSent = await emailService.sendEmail({
+                    to: clientData.email,
+                    toName: clientData.name || 'Client',
+                    subject: template.subject,
+                    html: template.html,
+                    text: template.text
+                });
+                if (emailSent) {
+                    console.log('✅ Client message notification sent to:', clientData.email);
+                }
+                else {
+                    console.error('❌ Failed to send client message notification');
+                }
+            }
+        }
+        else if (messageData.fromUser !== 'admin' && messageData.toUser === 'admin') {
+            // Client sent message to admin - notify admin
+            console.log('📧 Client → Admin message, notifying admin');
+            // Get client user details for context
+            const clientDoc = await admin.firestore().collection('users').doc(messageData.fromUser).get();
+            const clientData = clientDoc.data();
+            if (clientData) {
+                const template = emailService.getAdminClientMessageTemplate(clientData.name || 'Unknown Client', clientData.email || 'unknown@email.com', messageData.messageType || 'General', messageData.urgency || 'Medium');
+                // Send email to admin
+                const emailSent = await emailService.sendEmail({
+                    to: 'admin@veenutrition.com',
+                    toName: 'Nazdravi Admin',
+                    subject: template.subject,
+                    html: template.html,
+                    text: template.text
+                });
+                if (emailSent) {
+                    console.log('✅ Admin message notification sent to: admin@nazdravi.com');
+                }
+                else {
+                    console.error('❌ Failed to send admin message notification');
+                }
+            }
+        }
+    }
+    catch (error) {
+        console.error('❌ ERROR in onMessageCreated:', error);
+        console.error('📧 Failed to send message notification');
+    }
+});
+// 7. Invoice Created - Email Notification
 exports.onInvoiceCreated = functions.firestore
     .document('invoices/{invoiceId}')
     .onCreate(async (snap, context) => {
-    const invoice = snap.data();
-    if (invoice && invoice.clientEmail && invoice.clientName) {
+    const invoiceData = snap.data();
+    const invoiceId = context.params.invoiceId;
+    console.log('🔍 DEBUG: NEW INVOICE CREATED TRIGGER');
+    console.log('🆔 Invoice ID:', invoiceId);
+    console.log('📄 Invoice Number:', invoiceData.invoiceNumber);
+    console.log('📧 Client Email:', invoiceData.clientEmail);
+    console.log('👤 Client Name:', invoiceData.clientName);
+    console.log('💰 Amount:', invoiceData.totalAmount || invoiceData.amount);
+    console.log('💱 Currency:', invoiceData.currency || 'EUR');
+    console.log('📋 Invoice Type:', invoiceData.invoiceType);
+    console.log('📊 Status:', invoiceData.status);
+    console.log('📅 Due Date:', invoiceData.dueDate);
+    console.log('🕒 Timestamp:', new Date().toISOString());
+    // Send emails for all invoice types (session, subscription, and custom invoices)
+    if (invoiceData.invoiceType === 'subscription' || invoiceData.invoiceType === 'invoice' || invoiceData.invoiceType === 'session') {
+        console.log('✅ Invoice type qualifies for email notification');
         try {
-            // Send invoice email
-            await sendInvoiceEmailInternal({
-                email: invoice.clientEmail,
-                name: invoice.clientName,
-                invoiceNumber: invoice.invoiceNumber,
-                amount: invoice.amount,
-                dueDate: invoice.dueDate,
-                pdfUrl: invoice.pdfUrl
+            const template = emailService.getInvoiceGeneratedTemplate(invoiceData.clientName || 'Client', invoiceData.totalAmount || invoiceData.amount || 0, snap.id);
+            console.log('📧 Invoice notification template generated');
+            console.log('📋 Subject:', template.subject);
+            // Send email directly using Resend instead of queuing for Firebase extension
+            const emailSent = await emailService.sendEmail({
+                to: invoiceData.clientEmail,
+                toName: invoiceData.clientName || 'Client',
+                subject: template.subject,
+                html: template.html,
+                text: template.text,
             });
-            console.log(`Invoice email sent for ${invoice.clientName}`);
+            if (emailSent) {
+                console.log('✅ Invoice email sent successfully via Resend');
+            }
+            else {
+                console.log('❌ Failed to send invoice email via Resend');
+            }
+            console.log('📬 Email attempted to:', invoiceData.clientEmail);
         }
         catch (error) {
-            console.error('Error sending invoice email:', error);
+            console.error('❌ ERROR in onInvoiceCreated:', error);
+            console.error('📧 Failed to queue invoice email for:', invoiceData.clientEmail);
         }
+    }
+    else {
+        console.log('ℹ️ Invoice type does not qualify for email notification:', invoiceData.invoiceType);
+    }
+});
+// 7. Daily Reminder Scheduler
+exports.sendDailyReminders = functions.pubsub
+    .schedule('0 18 * * *') // 6 PM daily
+    .timeZone('Europe/Amsterdam')
+    .onRun(async (context) => {
+    console.log('Running daily appointment reminders...');
+    const tomorrow = new Date();
+    tomorrow.setDate(tomorrow.getDate() + 1);
+    const tomorrowString = tomorrow.toISOString().split('T')[0];
+    const appointmentsSnapshot = await admin.firestore()
+        .collection('appointments')
+        .where('date', '==', tomorrowString)
+        .where('status', '==', 'confirmed')
+        .get();
+    const promises = appointmentsSnapshot.docs.map(async (doc) => {
+        const appointment = doc.data();
+        // Send email directly using Resend
+        return emailService.sendAppointmentReminder(appointment.clientEmail || appointment.email, appointment.clientName || appointment.name || 'Client', appointment.date, appointment.time, appointment.type);
+    });
+    await Promise.all(promises);
+    console.log(`Queued ${promises.length} reminder emails`);
+});
+// 6. Scheduled Downgrade Processor
+// Health Information Update Notification
+exports.onHealthInfoUpdated = functions.firestore
+    .document('users/{userId}')
+    .onUpdate(async (change, context) => {
+    const beforeData = change.before.data();
+    const afterData = change.after.data();
+    const userId = context.params.userId;
+    // Check if health-related fields were updated
+    const healthFields = [
+        'age', 'weight', 'height', 'allergies', 'dietaryRestrictions',
+        'medicalConditions', 'medications', 'activityLevel', 'healthGoals',
+        'previousDiets', 'eatingHabits', 'sleepHours', 'stressLevel',
+        'waterIntake', 'supplementsUsed', 'emergencyContact', 'gpContact'
+    ];
+    const updatedHealthFields = [];
+    for (const field of healthFields) {
+        if (beforeData[field] !== afterData[field]) {
+            updatedHealthFields.push({
+                field,
+                oldValue: beforeData[field] || 'Not provided',
+                newValue: afterData[field] || 'Not provided'
+            });
+        }
+    }
+    // Only send notification if health fields were actually updated
+    if (updatedHealthFields.length === 0) {
+        console.log('🔍 No health information changes detected');
+        return;
+    }
+    console.log('🔍 Health information updated for user:', userId);
+    console.log('📋 Updated fields:', updatedHealthFields.map(f => f.field).join(', '));
+    try {
+        const emailService = new ResendEmailService();
+        // Send admin notification about health update
+        const template = emailService.getAdminHealthUpdateTemplate(afterData.name || 'Unknown Client', afterData.email || 'unknown@email.com', updatedHealthFields.length > 1 ? 'Multiple Fields' : updatedHealthFields[0].field);
+        await emailService.sendEmail({
+            to: 'admin@veenutrition.com',
+            toName: 'Nazdravi Admin',
+            subject: template.subject,
+            html: template.html,
+            text: template.text
+        });
+        console.log('✅ Admin health update notification sent successfully');
+    }
+    catch (error) {
+        console.error('❌ Error sending admin health update notification:', error);
+    }
+});
+// Service Plan Upgrade Notification
+exports.onServicePlanUpgrade = functions.firestore
+    .document('users/{userId}')
+    .onUpdate(async (change, context) => {
+    const beforeData = change.before.data();
+    const afterData = change.after.data();
+    const userId = context.params.userId;
+    // Check if service plan was upgraded
+    const oldPlan = beforeData.servicePlan;
+    const newPlan = afterData.servicePlan;
+    // Only trigger on actual upgrades (pay-as-you-go -> complete-program)
+    if (oldPlan !== newPlan && newPlan === 'complete-program' && oldPlan === 'pay-as-you-go') {
+        console.log('🔍 Service plan upgrade detected for user:', userId);
+        console.log('📋 Plan change:', `${oldPlan} -> ${newPlan}`);
+        try {
+            const emailService = new ResendEmailService();
+            // Send admin notification about plan upgrade
+            const template = emailService.getAdminPlanUpgradeTemplate(afterData.name || 'Unknown Client', newPlan, oldPlan);
+            await emailService.sendEmail({
+                to: 'admin@veenutrition.com',
+                toName: 'Nazdravi Admin',
+                subject: template.subject,
+                html: template.html,
+                text: template.text
+            });
+            console.log('✅ Admin plan upgrade notification sent successfully');
+        }
+        catch (error) {
+            console.error('❌ Error sending admin plan upgrade notification:', error);
+        }
+    }
+});
+exports.processScheduledDowngrades = functions.pubsub
+    .schedule('0 2 * * *') // 2 AM daily
+    .timeZone('Europe/Amsterdam')
+    .onRun(async (context) => {
+    var _a;
+    console.log('🔄 Processing scheduled downgrades...');
+    try {
+        // Get all users with planned downgrades
+        const usersWithDowngrades = await admin.firestore()
+            .collection('users')
+            .where('plannedDowngrade', '==', true)
+            .get();
+        const processedDowngrades = [];
+        const now = new Date();
+        for (const userDoc of usersWithDowngrades.docs) {
+            const userData = userDoc.data();
+            const downgradeEffectiveDate = (_a = userData.downgradeEffectiveDate) === null || _a === void 0 ? void 0 : _a.toDate();
+            if (downgradeEffectiveDate && downgradeEffectiveDate <= now) {
+                console.log(`⏰ Processing downgrade for user ${userDoc.id}, effective date: ${downgradeEffectiveDate}`);
+                try {
+                    // Execute downgrade - update user to Pay-as-you-go
+                    await userDoc.ref.update({
+                        servicePlan: 'pay-as-you-go',
+                        subscriptionStatus: 'downgraded',
+                        plannedDowngrade: false,
+                        downgradeExecutedAt: admin.firestore.FieldValue.serverTimestamp(),
+                        // Clear Complete Program related fields
+                        programStartDate: null,
+                        programEndDate: null,
+                        currentBillingCycle: null,
+                        nextBillingDate: null,
+                        maxBillingCycles: null,
+                        monthlyAmount: null,
+                        updatedAt: admin.firestore.FieldValue.serverTimestamp()
+                    });
+                    processedDowngrades.push({
+                        userId: userDoc.id,
+                        email: userData.email,
+                        effectiveDate: downgradeEffectiveDate,
+                        status: 'success'
+                    });
+                    console.log(`✓ User ${userDoc.id} successfully downgraded to Pay-as-you-go`);
+                    // Optionally send notification email about successful downgrade
+                    const emailTemplate = {
+                        subject: 'Service Plan Updated - Now Pay-As-You-Go',
+                        html: `
+                <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
+                  <h2>Service Plan Updated</h2>
+                  <p>Hi ${userData.name || 'there'},</p>
+                  <p>Your service plan has been successfully updated to Pay-As-You-Go as scheduled.</p>
+                  <p>You can continue booking individual sessions through your dashboard.</p>
+                  <p>Thank you for choosing Nazdravi!</p>
+                </div>
+              `,
+                        text: `Your service plan has been updated to Pay-As-You-Go. Continue booking sessions through your dashboard.`
+                    };
+                    await admin.firestore().collection('mail').add({
+                        to: userData.email,
+                        toName: userData.name || 'Client',
+                        subject: emailTemplate.subject,
+                        html: emailTemplate.html,
+                        text: emailTemplate.text,
+                        type: 'plan-downgrade-notification',
+                        status: 'pending',
+                        createdAt: admin.firestore.FieldValue.serverTimestamp(),
+                    });
+                }
+                catch (error) {
+                    console.error(`Error processing downgrade for user ${userDoc.id}:`, error);
+                    processedDowngrades.push({
+                        userId: userDoc.id,
+                        email: userData.email,
+                        effectiveDate: downgradeEffectiveDate,
+                        status: 'error',
+                        error: error instanceof Error ? error.message : 'Unknown error'
+                    });
+                }
+            }
+        }
+        console.log(`✓ Processed ${processedDowngrades.length} scheduled downgrades`);
+        // Log summary for monitoring
+        if (processedDowngrades.length > 0) {
+            console.log('Downgrade processing summary:', processedDowngrades);
+        }
+    }
+    catch (error) {
+        console.error('Error in scheduled downgrade processor:', error);
     }
 });
 //# sourceMappingURL=index.js.map

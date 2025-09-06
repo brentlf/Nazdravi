@@ -68,7 +68,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
       // This should be moved to server-side validation in production
       const adminDomains = process.env.NODE_ENV === 'development' 
         ? ['gmail.com'] // Development fallback
-        : ['nazdravi.com']; // Production domain
+        : ['veenutrition.com']; // Production domain
       
       return adminDomains.some(domain => email.endsWith(`@${domain}`));
     } catch (error) {

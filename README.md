@@ -1,3 +1,31 @@
+## Environment configuration
+
+Create the following files:
+
+1. `functions/.env` (used locally by Functions; production uses functions:config)
+
+```
+RESEND_API_KEY=your_resend_api_key
+FROM_NAME=Nazdravi
+FROM_EMAIL=info@nazdravi.com
+ADMIN_EMAIL=admin@nazdravi.com
+```
+
+Optionally set production config (recommended):
+
+```
+firebase functions:config:set resend.apikey="your_resend_api_key" emails.from_name="Nazdravi" emails.from_email="info@nazdravi.com" emails.admin_email="admin@nazdravi.com"
+```
+
+2. `client/.env`
+
+```
+VITE_EMAIL_FROM_NAME=Nazdravi
+VITE_EMAIL_FROM_EMAIL=info@nazdravi.com
+VITE_EMAIL_ADMIN=admin@nazdravi.com
+VITE_API_BASE_URL=https://us-central1-veenutrition-79fba.cloudfunctions.net/api
+```
+
 # Nazdravi - Pure Firebase Architecture
 
 A comprehensive nutrition consulting services platform built with **React + Firebase** - no Express server needed! 🚀

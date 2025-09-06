@@ -110,7 +110,7 @@ export default function Login() {
                   <Leaf className="h-7 w-7 text-white" />
                 </div>
                 <span className="font-bold text-3xl text-white tracking-tight" style={{fontFamily: 'DM Sans, sans-serif'}}>
-                  nazdravi
+                  Nazdravi
                 </span>
               </div>
             </Link>
@@ -130,7 +130,7 @@ export default function Login() {
                 Sign in to your account
               </CardTitle>
               <CardDescription className="text-center text-muted-foreground" style={{fontFamily: 'DM Sans, sans-serif'}}>
-                Continue your wellness journey with nazdravi
+                Continue your wellness journey with Nazdravi
               </CardDescription>
             </CardHeader>
             
