@@ -3,7 +3,7 @@ import { Link, useLocation } from "wouter";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { Eye, EyeOff, Mail, Lock, Leaf, AlertCircle, X, CheckCircle } from "lucide-react";
+import { Eye, EyeOff, Mail, Lock, User, Leaf } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
@@ -18,31 +18,34 @@ import {
 } from "@/components/ui/form";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/contexts/AuthContext";
-import { useLanguage } from "@/contexts/LanguageContext";
 
-const createLoginSchema = (t: (key: string, namespace?: string) => string) => z.object({
-  email: z.string().email(t("valid-email", "login")),
-  password: z.string().min(6, t("password-min-length", "login")),
+const registerSchema = z.object({
+  name: z.string().min(2, "Name must be at least 2 characters"),
+  email: z.string().email("Please enter a valid email address"),
+  password: z.string().min(8, "Password must be at least 8 characters"),
+  confirmPassword: z.string()
+}).refine((data) => data.password === data.confirmPassword, {
+  message: "Passwords don't match",
+  path: ["confirmPassword"],
 });
 
-export default function Login() {
+type RegisterFormData = z.infer<typeof registerSchema>;
+
+export default function Register() {
   const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const [success, setSuccess] = useState<string | null>(null);
   const [, setLocation] = useLocation();
   const { toast } = useToast();
-  const { signIn, signInWithGoogle, user } = useAuth();
-  const { t } = useLanguage();
+  const { signUp, signInWithGoogle, user } = useAuth();
 
-  const loginSchema = createLoginSchema(t);
-  type LoginFormData = z.infer<typeof loginSchema>;
-
-  const form = useForm<LoginFormData>({
-    resolver: zodResolver(loginSchema),
+  const form = useForm<RegisterFormData>({
+    resolver: zodResolver(registerSchema),
     defaultValues: {
+      name: "",
       email: "",
       password: "",
+      confirmPassword: "",
     },
   });
 
@@ -57,27 +60,35 @@ export default function Login() {
     }
   }, [user, setLocation]);
 
-  const onSubmit = async (data: LoginFormData) => {
+  const onSubmit = async (data: RegisterFormData) => {
     setLoading(true);
-    setError(null); // Clear any previous errors
-    setSuccess(null); // Clear any previous success messages
     try {
-      await signIn(data.email, data.password);
-      setSuccess(t("sign-in-success", "login"));
+      await signUp(data.email, data.password, data.name);
+      toast({
+        title: "Welcome to Nazdravi!",
+        description: "Your account has been created successfully.",
+      });
     } catch (error: any) {
-      setError(error.message || t("check-credentials", "login"));
+      toast({
+        title: "Registration failed",
+        description: error.message || "Please try again later.",
+        variant: "destructive",
+      });
     } finally {
       setLoading(false);
     }
   };
 
-  const handleGoogleSignIn = async () => {
+  const handleGoogleSignUp = async () => {
     setLoading(true);
-    setError(null); // Clear any previous errors
     try {
       await signInWithGoogle();
     } catch (error: any) {
-      setError(error.message || t("try-again-later", "login"));
+      toast({
+        title: "Google sign up failed",
+        description: error.message || "Please try again later.",
+        variant: "destructive",
+      });
       setLoading(false);
     }
   };
@@ -88,7 +99,7 @@ export default function Login() {
       <div 
         className="absolute inset-0 bg-cover bg-center bg-no-repeat"
         style={{
-          backgroundImage: `url(/orange-closeup.jpg)`,
+          backgroundImage: `url(/orange-upward.jpg)`,
           imageRendering: 'crisp-edges',
           WebkitBackfaceVisibility: 'hidden',
           backfaceVisibility: 'hidden',
@@ -116,10 +127,10 @@ export default function Login() {
             </Link>
             <div className="text-center">
               <h1 className="text-4xl font-light text-white mb-2" style={{fontFamily: 'DM Sans, sans-serif', textShadow: '2px 2px 4px rgba(0,0,0,0.7)'}}>
-                Welcome back
+                Join our community
               </h1>
               <p className="text-white/90 text-lg font-light" style={{fontFamily: 'DM Sans, sans-serif'}}>
-                {t("sign-in-description", "login")}
+                Start your wellness journey with nazdravi
               </p>
             </div>
           </div>
@@ -127,63 +138,19 @@ export default function Login() {
           <Card className="backdrop-blur-xl bg-white/95 dark:bg-gray-900/95 border-white/20 shadow-2xl">
             <CardHeader className="space-y-3 pb-6">
               <CardTitle className="text-2xl font-semibold text-center text-foreground" style={{fontFamily: 'Playfair Display, serif'}}>
-                Sign in to your account
+                Create your account
               </CardTitle>
               <CardDescription className="text-center text-muted-foreground" style={{fontFamily: 'DM Sans, sans-serif'}}>
-                Continue your wellness journey with nazdravi
+                Begin your personalized wellness journey
               </CardDescription>
             </CardHeader>
             
-            {/* Inline Error Notification */}
-            {error && (
-              <div className="mx-8 mb-6">
-                <div className="flex items-center space-x-3 p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800/30 rounded-lg backdrop-blur-sm">
-                  <div className="flex-shrink-0">
-                    <AlertCircle className="h-5 w-5 text-red-500 dark:text-red-400" />
-                  </div>
-                  <div className="flex-1">
-                    <p className="text-sm font-medium text-red-800 dark:text-red-200" style={{fontFamily: 'DM Sans, sans-serif'}}>
-                      {error}
-                    </p>
-                  </div>
-                  <button
-                    onClick={() => setError(null)}
-                    className="flex-shrink-0 p-1 rounded-md hover:bg-red-100 dark:hover:bg-red-800/30 transition-colors"
-                  >
-                    <X className="h-4 w-4 text-red-500 dark:text-red-400" />
-                  </button>
-                </div>
-              </div>
-            )}
-
-            {/* Inline Success Notification */}
-            {success && (
-              <div className="mx-8 mb-6">
-                <div className="flex items-center space-x-3 p-4 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800/30 rounded-lg backdrop-blur-sm">
-                  <div className="flex-shrink-0">
-                    <CheckCircle className="h-5 w-5 text-green-500 dark:text-green-400" />
-                  </div>
-                  <div className="flex-1">
-                    <p className="text-sm font-medium text-green-800 dark:text-green-200" style={{fontFamily: 'DM Sans, sans-serif'}}>
-                      {success}
-                    </p>
-                  </div>
-                  <button
-                    onClick={() => setSuccess(null)}
-                    className="flex-shrink-0 p-1 rounded-md hover:bg-green-100 dark:hover:bg-green-800/30 transition-colors"
-                  >
-                    <X className="h-4 w-4 text-green-500 dark:text-green-400" />
-                  </button>
-                </div>
-              </div>
-            )}
-            
             <CardContent className="space-y-6 px-8 pb-8">
-              {/* Google Sign In */}
+              {/* Google Sign Up */}
               <Button
                 variant="outline"
                 className="w-full h-12 text-base font-medium border-2 hover:bg-muted/50 transition-all duration-300 hover:scale-[1.02] hover:shadow-lg"
-                onClick={handleGoogleSignIn}
+                onClick={handleGoogleSignUp}
                 disabled={loading}
                 style={{fontFamily: 'DM Sans, sans-serif'}}
               >
@@ -205,7 +172,7 @@ export default function Login() {
                     d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"
                   />
                 </svg>
-                {t("continue-with-google", "login")}
+                Continue with Google
               </Button>
 
               <div className="relative my-8">
@@ -214,21 +181,45 @@ export default function Login() {
                 </div>
                 <div className="relative flex justify-center text-sm">
                   <span className="bg-card px-4 text-muted-foreground font-medium" style={{fontFamily: 'DM Sans, sans-serif'}}>
-                    {t("or-continue-with-email", "login")}
+                    Or continue with email
                   </span>
                 </div>
               </div>
 
-              {/* Email/Password Form */}
+              {/* Registration Form */}
               <Form {...form}>
                 <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+                  <FormField
+                    control={form.control}
+                    name="name"
+                    render={({ field }) => (
+                      <FormItem className="space-y-2">
+                        <FormLabel className="text-sm font-semibold text-foreground" style={{fontFamily: 'DM Sans, sans-serif'}}>
+                          Full name
+                        </FormLabel>
+                        <FormControl>
+                          <div className="relative">
+                            <User className="absolute left-3 top-3 h-5 w-5 text-muted-foreground/70" />
+                            <Input
+                              {...field}
+                              placeholder="Enter your full name"
+                              className="pl-10 h-12 text-base border-2 focus:border-primary/50 transition-colors"
+                              style={{fontFamily: 'DM Sans, sans-serif'}}
+                            />
+                          </div>
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+
                   <FormField
                     control={form.control}
                     name="email"
                     render={({ field }) => (
                       <FormItem className="space-y-2">
                         <FormLabel className="text-sm font-semibold text-foreground" style={{fontFamily: 'DM Sans, sans-serif'}}>
-                          {t("email-address", "login")}
+                          Email address
                         </FormLabel>
                         <FormControl>
                           <div className="relative">
@@ -236,14 +227,9 @@ export default function Login() {
                             <Input
                               {...field}
                               type="email"
-                              placeholder={t("enter-your-email", "login")}
+                              placeholder="Enter your email"
                               className="pl-10 h-12 text-base border-2 focus:border-primary/50 transition-colors"
                               style={{fontFamily: 'DM Sans, sans-serif'}}
-                              onChange={(e) => {
-                                field.onChange(e);
-                                if (error) setError(null);
-                                if (success) setSuccess(null);
-                              }}
                             />
                           </div>
                         </FormControl>
@@ -258,7 +244,7 @@ export default function Login() {
                     render={({ field }) => (
                       <FormItem className="space-y-2">
                         <FormLabel className="text-sm font-semibold text-foreground" style={{fontFamily: 'DM Sans, sans-serif'}}>
-                          {t("password", "login")}
+                          Password
                         </FormLabel>
                         <FormControl>
                           <div className="relative">
@@ -266,14 +252,9 @@ export default function Login() {
                             <Input
                               {...field}
                               type={showPassword ? "text" : "password"}
-                              placeholder={t("enter-your-password", "login")}
+                              placeholder="Create a password"
                               className="pl-10 pr-12 h-12 text-base border-2 focus:border-primary/50 transition-colors"
                               style={{fontFamily: 'DM Sans, sans-serif'}}
-                              onChange={(e) => {
-                                field.onChange(e);
-                                if (error) setError(null);
-                                if (success) setSuccess(null);
-                              }}
                             />
                             <Button
                               type="button"
@@ -295,28 +276,73 @@ export default function Login() {
                     )}
                   />
 
+                  <FormField
+                    control={form.control}
+                    name="confirmPassword"
+                    render={({ field }) => (
+                      <FormItem className="space-y-2">
+                        <FormLabel className="text-sm font-semibold text-foreground" style={{fontFamily: 'DM Sans, sans-serif'}}>
+                          Confirm password
+                        </FormLabel>
+                        <FormControl>
+                          <div className="relative">
+                            <Lock className="absolute left-3 top-3 h-5 w-5 text-muted-foreground/70" />
+                            <Input
+                              {...field}
+                              type={showConfirmPassword ? "text" : "password"}
+                              placeholder="Confirm your password"
+                              className="pl-10 pr-12 h-12 text-base border-2 focus:border-primary/50 transition-colors"
+                              style={{fontFamily: 'DM Sans, sans-serif'}}
+                            />
+                            <Button
+                              type="button"
+                              variant="ghost"
+                              size="sm"
+                              className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
+                              onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                            >
+                              {showConfirmPassword ? (
+                                <EyeOff className="h-4 w-4 text-muted-foreground/70" />
+                              ) : (
+                                <Eye className="h-4 w-4 text-muted-foreground/70" />
+                              )}
+                            </Button>
+                          </div>
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+
                   <Button 
                     type="submit" 
                     className="w-full h-12 text-base font-semibold bg-primary hover:bg-primary/90 transition-all duration-300 hover:scale-[1.02] hover:shadow-lg mt-8" 
                     disabled={loading}
                     style={{fontFamily: 'DM Sans, sans-serif'}}
                   >
-                    {loading ? t("signing-in", "login") : t("sign-in", "login")}
+                    {loading ? "Creating account..." : "Create account"}
                   </Button>
                 </form>
               </Form>
+
+              {/* Terms and Privacy */}
+              <p className="text-sm text-muted-foreground text-center leading-relaxed mt-6" style={{fontFamily: 'DM Sans, sans-serif'}}>
+                By creating an account, you agree to our{" "}
+                <Link href="/terms" className="text-primary hover:text-primary/80 underline underline-offset-4 transition-colors">
+                  Terms of Service
+                </Link>{" "}
+                and{" "}
+                <Link href="/privacy" className="text-primary hover:text-primary/80 underline underline-offset-4 transition-colors">
+                  Privacy Policy
+                </Link>
+              </p>
             </CardContent>
 
             <CardFooter className="flex flex-col space-y-4 px-8 pb-8">
               <div className="text-center text-muted-foreground" style={{fontFamily: 'DM Sans, sans-serif'}}>
-                {t("dont-have-account", "login")}{" "}
-                <Link href="/register" className="text-primary hover:text-primary/80 font-semibold underline underline-offset-4 transition-colors">
-                  {t("sign-up-here", "login")}
-                </Link>
-              </div>
-              <div className="text-center">
-                <Link href="/forgot-password" className="text-muted-foreground hover:text-foreground font-medium transition-colors underline underline-offset-4" style={{fontFamily: 'DM Sans, sans-serif'}}>
-                  {t("forgot-your-password", "login")}
+                Already have an account?{" "}
+                <Link href="/login" className="text-primary hover:text-primary/80 font-semibold underline underline-offset-4 transition-colors">
+                  Sign in here
                 </Link>
               </div>
             </CardFooter>

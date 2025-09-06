@@ -10,6 +10,7 @@ if (!config.firebase.apiKey || !config.firebase.projectId || !config.firebase.ap
   throw new Error('Firebase configuration is incomplete. Please check your environment variables.');
 }
 
+
 // Initialize Firebase
 const app = initializeApp(config.firebase);
 

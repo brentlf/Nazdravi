@@ -5,6 +5,7 @@ import {
   signInWithEmailAndPassword,
   createUserWithEmailAndPassword,
   signInWithRedirect,
+  signInWithPopup,
   getRedirectResult,
   signOut,
   updateProfile
@@ -77,6 +78,16 @@ export function AuthProvider({ children }: AuthProviderProps) {
   };
 
   useEffect(() => {
+    // Handle redirect result for OAuth first
+    getRedirectResult(auth).then((result) => {
+      if (result) {
+        // User successfully signed in with Google
+        console.log('Google sign-in successful:', result.user);
+      }
+    }).catch((error) => {
+      console.error('Error handling Google sign-in redirect:', error);
+    });
+
     const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
       setFirebaseUser(firebaseUser);
       
@@ -157,9 +168,6 @@ export function AuthProvider({ children }: AuthProviderProps) {
       setLoading(false);
     });
 
-    // Handle redirect result for OAuth
-    getRedirectResult(auth).catch(console.error);
-
     return unsubscribe;
   }, []);
 
@@ -187,7 +195,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
   const signInWithGoogle = async () => {
     try {
-      await signInWithRedirect(auth, googleProvider);
+      await signInWithPopup(auth, googleProvider);
     } catch (error: any) {
       console.error("Google sign-in error:", error);
       throw new Error("Google sign-in failed. Please try again or contact support.");

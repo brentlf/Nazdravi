@@ -144,105 +144,95 @@ export default function Services() {
   ];
 
   return (
-    <div className="min-h-screen bg-background relative">
-      {/* Background Image - Full Screen */}
-      <div
-        className="fixed inset-0 bg-cover bg-center bg-no-repeat -z-10"
-        style={{
-          backgroundImage: `url(/OrangesBG.jpg)`,
-        }}
-      />
-      {/* Dark overlay - Full Screen */}
-      <div className="fixed inset-0 bg-black/40 -z-10" />
-
-      {/* Content Container - Full height with proper spacing for footer overlay */}
-      <div className="min-h-screen pt-16 pb-20">
-        {/* Main content section */}
-        <section className="px-4 py-4">
-          <div className="max-w-7xl mx-auto w-full">
-            {/* Header Section */}
-            <div className="text-center mb-6">
-              <div className="inline-flex items-center justify-center w-10 h-10 bg-white/15 backdrop-blur-sm rounded-full mb-3">
-                <Leaf className="h-5 w-5 text-white" />
-              </div>
-              <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold mb-3 leading-tight text-white font-serif">
-                Nutrition Services
-              </h1>
-              <p className="text-sm text-white/90 max-w-xl mx-auto leading-relaxed">
-                Transform your health with evidence-based nutrition guidance tailored to your unique needs and lifestyle.
-              </p>
+    <div className="min-h-screen pt-16 pb-20">
+      {/* Main content section */}
+      <section className="px-4 py-8">
+        <div className="max-w-7xl mx-auto w-full">
+          {/* Header Section */}
+          <div className="text-center mb-8">
+            <div className="inline-flex items-center justify-center w-12 h-12 bg-primary/10 rounded-full mb-4">
+              <Leaf className="h-6 w-6 text-primary" />
             </div>
-
-            {/* Services Grid */}
-            <div className="grid lg:grid-cols-3 gap-4 mb-6">
-              {services.map((service, index) => (
-                <Card key={index} className={`relative border-0 bg-white/15 backdrop-blur-sm hover:bg-white/25 transition-all duration-300 rounded-xl ${service.popular ? 'ring-2 ring-yellow-400/50' : ''}`}>
-                  {service.popular && (
-                    <div className="absolute -top-2 left-1/2 transform -translate-x-1/2">
-                      <Badge className="bg-yellow-400 text-gray-900 px-2 py-0.5 text-xs font-medium">
-                        Most Popular
-                      </Badge>
-                    </div>
-                  )}
-                  <CardContent className="p-4 text-white h-full flex flex-col">
-                    <div className={`inline-flex items-center justify-center w-8 h-8 bg-gradient-to-br ${service.color} rounded-xl mb-3`}>
-                      <service.icon className="h-4 w-4 text-white" />
-                    </div>
-                    
-                    <h3 className="text-sm font-bold mb-2">
-                      {service.title}
-                    </h3>
-                    
-                    <p className="text-white/80 mb-3 leading-relaxed text-xs flex-grow">
-                      {service.description}
-                    </p>
-                    
-                    <div className="flex items-center justify-between mb-3">
-                      <div className="text-xs text-white/70">
-                        Duration: {service.duration}
-                      </div>
-                      <div className="text-base font-bold">
-                        {service.price}
-                      </div>
-                    </div>
-                    
-                    <ul className="space-y-1 mb-4 flex-grow">
-                      {service.features.slice(0, 3).map((feature, featureIndex) => (
-                        <li key={featureIndex} className="flex items-start gap-2 text-xs">
-                          <CheckCircle className="h-3 w-3 text-green-400 flex-shrink-0 mt-0.5" />
-                          <span className="text-white/90">{feature}</span>
-                        </li>
-                      ))}
-                      {service.features.length > 3 && (
-                        <li className="text-xs text-white/60 italic">+ {service.features.length - 3} more features</li>
-                      )}
-                    </ul>
-                    
-                    <Button 
-                      className="w-full bg-white text-gray-900 hover:bg-gray-100 font-medium text-xs py-2 h-auto"
-                      onClick={() => handleServicePlanSelection(service.id as any)}
-                    >
-                      {service.id === "program" ? "Start Program" : "Book Now"}
-                      <ChevronRight className="ml-1 h-3 w-3" />
-                    </Button>
-                  </CardContent>
-                </Card>
-              ))}
-            </div>
-
-            {/* CTA Section */}
-            <div className="text-center">
-              <h3 className="text-base font-bold text-white mb-3">Not sure which option is right for you?</h3>
-              <Link href="/appointment">
-                <Button size="sm" className="bg-white text-gray-900 hover:bg-gray-100 px-4 py-2 text-xs font-semibold">
-                  Book Your Consultation
-                  <ArrowRight className="ml-1 h-3 w-3" />
-                </Button>
-              </Link>
-            </div>
+            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-4 leading-tight text-foreground font-serif">
+              Nutrition Services
+            </h1>
+            <p className="text-lg text-muted-foreground max-w-2xl mx-auto leading-relaxed">
+              Transform your health with evidence-based nutrition guidance tailored to your unique needs and lifestyle.
+            </p>
           </div>
-        </section>
-      </div>
+
+          {/* Services Grid */}
+          <div className="grid lg:grid-cols-3 gap-6 mb-12">
+            {services.map((service, index) => (
+              <Card key={index} className={`relative border border-border bg-card hover:shadow-lg transition-all duration-300 ${service.popular ? 'ring-2 ring-yellow-400/50' : ''}`}>
+                {service.popular && (
+                  <div className="absolute -top-3 left-1/2 transform -translate-x-1/2">
+                    <Badge className="bg-yellow-400 text-gray-900 px-3 py-1 font-medium">
+                      Most Popular
+                    </Badge>
+                  </div>
+                )}
+                <CardContent className="p-6 text-card-foreground h-full flex flex-col">
+                  <div className={`inline-flex items-center justify-center w-12 h-12 bg-gradient-to-br ${service.color} rounded-xl mb-4`}>
+                    <service.icon className="h-6 w-6 text-white" />
+                  </div>
+                  
+                  <h3 className="text-xl font-bold mb-3">
+                    {service.title}
+                  </h3>
+                  
+                  <p className="text-muted-foreground mb-4 leading-relaxed flex-grow">
+                    {service.description}
+                  </p>
+                  
+                  <div className="flex items-center justify-between mb-4">
+                    <div className="text-sm text-muted-foreground">
+                      Duration: {service.duration}
+                    </div>
+                    <div className="text-2xl font-bold text-primary">
+                      {service.price}
+                    </div>
+                  </div>
+                  
+                  <ul className="space-y-2 mb-6 flex-grow">
+                    {service.features.slice(0, 4).map((feature, featureIndex) => (
+                      <li key={featureIndex} className="flex items-start gap-2">
+                        <CheckCircle className="h-4 w-4 text-green-500 flex-shrink-0 mt-0.5" />
+                        <span className="text-muted-foreground text-sm">{feature}</span>
+                      </li>
+                    ))}
+                    {service.features.length > 4 && (
+                      <li className="text-sm text-muted-foreground italic">+ {service.features.length - 4} more features</li>
+                    )}
+                  </ul>
+                  
+                  <Button 
+                    className="w-full"
+                    onClick={() => handleServicePlanSelection(service.id as any)}
+                  >
+                    {service.id === "program" ? "Start Program" : "Book Now"}
+                    <ChevronRight className="ml-2 h-4 w-4" />
+                  </Button>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+
+          {/* CTA Section */}
+          <div className="text-center bg-card border border-border rounded-2xl p-8">
+            <h3 className="text-xl font-bold text-card-foreground mb-4">Not sure which option is right for you?</h3>
+            <p className="text-muted-foreground mb-6">
+              Schedule a free 15-minute consultation to discuss your goals and find the perfect service for your needs.
+            </p>
+            <Link href="/appointment">
+              <Button size="lg" className="px-8 py-3">
+                Book Your Consultation
+                <ArrowRight className="ml-2 h-4 w-4" />
+              </Button>
+            </Link>
+          </div>
+        </div>
+      </section>
 
       {/* Billing Confirmation Dialog */}
       <Dialog open={showBillingConfirmation} onOpenChange={setShowBillingConfirmation}>
@@ -283,4 +273,4 @@ export default function Services() {
       </Dialog>
     </div>
   );
-} 
+}

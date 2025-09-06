@@ -1,5 +1,5 @@
 import { createContext, useContext, useState, useEffect, ReactNode } from "react";
-import { getCurrentLanguage, setLanguage as setLanguageStorage } from "@/lib/globalTranslationFunction";
+import { getCurrentLanguage, setLanguage as setLanguageStorage, gt, gtWithParams } from "@/lib/globalTranslationFunction";
 import type { Language } from "@/types";
 
 interface LanguageContextType {
@@ -40,12 +40,17 @@ export function LanguageProvider({ children }: LanguageProviderProps) {
     }
   };
 
-  const t = (key: string, params?: Record<string, string>): string => {
+  const t = (key: string, namespaceOrParams?: string | Record<string, string>): string => {
     try {
-      if (params) {
-        return require('@/lib/globalTranslationFunction').gtWithParams(key, params, language);
+      // Handle namespace (string) parameter - ignore it for now since we have a global translation system
+      if (typeof namespaceOrParams === 'string') {
+        return gt(key, language);
       }
-      return require('@/lib/globalTranslationFunction').gt(key, language);
+      // Handle params (object) parameter
+      if (namespaceOrParams && typeof namespaceOrParams === 'object') {
+        return gtWithParams(key, namespaceOrParams, language);
+      }
+      return gt(key, language);
     } catch (error) {
       console.error('Translation error:', error);
       return key;

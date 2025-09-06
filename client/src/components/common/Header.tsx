@@ -37,8 +37,13 @@ export function Header() {
     }
   };
 
-  const overlayHeaderRoutes = ["/", "/about", "/services", "/blog", "/appointment"];
+  const overlayHeaderRoutes = ["/"];
   const isOverlayHeader = overlayHeaderRoutes.includes(location);
+
+  // Don't render header on home page at all
+  if (location === "/") {
+    return null;
+  }
 
   return (
     <header className={`${

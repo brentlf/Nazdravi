@@ -225,7 +225,29 @@ export const globalTranslations = {
     'informed-consent': 'Informed consent',
     'consent-form-completed': 'Consent completed',
     'ready-to-book': 'Ready to book',
-    'all-requirements-completed': 'All requirements completed'
+    'all-requirements-completed': 'All requirements completed',
+
+    // Login & Authentication
+    'valid-email': 'Please enter a valid email address',
+    'password-min-length': 'Password must be at least 6 characters',
+    'welcome-back-toast': 'Welcome back!',
+    'sign-in-success': 'Successfully signed in',
+    'sign-in-failed': 'Sign in failed',
+    'check-credentials': 'Please check your credentials and try again',
+    'google-sign-in-failed': 'Google sign in failed',
+    'try-again-later': 'Please try again later',
+    'sign-in-description': 'Enter your credentials to access your account',
+    'continue-with-google': 'Continue with Google',
+    'or-continue-with-email': 'Or continue with email',
+    'email-address': 'Email address',
+    'enter-your-email': 'Enter your email address',
+    'password': 'Password',
+    'enter-your-password': 'Enter your password',
+    'signing-in': 'Signing in...',
+    'sign-in': 'Sign in',
+    'dont-have-account': "Don't have an account?",
+    'sign-up-here': 'Sign up here',
+    'forgot-your-password': 'Forgot your password?'
   },
 
   cs: {
@@ -421,6 +443,28 @@ export const globalTranslations = {
     'informed-consent': 'Informovaný souhlas',
     'consent-completed': 'Souhlas dokončen',
     'ready-to-book': 'Připraven k rezervaci',
-    'all-requirements-completed': 'Všechny požadavky splněny'
+    'all-requirements-completed': 'Všechny požadavky splněny',
+
+    // Login & Authentication
+    'valid-email': 'Zadejte platnou emailovou adresu',
+    'password-min-length': 'Heslo musí mít alespoň 6 znaků',
+    'welcome-back-toast': 'Vítejte zpět!',
+    'sign-in-success': 'Úspěšně přihlášen',
+    'sign-in-failed': 'Přihlášení se nezdařilo',
+    'check-credentials': 'Zkontrolujte své přihlašovací údaje a zkuste to znovu',
+    'google-sign-in-failed': 'Přihlášení přes Google se nezdařilo',
+    'try-again-later': 'Zkuste to prosím později',
+    'sign-in-description': 'Zadejte své přihlašovací údaje pro přístup k účtu',
+    'continue-with-google': 'Pokračovat s Google',
+    'or-continue-with-email': 'Nebo pokračovat s emailem',
+    'email-address': 'Emailová adresa',
+    'enter-your-email': 'Zadejte svou emailovou adresu',
+    'password': 'Heslo',
+    'enter-your-password': 'Zadejte své heslo',
+    'signing-in': 'Přihlašování...',
+    'sign-in': 'Přihlásit se',
+    'dont-have-account': 'Nemáte účet?',
+    'sign-up-here': 'Zaregistrujte se zde',
+    'forgot-your-password': 'Zapomněli jste heslo?'
   }
 };

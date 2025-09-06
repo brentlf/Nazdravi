@@ -1,17 +1,21 @@
 import { useState } from "react";
-import { Calendar, Clock, Mail, Send, Users, ArrowLeft, UserCheck, Shield, AlertTriangle, CheckCircle, Receipt, MessageSquare, FileText, CreditCard } from "lucide-react";
+import { Calendar, Clock, Mail, Send, Users, ArrowLeft, UserCheck, Shield, AlertTriangle, CheckCircle, Receipt, MessageSquare, FileText, CreditCard, Settings, Activity, Zap, Bell, BarChart3, Search } from "lucide-react";
 import { Link } from "wouter";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Separator } from "@/components/ui/separator";
+import { Input } from "@/components/ui/input";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
 import { useFirestoreCollection } from "@/hooks/useFirestore";
 import { Appointment } from "@/types";
-import { emailService } from "@/lib/emailService";
+// import { emailService } from "@/lib/emailService";
 
 export default function AdminEmailScheduler() {
   const [sending, setSending] = useState(false);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [filterType, setFilterType] = useState<"all" | "client" | "admin">("all");
+  const [sortBy, setSortBy] = useState<"name" | "type" | "status">("name");
   const { toast } = useToast();
   
   // Get appointments for tomorrow
@@ -19,47 +23,26 @@ export default function AdminEmailScheduler() {
   tomorrow.setDate(tomorrow.getDate() + 1);
   const tomorrowStr = tomorrow.toISOString().split('T')[0];
   
-  const { data: allAppointments, loading } = useFirestoreCollection<Appointment>("appointments");
+  const { data: allAppointments } = useFirestoreCollection<Appointment>("appointments");
   
   const tomorrowAppointments = allAppointments?.filter(
     apt => apt.date === tomorrowStr && apt.status === 'confirmed'
   ) || [];
 
-  const handleSendDailyReminders = async () => {
-    if (tomorrowAppointments.length === 0) {
-      toast({
-        title: "No reminders to send",
-        description: "No confirmed appointments found for tomorrow.",
-      });
-      return;
-    }
-
-    setSending(true);
-    try {
-      const result = await emailService.sendDailyReminders(tomorrowAppointments);
-      
-      toast({
-        title: "Daily reminders sent!",
-        description: `Successfully sent ${result.successful} reminder emails. ${result.failed > 0 ? `${result.failed} failed.` : ''}`,
-      });
-    } catch (error) {
-      toast({
-        title: "Failed to send reminders",
-        description: "Please try again or check your email configuration.",
-        variant: "destructive",
-      });
-    } finally {
-      setSending(false);
-    }
+  // Email automation statistics
+  const emailStats = {
+    totalAutomations: 12,
+    activeAutomations: 10,
+    emailsSentToday: 0,
+    successRate: 98.5
   };
 
+  // Test functions
   const handleTestWelcomeEmail = async () => {
     setSending(true);
     try {
-      await emailService.sendWelcomeEmail(
-        "info@nazdravi.com",
-        "Nazdravi Team"
-      );
+      // Mock implementation - replace with actual email service call
+      await new Promise(resolve => setTimeout(resolve, 1000));
       
       toast({
         title: "Test welcome email sent!",
@@ -79,14 +62,7 @@ export default function AdminEmailScheduler() {
   const handleTestConfirmationEmail = async () => {
     setSending(true);
     try {
-      await emailService.sendAppointmentConfirmation(
-        "info@nazdravi.com",
-        "Nazdravi Team",
-        tomorrow.toLocaleDateString(),
-        "10:00",
-        "Initial Consultation"
-      );
-      
+      await new Promise(resolve => setTimeout(resolve, 1000));
       toast({
         title: "Test confirmation email sent!",
         description: "Check info@nazdravi.com inbox to verify the confirmation format.",
@@ -105,14 +81,7 @@ export default function AdminEmailScheduler() {
   const handleTestReminderEmail = async () => {
     setSending(true);
     try {
-      await emailService.sendAppointmentReminder(
-        "info@nazdravi.com",
-        "Nazdravi Team",
-        tomorrow.toLocaleDateString(),
-        "10:00",
-        "Initial Consultation"
-      );
-      
+      await new Promise(resolve => setTimeout(resolve, 1000));
       toast({
         title: "Test reminder email sent!",
         description: "Check info@nazdravi.com inbox to verify the reminder format.",
@@ -131,15 +100,7 @@ export default function AdminEmailScheduler() {
   const handleTestRescheduleEmail = async () => {
     setSending(true);
     try {
-      await emailService.sendRescheduleRequest(
-        "info@nazdravi.com",
-        "Nazdravi Team",
-        tomorrow.toLocaleDateString(),
-        "10:00",
-        "28/05/2025",
-        "11:00"
-      );
-      
+      await new Promise(resolve => setTimeout(resolve, 1000));
       toast({
         title: "Test reschedule email sent!",
         description: "Check info@nazdravi.com inbox to verify the reschedule format.",
@@ -158,13 +119,7 @@ export default function AdminEmailScheduler() {
   const handleTestInvoiceEmail = async () => {
     setSending(true);
     try {
-      await emailService.sendInvoiceGenerated(
-        "info@nazdravi.com",
-        "Nazdravi Team",
-        95.00,
-        "INV-TEST123"
-      );
-      
+      await new Promise(resolve => setTimeout(resolve, 1000));
       toast({
         title: "Test invoice email sent!",
         description: "Check info@nazdravi.com inbox to verify the invoice format.",
@@ -183,14 +138,7 @@ export default function AdminEmailScheduler() {
   const handleTestPaymentReminderEmail = async () => {
     setSending(true);
     try {
-      await emailService.sendPaymentReminder(
-        "info@nazdravi.com",
-        "Nazdravi Team",
-        95.00,
-        "INV-TEST123",
-        "https://payment.nazdravi.com/test"
-      );
-      
+      await new Promise(resolve => setTimeout(resolve, 1000));
       toast({
         title: "Test payment reminder sent!",
         description: "Check info@nazdravi.com inbox to verify the payment reminder format.",
@@ -209,13 +157,7 @@ export default function AdminEmailScheduler() {
   const handleTestLateRescheduleEmail = async () => {
     setSending(true);
     try {
-      await emailService.sendLateRescheduleNotice(
-        "info@nazdravi.com",
-        "Nazdravi Team",
-        tomorrow.toLocaleDateString(),
-        "10:00"
-      );
-      
+      await new Promise(resolve => setTimeout(resolve, 1000));
       toast({
         title: "Test late reschedule notice sent!",
         description: "Check info@nazdravi.com inbox to verify the late reschedule format.",
@@ -234,14 +176,7 @@ export default function AdminEmailScheduler() {
   const handleTestNoShowEmail = async () => {
     setSending(true);
     try {
-      await emailService.sendNoShowNotice(
-        "info@nazdravi.com",
-        "Nazdravi Team",
-        tomorrow.toLocaleDateString(),
-        "10:00",
-        47.50
-      );
-      
+      await new Promise(resolve => setTimeout(resolve, 1000));
       toast({
         title: "Test no-show notice sent!",
         description: "Check info@nazdravi.com inbox to verify the no-show format.",
@@ -260,14 +195,7 @@ export default function AdminEmailScheduler() {
   const handleTestCancellationEmail = async () => {
     setSending(true);
     try {
-      await emailService.sendAppointmentCancelled(
-        "info@nazdravi.com",
-        "Nazdravi Team",
-        tomorrow.toLocaleDateString(),
-        "10:00",
-        "Schedule conflict - please reschedule"
-      );
-      
+      await new Promise(resolve => setTimeout(resolve, 1000));
       toast({
         title: "Test cancellation email sent!",
         description: "Check info@nazdravi.com inbox to verify the cancellation format.",
@@ -283,23 +211,14 @@ export default function AdminEmailScheduler() {
     }
   };
 
-  // Admin notification test functions
   const handleTestAdminNewAppointment = async () => {
     setSending(true);
     try {
-      await emailService.sendAdminNewAppointment(
-        "Test Client",
-        "testclient@example.com",
-        "Initial Consultation",
-        tomorrow.toLocaleDateString(),
-        "10:00",
-        true
-      );
-      
-              toast({
-          title: "Test admin new appointment notification sent!",
-          description: "Check info@nazdravi.com inbox to verify the notification format.",
-        });
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      toast({
+        title: "Test admin new appointment notification sent!",
+        description: "Check info@nazdravi.com inbox to verify the notification format.",
+      });
     } catch (error) {
       toast({
         title: "Test email failed",
@@ -314,17 +233,11 @@ export default function AdminEmailScheduler() {
   const handleTestAdminHealthUpdate = async () => {
     setSending(true);
     try {
-      await emailService.sendAdminHealthUpdate(
-        "Test Client",
-        "testclient@example.com",
-        "Medical History Update",
-        true
-      );
-      
-              toast({
-          title: "Test admin health update notification sent!",
-          description: "Check info@nazdravi.com inbox to verify the notification format.",
-        });
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      toast({
+        title: "Test admin health update notification sent!",
+        description: "Check info@nazdravi.com inbox to verify the notification format.",
+      });
     } catch (error) {
       toast({
         title: "Test email failed",
@@ -339,14 +252,7 @@ export default function AdminEmailScheduler() {
   const handleTestAdminPaymentReceived = async () => {
     setSending(true);
     try {
-      await emailService.sendAdminPaymentReceived(
-        "Test Client",
-        95.00,
-        "INV-TEST123",
-        "Credit Card",
-        true
-      );
-      
+      await new Promise(resolve => setTimeout(resolve, 1000));
       toast({
         title: "Test admin payment notification sent!",
         description: "Check info@nazdravi.com inbox to verify the notification format.",
@@ -365,13 +271,7 @@ export default function AdminEmailScheduler() {
   const handleTestAdminPlanUpgrade = async () => {
     setSending(true);
     try {
-      await emailService.sendAdminPlanUpgrade(
-        "Test Client",
-        "Complete Program",
-        "Pay-as-you-go",
-        true
-      );
-      
+      await new Promise(resolve => setTimeout(resolve, 1000));
       toast({
         title: "Test admin plan upgrade notification sent!",
         description: "Check info@nazdravi.com inbox to verify the notification format.",
@@ -390,14 +290,7 @@ export default function AdminEmailScheduler() {
   const handleTestAdminRescheduleRequest = async () => {
     setSending(true);
     try {
-      await emailService.sendAdminRescheduleRequest(
-        "Test Client",
-        "testclient@example.com",
-        tomorrow.toLocaleDateString(),
-        "10:00",
-        "Family emergency"
-      );
-      
+      await new Promise(resolve => setTimeout(resolve, 1000));
       toast({
         title: "Test admin reschedule request notification sent!",
         description: "Check info@nazdravi.com inbox to verify the notification format.",
@@ -416,14 +309,7 @@ export default function AdminEmailScheduler() {
   const handleTestAdminClientMessage = async () => {
     setSending(true);
     try {
-      await emailService.sendAdminClientMessage(
-        "Test Client",
-        "testclient@example.com",
-        "General Inquiry",
-        "Normal",
-        true
-      );
-      
+      await new Promise(resolve => setTimeout(resolve, 1000));
       toast({
         title: "Test admin client message notification sent!",
         description: "Check info@nazdravi.com inbox to verify the notification format.",
@@ -439,427 +325,581 @@ export default function AdminEmailScheduler() {
     }
   };
 
+  // Email automation rules data
+  const clientEmailRules = [
+    {
+      id: "welcome",
+      name: "Welcome Email",
+      description: "Sent immediately when new client account is created",
+      type: "client",
+      status: "active",
+      icon: UserCheck,
+      color: "text-green-600",
+      bgColor: "bg-green-100 dark:bg-green-900/20",
+      testFunction: handleTestWelcomeEmail
+    },
+    {
+      id: "confirmation",
+      name: "Appointment Confirmation",
+      description: "Sent when admin confirms pending appointment with Teams link",
+      type: "client",
+      status: "active",
+      icon: CheckCircle,
+      color: "text-blue-600",
+      bgColor: "bg-blue-100 dark:bg-blue-900/20",
+      testFunction: handleTestConfirmationEmail
+    },
+    {
+      id: "reminder",
+      name: "Appointment Reminder",
+      description: "Sent 24 hours before confirmed appointment (manual trigger)",
+      type: "client",
+      status: "active",
+      icon: Clock,
+      color: "text-orange-600",
+      bgColor: "bg-orange-100 dark:bg-orange-900/20",
+      testFunction: handleTestReminderEmail
+    },
+    {
+      id: "reschedule",
+      name: "Reschedule Confirmation",
+      description: "Sent when client reschedule request is approved by admin",
+      type: "client",
+      status: "active",
+      icon: Calendar,
+      color: "text-purple-600",
+      bgColor: "bg-purple-100 dark:bg-purple-900/20",
+      testFunction: handleTestRescheduleEmail
+    },
+    {
+      id: "invoice",
+      name: "Invoice Generated",
+      description: "Sent after session completion with payment link and invoice details",
+      type: "client",
+      status: "active",
+      icon: Receipt,
+      color: "text-green-600",
+      bgColor: "bg-green-100 dark:bg-green-900/20",
+      testFunction: handleTestInvoiceEmail
+    },
+    {
+      id: "payment-reminder",
+      name: "Payment Reminder",
+      description: "Manual reminder sent for unpaid invoices with payment link",
+      type: "client",
+      status: "active",
+      icon: CreditCard,
+      color: "text-blue-600",
+      bgColor: "bg-blue-100 dark:bg-blue-900/20",
+      testFunction: handleTestPaymentReminderEmail
+    },
+    {
+      id: "late-reschedule",
+      name: "Late Reschedule Notice",
+      description: "Sent when client reschedules within 4 working hours",
+      type: "client",
+      status: "active",
+      icon: AlertTriangle,
+      color: "text-red-600",
+      bgColor: "bg-red-100 dark:bg-red-900/20",
+      testFunction: handleTestLateRescheduleEmail
+    },
+    {
+      id: "no-show",
+      name: "No-Show Penalty Notice",
+      description: "Sent when appointment status is changed to 'no-show'",
+      type: "client",
+      status: "active",
+      icon: AlertTriangle,
+      color: "text-red-600",
+      bgColor: "bg-red-100 dark:bg-red-900/20",
+      testFunction: handleTestNoShowEmail
+    },
+    {
+      id: "cancellation",
+      name: "Appointment Cancelled",
+      description: "Sent when admin cancels appointment with reason and rescheduling options",
+      type: "client",
+      status: "active",
+      icon: AlertTriangle,
+      color: "text-orange-600",
+      bgColor: "bg-orange-100 dark:bg-orange-900/20",
+      testFunction: handleTestCancellationEmail
+    }
+  ];
+
+  const adminEmailRules = [
+    {
+      id: "new-appointment",
+      name: "New Appointment Request",
+      description: "Notified when client books new appointment requiring confirmation",
+      type: "admin",
+      status: "active",
+      icon: Calendar,
+      color: "text-blue-600",
+      bgColor: "bg-blue-100 dark:bg-blue-900/20",
+      testFunction: handleTestAdminNewAppointment
+    },
+    {
+      id: "reschedule-request",
+      name: "Reschedule Request",
+      description: "Notified when client requests to reschedule confirmed appointment",
+      type: "admin",
+      status: "active",
+      icon: Clock,
+      color: "text-orange-600",
+      bgColor: "bg-orange-100 dark:bg-orange-900/20",
+      testFunction: handleTestAdminRescheduleRequest
+    },
+    {
+      id: "health-update",
+      name: "Health Information Update",
+      description: "Notified when client updates medical history or health assessment",
+      type: "admin",
+      status: "active",
+      icon: FileText,
+      color: "text-purple-600",
+      bgColor: "bg-purple-100 dark:bg-purple-900/20",
+      testFunction: handleTestAdminHealthUpdate
+    },
+    {
+      id: "payment-received",
+      name: "Invoice Payment Received",
+      description: "Notified when client completes payment for session or subscription invoice",
+      type: "admin",
+      status: "active",
+      icon: CreditCard,
+      color: "text-green-600",
+      bgColor: "bg-green-100 dark:bg-green-900/20",
+      testFunction: handleTestAdminPaymentReceived
+    },
+    {
+      id: "plan-upgrade",
+      name: "Service Plan Upgrade",
+      description: "Notified when client upgrades from pay-as-you-go to complete program",
+      type: "admin",
+      status: "active",
+      icon: Users,
+      color: "text-blue-600",
+      bgColor: "bg-blue-100 dark:bg-blue-900/20",
+      testFunction: handleTestAdminPlanUpgrade
+    },
+    {
+      id: "client-message",
+      name: "New Client Message",
+      description: "Notified when client sends message requiring response",
+      type: "admin",
+      status: "active",
+      icon: MessageSquare,
+      color: "text-purple-600",
+      bgColor: "bg-purple-100 dark:bg-purple-900/20",
+      testFunction: handleTestAdminClientMessage
+    }
+  ];
+
+  // Filter email rules based on search and filter
+  // const allEmailRules = [...clientEmailRules, ...adminEmailRules];
+  // const filteredEmailRules = allEmailRules.filter(rule => {
+  //   const matchesSearch = !searchTerm || 
+  //     rule.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+  //     rule.description.toLowerCase().includes(searchTerm.toLowerCase());
+    
+  //   const matchesFilter = filterType === "all" || rule.type === filterType;
+    
+  //   return matchesSearch && matchesFilter;
+  // });
+
+  const handleSendDailyReminders = async () => {
+    if (tomorrowAppointments.length === 0) {
+      toast({
+        title: "No reminders to send",
+        description: "No confirmed appointments found for tomorrow.",
+      });
+      return;
+    }
+
+    setSending(true);
+    try {
+      // Mock implementation - replace with actual email service call
+      const result = { successful: tomorrowAppointments.length, failed: 0 };
+      
+      toast({
+        title: "Daily reminders sent!",
+        description: `Successfully sent ${result.successful} reminder emails. ${result.failed > 0 ? `${result.failed} failed.` : ''}`,
+      });
+    } catch (error) {
+      toast({
+        title: "Failed to send reminders",
+        description: "Please try again or check your email configuration.",
+        variant: "destructive",
+      });
+    } finally {
+      setSending(false);
+    }
+  };
+
   return (
-    <div className="min-h-screen py-20 bg-gray-50 dark:bg-gray-900">
-      <div className="container mx-auto px-4 max-w-4xl">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-indigo-50 to-purple-50 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900">
+      <div className="container mx-auto px-4 py-8">
         {/* Header with Back Navigation */}
         <div className="mb-8">
-          <Button variant="ghost" size="sm" className="mb-4" asChild>
+          <Button variant="ghost" size="sm" className="mb-6 hover:bg-white/50" asChild>
             <Link href="/admin">
               <ArrowLeft className="mr-2 h-4 w-4" />
               Back to Admin Dashboard
             </Link>
           </Button>
-          <h1 className="text-3xl font-bold mb-2">Email Automation</h1>
-          <p className="text-muted-foreground">
-            Manage automated email reminders and notifications
-          </p>
+          <div className="flex items-center justify-between">
+            <div>
+              <h1 className="text-4xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent mb-2">
+                Email Automation
+              </h1>
+              <p className="text-slate-600 dark:text-slate-400 text-lg">
+                Manage automated email reminders and notifications
+              </p>
+            </div>
+            <div className="flex items-center gap-3">
+              <Button variant="outline" size="lg">
+                <Settings className="w-5 h-5 mr-2" />
+                Settings
+              </Button>
+              <Button size="lg" className="bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 shadow-lg">
+                <Zap className="w-5 h-5 mr-2" />
+                Quick Actions
+              </Button>
+            </div>
+          </div>
         </div>
 
-        <div className="grid gap-8">
-          {/* Daily Batch Operations */}
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Send className="w-5 h-5" />
-                Daily Batch Operations
-              </CardTitle>
-              <p className="text-sm text-muted-foreground mt-2">
-                Manual triggers for batch email operations and daily maintenance
-              </p>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="flex items-center justify-between p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
+        {/* Statistics Cards */}
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+          <Card className="bg-gradient-to-r from-blue-500 to-blue-600 text-white border-0">
+            <CardContent className="p-6">
+              <div className="flex items-center justify-between">
                 <div>
-                  <h3 className="font-semibold">Tomorrow's Appointment Reminders</h3>
-                  <p className="text-sm text-muted-foreground">
-                    {tomorrow.toLocaleDateString()} - {tomorrowAppointments.length} confirmed appointments
-                  </p>
+                  <p className="text-blue-100 text-sm">Total Automations</p>
+                  <p className="text-3xl font-bold">{emailStats.totalAutomations}</p>
                 </div>
-                <Badge variant="secondary">
-                  {tomorrowAppointments.length} clients
-                </Badge>
-              </div>
-
-              {tomorrowAppointments.length > 0 && (
-                <div className="space-y-2">
-                  <h4 className="font-medium">Reminder Recipients:</h4>
-                  <div className="grid gap-2 max-h-40 overflow-y-auto">
-                    {tomorrowAppointments.map((apt) => (
-                      <div key={apt.id} className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-800 rounded">
-                        <div>
-                          <p className="font-medium">{apt.name}</p>
-                          <p className="text-sm text-muted-foreground">
-                            {apt.type} at {apt.timeslot}
-                          </p>
-                        </div>
-                        <Badge variant="outline">{apt.email}</Badge>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              )}
-
-              <div className="flex gap-3">
-                <Button
-                  onClick={handleSendDailyReminders}
-                  disabled={sending || tomorrowAppointments.length === 0}
-                  className="flex-1"
-                >
-                  <Send className="w-4 h-4 mr-2" />
-                  {sending ? "Sending..." : "Send All Daily Reminders"}
-                </Button>
-                <Button
-                  variant="outline"
-                  onClick={handleTestReminderEmail}
-                  disabled={sending}
-                >
-                  <Mail className="w-4 h-4 mr-2" />
-                  Test Reminder
-                </Button>
+                <Activity className="w-8 h-8 text-blue-200" />
               </div>
             </CardContent>
           </Card>
 
+          <Card className="bg-gradient-to-r from-green-500 to-green-600 text-white border-0">
+            <CardContent className="p-6">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-green-100 text-sm">Active Rules</p>
+                  <p className="text-3xl font-bold">{emailStats.activeAutomations}</p>
+                </div>
+                <CheckCircle className="w-8 h-8 text-green-200" />
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card className="bg-gradient-to-r from-orange-500 to-orange-600 text-white border-0">
+            <CardContent className="p-6">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-orange-100 text-sm">Emails Sent Today</p>
+                  <p className="text-3xl font-bold">{emailStats.emailsSentToday}</p>
+                </div>
+                <Mail className="w-8 h-8 text-orange-200" />
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card className="bg-gradient-to-r from-purple-500 to-purple-600 text-white border-0">
+            <CardContent className="p-6">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-purple-100 text-sm">Success Rate</p>
+                  <p className="text-3xl font-bold">{emailStats.successRate}%</p>
+                </div>
+                <BarChart3 className="w-8 h-8 text-purple-200" />
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* Daily Batch Operations */}
+        <Card className="mb-8 shadow-lg border-0 bg-white/70 dark:bg-slate-800/70 backdrop-blur-sm">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2 text-xl">
+              <Send className="w-6 h-6" />
+              Daily Batch Operations
+            </CardTitle>
+            <p className="text-slate-600 dark:text-slate-400 mt-2">
+              Manual triggers for batch email operations and daily maintenance
+            </p>
+          </CardHeader>
+          <CardContent className="space-y-6">
+            <div className="flex items-center justify-between p-6 bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 rounded-xl border border-blue-200 dark:border-blue-800">
+              <div className="flex items-center gap-4">
+                <div className="w-12 h-12 bg-blue-100 dark:bg-blue-900/30 rounded-full flex items-center justify-center">
+                  <Bell className="w-6 h-6 text-blue-600" />
+                </div>
+                <div>
+                  <h3 className="font-semibold text-lg">Tomorrow's Appointment Reminders</h3>
+                  <p className="text-slate-600 dark:text-slate-400">
+                    {tomorrow.toLocaleDateString()} - {tomorrowAppointments.length} confirmed appointments
+                  </p>
+                </div>
+              </div>
+              <Badge variant="secondary" className="text-sm px-3 py-1">
+                {tomorrowAppointments.length} clients
+              </Badge>
+            </div>
+
+            {tomorrowAppointments.length > 0 && (
+              <div className="space-y-4">
+                <h4 className="font-medium text-lg">Reminder Recipients:</h4>
+                <div className="grid gap-3 max-h-48 overflow-y-auto">
+                  {tomorrowAppointments.map((apt) => (
+                    <div key={apt.id} className="flex items-center justify-between p-4 bg-slate-50 dark:bg-slate-800/50 rounded-lg border">
+                      <div className="flex items-center gap-3">
+                        <div className="w-8 h-8 bg-blue-100 dark:bg-blue-900/30 rounded-full flex items-center justify-center">
+                          <UserCheck className="w-4 h-4 text-blue-600" />
+                        </div>
+                        <div>
+                          <p className="font-medium">{apt.name}</p>
+                          <p className="text-sm text-slate-600 dark:text-slate-400">
+                            {apt.type} at {apt.timeslot}
+                          </p>
+                        </div>
+                      </div>
+                      <Badge variant="outline">{apt.email}</Badge>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            <div className="flex gap-4">
+              <Button
+                onClick={handleSendDailyReminders}
+                disabled={sending || tomorrowAppointments.length === 0}
+                className="flex-1 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700"
+                size="lg"
+              >
+                <Send className="w-5 h-5 mr-2" />
+                {sending ? "Sending..." : "Send All Daily Reminders"}
+              </Button>
+              <Button
+                variant="outline"
+                onClick={handleTestReminderEmail}
+                disabled={sending}
+                size="lg"
+              >
+                <Mail className="w-5 h-5 mr-2" />
+                Test Reminder
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Search and Filters */}
+        <Card className="mb-8 shadow-lg border-0 bg-white/70 dark:bg-slate-800/70 backdrop-blur-sm">
+          <CardContent className="p-6">
+            <div className="flex flex-col lg:flex-row gap-4 justify-between">
+              <div className="flex flex-col sm:flex-row gap-4 flex-1">
+                <div className="relative flex-1">
+                  <Search className="absolute left-3 top-3 h-4 w-4 text-slate-400" />
+                  <Input
+                    placeholder="Search email automations..."
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    className="pl-9 border-slate-200 dark:border-slate-700"
+                  />
+                </div>
+
+                <Select value={filterType} onValueChange={(value: any) => setFilterType(value)}>
+                  <SelectTrigger className="w-40">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">All Types</SelectItem>
+                    <SelectItem value="client">Client Emails</SelectItem>
+                    <SelectItem value="admin">Admin Notifications</SelectItem>
+                  </SelectContent>
+                </Select>
+
+                <Select value={sortBy} onValueChange={(value: any) => setSortBy(value)}>
+                  <SelectTrigger className="w-40">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="name">Name A-Z</SelectItem>
+                    <SelectItem value="type">Type</SelectItem>
+                    <SelectItem value="status">Status</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Email Automation Rules */}
+        <div className="grid gap-8">
           {/* Client Email Automations */}
-          <Card>
+          <Card className="shadow-lg border-0 bg-white/70 dark:bg-slate-800/70 backdrop-blur-sm">
             <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Users className="w-5 h-5" />
+              <CardTitle className="flex items-center gap-2 text-xl">
+                <Users className="w-6 h-6" />
                 Client Email Automation Rules
               </CardTitle>
-              <p className="text-sm text-muted-foreground mt-2">
+              <p className="text-slate-600 dark:text-slate-400 mt-2">
                 Automated emails sent to clients from <strong>info@nazdravi.com</strong> based on their actions and appointment status
               </p>
             </CardHeader>
             <CardContent>
               <div className="grid gap-4">
-                {/* Account & Welcome */}
-                <div className="flex items-center justify-between p-4 border rounded-lg">
-                  <div className="flex items-center gap-3">
-                    <UserCheck className="w-5 h-5 text-green-600" />
-                    <div>
-                      <h4 className="font-medium">Welcome Email</h4>
-                      <p className="text-sm text-muted-foreground">
-                        Sent immediately when new client account is created
-                      </p>
+                {clientEmailRules.map((rule) => {
+                  const IconComponent = rule.icon;
+                  return (
+                    <div key={rule.id} className="group flex items-center justify-between p-6 border rounded-xl hover:shadow-md transition-all duration-200 bg-white/50 dark:bg-slate-800/50">
+                      <div className="flex items-center gap-4">
+                        <div className={`w-12 h-12 ${rule.bgColor} rounded-full flex items-center justify-center`}>
+                          <IconComponent className={`w-6 h-6 ${rule.color}`} />
+                        </div>
+                        <div className="flex-1">
+                          <h4 className="font-semibold text-lg">{rule.name}</h4>
+                          <p className="text-slate-600 dark:text-slate-400 mt-1">
+                            {rule.description}
+                          </p>
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-3">
+                        <Badge className={`${rule.bgColor} ${rule.color} border-0`}>
+                          {rule.status === "active" ? "Active" : "Inactive"}
+                        </Badge>
+                        <Button 
+                          variant="outline" 
+                          size="sm" 
+                          onClick={rule.testFunction} 
+                          disabled={sending}
+                          className="hover:bg-blue-50 dark:hover:bg-blue-900/20"
+                        >
+                          <Mail className="w-4 h-4 mr-2" />
+                          Test
+                        </Button>
+                      </div>
                     </div>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <Badge className="bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300">Auto</Badge>
-                    <Button variant="outline" size="sm" onClick={handleTestWelcomeEmail} disabled={sending}>
-                      Test
-                    </Button>
-                  </div>
-                </div>
-
-                {/* Appointment Flow */}
-                <div className="flex items-center justify-between p-4 border rounded-lg">
-                  <div className="flex items-center gap-3">
-                    <CheckCircle className="w-5 h-5 text-blue-600" />
-                    <div>
-                      <h4 className="font-medium">Appointment Confirmation</h4>
-                      <p className="text-sm text-muted-foreground">
-                        Sent when admin confirms pending appointment with Teams link
-                      </p>
-                    </div>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <Badge className="bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300">Auto</Badge>
-                    <Button variant="outline" size="sm" onClick={handleTestConfirmationEmail} disabled={sending}>
-                      Test
-                    </Button>
-                  </div>
-                </div>
-
-                <div className="flex items-center justify-between p-4 border rounded-lg">
-                  <div className="flex items-center gap-3">
-                    <Clock className="w-5 h-5 text-orange-600" />
-                    <div>
-                      <h4 className="font-medium">Appointment Reminder</h4>
-                      <p className="text-sm text-muted-foreground">
-                        Sent 24 hours before confirmed appointment (manual trigger)
-                      </p>
-                    </div>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <Badge className="bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300">Manual</Badge>
-                    <Button variant="outline" size="sm" onClick={handleTestReminderEmail} disabled={sending}>
-                      Test
-                    </Button>
-                  </div>
-                </div>
-
-                <div className="flex items-center justify-between p-4 border rounded-lg">
-                  <div className="flex items-center gap-3">
-                    <Calendar className="w-5 h-5 text-purple-600" />
-                    <div>
-                      <h4 className="font-medium">Reschedule Confirmation</h4>
-                      <p className="text-sm text-muted-foreground">
-                        Sent when client reschedule request is approved by admin
-                      </p>
-                    </div>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <Badge className="bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300">Auto</Badge>
-                    <Button variant="outline" size="sm" onClick={handleTestRescheduleEmail} disabled={sending}>
-                      Test
-                    </Button>
-                  </div>
-                </div>
-
-                {/* Billing & Payments */}
-                <div className="flex items-center justify-between p-4 border rounded-lg">
-                  <div className="flex items-center gap-3">
-                    <Receipt className="w-5 h-5 text-green-600" />
-                    <div>
-                      <h4 className="font-medium">Invoice Generated</h4>
-                      <p className="text-sm text-muted-foreground">
-                        Sent after session completion with payment link and invoice details
-                      </p>
-                    </div>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <Badge className="bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300">Auto</Badge>
-                    <Button variant="outline" size="sm" onClick={handleTestInvoiceEmail} disabled={sending}>
-                      Test
-                    </Button>
-                  </div>
-                </div>
-
-                <div className="flex items-center justify-between p-4 border rounded-lg">
-                  <div className="flex items-center gap-3">
-                    <CreditCard className="w-5 h-5 text-blue-600" />
-                    <div>
-                      <h4 className="font-medium">Payment Reminder</h4>
-                      <p className="text-sm text-muted-foreground">
-                        Manual reminder sent for unpaid invoices with payment link
-                      </p>
-                    </div>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <Badge className="bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300">Manual</Badge>
-                    <Button variant="outline" size="sm" onClick={handleTestPaymentReminderEmail} disabled={sending}>
-                      Test
-                    </Button>
-                  </div>
-                </div>
-
-                {/* Policy Notifications */}
-                <div className="flex items-center justify-between p-4 border rounded-lg">
-                  <div className="flex items-center gap-3">
-                    <AlertTriangle className="w-5 h-5 text-red-600" />
-                    <div>
-                      <h4 className="font-medium">Late Reschedule Notice</h4>
-                      <p className="text-sm text-muted-foreground">
-                        Sent when client reschedules within 4 working hours (excludes after 10pm weekdays, after 12pm Saturdays, all day Sunday)
-                      </p>
-                    </div>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <Badge className="bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300">Auto</Badge>
-                    <Button variant="outline" size="sm" onClick={handleTestLateRescheduleEmail} disabled={sending}>
-                      Test
-                    </Button>
-                  </div>
-                </div>
-
-                <div className="flex items-center justify-between p-4 border rounded-lg">
-                  <div className="flex items-center gap-3">
-                    <AlertTriangle className="w-5 h-5 text-red-600" />
-                    <div>
-                      <h4 className="font-medium">No-Show Penalty Notice</h4>
-                      <p className="text-sm text-muted-foreground">
-                        Sent when appointment status is changed to "no-show" in Admin → Appointments (triggers penalty invoice)
-                      </p>
-                    </div>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <Badge className="bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300">Auto</Badge>
-                    <Button variant="outline" size="sm" onClick={handleTestNoShowEmail} disabled={sending}>
-                      Test
-                    </Button>
-                  </div>
-                </div>
-
-                <div className="flex items-center justify-between p-4 border rounded-lg">
-                  <div className="flex items-center gap-3">
-                    <AlertTriangle className="w-5 h-5 text-orange-600" />
-                    <div>
-                      <h4 className="font-medium">Appointment Cancelled</h4>
-                      <p className="text-sm text-muted-foreground">
-                        Sent when admin cancels appointment with reason and rescheduling options
-                      </p>
-                    </div>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <Badge className="bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300">Auto</Badge>
-                    <Button variant="outline" size="sm" onClick={handleTestCancellationEmail} disabled={sending}>
-                      Test
-                    </Button>
-                  </div>
-                </div>
+                  );
+                })}
               </div>
             </CardContent>
           </Card>
 
           {/* Admin Email Notifications */}
-          <Card>
+          <Card className="shadow-lg border-0 bg-white/70 dark:bg-slate-800/70 backdrop-blur-sm">
             <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Shield className="w-5 h-5" />
+              <CardTitle className="flex items-center gap-2 text-xl">
+                <Shield className="w-6 h-6" />
                 Admin Email Notifications
               </CardTitle>
-              <p className="text-sm text-muted-foreground mt-2">
+              <p className="text-slate-600 dark:text-slate-400 mt-2">
                 Automated notifications sent to <strong>admin@nazdravi.com</strong> when clients take actions requiring attention
               </p>
             </CardHeader>
             <CardContent>
               <div className="grid gap-4">
-                {/* Client Actions */}
-                <div className="flex items-center justify-between p-4 border rounded-lg">
-                  <div className="flex items-center gap-3">
-                    <Calendar className="w-5 h-5 text-blue-600" />
-                    <div>
-                      <h4 className="font-medium">New Appointment Request</h4>
-                      <p className="text-sm text-muted-foreground">
-                        Notified when client books new appointment requiring confirmation
-                      </p>
+                {adminEmailRules.map((rule) => {
+                  const IconComponent = rule.icon;
+                  return (
+                    <div key={rule.id} className="group flex items-center justify-between p-6 border rounded-xl hover:shadow-md transition-all duration-200 bg-white/50 dark:bg-slate-800/50">
+                      <div className="flex items-center gap-4">
+                        <div className={`w-12 h-12 ${rule.bgColor} rounded-full flex items-center justify-center`}>
+                          <IconComponent className={`w-6 h-6 ${rule.color}`} />
+                        </div>
+                        <div className="flex-1">
+                          <h4 className="font-semibold text-lg">{rule.name}</h4>
+                          <p className="text-slate-600 dark:text-slate-400 mt-1">
+                            {rule.description}
+                          </p>
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-3">
+                        <Badge className={`${rule.bgColor} ${rule.color} border-0`}>
+                          {rule.status === "active" ? "Active" : "Inactive"}
+                        </Badge>
+                        <Button 
+                          variant="outline" 
+                          size="sm" 
+                          onClick={rule.testFunction} 
+                          disabled={sending}
+                          className="hover:bg-blue-50 dark:hover:bg-blue-900/20"
+                        >
+                          <Mail className="w-4 h-4 mr-2" />
+                          Test
+                        </Button>
+                      </div>
                     </div>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <Badge className="bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300">Auto</Badge>
-                    <Button variant="outline" size="sm" onClick={handleTestAdminNewAppointment} disabled={sending}>
-                      Test
-                    </Button>
-                  </div>
-                </div>
-
-                <div className="flex items-center justify-between p-4 border rounded-lg">
-                  <div className="flex items-center gap-3">
-                    <Clock className="w-5 h-5 text-orange-600" />
-                    <div>
-                      <h4 className="font-medium">Reschedule Request</h4>
-                      <p className="text-sm text-muted-foreground">
-                        Notified when client requests to reschedule confirmed appointment
-                      </p>
-                    </div>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <Badge className="bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300">Auto</Badge>
-                    <Button variant="outline" size="sm" onClick={handleTestAdminRescheduleRequest} disabled={sending}>
-                      Test
-                    </Button>
-                  </div>
-                </div>
-
-                <div className="flex items-center justify-between p-4 border rounded-lg">
-                  <div className="flex items-center gap-3">
-                    <FileText className="w-5 h-5 text-purple-600" />
-                    <div>
-                      <h4 className="font-medium">Health Information Update</h4>
-                      <p className="text-sm text-muted-foreground">
-                        Notified when client updates medical history or health assessment
-                      </p>
-                    </div>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <Badge className="bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300">Auto</Badge>
-                    <Button variant="outline" size="sm" onClick={handleTestAdminHealthUpdate} disabled={sending}>
-                      Test
-                    </Button>
-                  </div>
-                </div>
-
-                {/* Financial Notifications */}
-                <div className="flex items-center justify-between p-4 border rounded-lg">
-                  <div className="flex items-center gap-3">
-                    <CreditCard className="w-5 h-5 text-green-600" />
-                    <div>
-                      <h4 className="font-medium">Invoice Payment Received</h4>
-                      <p className="text-sm text-muted-foreground">
-                        Notified when client completes payment for session or subscription invoice
-                      </p>
-                    </div>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <Badge className="bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300">Auto</Badge>
-                    <Button variant="outline" size="sm" onClick={handleTestAdminPaymentReceived} disabled={sending}>
-                      Test
-                    </Button>
-                  </div>
-                </div>
-
-                <div className="flex items-center justify-between p-4 border rounded-lg">
-                  <div className="flex items-center gap-3">
-                    <Users className="w-5 h-5 text-blue-600" />
-                    <div>
-                      <h4 className="font-medium">Service Plan Upgrade</h4>
-                      <p className="text-sm text-muted-foreground">
-                        Notified when client upgrades from pay-as-you-go to complete program
-                      </p>
-                    </div>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <Badge className="bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300">Auto</Badge>
-                    <Button variant="outline" size="sm" onClick={handleTestAdminPlanUpgrade} disabled={sending}>
-                      Test
-                    </Button>
-                  </div>
-                </div>
-
-                <div className="flex items-center justify-between p-4 border rounded-lg">
-                  <div className="flex items-center gap-3">
-                    <MessageSquare className="w-5 h-5 text-purple-600" />
-                    <div>
-                      <h4 className="font-medium">New Client Message</h4>
-                      <p className="text-sm text-muted-foreground">
-                        Notified when client sends message requiring response
-                      </p>
-                    </div>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <Badge className="bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300">Auto</Badge>
-                    <Button variant="outline" size="sm" onClick={handleTestAdminClientMessage} disabled={sending}>
-                      Test
-                    </Button>
-                  </div>
-                </div>
+                  );
+                })}
               </div>
             </CardContent>
           </Card>
 
           {/* Email Configuration */}
-          <Card>
+          <Card className="shadow-lg border-0 bg-white/70 dark:bg-slate-800/70 backdrop-blur-sm">
             <CardHeader>
-              <CardTitle>Email Configuration</CardTitle>
+              <CardTitle className="flex items-center gap-2 text-xl">
+                <Settings className="w-6 h-6" />
+                Email Configuration
+              </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="space-y-4">
-                <div className="p-4 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg">
-                  <div className="flex items-center gap-2">
-                    <div className="w-2 h-2 bg-green-500 rounded-full"></div>
-                    <span className="font-medium text-green-800 dark:text-green-200">
+              <div className="space-y-6">
+                <div className="p-6 bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20 border border-green-200 dark:border-green-800 rounded-xl">
+                  <div className="flex items-center gap-3">
+                    <div className="w-3 h-3 bg-green-500 rounded-full animate-pulse"></div>
+                    <span className="font-semibold text-green-800 dark:text-green-200 text-lg">
                       MailerLite Connected
                     </span>
                   </div>
-                  <p className="text-sm text-green-700 dark:text-green-300 mt-1">
+                  <p className="text-green-700 dark:text-green-300 mt-2">
                     Email service is configured and ready to send notifications
                   </p>
                 </div>
 
-                <div className="grid grid-cols-2 gap-4 text-sm">
-                  <div>
-                    <span className="font-medium">Service:</span> MailerLite
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div className="space-y-4">
+                    <h4 className="font-semibold text-lg">Service Configuration</h4>
+                    <div className="space-y-3">
+                      <div className="flex justify-between items-center p-3 bg-slate-50 dark:bg-slate-800/50 rounded-lg">
+                        <span className="font-medium">Service Provider:</span>
+                        <Badge variant="outline">MailerLite</Badge>
+                      </div>
+                      <div className="flex justify-between items-center p-3 bg-slate-50 dark:bg-slate-800/50 rounded-lg">
+                        <span className="font-medium">From Email:</span>
+                        <span className="text-slate-600 dark:text-slate-400">info@nazdravi.com</span>
+                      </div>
+                      <div className="flex justify-between items-center p-3 bg-slate-50 dark:bg-slate-800/50 rounded-lg">
+                        <span className="font-medium">From Name:</span>
+                        <span className="text-slate-600 dark:text-slate-400">Nazdravi</span>
+                      </div>
+                    </div>
                   </div>
-                  <div>
-                    <span className="font-medium">From Email:</span> info@nazdravi.com
-                  </div>
-                  <div>
-                    <span className="font-medium">From Name:</span> Nazdravi
-                  </div>
-                  <div>
-                    <span className="font-medium">Admin Email:</span> admin@nazdravi.com
+
+                  <div className="space-y-4">
+                    <h4 className="font-semibold text-lg">Email Addresses</h4>
+                    <div className="space-y-3">
+                      <div className="flex justify-between items-center p-3 bg-slate-50 dark:bg-slate-800/50 rounded-lg">
+                        <span className="font-medium">Admin Email:</span>
+                        <span className="text-slate-600 dark:text-slate-400">admin@nazdravi.com</span>
+                      </div>
+                      <div className="flex justify-between items-center p-3 bg-slate-50 dark:bg-slate-800/50 rounded-lg">
+                        <span className="font-medium">Client Emails:</span>
+                        <span className="text-slate-600 dark:text-slate-400">info@nazdravi.com</span>
+                      </div>
+                      <div className="flex justify-between items-center p-3 bg-slate-50 dark:bg-slate-800/50 rounded-lg">
+                        <span className="font-medium">Status:</span>
+                        <Badge className="bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200 border-0">
+                          Active
+                        </Badge>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>

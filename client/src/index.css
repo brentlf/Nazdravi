@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:wght@400;500;600;700;800;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:wght@400;500;600;700;800;900&family=Maharlika:wght@400&family=DM+Sans:wght@100;200;300;400;500;600;700;800;900&display=swap');
 
 @import "tailwindcss";
 
@@ -7,8 +7,8 @@
   --primary: 25 15% 15%; /* Warm dark brown */
   --primary-foreground: 0 0% 98%; /* Off-white */
   
-  /* Background Colors - Warm whites and creams */
-  --background: 35 20% 98%; /* Warm off-white */
+  /* Background Colors - Light grey */
+  --background: 220 14% 96%; /* Very light grey */
   --foreground: 25 15% 15%; /* Warm dark brown text */
   
   /* UI Colors with warmth */
@@ -110,7 +110,6 @@
   }
   
   body {
-    background-color: hsl(var(--background)) !important;
     color: hsl(var(--foreground)) !important;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
@@ -121,9 +120,9 @@
     transition: background-color 0.3s ease, color 0.3s ease;
   }
   
-  /* Ensure root element also gets proper background */
+  /* Remove forced background - let components handle their own backgrounds */
   html {
-    background-color: hsl(var(--background)) !important;
+    /* background-color: hsl(var(--background)) !important; */
   }
   
   /* Playfair Display for elegant headers */
@@ -372,5 +371,11 @@
   
   .dark .admin-select-content {
     background-color: hsl(220 15% 12%) !important;
+  }
+  
+  /* Animation for nazdravi gradient effect */
+  @keyframes subtle-gradient {
+    0%, 100% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
   }
 }

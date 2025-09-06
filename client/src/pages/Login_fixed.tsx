@@ -3,7 +3,7 @@ import { Link, useLocation } from "wouter";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { Eye, EyeOff, Mail, Lock, Leaf, AlertCircle, X, CheckCircle } from "lucide-react";
+import { Eye, EyeOff, Mail, Lock, Leaf } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
@@ -28,8 +28,6 @@ const createLoginSchema = (t: (key: string, namespace?: string) => string) => z.
 export default function Login() {
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const [success, setSuccess] = useState<string | null>(null);
   const [, setLocation] = useLocation();
   const { toast } = useToast();
   const { signIn, signInWithGoogle, user } = useAuth();
@@ -59,13 +57,18 @@ export default function Login() {
 
   const onSubmit = async (data: LoginFormData) => {
     setLoading(true);
-    setError(null); // Clear any previous errors
-    setSuccess(null); // Clear any previous success messages
     try {
       await signIn(data.email, data.password);
-      setSuccess(t("sign-in-success", "login"));
+      toast({
+        title: t("welcome-back-toast", "login"),
+        description: t("sign-in-success", "login"),
+      });
     } catch (error: any) {
-      setError(error.message || t("check-credentials", "login"));
+      toast({
+        title: t("sign-in-failed", "login"),
+        description: error.message || t("check-credentials", "login"),
+        variant: "destructive",
+      });
     } finally {
       setLoading(false);
     }
@@ -73,11 +76,14 @@ export default function Login() {
 
   const handleGoogleSignIn = async () => {
     setLoading(true);
-    setError(null); // Clear any previous errors
     try {
       await signInWithGoogle();
     } catch (error: any) {
-      setError(error.message || t("try-again-later", "login"));
+      toast({
+        title: t("google-sign-in-failed", "login"),
+        description: error.message || t("try-again-later", "login"),
+        variant: "destructive",
+      });
       setLoading(false);
     }
   };
@@ -133,50 +139,6 @@ export default function Login() {
                 Continue your wellness journey with nazdravi
               </CardDescription>
             </CardHeader>
-            
-            {/* Inline Error Notification */}
-            {error && (
-              <div className="mx-8 mb-6">
-                <div className="flex items-center space-x-3 p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800/30 rounded-lg backdrop-blur-sm">
-                  <div className="flex-shrink-0">
-                    <AlertCircle className="h-5 w-5 text-red-500 dark:text-red-400" />
-                  </div>
-                  <div className="flex-1">
-                    <p className="text-sm font-medium text-red-800 dark:text-red-200" style={{fontFamily: 'DM Sans, sans-serif'}}>
-                      {error}
-                    </p>
-                  </div>
-                  <button
-                    onClick={() => setError(null)}
-                    className="flex-shrink-0 p-1 rounded-md hover:bg-red-100 dark:hover:bg-red-800/30 transition-colors"
-                  >
-                    <X className="h-4 w-4 text-red-500 dark:text-red-400" />
-                  </button>
-                </div>
-              </div>
-            )}
-
-            {/* Inline Success Notification */}
-            {success && (
-              <div className="mx-8 mb-6">
-                <div className="flex items-center space-x-3 p-4 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800/30 rounded-lg backdrop-blur-sm">
-                  <div className="flex-shrink-0">
-                    <CheckCircle className="h-5 w-5 text-green-500 dark:text-green-400" />
-                  </div>
-                  <div className="flex-1">
-                    <p className="text-sm font-medium text-green-800 dark:text-green-200" style={{fontFamily: 'DM Sans, sans-serif'}}>
-                      {success}
-                    </p>
-                  </div>
-                  <button
-                    onClick={() => setSuccess(null)}
-                    className="flex-shrink-0 p-1 rounded-md hover:bg-green-100 dark:hover:bg-green-800/30 transition-colors"
-                  >
-                    <X className="h-4 w-4 text-green-500 dark:text-green-400" />
-                  </button>
-                </div>
-              </div>
-            )}
             
             <CardContent className="space-y-6 px-8 pb-8">
               {/* Google Sign In */}
@@ -239,11 +201,6 @@ export default function Login() {
                               placeholder={t("enter-your-email", "login")}
                               className="pl-10 h-12 text-base border-2 focus:border-primary/50 transition-colors"
                               style={{fontFamily: 'DM Sans, sans-serif'}}
-                              onChange={(e) => {
-                                field.onChange(e);
-                                if (error) setError(null);
-                                if (success) setSuccess(null);
-                              }}
                             />
                           </div>
                         </FormControl>
@@ -269,11 +226,6 @@ export default function Login() {
                               placeholder={t("enter-your-password", "login")}
                               className="pl-10 pr-12 h-12 text-base border-2 focus:border-primary/50 transition-colors"
                               style={{fontFamily: 'DM Sans, sans-serif'}}
-                              onChange={(e) => {
-                                field.onChange(e);
-                                if (error) setError(null);
-                                if (success) setSuccess(null);
-                              }}
                             />
                             <Button
                               type="button"
