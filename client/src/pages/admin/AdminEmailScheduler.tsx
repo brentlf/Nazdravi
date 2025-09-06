@@ -573,50 +573,50 @@ export default function AdminEmailScheduler() {
 
         {/* Statistics Cards */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
-          <Card className="bg-gradient-to-r from-blue-500 to-blue-600 text-white border-0">
+          <Card className="bg-white/70 dark:bg-slate-800/70 border border-slate-200 dark:border-slate-700">
             <CardContent className="p-4">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-blue-100 text-sm">Total Automations</p>
-                  <p className="text-3xl font-bold">{emailStats.totalAutomations}</p>
+                  <p className="text-slate-500 dark:text-slate-400 text-xs">Total Automations</p>
+                  <p className="text-2xl font-semibold text-slate-900 dark:text-slate-100">{emailStats.totalAutomations}</p>
                 </div>
-                <Activity className="w-8 h-8 text-blue-200" />
+                <Activity className="w-8 h-8 text-slate-400" />
               </div>
             </CardContent>
           </Card>
 
-          <Card className="bg-gradient-to-r from-green-500 to-green-600 text-white border-0">
+          <Card className="bg-white/70 dark:bg-slate-800/70 border border-slate-200 dark:border-slate-700">
             <CardContent className="p-4">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-green-100 text-sm">Active Rules</p>
-                  <p className="text-3xl font-bold">{emailStats.activeAutomations}</p>
+                  <p className="text-slate-500 dark:text-slate-400 text-xs">Active Rules</p>
+                  <p className="text-2xl font-semibold text-slate-900 dark:text-slate-100">{emailStats.activeAutomations}</p>
                 </div>
-                <CheckCircle className="w-8 h-8 text-green-200" />
+                <CheckCircle className="w-8 h-8 text-slate-400" />
               </div>
             </CardContent>
           </Card>
 
-          <Card className="bg-gradient-to-r from-orange-500 to-orange-600 text-white border-0">
+          <Card className="bg-white/70 dark:bg-slate-800/70 border border-slate-200 dark:border-slate-700">
             <CardContent className="p-4">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-orange-100 text-sm">Emails Sent Today</p>
-                  <p className="text-3xl font-bold">{emailStats.emailsSentToday}</p>
+                  <p className="text-slate-500 dark:text-slate-400 text-xs">Emails Sent Today</p>
+                  <p className="text-2xl font-semibold text-slate-900 dark:text-slate-100">{emailStats.emailsSentToday}</p>
                 </div>
-                <Mail className="w-8 h-8 text-orange-200" />
+                <Mail className="w-8 h-8 text-slate-400" />
               </div>
             </CardContent>
           </Card>
 
-          <Card className="bg-gradient-to-r from-purple-500 to-purple-600 text-white border-0">
+          <Card className="bg-white/70 dark:bg-slate-800/70 border border-slate-200 dark:border-slate-700">
             <CardContent className="p-4">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-purple-100 text-sm">Success Rate</p>
-                  <p className="text-3xl font-bold">{emailStats.successRate}%</p>
+                  <p className="text-slate-500 dark:text-slate-400 text-xs">Success Rate</p>
+                  <p className="text-2xl font-semibold text-slate-900 dark:text-slate-100">{emailStats.successRate}%</p>
                 </div>
-                <BarChart3 className="w-8 h-8 text-purple-200" />
+                <BarChart3 className="w-8 h-8 text-slate-400" />
               </div>
             </CardContent>
           </Card>
