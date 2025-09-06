@@ -53,6 +53,7 @@ export default function Blog() {
     setCurrentPage(1);
   }, [searchTerm, selectedCategory, viewMode]);
 
+
   function calculateReadTime(content: string): number {
     const wordsPerMinute = 200;
     const wordCount = content.split(" ").length;
@@ -217,24 +218,28 @@ export default function Blog() {
               <div>
                 <h3 className="text-lg font-semibold text-card-foreground mb-3">View Mode</h3>
                 <div className="flex gap-2">
-                  <Button
-                    variant={viewMode === "grid" ? "default" : "outline"}
+                  <button
                     onClick={() => setViewMode("grid")}
-                    size="sm"
-                    className="flex items-center gap-2"
+                    className={`flex items-center gap-2 px-3 py-2 text-sm font-medium rounded-md transition-colors ${
+                      viewMode === "grid" 
+                        ? "bg-primary text-primary-foreground hover:bg-primary/90" 
+                        : "bg-background border border-input hover:bg-accent hover:text-accent-foreground"
+                    }`}
                   >
                     <Grid3X3 className="h-4 w-4" />
                     Grid
-                  </Button>
-                  <Button
-                    variant={viewMode === "list" ? "default" : "outline"}
+                  </button>
+                  <button
                     onClick={() => setViewMode("list")}
-                    size="sm"
-                    className="flex items-center gap-2"
+                    className={`flex items-center gap-2 px-3 py-2 text-sm font-medium rounded-md transition-colors ${
+                      viewMode === "list" 
+                        ? "bg-primary text-primary-foreground hover:bg-primary/90" 
+                        : "bg-background border border-input hover:bg-accent hover:text-accent-foreground"
+                    }`}
                   >
                     <List className="h-4 w-4" />
                     List
-                  </Button>
+                  </button>
                 </div>
               </div>
             </div>

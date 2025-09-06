@@ -239,10 +239,10 @@ export default function AdminDocuments() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900">
-      <div className="container mx-auto px-4 py-8">
+      <div className="container mx-auto px-3 py-4">
         {/* Header with Back Navigation */}
-        <div className="mb-8">
-          <Button variant="ghost" size="sm" className="mb-6 hover:bg-white/50" asChild>
+        <div className="mb-4">
+          <Button variant="ghost" size="sm" className="mb-3 hover:bg-white/50" asChild>
             <Link href="/admin">
               <ArrowLeft className="mr-2 h-4 w-4" />
               Back to Admin Dashboard
@@ -250,26 +250,26 @@ export default function AdminDocuments() {
           </Button>
           <div className="flex items-center justify-between">
             <div>
-              <h1 className="text-4xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent mb-2">
+              <h1 className="text-3xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent mb-1">
                 Client Documents
               </h1>
-              <p className="text-slate-600 dark:text-slate-400 text-lg">
+              <p className="text-slate-600 dark:text-slate-400 text-base">
                 Upload and manage nutritional plans and documents for your clients
               </p>
             </div>
             <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
               <DialogTrigger asChild>
-                <Button size="lg" className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 shadow-lg">
+                <Button size="sm" className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 shadow-lg">
                   <Plus className="w-5 h-5 mr-2" />
                   Upload Document
                 </Button>
               </DialogTrigger>
-              <DialogContent className="max-w-2xl">
+              <DialogContent className="max-w-xl">
                 <DialogHeader>
-                  <DialogTitle className="text-2xl">Upload New Document</DialogTitle>
+                  <DialogTitle className="text-xl">Upload New Document</DialogTitle>
                 </DialogHeader>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <div className="space-y-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="space-y-3">
                     <div>
                       <Label htmlFor="client-select" className="text-sm font-medium">Select Client</Label>
                       <Select 

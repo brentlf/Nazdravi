@@ -540,10 +540,10 @@ export default function AdminEmailScheduler() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-indigo-50 to-purple-50 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900">
-      <div className="container mx-auto px-4 py-8">
+      <div className="container mx-auto px-3 py-4">
         {/* Header with Back Navigation */}
-        <div className="mb-8">
-          <Button variant="ghost" size="sm" className="mb-6 hover:bg-white/50" asChild>
+        <div className="mb-4">
+          <Button variant="ghost" size="sm" className="mb-3 hover:bg-white/50" asChild>
             <Link href="/admin">
               <ArrowLeft className="mr-2 h-4 w-4" />
               Back to Admin Dashboard
@@ -551,19 +551,19 @@ export default function AdminEmailScheduler() {
           </Button>
           <div className="flex items-center justify-between">
             <div>
-              <h1 className="text-4xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent mb-2">
+              <h1 className="text-3xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent mb-1">
                 Email Automation
               </h1>
-              <p className="text-slate-600 dark:text-slate-400 text-lg">
+              <p className="text-slate-600 dark:text-slate-400 text-base">
                 Manage automated email reminders and notifications
               </p>
             </div>
             <div className="flex items-center gap-3">
-              <Button variant="outline" size="lg">
+              <Button variant="outline" size="sm">
                 <Settings className="w-5 h-5 mr-2" />
                 Settings
               </Button>
-              <Button size="lg" className="bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 shadow-lg">
+              <Button size="sm" className="bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 shadow-lg">
                 <Zap className="w-5 h-5 mr-2" />
                 Quick Actions
               </Button>
@@ -572,9 +572,9 @@ export default function AdminEmailScheduler() {
         </div>
 
         {/* Statistics Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
           <Card className="bg-gradient-to-r from-blue-500 to-blue-600 text-white border-0">
-            <CardContent className="p-6">
+            <CardContent className="p-4">
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-blue-100 text-sm">Total Automations</p>
@@ -586,7 +586,7 @@ export default function AdminEmailScheduler() {
           </Card>
 
           <Card className="bg-gradient-to-r from-green-500 to-green-600 text-white border-0">
-            <CardContent className="p-6">
+            <CardContent className="p-4">
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-green-100 text-sm">Active Rules</p>
@@ -598,7 +598,7 @@ export default function AdminEmailScheduler() {
           </Card>
 
           <Card className="bg-gradient-to-r from-orange-500 to-orange-600 text-white border-0">
-            <CardContent className="p-6">
+            <CardContent className="p-4">
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-orange-100 text-sm">Emails Sent Today</p>
@@ -610,7 +610,7 @@ export default function AdminEmailScheduler() {
           </Card>
 
           <Card className="bg-gradient-to-r from-purple-500 to-purple-600 text-white border-0">
-            <CardContent className="p-6">
+            <CardContent className="p-4">
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-purple-100 text-sm">Success Rate</p>

@@ -266,10 +266,10 @@ export default function AdminBlog() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-purple-50 to-pink-50 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900">
-      <div className="container mx-auto px-4 py-8">
+      <div className="container mx-auto px-3 py-4">
         {/* Header with Back Navigation */}
-        <div className="mb-8">
-          <Button variant="ghost" size="sm" className="mb-6 hover:bg-white/50" asChild>
+        <div className="mb-4">
+          <Button variant="ghost" size="sm" className="mb-3 hover:bg-white/50" asChild>
             <Link href="/admin">
               <ArrowLeft className="mr-2 h-4 w-4" />
               Back to Admin Dashboard
@@ -277,21 +277,21 @@ export default function AdminBlog() {
           </Button>
           <div className="flex items-center justify-between">
             <div>
-              <h1 className="text-4xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent mb-2">
+              <h1 className="text-3xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent mb-1">
                 Blog Management
               </h1>
-              <p className="text-slate-600 dark:text-slate-400 text-lg">
+              <p className="text-slate-600 dark:text-slate-400 text-base">
                 Create and manage blog posts with image uploads
               </p>
             </div>
             <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
               <DialogTrigger asChild>
-                <Button size="lg" className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 shadow-lg" onClick={openNewPostDialog}>
+                <Button size="sm" className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 shadow-lg" onClick={openNewPostDialog}>
                   <Plus className="w-5 h-5 mr-2" />
                   New Blog Post
                 </Button>
               </DialogTrigger>
-              <DialogContent className="max-w-6xl max-h-[90vh] overflow-y-auto">
+              <DialogContent className="max-w-5xl max-h-[85vh] overflow-y-auto">
                   <DialogHeader>
                     <DialogTitle className="text-2xl">
                       {editingPost ? "Edit Blog Post" : "Create New Blog Post"}
@@ -533,9 +533,9 @@ export default function AdminBlog() {
           </div>
 
         {/* Statistics Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
           <Card className="bg-gradient-to-r from-blue-500 to-blue-600 text-white border-0">
-            <CardContent className="p-6">
+            <CardContent className="p-4">
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-blue-100 text-sm">Total Posts</p>
@@ -547,7 +547,7 @@ export default function AdminBlog() {
           </Card>
 
           <Card className="bg-gradient-to-r from-green-500 to-green-600 text-white border-0">
-            <CardContent className="p-6">
+            <CardContent className="p-4">
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-green-100 text-sm">Published</p>
@@ -559,7 +559,7 @@ export default function AdminBlog() {
           </Card>
 
           <Card className="bg-gradient-to-r from-orange-500 to-orange-600 text-white border-0">
-            <CardContent className="p-6">
+            <CardContent className="p-4">
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-orange-100 text-sm">Drafts</p>
@@ -571,7 +571,7 @@ export default function AdminBlog() {
           </Card>
 
           <Card className="bg-gradient-to-r from-purple-500 to-purple-600 text-white border-0">
-            <CardContent className="p-6">
+            <CardContent className="p-4">
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-purple-100 text-sm">Tags</p>
@@ -584,10 +584,10 @@ export default function AdminBlog() {
           </div>
 
         {/* Filters and Search */}
-        <Card className="mb-8 shadow-lg border-0 bg-white/70 dark:bg-slate-800/70 backdrop-blur-sm">
-          <CardContent className="p-6">
-            <div className="flex flex-col lg:flex-row gap-4 justify-between">
-                <div className="flex flex-col sm:flex-row gap-4 flex-1">
+        <Card className="mb-6 shadow-lg border-0 bg-white/70 dark:bg-slate-800/70 backdrop-blur-sm">
+          <CardContent className="p-4">
+            <div className="flex flex-col lg:flex-row gap-3 justify-between">
+                <div className="flex flex-col sm:flex-row gap-3 flex-1">
                   <div className="relative flex-1">
                     <Search className="absolute left-3 top-3 h-4 w-4 text-slate-400" />
                     <Input
@@ -599,7 +599,7 @@ export default function AdminBlog() {
                   </div>
 
                   <Select value={selectedLang} onValueChange={(value: any) => setSelectedLang(value)}>
-                    <SelectTrigger className="w-40">
+                    <SelectTrigger className="w-36">
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
@@ -610,7 +610,7 @@ export default function AdminBlog() {
                   </Select>
 
                   <Select value={statusFilter} onValueChange={(value: any) => setStatusFilter(value)}>
-                    <SelectTrigger className="w-40">
+                    <SelectTrigger className="w-36">
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
@@ -621,7 +621,7 @@ export default function AdminBlog() {
                   </Select>
 
                   <Select value={sortBy} onValueChange={(value: any) => setSortBy(value)}>
-                    <SelectTrigger className="w-40">
+                    <SelectTrigger className="w-36">
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
@@ -633,7 +633,7 @@ export default function AdminBlog() {
                   </Select>
                 </div>
 
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-1.5">
                   <Button
                     variant={viewMode === "grid" ? "default" : "outline"}
                     size="sm"

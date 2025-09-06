@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Calendar, Clock, Plus, Trash2, Save, ArrowLeft } from "lucide-react";
 import { Link } from "wouter";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -7,6 +7,8 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
 import { useFirestoreCollection, useFirestoreActions } from "@/hooks/useFirestore";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from "@/components/ui/pagination";
 
 interface UnavailableSlot {
   id?: string;
@@ -24,6 +26,16 @@ export default function AdminAvailability() {
 
   const { data: unavailableSlots, loading } = useFirestoreCollection<UnavailableSlot>("unavailableSlots");
   const { add: addUnavailableSlot, remove: removeUnavailableSlot } = useFirestoreActions("unavailableSlots");
+
+  // Controls for search, filter, sort, pagination
+  const [searchQuery, setSearchQuery] = useState("");
+  const [startDateFilter, setStartDateFilter] = useState("");
+  const [endDateFilter, setEndDateFilter] = useState("");
+  const [sortOption, setSortOption] = useState<
+    "date_desc" | "date_asc" | "reason_asc" | "reason_desc" | "slots_desc" | "slots_asc"
+  >("date_desc");
+  const [pageSize, setPageSize] = useState<number>(10);
+  const [currentPage, setCurrentPage] = useState<number>(1);
 
   const timeSlots = [
     "09:00", "09:30", "10:00", "10:30", "11:00", "11:30",
@@ -89,6 +101,84 @@ export default function AdminAvailability() {
       });
     }
   };
+
+  // Derived, filtered, sorted list
+  const filteredAndSortedSlots = useMemo(() => {
+    const normalize = (v: string) => v.toLowerCase();
+    const queryLower = normalize(searchQuery.trim());
+
+    const withinRange = (dateStr: string) => {
+      if (!startDateFilter && !endDateFilter) return true;
+      const dateValue = new Date(dateStr).getTime();
+      if (startDateFilter) {
+        const start = new Date(startDateFilter).getTime();
+        if (dateValue < start) return false;
+      }
+      if (endDateFilter) {
+        const end = new Date(endDateFilter).getTime();
+        if (dateValue > end) return false;
+      }
+      return true;
+    };
+
+    const searched = (slot: UnavailableSlot) => {
+      if (!queryLower) return true;
+      const reasonMatch = slot.reason ? normalize(slot.reason).includes(queryLower) : false;
+      const dateText = new Date(slot.date).toLocaleDateString();
+      const dateMatch = normalize(dateText).includes(queryLower) || normalize(slot.date).includes(queryLower);
+      const timeMatch = (slot.timeslots || []).some(t => normalize(t).includes(queryLower));
+      return reasonMatch || dateMatch || timeMatch;
+    };
+
+    const filtered = (unavailableSlots || []).filter(s => withinRange(s.date) && searched(s));
+
+    const sorted = [...filtered].sort((a, b) => {
+      const aDate = new Date(a.date).getTime();
+      const bDate = new Date(b.date).getTime();
+      const aReason = (a.reason || "").toLowerCase();
+      const bReason = (b.reason || "").toLowerCase();
+      const aCount = (a.timeslots || []).length;
+      const bCount = (b.timeslots || []).length;
+      switch (sortOption) {
+        case "date_asc":
+          return aDate - bDate;
+        case "date_desc":
+          return bDate - aDate;
+        case "reason_asc":
+          return aReason.localeCompare(bReason);
+        case "reason_desc":
+          return bReason.localeCompare(aReason);
+        case "slots_asc":
+          return aCount - bCount;
+        case "slots_desc":
+          return bCount - aCount;
+        default:
+          return 0;
+      }
+    });
+
+    return sorted;
+  }, [unavailableSlots, searchQuery, startDateFilter, endDateFilter, sortOption]);
+
+  // Pagination derivation
+  const totalItems = filteredAndSortedSlots.length;
+  const totalPages = Math.max(1, Math.ceil(totalItems / pageSize));
+  const currentPageSafe = Math.min(currentPage, totalPages);
+  const startIndex = (currentPageSafe - 1) * pageSize;
+  const endIndex = Math.min(startIndex + pageSize, totalItems);
+  const paginatedSlots = filteredAndSortedSlots.slice(startIndex, endIndex);
+
+  // Reset pagination when filters change
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchQuery, startDateFilter, endDateFilter, sortOption, pageSize]);
+
+  // Ensure current page stays valid when items change (e.g., delete)
+  useEffect(() => {
+    if (currentPage > totalPages) {
+      setCurrentPage(totalPages);
+    }
+  }, [currentPage, totalPages]);
 
   return (
     <div className="min-h-screen py-20 bg-gray-50 dark:bg-gray-900">
@@ -175,15 +265,87 @@ export default function AdminAvailability() {
               </CardTitle>
             </CardHeader>
             <CardContent>
+              {/* Filters & Controls */}
+              <div className="mb-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+                <div className="flex flex-col gap-1">
+                  <Label htmlFor="search">Search</Label>
+                  <Input
+                    id="search"
+                    placeholder="Search reason, date, or time"
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                  />
+                </div>
+                <div className="flex flex-col gap-1">
+                  <Label htmlFor="from">From</Label>
+                  <Input
+                    id="from"
+                    type="date"
+                    value={startDateFilter}
+                    onChange={(e) => setStartDateFilter(e.target.value)}
+                  />
+                </div>
+                <div className="flex flex-col gap-1">
+                  <Label htmlFor="to">To</Label>
+                  <Input
+                    id="to"
+                    type="date"
+                    value={endDateFilter}
+                    onChange={(e) => setEndDateFilter(e.target.value)}
+                  />
+                </div>
+                <div className="flex flex-col gap-1">
+                  <Label>Sort</Label>
+                  <Select value={sortOption} onValueChange={(v) => setSortOption(v as any)}>
+                    <SelectTrigger>
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="date_desc">Date: Newest first</SelectItem>
+                      <SelectItem value="date_asc">Date: Oldest first</SelectItem>
+                      <SelectItem value="reason_asc">Reason: A → Z</SelectItem>
+                      <SelectItem value="reason_desc">Reason: Z → A</SelectItem>
+                      <SelectItem value="slots_desc">Slots: Most → Least</SelectItem>
+                      <SelectItem value="slots_asc">Slots: Least → Most</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div className="flex flex-col gap-1">
+                  <Label>Rows per page</Label>
+                  <Select value={String(pageSize)} onValueChange={(v) => setPageSize(Number(v))}>
+                    <SelectTrigger>
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="5">5</SelectItem>
+                      <SelectItem value="10">10</SelectItem>
+                      <SelectItem value="20">20</SelectItem>
+                      <SelectItem value="50">50</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div className="flex items-end">
+                  <Button variant="outline" className="w-full" onClick={() => { setSearchQuery(""); setStartDateFilter(""); setEndDateFilter(""); setSortOption("date_desc"); setPageSize(10); }}>
+                    Clear filters
+                  </Button>
+                </div>
+              </div>
+
+              {/* Results count */}
+              {!loading && (
+                <div className="text-sm text-muted-foreground mb-3">
+                  Showing {totalItems === 0 ? 0 : startIndex + 1}-{endIndex} of {totalItems} result{totalItems === 1 ? "" : "s"}
+                </div>
+              )}
               {loading ? (
                 <div className="space-y-4">
                   {[...Array(3)].map((_, i) => (
                     <div key={i} className="h-16 bg-gray-200 dark:bg-gray-700 rounded animate-pulse"></div>
                   ))}
                 </div>
-              ) : unavailableSlots && unavailableSlots.length > 0 ? (
+              ) : paginatedSlots && paginatedSlots.length > 0 ? (
                 <div className="space-y-4">
-                  {unavailableSlots.map((slot) => (
+                  {paginatedSlots.map((slot) => (
                     <div key={slot.id} className="border rounded-lg p-4">
                       <div className="flex justify-between items-start">
                         <div>
@@ -223,6 +385,44 @@ export default function AdminAvailability() {
                   <p className="text-muted-foreground">
                     All time slots are currently available for client bookings.
                   </p>
+                </div>
+              )}
+
+              {/* Pagination */}
+              {totalItems > 0 && (
+                <div className="mt-4">
+                  <Pagination>
+                    <PaginationContent>
+                      <PaginationItem>
+                        <PaginationPrevious
+                          href="#"
+                          onClick={(e) => { e.preventDefault(); setCurrentPage(p => Math.max(1, p - 1)); }}
+                          className={currentPageSafe === 1 ? "pointer-events-none opacity-50" : ""}
+                        />
+                      </PaginationItem>
+                      {Array.from({ length: totalPages }).map((_, idx) => {
+                        const pageNumber = idx + 1;
+                        return (
+                          <PaginationItem key={pageNumber}>
+                            <PaginationLink
+                              href="#"
+                              isActive={pageNumber === currentPageSafe}
+                              onClick={(e) => { e.preventDefault(); setCurrentPage(pageNumber); }}
+                            >
+                              {pageNumber}
+                            </PaginationLink>
+                          </PaginationItem>
+                        );
+                      })}
+                      <PaginationItem>
+                        <PaginationNext
+                          href="#"
+                          onClick={(e) => { e.preventDefault(); setCurrentPage(p => Math.min(totalPages, p + 1)); }}
+                          className={currentPageSafe === totalPages ? "pointer-events-none opacity-50" : ""}
+                        />
+                      </PaginationItem>
+                    </PaginationContent>
+                  </Pagination>
                 </div>
               )}
             </CardContent>
