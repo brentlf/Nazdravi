@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import { MessageCircle, Send, Search, User, Clock, ArrowLeft } from "lucide-react";
+import { MessageCircle, Send, Search, User, Clock, ArrowLeft, MoreVertical, Phone, Video, Smile, Paperclip, Mic } from "lucide-react";
 import { Link } from "wouter";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -7,6 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import {
   Select,
   SelectContent,
@@ -229,187 +230,307 @@ export default function AdminMessages() {
     );
   }
 
+  const selectedClient = filteredUsers.find(u => createChatRoom(u.uid) === selectedChatRoom);
+
   return (
-    <div className="min-h-screen py-20 bg-gray-50 dark:bg-gray-900">
-      <div className="container mx-auto px-4">
-        {/* Header with Back Navigation */}
-        <div className="mb-8">
-          <Button variant="ghost" size="sm" className="mb-4" asChild>
-            <Link href="/admin">
-              <ArrowLeft className="mr-2 h-4 w-4" />
-              Back to Admin Dashboard
-            </Link>
-          </Button>
-          <h1 className="text-3xl font-bold mb-2">Messages</h1>
-          <p className="text-muted-foreground">
-            Communicate with your clients directly
-          </p>
-        </div>
-
-        <div className="grid lg:grid-cols-3 gap-6 h-[600px]">
-          {/* Client List */}
-          <Card className="lg:col-span-1">
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <MessageCircle className="w-5 h-5" />
-                Clients
-              </CardTitle>
-              <div className="relative">
-                <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-                <Input
-                  placeholder="Search clients..."
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                  className="pl-9"
-                />
+    <div className="h-screen bg-background flex flex-col">
+      {/* WhatsApp-style Header */}
+      <div className="bg-green-600 dark:bg-green-700 text-white px-4 py-3 flex items-center justify-between flex-shrink-0">
+        <div className="flex items-center gap-3">
+          <Link href="/admin">
+            <Button variant="ghost" size="icon" className="text-white hover:bg-green-700 dark:hover:bg-green-800 h-8 w-8 p-0">
+              <ArrowLeft className="w-5 h-5" />
+            </Button>
+          </Link>
+          
+          {selectedClient ? (
+            <>
+              <Avatar className="h-10 w-10">
+                <AvatarImage src={selectedClient.photoURL} />
+                <AvatarFallback className="bg-green-500 text-white">
+                  {selectedClient.name.split(' ').map(n => n[0]).join('').toUpperCase()}
+                </AvatarFallback>
+              </Avatar>
+              
+              <div className="flex-1 min-w-0">
+                <h1 className="font-semibold text-white truncate">{selectedClient.name}</h1>
+                <p className="text-xs text-green-100 truncate">{selectedClient.email}</p>
               </div>
-            </CardHeader>
-            <CardContent className="p-0">
-              <div className="space-y-2 max-h-[400px] overflow-y-auto">
-                {filteredUsers.map((client) => {
-                  const chatRoom = createChatRoom(client.uid);
-                  const lastMessage = getLastMessage(client.uid);
-                  const unreadCount = getUnreadCount(client.uid);
-                  const isSelected = selectedChatRoom === chatRoom;
-                  const hasUnread = unreadCount > 0;
+            </>
+          ) : (
+            <div className="flex-1 min-w-0">
+              <h1 className="font-semibold text-white">Admin Messages</h1>
+              <p className="text-xs text-green-100">Select a client to start chatting</p>
+            </div>
+          )}
+        </div>
+        
+        {selectedClient && (
+          <div className="flex items-center gap-2">
+            <Button variant="ghost" size="icon" className="text-white hover:bg-green-700 dark:hover:bg-green-800 h-8 w-8 p-0">
+              <Video className="w-5 h-5" />
+            </Button>
+            <Button variant="ghost" size="icon" className="text-white hover:bg-green-700 dark:hover:bg-green-800 h-8 w-8 p-0">
+              <Phone className="w-5 h-5" />
+            </Button>
+            <Button variant="ghost" size="icon" className="text-white hover:bg-green-700 dark:hover:bg-green-800 h-8 w-8 p-0">
+              <MoreVertical className="w-5 h-5" />
+            </Button>
+          </div>
+        )}
+      </div>
 
-                  return (
-                    <div
-                      key={client.uid}
-                      onClick={() => setSelectedChatRoom(chatRoom)}
-                      className={`p-4 border-b cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors ${
-                        isSelected ? 'bg-blue-50 dark:bg-blue-900/20 border-blue-200' : ''
-                      }`}
-                    >
-                      <div className="flex items-start space-x-3">
-                        <div className="relative">
-                          <Avatar className="w-10 h-10">
-                            <AvatarImage src={client.photoURL} />
-                            <AvatarFallback>
-                              {client.name.split(' ').map(n => n[0]).join('').toUpperCase()}
-                            </AvatarFallback>
-                          </Avatar>
-                          {hasUnread && (
-                            <div className="absolute -top-1 -right-1 w-4 h-4 bg-red-500 rounded-full flex items-center justify-center">
-                              <div className="w-2 h-2 bg-white rounded-full"></div>
-                            </div>
-                          )}
-                        </div>
-                        <div className="flex-1 min-w-0">
-                          <div className="flex items-center justify-between">
-                            <p className={`text-sm truncate ${hasUnread ? 'font-semibold' : 'font-medium'}`}>{client.name}</p>
-                            <div className="flex items-center space-x-2">
-                              {unreadCount > 0 && (
-                                <Badge variant="destructive" className="text-xs h-5 px-1.5">
-                                  {unreadCount}
-                                </Badge>
-                              )}
-                              {lastMessage && (
-                                <span className="text-xs text-muted-foreground">
-                                  {new Date(lastMessage.createdAt).toLocaleDateString()}
-                                </span>
-                              )}
-                            </div>
+      <div className="flex-1 flex overflow-hidden">
+        {/* Client List Sidebar */}
+        <div className="w-80 bg-white dark:bg-gray-900 border-r border-gray-200 dark:border-gray-700 flex flex-col">
+          {/* Search Header */}
+          <div className="p-4 border-b border-gray-200 dark:border-gray-700">
+            <div className="relative">
+              <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+              <Input
+                placeholder="Search clients..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="pl-9"
+              />
+            </div>
+          </div>
+
+          {/* Client List */}
+          <ScrollArea className="flex-1">
+            <div className="space-y-1 p-2">
+              {filteredUsers.map((client) => {
+                const chatRoom = createChatRoom(client.uid);
+                const lastMessage = getLastMessage(client.uid);
+                const unreadCount = getUnreadCount(client.uid);
+                const isSelected = selectedChatRoom === chatRoom;
+                const hasUnread = unreadCount > 0;
+
+                return (
+                  <div
+                    key={client.uid}
+                    onClick={() => setSelectedChatRoom(chatRoom)}
+                    className={`p-3 rounded-lg cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors ${
+                      isSelected ? 'bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-700' : ''
+                    }`}
+                  >
+                    <div className="flex items-center space-x-3">
+                      <div className="relative">
+                        <Avatar className="w-12 h-12">
+                          <AvatarImage src={client.photoURL} />
+                          <AvatarFallback className="bg-green-500 text-white">
+                            {client.name.split(' ').map(n => n[0]).join('').toUpperCase()}
+                          </AvatarFallback>
+                        </Avatar>
+                        {hasUnread && (
+                          <div className="absolute -top-1 -right-1 w-5 h-5 bg-red-500 rounded-full flex items-center justify-center">
+                            <span className="text-xs text-white font-bold">{unreadCount}</span>
                           </div>
-                          <p className="text-xs text-muted-foreground truncate">{client.email}</p>
+                        )}
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center justify-between">
+                          <p className={`text-sm truncate ${hasUnread ? 'font-semibold' : 'font-medium'}`}>
+                            {client.name}
+                          </p>
                           {lastMessage && (
-                            <p className="text-xs text-muted-foreground truncate mt-1">
-                              {lastMessage.text}
-                            </p>
+                            <span className="text-xs text-muted-foreground">
+                              {(() => {
+                                try {
+                                  let date;
+                                  if (lastMessage.createdAt instanceof Date) {
+                                    date = lastMessage.createdAt;
+                                  } else if (lastMessage.createdAt && typeof lastMessage.createdAt === 'object' && 'toDate' in lastMessage.createdAt) {
+                                    date = (lastMessage.createdAt as any).toDate();
+                                  } else {
+                                    date = new Date();
+                                  }
+                                  const now = new Date();
+                                  const diffMs = now.getTime() - date.getTime();
+                                  const diffMins = Math.floor(diffMs / 60000);
+                                  const diffHours = Math.floor(diffMins / 60);
+                                  const diffDays = Math.floor(diffHours / 24);
+                                  
+                                  if (diffMins < 1) return 'now';
+                                  if (diffMins < 60) return `${diffMins}m`;
+                                  if (diffHours < 24) return `${diffHours}h`;
+                                  if (diffDays < 7) return `${diffDays}d`;
+                                  return date.toLocaleDateString();
+                                } catch (error) {
+                                  return 'now';
+                                }
+                              })()}
+                            </span>
                           )}
                         </div>
+                        <p className="text-xs text-muted-foreground truncate">{client.email}</p>
+                        {lastMessage && (
+                          <p className="text-xs text-muted-foreground truncate mt-1">
+                            {lastMessage.text}
+                          </p>
+                        )}
                       </div>
                     </div>
-                  );
-                })}
-                
-                {filteredUsers.length === 0 && (
-                  <div className="p-8 text-center text-muted-foreground">
-                    <MessageCircle className="w-12 h-12 mx-auto mb-4 opacity-50" />
-                    <p>No clients found</p>
                   </div>
-                )}
-              </div>
-            </CardContent>
-          </Card>
+                );
+              })}
+              
+              {filteredUsers.length === 0 && (
+                <div className="p-8 text-center text-muted-foreground">
+                  <MessageCircle className="w-12 h-12 mx-auto mb-4 opacity-50" />
+                  <p>No clients found</p>
+                </div>
+              )}
+            </div>
+          </ScrollArea>
+        </div>
 
-          {/* Chat Area */}
-          <Card className="lg:col-span-2">
-            {selectedChatRoom ? (
-              <>
-                <CardHeader className="border-b">
-                  <CardTitle className="flex items-center gap-2">
-                    <MessageCircle className="w-5 h-5" />
-                    Chat with {filteredUsers.find(u => createChatRoom(u.uid) === selectedChatRoom)?.name}
-                  </CardTitle>
-                </CardHeader>
+        {/* Chat Area */}
+        <div className="flex-1 flex flex-col">
+          {selectedChatRoom ? (
+            <>
+              {/* WhatsApp-style Background */}
+              <div className="flex-1 bg-[#e5ddd5] dark:bg-[#0a0a0a] relative overflow-hidden">
+                {/* Background Pattern */}
+                <div 
+                  className="absolute inset-0 opacity-5 dark:opacity-10"
+                  style={{
+                    backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23000000' fill-opacity='0.1'%3E%3Ccircle cx='30' cy='30' r='2'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
+                  }}
+                />
                 
-                {/* Messages */}
-                <CardContent className="p-0">
-                  <div className="h-[400px] overflow-y-auto p-4 space-y-4" id="admin-messages-container">
+                {/* Messages Container */}
+                <ScrollArea className="relative z-10 h-full px-4 py-2">
+                  <div className="space-y-2 pb-4">
                     {messagesLoading ? (
                       <div className="space-y-4">
                         {[...Array(3)].map((_, i) => (
                           <div key={i} className="animate-pulse">
-                            <div className="h-10 bg-gray-200 dark:bg-gray-700 rounded mb-2"></div>
+                            <div className="h-10 bg-white/20 rounded-lg"></div>
                           </div>
                         ))}
                       </div>
                     ) : messages && messages.length > 0 ? (
-                      messages.map((message) => (
-                        <div
-                          key={message.id}
-                          className={`flex ${
-                            message.fromUser === "admin" || message.fromUser === user?.uid ? 'justify-end' : 'justify-start'
-                          }`}
-                        >
-                          <div
-                            className={`max-w-xs lg:max-w-md px-4 py-2 rounded-lg ${
-                              message.fromUser === "admin" || message.fromUser === user?.uid
-                                ? 'bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-200 border border-green-200 dark:border-green-700'
-                                : 'bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-200 border border-blue-200 dark:border-blue-700'
-                            }`}
-                          >
-                            <p className="text-sm">{message.text}</p>
-                            <p className={`text-xs mt-1 ${
-                              message.fromUser === "admin" || message.fromUser === user?.uid ? 'text-green-600 dark:text-green-300' : 'text-blue-600 dark:text-blue-300'
-                            }`}>
-                              {(() => {
-                                try {
-                                  let date;
-                                  if (message.createdAt instanceof Date) {
-                                    date = message.createdAt;
-                                  } else if (message.createdAt && typeof message.createdAt === 'object' && 'toDate' in message.createdAt) {
-                                    date = (message.createdAt as any).toDate();
-                                  } else {
-                                    date = new Date();
-                                  }
-                                  return date.toLocaleTimeString([], {
-                                    hour: '2-digit',
-                                    minute: '2-digit'
-                                  });
-                                } catch (error) {
-                                  return 'Just now';
-                                }
-                              })()}
-                            </p>
+                      messages.map((message, index) => {
+                        const isFromAdmin = message.fromUser === "admin" || message.fromUser === user?.uid;
+                        const prevMessage = index > 0 ? messages[index - 1] : null;
+                        const showTime = !prevMessage || 
+                          Math.abs(new Date(message.createdAt).getTime() - new Date(prevMessage.createdAt).getTime()) > 5 * 60 * 1000; // 5 minutes
+                        
+                        return (
+                          <div key={message.id}>
+                            {/* Time separator */}
+                            {showTime && (
+                              <div className="flex justify-center my-4">
+                                <div className="bg-black/10 dark:bg-white/10 text-white/70 text-xs px-3 py-1 rounded-full">
+                                  {(() => {
+                                    try {
+                                      let date;
+                                      if (message.createdAt instanceof Date) {
+                                        date = message.createdAt;
+                                      } else if (message.createdAt && typeof message.createdAt === 'object' && 'toDate' in message.createdAt) {
+                                        date = (message.createdAt as any).toDate();
+                                      } else {
+                                        date = new Date();
+                                      }
+                                      return date.toLocaleTimeString([], {
+                                        hour: '2-digit',
+                                        minute: '2-digit'
+                                      });
+                                    } catch (error) {
+                                      return 'Just now';
+                                    }
+                                  })()}
+                                </div>
+                              </div>
+                            )}
+                            
+                            <div className={`flex gap-2 ${isFromAdmin ? 'justify-end' : 'justify-start'}`}>
+                              {/* Client Avatar */}
+                              {!isFromAdmin && (
+                                <Avatar className="h-8 w-8 flex-shrink-0">
+                                  <AvatarImage src={selectedClient?.photoURL} />
+                                  <AvatarFallback className="bg-blue-500 text-white">
+                                    {selectedClient?.name?.split(' ').map(n => n[0]).join('').toUpperCase()}
+                                  </AvatarFallback>
+                                </Avatar>
+                              )}
+                              
+                              {/* Spacer for admin messages */}
+                              {isFromAdmin && <div className="w-8" />}
+                              
+                              {/* Message Bubble */}
+                              <div
+                                className={`max-w-[70%] px-3 py-2 rounded-2xl ${
+                                  isFromAdmin
+                                    ? 'bg-green-500 text-white rounded-br-md'
+                                    : 'bg-white dark:bg-gray-800 text-gray-900 dark:text-white rounded-bl-md shadow-sm'
+                                }`}
+                              >
+                                <p className="text-sm leading-relaxed">{message.text}</p>
+                                <p
+                                  className={`text-xs mt-1 ${
+                                    isFromAdmin 
+                                      ? 'text-green-100' 
+                                      : 'text-gray-500 dark:text-gray-400'
+                                  }`}
+                                >
+                                  {(() => {
+                                    try {
+                                      let date;
+                                      if (message.createdAt instanceof Date) {
+                                        date = message.createdAt;
+                                      } else if (message.createdAt && typeof message.createdAt === 'object' && 'toDate' in message.createdAt) {
+                                        date = (message.createdAt as any).toDate();
+                                      } else {
+                                        date = new Date();
+                                      }
+                                      return date.toLocaleTimeString([], {
+                                        hour: '2-digit',
+                                        minute: '2-digit'
+                                      });
+                                    } catch (error) {
+                                      return 'Just now';
+                                    }
+                                  })()}
+                                </p>
+                              </div>
+                            </div>
                           </div>
-                        </div>
-                      ))
+                        );
+                      })
                     ) : (
-                      <div className="text-center text-muted-foreground py-12">
-                        <MessageCircle className="w-12 h-12 mx-auto mb-4 opacity-50" />
-                        <p>No messages yet. Start the conversation!</p>
+                      <div className="flex flex-col items-center justify-center h-full text-center py-12">
+                        <div className="w-16 h-16 bg-green-500 rounded-full flex items-center justify-center mb-4">
+                          <MessageCircle className="w-8 h-8 text-white" />
+                        </div>
+                        <h3 className="text-white font-medium mb-2">Start a conversation</h3>
+                        <p className="text-white/70 text-sm">
+                          Send a message to {selectedClient?.name}
+                        </p>
                       </div>
                     )}
                     <div ref={messagesEndRef} />
                   </div>
-                  
-                  {/* Message Input */}
-                  <div className="border-t p-4">
-                    <div className="flex space-x-2">
+                </ScrollArea>
+
+                {/* WhatsApp-style Input Area */}
+                <div className="bg-white dark:bg-gray-900 px-4 py-3 border-t border-gray-200 dark:border-gray-700">
+                  <div className="flex items-end gap-2">
+                    {/* Attachment Button */}
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="icon"
+                      className="h-10 w-10 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
+                    >
+                      <Paperclip className="h-5 w-5" />
+                    </Button>
+                    
+                    {/* Message Input */}
+                    <div className="flex-1 relative">
                       <Textarea
-                        placeholder="Type your message..."
+                        placeholder="Type a message"
                         value={newMessage}
                         onChange={(e) => setNewMessage(e.target.value)}
                         onKeyDown={(e) => {
@@ -418,29 +539,53 @@ export default function AdminMessages() {
                             handleSendMessage();
                           }
                         }}
-                        className="flex-1 min-h-[40px] max-h-[120px]"
+                        className="pr-12 py-3 rounded-full border-gray-300 dark:border-gray-600 focus:ring-2 focus:ring-green-500 focus:border-transparent resize-none min-h-[40px] max-h-[120px]"
                       />
                       <Button
-                        onClick={handleSendMessage}
-                        disabled={!newMessage.trim() || sendingMessage}
-                        className="self-end"
+                        type="button"
+                        variant="ghost"
+                        size="icon"
+                        className="absolute right-1 top-1/2 -translate-y-1/2 h-8 w-8 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
                       >
-                        <Send className="w-4 h-4" />
+                        <Smile className="h-5 w-5" />
                       </Button>
                     </div>
+                    
+                    {/* Send/Voice Button */}
+                    {newMessage.trim() ? (
+                      <Button
+                        onClick={handleSendMessage}
+                        disabled={sendingMessage}
+                        size="icon"
+                        className="h-10 w-10 bg-green-500 hover:bg-green-600 text-white rounded-full"
+                      >
+                        <Send className="h-5 w-5" />
+                      </Button>
+                    ) : (
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        size="icon"
+                        className="h-10 w-10 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
+                      >
+                        <Mic className="h-5 w-5" />
+                      </Button>
+                    )}
                   </div>
-                </CardContent>
-              </>
-            ) : (
-              <CardContent className="flex items-center justify-center h-full">
-                <div className="text-center text-muted-foreground">
-                  <MessageCircle className="w-16 h-16 mx-auto mb-4 opacity-50" />
-                  <h3 className="text-lg font-semibold mb-2">Select a client to start messaging</h3>
-                  <p>Choose a client from the list to begin a conversation</p>
                 </div>
-              </CardContent>
-            )}
-          </Card>
+              </div>
+            </>
+          ) : (
+            <div className="flex-1 flex items-center justify-center bg-[#e5ddd5] dark:bg-[#0a0a0a]">
+              <div className="text-center text-white">
+                <div className="w-16 h-16 bg-green-500 rounded-full flex items-center justify-center mb-4 mx-auto">
+                  <MessageCircle className="w-8 h-8 text-white" />
+                </div>
+                <h3 className="text-lg font-semibold mb-2">Select a client to start messaging</h3>
+                <p className="text-white/70">Choose a client from the list to begin a conversation</p>
+              </div>
+            </div>
+          )}
         </div>
       </div>
     </div>
