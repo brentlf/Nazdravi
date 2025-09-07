@@ -39,17 +39,24 @@ export default function AdminHome() {
   const [calendarView, setCalendarView] = useState<'month' | 'week'>('month');
   const [currentDate, setCurrentDate] = useState(new Date());
   const [isMobile, setIsMobile] = useState(false);
+  const [viewportHeight, setViewportHeight] = useState(0);
+  const [isShortViewport, setIsShortViewport] = useState(false);
   
-  // Detect mobile screen size
+  // Detect mobile screen size and viewport height
   useEffect(() => {
-    const checkMobile = () => {
-      setIsMobile(window.innerWidth < 1024); // lg breakpoint
+    const checkViewport = () => {
+      const width = window.innerWidth;
+      const height = window.innerHeight;
+      
+      setIsMobile(width < 1024); // lg breakpoint
+      setViewportHeight(height);
+      setIsShortViewport(height < 600); // Short viewport threshold
     };
     
-    checkMobile();
-    window.addEventListener('resize', checkMobile);
+    checkViewport();
+    window.addEventListener('resize', checkViewport);
     
-    return () => window.removeEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkViewport);
   }, []);
   
   // Fetch dashboard data
@@ -205,7 +212,7 @@ export default function AdminHome() {
 
 
   return (
-    <div className="h-[calc(100vh-5rem)] bg-gradient-to-br from-background via-background to-muted/10 relative">
+    <div className="h-[calc(100vh-5rem)] sm:h-[calc(100vh-5rem)] bg-gradient-to-br from-background via-background to-muted/10 relative">
       <div className="container mx-auto px-3 sm:px-4 lg:px-6 py-1 sm:py-2 lg:py-3 relative z-10 h-full flex flex-col">
         {/* Header with Navigation and Organic Design */}
         <div className="mb-1 lg:mb-2 relative flex-shrink-0">
@@ -284,44 +291,81 @@ export default function AdminHome() {
                   }
                 }
 
+                // Dynamic height based on viewport height
+                const getCardHeight = () => {
+                  if (isShortViewport) {
+                    return "h-12 sm:h-14"; // Very compact for short viewports
+                  } else if (viewportHeight < 800) {
+                    return "h-14 sm:h-16"; // Compact for medium viewports
+                  } else if (viewportHeight < 1000) {
+                    return "h-16 sm:h-20"; // Normal for medium-tall viewports
+                  } else {
+                    return "h-18 sm:h-22 lg:h-24"; // Tall for large viewports
+                  }
+                };
+
+                const getIconSize = () => {
+                  if (isShortViewport) {
+                    return "w-6 h-6 sm:w-7 sm:h-7";
+                  } else if (viewportHeight < 800) {
+                    return "w-7 h-7 sm:w-8 sm:h-8";
+                  } else if (viewportHeight < 1000) {
+                    return "w-8 h-8 sm:w-9 sm:h-9";
+                  } else {
+                    return "w-8 h-8 sm:w-10 sm:h-10 lg:w-10 lg:h-10";
+                  }
+                };
+
+                const getTextSize = () => {
+                  if (isShortViewport) {
+                    return "text-xs sm:text-sm";
+                  } else if (viewportHeight < 800) {
+                    return "text-sm sm:text-base";
+                  } else if (viewportHeight < 1000) {
+                    return "text-sm sm:text-lg";
+                  } else {
+                    return "text-sm sm:text-lg lg:text-xl";
+                  }
+                };
+
                 return (
                   <Link href={stat.href} className="block">
                     <Card
                       key={index}
-                      className="group relative overflow-hidden bg-gradient-to-br from-card via-card/95 to-muted/30 border hover:border-primary/20 hover:shadow-lg hover:shadow-primary/5 transition-all duration-300 cursor-pointer"
+                      className={`group relative overflow-hidden bg-gradient-to-br from-card via-card/95 to-muted/30 border hover:border-primary/20 hover:shadow-lg hover:shadow-primary/5 transition-all duration-300 cursor-pointer ${getCardHeight()}`}
                     >
                       {isMobile ? (
-                        /* Mobile Design - Compact */
-                        <CardContent className="p-2 flex flex-col items-center justify-center gap-1.5 h-16">
+                        /* Mobile Design - Height Responsive */
+                        <CardContent className="p-1.5 sm:p-2 flex flex-col items-center justify-center gap-1 h-full">
                           {/* Icon */}
-                          <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${stat.bgColor} shadow-sm transition-transform duration-300 group-hover:scale-110`}>
-                            <Icon className={`w-5 h-5 ${stat.color}`} />
+                          <div className={`${getIconSize()} rounded-lg flex items-center justify-center ${stat.bgColor} shadow-sm transition-transform duration-300 group-hover:scale-110`}>
+                            <Icon className={`${isShortViewport ? 'w-3 h-3 sm:w-3.5 sm:h-3.5' : viewportHeight < 800 ? 'w-3.5 h-3.5 sm:w-4 sm:h-4' : 'w-4 h-4 sm:w-5 sm:h-5'} ${stat.color}`} />
                           </div>
                           
                           {/* Value and Title */}
-                          <div className="text-center">
-                            <div className="text-lg font-bold text-foreground group-hover:text-primary transition-colors duration-300">
+                          <div className="text-center flex-1 flex flex-col justify-center">
+                            <div className={`${getTextSize()} font-bold text-foreground group-hover:text-primary transition-colors duration-300`}>
                               {displayValue}
                             </div>
-                            <div className="text-xs font-medium text-muted-foreground group-hover:text-primary/80 transition-colors duration-300">
+                            <div className={`${isShortViewport ? 'text-[10px] sm:text-xs' : 'text-xs sm:text-sm'} font-medium text-muted-foreground group-hover:text-primary/80 transition-colors duration-300`}>
                               {displayTitle}
                             </div>
                           </div>
                         </CardContent>
                       ) : (
-                        /* Desktop Design - Compact */
-                        <CardContent className="p-2 flex flex-col items-center justify-center gap-1.5 h-16">
+                        /* Desktop Design - Height Responsive */
+                        <CardContent className="p-2 flex flex-col items-center justify-center gap-1.5 h-full">
                           {/* Icon */}
-                          <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${stat.bgColor} shadow-sm transition-transform duration-300 group-hover:scale-110`}>
-                            <Icon className={`w-4 h-4 ${stat.color}`} />
+                          <div className={`${getIconSize()} rounded-lg flex items-center justify-center ${stat.bgColor} shadow-sm transition-transform duration-300 group-hover:scale-110`}>
+                            <Icon className={`${isShortViewport ? 'w-4 h-4 lg:w-4.5 lg:h-4.5' : viewportHeight < 800 ? 'w-4 h-4 lg:w-5 lg:h-5' : 'w-4 h-4 lg:w-5 lg:h-5'} ${stat.color}`} />
                           </div>
                           
                           {/* Value and Title */}
-                          <div className="text-center">
-                            <div className="text-lg font-bold text-foreground group-hover:text-primary transition-colors duration-300">
+                          <div className="text-center flex-1 flex flex-col justify-center">
+                            <div className={`${getTextSize()} font-bold text-foreground group-hover:text-primary transition-colors duration-300`}>
                               {displayValue}
                             </div>
-                            <div className="text-xs font-medium text-muted-foreground group-hover:text-primary/80 transition-colors duration-300">
+                            <div className={`${isShortViewport ? 'text-xs lg:text-sm' : 'text-xs lg:text-sm'} font-medium text-muted-foreground group-hover:text-primary/80 transition-colors duration-300`}>
                               {displayTitle}
                             </div>
                           </div>

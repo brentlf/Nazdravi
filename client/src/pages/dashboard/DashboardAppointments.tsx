@@ -639,7 +639,7 @@ export default function DashboardAppointments() {
 
   if (loading) {
     return (
-      <div className="h-[calc(100vh-8rem)] bg-background">
+      <div className="h-[calc(100vh-5rem)] sm:h-[calc(100vh-5rem)] bg-background">
         <div className="container mx-auto px-4 sm:px-6 px-safe py-4 h-full flex flex-col">
           <div className="grid gap-6">
             {[...Array(3)].map((_, i) => (
@@ -658,8 +658,8 @@ export default function DashboardAppointments() {
   }
 
   return (
-    <div className="min-h-[calc(100vh-8rem)] bg-gradient-to-br from-background to-muted/30 country-texture relative">
-      <div className="container mx-auto px-4 sm:px-6 px-safe py-2 relative z-10 min-h-full flex flex-col">
+    <div className="h-[calc(100vh-5rem)] sm:h-[calc(100vh-5rem)] bg-gradient-to-br from-background to-muted/30 country-texture relative">
+      <div className="container mx-auto px-4 sm:px-6 px-safe py-2 relative z-10 h-full flex flex-col">
         {/* Compact Header with Back Navigation */}
         <div className="flex items-center justify-between mb-2 flex-shrink-0">
           <div className="flex items-center gap-4">

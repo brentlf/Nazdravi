@@ -74,7 +74,7 @@ export default function DashboardInvoices() {
   const totalPending = pendingInvoices.reduce((sum, invoice) => sum + (invoice.amount || 0), 0);
 
   return (
-    <div className="h-[calc(100vh-8rem)] bg-background">
+    <div className="h-[calc(100vh-5rem)] sm:h-[calc(100vh-5rem)] bg-background">
       <div className="container mx-auto px-4 sm:px-6 px-safe py-4 h-full flex flex-col">
         {/* Compact Header with Back Navigation */}
         <div className="flex items-center justify-between mb-4 flex-shrink-0">

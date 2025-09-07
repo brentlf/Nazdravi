@@ -66,7 +66,7 @@ function Layout({ children }: { children: React.ReactNode }) {
   return (
     <div className={`min-h-[100svh] relative bg-background text-foreground ${!isHomePage ? (isDashboardRoute ? "pb-[calc(env(safe-area-inset-bottom)+80px)]" : "pb-[calc(env(safe-area-inset-bottom)+120px)]") : ""}`}>
       <Header />
-      <main className="relative">
+      <main className={`${isDashboardRoute ? 'pb-16 xs:pb-16 sm:pb-0' : 'pb-20 xs:pb-20 sm:pb-0'}`}>
         {children}
       </main>
       {!isHomePage && !isDashboardRoute && (
@@ -75,7 +75,6 @@ function Layout({ children }: { children: React.ReactNode }) {
         </div>
       )}
       <MobileBottomNav />
-
     </div>
   );
 }

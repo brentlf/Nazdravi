@@ -55,9 +55,9 @@ export default function Home() {
   };
 
   return (
-    <div className="min-h-[100svh] overflow-hidden">
+    <div className="min-h-screen w-full overflow-hidden">
       {/* Full Viewport Hero Section with Background Image */}
-      <section className="relative h-[100svh] w-full overflow-hidden">
+      <section className="relative min-h-screen w-full overflow-hidden">
         {/* Background Image */}
         <div 
           className="absolute inset-0 bg-cover bg-center bg-no-repeat"
@@ -144,25 +144,26 @@ export default function Home() {
             )}
           </div>
 
-          {/* Mobile burger menu (home-only, not header) */}
-          <div className="absolute top-4 sm:top-6 right-4 sm:right-6 lg:hidden flex items-center gap-2 px-safe pt-safe">
+          {/* Mobile burger menu and theme toggle (home-only, not header) */}
+          <div className="absolute top-4 sm:top-6 right-4 sm:right-6 flex items-center gap-2 px-safe pt-safe">
             <ThemeToggle className="text-white hover:bg-white/20 tap-target" />
-            <Sheet open={menuOpen} onOpenChange={setMenuOpen}>
-              <SheetTrigger asChild>
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  className={`h-11 w-11 sm:h-10 sm:w-10 rounded-md z-50 tap-target-lg ${
-                    menuOpen
-                      ? "bg-white text-foreground hover:bg-white shadow-md"
-                      : "text-white hover:bg-white/20"
-                  }`}
-                  aria-label={menuOpen ? "Close menu" : "Open menu"}
-                  aria-expanded={menuOpen}
-                >
-                  {menuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
-                </Button>
-              </SheetTrigger>
+            <div className="lg:hidden">
+              <Sheet open={menuOpen} onOpenChange={setMenuOpen}>
+                <SheetTrigger asChild>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className={`h-11 w-11 sm:h-10 sm:w-10 rounded-md z-50 tap-target-lg ${
+                      menuOpen
+                        ? "bg-white text-foreground hover:bg-white shadow-md"
+                        : "text-white hover:bg-white/20"
+                    }`}
+                    aria-label={menuOpen ? "Close menu" : "Open menu"}
+                    aria-expanded={menuOpen}
+                  >
+                    {menuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+                  </Button>
+                </SheetTrigger>
               <SheetContent side="right" className="w-[82vw] max-w-[360px] px-safe">
                 <nav className="mt-6 space-y-2">
                   {navigation.map((item) => (
@@ -185,17 +186,14 @@ export default function Home() {
                 )}
               </SheetContent>
             </Sheet>
+            </div>
           </div>
         </div>
 
-        {/* Main content with navigation on the right */}
-        <div className="relative z-10 h-full flex items-end pb-24 sm:pb-20">
-          <div className="w-full pl-4 sm:pl-8 pr-4 sm:pr-6 px-safe">
-            <div className="flex items-end justify-between h-full w-full">
-              {/* Left side - Main content positioned at bottom left */}
-              <div className="max-w-4xl -ml-2 sm:-ml-4">
+        {/* Main content positioned at bottom left */}
+        <div className="absolute bottom-32 sm:bottom-28 left-4 sm:left-8 z-10 max-w-4xl -ml-2 sm:-ml-4 px-safe">
                 {/* Main title "nazdravi" raised from the image */}
-                <h1 className="text-6xl xs:text-7xl sm:text-9xl lg:text-[12rem] xl:text-[14rem] font-extralight mb-3 sm:mb-2 leading-tight text-white text-balance" 
+                <h1 className="text-9xl xs:text-[10rem] sm:text-[11rem] lg:text-[12rem] xl:text-[14rem] font-extralight mb-3 sm:mb-2 leading-tight text-white text-balance" 
                     style={{
                       fontFamily: 'DM Sans, sans-serif',
                       textShadow: '2px 2px 4px rgba(0,0,0,0.7), -1px -1px 3px rgba(255,255,255,0.25), 1px 1px 2px rgba(255,255,255,0.15)',
@@ -204,15 +202,15 @@ export default function Home() {
                   nazdravi
                 </h1>
                 
-                {/* Centered content under nazdravi */}
-                <div className="flex flex-col items-center">
-                  {/* Subtitle "REGISTERED DIETITIAN" centered under nazdravi - larger font */}
-                  <p className="text-xl xs:text-2xl sm:text-3xl lg:text-4xl xl:text-5xl mb-8 sm:mb-10 text-white font-light tracking-wide opacity-90 text-center text-balance"
+                {/* Left-aligned content under nazdravi */}
+                <div className="flex flex-col items-start">
+                  {/* Subtitle "REGISTERED DIETITIAN" left-aligned under nazdravi - larger font */}
+                  <p className="text-xl xs:text-2xl sm:text-3xl lg:text-4xl xl:text-5xl mb-8 sm:mb-10 text-white font-light tracking-wide opacity-90 text-left text-balance"
                      style={{fontFamily: 'DM Sans, sans-serif'}}>
                     REGISTERED DIETITIAN
                   </p>
                   
-                  {/* BOOK AN APPOINTMENT button centered - larger */}
+                  {/* BOOK AN APPOINTMENT button left-aligned - larger */}
                   <Link href="/appointment">
                     <Button 
                       size="lg" 
@@ -224,10 +222,10 @@ export default function Home() {
                     </Button>
                   </Link>
                 </div>
-              </div>
+        </div>
 
-              {/* Right lower corner - Navigation menu with elegant styling */}
-              <div className="hidden lg:flex flex-col items-end space-y-6 absolute bottom-12 right-12 hide-on-mobile">
+        {/* Right lower corner - Navigation menu with elegant styling */}
+        <div className="hidden lg:flex flex-col items-end space-y-6 absolute bottom-32 right-12 hide-on-mobile z-20">
                 <Link href="/">
                   <div className="text-white text-5xl xl:text-6xl font-light hover:text-white/80 transition-all duration-300 cursor-pointer border-b border-white/30 pb-2 tracking-[0.2em]" 
                        style={{
@@ -278,9 +276,6 @@ export default function Home() {
                     APPOINTMENT
                   </div>
                 </Link>
-              </div>
-            </div>
-          </div>
         </div>
 
         {/* Footer overlay - positioned at bottom */}

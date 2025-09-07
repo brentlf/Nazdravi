@@ -139,25 +139,25 @@ export default function Services() {
   ];
 
   return (
-    <div className="min-h-screen pt-16 pb-safe">
+    <div className="h-full overflow-y-auto">
       {/* Main content section */}
       <section className="px-4 sm:px-6 px-safe py-8">
         <div className="max-w-7xl mx-auto w-full">
           {/* Header Section */}
-          <div className="text-center mb-8">
-            <div className="inline-flex items-center justify-center w-12 h-12 bg-primary/10 rounded-full mb-4">
-              <Leaf className="h-6 w-6 text-primary" />
+          <div className="text-center mb-6 xs:mb-8 sm:mb-12">
+            <div className="inline-flex items-center justify-center w-10 h-10 xs:w-12 xs:h-12 bg-primary/10 rounded-full mb-3 xs:mb-4">
+              <Leaf className="h-5 w-5 xs:h-6 xs:w-6 text-primary" />
             </div>
-            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-4 leading-tight text-foreground font-serif">
+            <h1 className="text-2xl xs:text-3xl sm:text-4xl lg:text-5xl font-bold mb-3 xs:mb-4 leading-tight text-foreground font-serif h-short-heading">
               Nutrition Services
             </h1>
-            <p className="text-lg text-muted-foreground max-w-2xl mx-auto leading-relaxed">
+            <p className="text-base xs:text-lg text-muted-foreground max-w-2xl mx-auto leading-relaxed h-short-text">
               Transform your health with evidence-based nutrition guidance tailored to your unique needs and lifestyle.
             </p>
           </div>
 
           {/* Services Grid */}
-          <div className="grid lg:grid-cols-3 gap-6 mb-12">
+          <div className="grid grid-cols-1 xs:grid-cols-2 lg:grid-cols-3 gap-4 xs:gap-6 mb-8 xs:mb-12">
             {services.map((service, index) => (
               <Card key={index} className={`relative border border-border bg-card hover:shadow-lg transition-all duration-300 ${service.popular ? 'ring-2 ring-yellow-400/50' : ''}`}>
                 {service.popular && (
@@ -167,37 +167,37 @@ export default function Services() {
                     </Badge>
                   </div>
                 )}
-                <CardContent className="p-6 text-card-foreground h-full flex flex-col">
-                  <div className={`inline-flex items-center justify-center w-12 h-12 bg-gradient-to-br ${service.color} rounded-xl mb-4`}>
-                    <service.icon className="h-6 w-6 text-foreground" />
+                <CardContent className="p-4 xs:p-6 text-card-foreground h-full flex flex-col">
+                  <div className={`inline-flex items-center justify-center w-10 h-10 xs:w-12 xs:h-12 bg-gradient-to-br ${service.color} rounded-xl mb-3 xs:mb-4`}>
+                    <service.icon className="h-5 w-5 xs:h-6 xs:w-6 text-foreground" />
                   </div>
                   
-                  <h3 className="text-xl font-bold mb-3">
+                  <h3 className="text-lg xs:text-xl font-bold mb-2 xs:mb-3 h-short-heading">
                     {service.title}
                   </h3>
                   
-                  <p className="text-muted-foreground mb-4 leading-relaxed flex-grow">
+                  <p className="text-muted-foreground mb-3 xs:mb-4 leading-relaxed flex-grow text-sm xs:text-base h-short-text">
                     {service.description}
                   </p>
                   
-                  <div className="flex items-center justify-between mb-4">
-                    <div className="text-sm text-muted-foreground">
+                  <div className="flex items-center justify-between mb-3 xs:mb-4">
+                    <div className="text-xs xs:text-sm text-muted-foreground">
                       Duration: {service.duration}
                     </div>
-                    <div className="text-2xl font-bold text-primary">
+                    <div className="text-xl xs:text-2xl font-bold text-primary">
                       {service.price}
                     </div>
                   </div>
                   
-                  <ul className="space-y-2 mb-6 flex-grow">
+                  <ul className="space-y-1.5 xs:space-y-2 mb-4 xs:mb-6 flex-grow">
                     {service.features.slice(0, 4).map((feature, featureIndex) => (
-                      <li key={featureIndex} className="flex items-start gap-2">
-                        <CheckCircle className="h-4 w-4 text-green-500 flex-shrink-0 mt-0.5" />
-                        <span className="text-muted-foreground text-sm">{feature}</span>
+                      <li key={featureIndex} className="flex items-start gap-1.5 xs:gap-2">
+                        <CheckCircle className="h-3.5 w-3.5 xs:h-4 xs:w-4 text-green-500 flex-shrink-0 mt-0.5" />
+                        <span className="text-muted-foreground text-xs xs:text-sm">{feature}</span>
                       </li>
                     ))}
                     {service.features.length > 4 && (
-                      <li className="text-sm text-muted-foreground italic">+ {service.features.length - 4} more features</li>
+                      <li className="text-xs xs:text-sm text-muted-foreground italic">+ {service.features.length - 4} more features</li>
                     )}
                   </ul>
                   

@@ -1,3 +1,4 @@
+import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -30,6 +31,22 @@ import { where, orderBy, limit, or } from "firebase/firestore";
 
 export function DashboardOverview() {
   const { effectiveUser: user, isAdminViewingClient } = useAuth();
+  const [viewportHeight, setViewportHeight] = useState(0);
+  const [isShortViewport, setIsShortViewport] = useState(false);
+  
+  // Detect viewport height
+  useEffect(() => {
+    const checkViewport = () => {
+      const height = window.innerHeight;
+      setViewportHeight(height);
+      setIsShortViewport(height < 600); // Short viewport threshold
+    };
+    
+    checkViewport();
+    window.addEventListener('resize', checkViewport);
+    
+    return () => window.removeEventListener('resize', checkViewport);
+  }, []);
 
   // Single optimized query for appointments using OR conditions
   const { data: appointments, loading: appointmentsLoading, error: appointmentsError } = useFirestoreCollection<Appointment>(
@@ -254,10 +271,10 @@ export function DashboardOverview() {
   return (
     <div className="space-y-2 relative h-full flex flex-col">
       {/* Compact Welcome Section */}
-      <div className="relative overflow-hidden mediterranean-card p-3 sm:p-4 text-white bg-gradient-to-br from-primary to-accent warm-glow flex-shrink-0">
+      <div className="relative overflow-hidden mediterranean-card p-2 xs:p-3 sm:p-4 text-white bg-gradient-to-br from-primary to-accent warm-glow flex-shrink-0">
         {isAdminViewingClient && (
-          <div className="mb-3 bg-yellow-500/20 border border-yellow-400/30 rounded-lg p-2 floating-element">
-            <p className="text-sm text-yellow-100">
+          <div className="mb-2 xs:mb-3 bg-yellow-500/20 border border-yellow-400/30 rounded-lg p-1.5 xs:p-2 floating-element">
+            <p className="text-xs xs:text-sm text-yellow-100">
               Admin View: You are viewing {user?.name}'s dashboard
             </p>
           </div>
@@ -265,11 +282,11 @@ export function DashboardOverview() {
 
         <div className="relative z-10">
           <div className="doodle-arrow mb-1">
-            <h1 className="font-display text-lg font-bold mb-1 handwritten-accent">
+            <h1 className="font-display text-base xs:text-lg font-bold mb-1 handwritten-accent h-short-heading">
               Welcome back, {user?.name}!
             </h1>
           </div>
-          <p className="serif-body text-sm text-primary-100 leading-relaxed">
+          <p className="serif-body text-xs xs:text-sm text-primary-100 leading-relaxed h-short-text">
             Here's your nutrition journey overview
           </p>
         </div>
@@ -297,16 +314,78 @@ export function DashboardOverview() {
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-1 sm:gap-1.5">
             {quickStats.map((stat, index) => {
               const Icon = stat.icon;
+              
+              // Dynamic height based on viewport height
+              const getCardHeight = () => {
+                if (isShortViewport) {
+                  return "h-12 sm:h-14 md:h-16"; // Very compact for short viewports
+                } else if (viewportHeight < 700) {
+                  return "h-14 sm:h-16 md:h-18"; // Compact for medium viewports
+                } else if (viewportHeight < 900) {
+                  return "h-16 sm:h-18 md:h-20"; // Normal for medium-tall viewports
+                } else {
+                  return "h-18 sm:h-20 md:h-24 lg:h-28"; // Tall for large viewports
+                }
+              };
+
+              const getHeaderHeight = () => {
+                if (isShortViewport) {
+                  return "h-3 sm:h-4";
+                } else if (viewportHeight < 700) {
+                  return "h-4 sm:h-5";
+                } else if (viewportHeight < 900) {
+                  return "h-4 sm:h-5 md:h-6";
+                } else {
+                  return "h-4 sm:h-5 md:h-6";
+                }
+              };
+
+              const getIconSize = () => {
+                if (isShortViewport) {
+                  return "w-2.5 h-2.5 sm:w-3 sm:h-3";
+                } else if (viewportHeight < 700) {
+                  return "w-3 h-3 sm:w-3.5 sm:h-3.5";
+                } else if (viewportHeight < 900) {
+                  return "w-3 h-3 sm:w-4 sm:h-4 md:w-4 md:h-4";
+                } else {
+                  return "w-3 h-3 sm:w-4 sm:h-4 md:w-5 md:h-5";
+                }
+              };
+
+              const getTextSize = () => {
+                if (isShortViewport) {
+                  return "text-xs sm:text-sm";
+                } else if (viewportHeight < 700) {
+                  return "text-sm sm:text-base";
+                } else if (viewportHeight < 900) {
+                  return "text-sm sm:text-lg";
+                } else {
+                  return "text-sm sm:text-lg md:text-xl";
+                }
+              };
+
+              const getButtonHeight = () => {
+                if (isShortViewport) {
+                  return "h-4 sm:h-5";
+                } else if (viewportHeight < 700) {
+                  return "h-5 sm:h-6";
+                } else if (viewportHeight < 900) {
+                  return "h-5 sm:h-6 md:h-7";
+                } else {
+                  return "h-5 sm:h-6 md:h-8";
+                }
+              };
+
               return (
                 <Card
                   key={index}
-                  className="group relative overflow-hidden bg-gradient-to-br from-card via-card/95 to-muted/30 border hover:border-primary/20 hover:shadow-lg hover:shadow-primary/5 transition-all duration-300 h-16 sm:h-24 md:h-28"
+                  className={`group relative overflow-hidden bg-gradient-to-br from-card via-card/95 to-muted/30 border hover:border-primary/20 hover:shadow-lg hover:shadow-primary/5 transition-all duration-300 ${getCardHeight()}`}
                 >
                   <CardContent className="p-1.5 sm:p-3 flex flex-col h-full relative z-10">
-                    {/* Fixed Header - Smaller on mobile */}
-                    <div className="flex items-center gap-1 h-4 sm:h-6 flex-shrink-0">
-                      <div className={`w-3 h-3 sm:w-5 sm:h-5 rounded-md flex items-center justify-center ${stat.bgColor} shadow-sm transition-transform duration-300 group-hover:scale-110`}>
-                        <Icon className={`w-1.5 h-1.5 sm:w-2.5 sm:h-2.5 ${stat.color}`} />
+                    {/* Dynamic Header - Height responsive */}
+                    <div className={`flex items-center gap-1 ${getHeaderHeight()} flex-shrink-0`}>
+                      <div className={`${getIconSize()} rounded-md flex items-center justify-center ${stat.bgColor} shadow-sm transition-transform duration-300 group-hover:scale-110`}>
+                        <Icon className={`${isShortViewport ? 'w-1 h-1 sm:w-1.5 sm:h-1.5' : viewportHeight < 700 ? 'w-1.5 h-1.5 sm:w-2 sm:h-2' : viewportHeight < 900 ? 'w-1.5 h-1.5 sm:w-2 sm:h-2 md:w-2.5 md:h-2.5' : 'w-1.5 h-1.5 sm:w-2 sm:h-2 md:w-2.5 md:h-2.5'} ${stat.color}`} />
                       </div>
                       <div className="flex-1 min-w-0">
                         <p className="text-[10px] sm:text-xs font-medium text-muted-foreground uppercase tracking-wide leading-none truncate" title={stat.title}>
@@ -318,7 +397,7 @@ export function DashboardOverview() {
                     {/* Flexible Content Area - Takes remaining space */}
                     <div className="flex-1 flex flex-col justify-center py-1 sm:py-2">
                       <div className="text-center">
-                        <p className="text-sm sm:text-xl font-bold text-foreground leading-none mb-0.5 sm:mb-1 transition-colors duration-300 group-hover:text-primary">
+                        <p className={`${getTextSize()} font-bold text-foreground leading-none mb-0.5 sm:mb-1 transition-colors duration-300 group-hover:text-primary`}>
                           {stat.value}
                         </p>
                         {stat.subtitle && (
@@ -329,8 +408,8 @@ export function DashboardOverview() {
                       </div>
                     </div>
                     
-                    {/* Fixed Button Area - Smaller on mobile */}
-                    <div className="h-5 sm:h-8 flex-shrink-0">
+                    {/* Dynamic Button Area - Height responsive */}
+                    <div className={`${getButtonHeight()} flex-shrink-0`}>
                       <Button 
                         size="sm" 
                         variant="default" 

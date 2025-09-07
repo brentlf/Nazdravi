@@ -31,7 +31,7 @@ export default function BlogPost() {
 
   if (loading) {
     return (
-      <div className="min-h-screen pt-16 pb-20 flex items-center justify-center">
+      <div className="h-full pt-16 pb-20 flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
           <p className="text-muted-foreground">Loading blog post...</p>
@@ -42,7 +42,7 @@ export default function BlogPost() {
 
   if (error || !post) {
     return (
-      <div className="min-h-screen pt-16 pb-20 flex items-center justify-center">
+      <div className="h-full pt-16 pb-20 flex items-center justify-center">
         <div className="text-center max-w-md">
           <h1 className="text-2xl font-bold mb-4">Blog Post Not Found</h1>
           <p className="text-muted-foreground mb-6">The blog post you're looking for doesn't exist or has been removed.</p>
@@ -58,7 +58,7 @@ export default function BlogPost() {
   }
 
   return (
-    <div className="min-h-screen pt-16 pb-20">
+    <div className="h-full pt-16 pb-20 overflow-y-auto">
       <div className="container mx-auto px-4">
         {/* Back Button */}
         <div className="mb-8">

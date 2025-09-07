@@ -4,7 +4,7 @@ import { Shield, Scale, Globe, FileText, AlertCircle } from "lucide-react";
 
 export default function Legal() {
   return (
-    <div className="min-h-screen py-20 bg-background">
+    <div className="h-full py-20 bg-background overflow-y-auto">
       <div className="container mx-auto px-4 max-w-4xl">
         {/* Header */}
         <div className="text-center mb-12">

@@ -4,7 +4,7 @@ import { Cookie, Settings, Shield, Mail } from "lucide-react";
 export default function CookiePolicy() {
 
   return (
-    <div className="min-h-screen py-20 bg-gray-50 dark:bg-gray-900">
+    <div className="h-full py-20 bg-gray-50 dark:bg-gray-900 overflow-y-auto">
       <div className="container mx-auto px-4 max-w-4xl">
         <div className="text-center mb-12">
           <Cookie className="w-16 h-16 text-primary-600 mx-auto mb-4" />

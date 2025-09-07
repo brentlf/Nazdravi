@@ -1,0 +1,25 @@
+warning: in the working copy of 'client/src/App.tsx', LF will be replaced by CRLF the next time Git touches it
+[1mdiff --git a/client/src/App.tsx b/client/src/App.tsx[m
+[1mindex 31b824a..a3ac2b5 100644[m
+[1m--- a/client/src/App.tsx[m
+[1m+++ b/client/src/App.tsx[m
+[36m@@ -64,9 +64,9 @@[m [mfunction Layout({ children }: { children: React.ReactNode }) {[m
+   const isDashboardRoute = location.startsWith("/dashboard") || location.startsWith("/admin");[m
+   [m
+   return ([m
+[31m-    <div className={`min-h-[100svh] relative bg-background text-foreground ${!isHomePage ? (isDashboardRoute ? "pb-[calc(env(safe-area-inset-bottom)+80px)]" : "pb-[calc(env(safe-area-inset-bottom)+120px)]") : ""}`}>[m
+[32m+[m[32m    <div className={`h-[100svh] relative bg-background text-foreground flex flex-col overflow-hidden`}>[m
+       <Header />[m
+[31m-      <main className="relative">[m
+[32m+[m[32m      <main className={`flex-1 relative overflow-hidden ${isDashboardRoute ? 'pb-16 xs:pb-16 sm:pb-0' : 'pb-20 xs:pb-20 sm:pb-0'}`}>[m
+         {children}[m
+       </main>[m
+       {!isHomePage && !isDashboardRoute && ([m
+[36m@@ -75,7 +75,6 @@[m [mfunction Layout({ children }: { children: React.ReactNode }) {[m
+         </div>[m
+       )}[m
+       <MobileBottomNav />[m
+[31m-[m
+     </div>[m
+   );[m
+ }[m

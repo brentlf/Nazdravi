@@ -91,7 +91,7 @@ export default function Register() {
   };
 
   return (
-    <div className="min-h-screen relative overflow-hidden">
+    <div className="h-full relative overflow-hidden">
       {/* Background Image */}
       <div 
         className="absolute inset-0 bg-cover bg-center bg-no-repeat"
@@ -128,7 +128,7 @@ export default function Register() {
         </div>
       </div>
 
-      <div className="relative z-10 min-h-screen flex items-center justify-center py-16 px-4 sm:px-6 lg:px-8 px-safe pb-safe">
+      <div className="relative z-10 h-full flex items-center justify-center py-16 px-4 sm:px-6 lg:px-8 px-safe pb-safe">
         <div className="max-w-md w-full space-y-10">
           {/* Sophisticated Header */}
           <div className="text-center space-y-6 animate-in fade-in-0 slide-in-from-top-4 duration-700 delay-200">

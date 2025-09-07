@@ -135,7 +135,7 @@ export default function Blog() {
 
   if (loading) {
     return (
-      <div className="min-h-screen pt-16 pb-safe">
+      <div className="h-full overflow-y-auto">
         <div className="container mx-auto px-4 sm:px-6 px-safe py-8">
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
             {[...Array(6)].map((_, i) => (
@@ -155,26 +155,26 @@ export default function Blog() {
   }
 
   return (
-    <div className="min-h-screen pt-16 pb-safe">
+    <div className="h-full overflow-y-auto">
       {/* Main content section */}
       <section className="px-4 sm:px-6 px-safe py-8">
         <div className="max-w-7xl mx-auto w-full">
           {/* Header Section */}
-          <div className="text-center mb-8">
-            <div className="inline-flex items-center justify-center w-12 h-12 bg-primary/10 rounded-full mb-4">
-              <BookOpen className="h-6 w-6 text-primary" />
+          <div className="text-center mb-6 xs:mb-8 sm:mb-12">
+            <div className="inline-flex items-center justify-center w-10 h-10 xs:w-12 xs:h-12 bg-primary/10 rounded-full mb-3 xs:mb-4">
+              <BookOpen className="h-5 w-5 xs:h-6 xs:w-6 text-primary" />
             </div>
-            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-4 leading-tight text-foreground font-serif">
+            <h1 className="text-2xl xs:text-3xl sm:text-4xl lg:text-5xl font-bold mb-3 xs:mb-4 leading-tight text-foreground font-serif h-short-heading">
               Nutrition Blog
             </h1>
-            <p className="text-lg text-muted-foreground max-w-2xl mx-auto leading-relaxed">
+            <p className="text-base xs:text-lg text-muted-foreground max-w-2xl mx-auto leading-relaxed h-short-text">
               Expert insights, practical tips, and evidence-based guidance to support your nutrition journey.
             </p>
           </div>
 
           {/* Search and Filter Section */}
-          <div className="bg-card border border-border rounded-xl p-6 mb-8">
-            <div className="grid lg:grid-cols-3 gap-6 items-end">
+          <div className="bg-card border border-border rounded-xl p-4 xs:p-6 mb-6 xs:mb-8">
+            <div className="grid grid-cols-1 xs:grid-cols-2 lg:grid-cols-3 gap-4 xs:gap-6 items-end">
               {/* Search Bar */}
               <div>
                 <h3 className="text-lg font-semibold text-card-foreground mb-3">Find Articles</h3>

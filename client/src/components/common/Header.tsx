@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link, useLocation } from "wouter";
-import { Menu, X, Leaf, LogOut, User } from "lucide-react";
+import { Menu, Leaf, LogOut, User } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import {
@@ -50,19 +50,19 @@ export function Header() {
       isOverlayHeader 
         ? "absolute top-0 left-0 right-0 z-50 border-white/20 bg-transparent text-white" 
         : "sticky top-0 z-50 border-border/40 bg-background/80 backdrop-blur-xl supports-[backdrop-filter]:bg-background/60 text-foreground"
-    } w-full border-b transition-all duration-300`}>
-      <div className="container mx-auto flex h-20 items-center justify-between px-4 sm:px-6 px-safe">
+    } w-full border-b transition-all duration-300 nav-responsive`}>
+      <div className="container mx-auto flex h-14 xs:h-16 sm:h-18 lg:h-20 items-center justify-between px-3 sm:px-4 lg:px-6 px-safe">
         {/* Logo */}
         <Link href="/">
-          <div className="flex items-center space-x-3 cursor-pointer group">
-            <div className={`w-10 h-10 rounded-xl flex items-center justify-center transition-all duration-300 group-hover:scale-110 group-hover:shadow-lg ${
+          <div className="flex items-center space-x-2 xs:space-x-3 cursor-pointer group">
+            <div className={`w-7 h-7 xs:w-8 xs:h-8 sm:w-10 sm:h-10 rounded-xl flex items-center justify-center transition-all duration-300 group-hover:scale-110 group-hover:shadow-lg ${
               isOverlayHeader ? "bg-white/20 backdrop-blur-sm" : "bg-primary"
             }`}>
-              <Leaf className={`h-6 w-6 ${
+              <Leaf className={`h-3.5 w-3.5 xs:h-4 xs:w-4 sm:h-6 sm:w-6 ${
                 isOverlayHeader ? "text-white" : "text-primary-foreground"
               }`} />
             </div>
-            <span className={`font-bold text-xl tracking-tight ${
+            <span className={`font-bold text-base xs:text-lg sm:text-xl tracking-tight ${
               isOverlayHeader ? "text-white" : "text-primary"
             }`}>
               Nazdravi
@@ -97,19 +97,19 @@ export function Header() {
         </nav>
 
         {/* Right side controls */}
-        <div className="flex items-center space-x-4 pr-safe">
-          <ThemeToggle className="tap-target" />
+        <div className="flex items-center space-x-1 xs:space-x-2 sm:space-x-4">
+          <ThemeToggle className="tap-target h-7 w-7 xs:h-8 xs:w-8 sm:h-10 sm:w-10" />
 
           {/* User menu or auth buttons */}
           {user ? (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="ghost" className={`relative h-10 w-10 rounded-full hover:bg-muted/80 ${
+                <Button variant="ghost" className={`relative h-7 w-7 xs:h-8 xs:w-8 sm:h-10 sm:w-10 rounded-full hover:bg-muted/80 ${
                   isOverlayHeader ? "text-white hover:bg-white/20" : ""
                 }`}>
-                  <Avatar className="h-10 w-10">
+                  <Avatar className="h-7 w-7 xs:h-8 xs:w-8 sm:h-10 sm:w-10">
                     <AvatarImage src={user.photoURL} alt={user.name} />
-                    <AvatarFallback className={`font-semibold ${
+                    <AvatarFallback className={`font-semibold text-xs ${
                       isOverlayHeader ? "bg-white/20 text-white" : "bg-primary text-primary-foreground"
                     }`}>
                       {user.name.slice(0, 2).toUpperCase()}
@@ -175,9 +175,9 @@ export function Header() {
               </DropdownMenuContent>
             </DropdownMenu>
           ) : (
-            <div className="flex items-center space-x-3">
+            <div className="flex items-center space-x-1 xs:space-x-2 sm:space-x-3">
               <Link href="/login">
-                <Button variant="ghost" className={`font-medium ${
+                <Button variant="ghost" className={`font-medium text-xs xs:text-sm sm:text-base px-1 xs:px-2 sm:px-4 ${
                   isOverlayHeader 
                     ? "text-white hover:bg-white/20" 
                     : "hover:bg-muted/80"
@@ -186,7 +186,7 @@ export function Header() {
                 </Button>
               </Link>
               <Link href="/register">
-                <Button className={`font-medium shadow-soft hover:shadow-elegant transition-all duration-300 ${
+                <Button className={`font-medium text-xs xs:text-sm sm:text-base px-1 xs:px-2 sm:px-4 shadow-soft hover:shadow-elegant transition-all duration-300 ${
                   isOverlayHeader 
                     ? "bg-white/20 text-white hover:bg-white/30 border-white/30" 
                     : ""
@@ -203,31 +203,31 @@ export function Header() {
               <Button
                 variant="ghost"
                 size="icon"
-                className={`lg:hidden h-11 w-11 tap-target-lg ${
+                className={`lg:hidden h-7 w-7 xs:h-8 xs:w-8 sm:h-10 sm:w-10 tap-target ${
                   isOverlayHeader ? "text-white hover:bg-white/20" : ""
                 }`}
                 onClick={() => setIsOpen(true)}
               >
-                <Menu className="h-5 w-5" />
+                <Menu className="h-3.5 w-3.5 xs:h-4 xs:w-4 sm:h-5 sm:w-5" />
                 <span className="sr-only">Toggle menu</span>
               </Button>
             </SheetTrigger>
-            <SheetContent side="right" className="w-[82vw] max-w-[400px] px-safe pb-safe bg-background text-foreground border-l border-border/40 backdrop-blur-xl">
+            <SheetContent side="right" className="w-[85vw] xs:w-[82vw] sm:w-[80vw] max-w-[400px] px-safe pb-safe bg-background text-foreground border-l border-border/40 backdrop-blur-xl">
               <div className="flex flex-col h-full">
-                <div className="flex items-center space-x-3 mb-8">
-                  <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
-                    <Leaf className="h-5 w-5 text-primary-foreground" />
+                <div className="flex items-center space-x-3 mb-4 xs:mb-6 sm:mb-8">
+                  <div className="w-7 h-7 xs:w-8 xs:h-8 bg-primary rounded-lg flex items-center justify-center">
+                    <Leaf className="h-4 w-4 xs:h-5 xs:w-5 text-primary-foreground" />
                   </div>
-                  <span className="font-bold text-lg text-primary">Nazdravi</span>
+                  <span className="font-bold text-base xs:text-lg text-primary">Nazdravi</span>
                 </div>
                 
-                <nav className="flex-1 space-y-2">
+                <nav className="flex-1 space-y-1 xs:space-y-2">
                   {navigation.map((item) => (
                     <Link
                       key={item.href}
                       href={item.href}
                       onClick={() => setIsOpen(false)}
-                      className={`block px-4 py-4 rounded-lg text-lg font-medium transition-colors tap-target ${
+                      className={`block px-3 xs:px-4 py-3 xs:py-4 rounded-lg text-sm xs:text-base sm:text-lg font-medium transition-colors tap-target ${
                         isActive(item.href)
                           ? "bg-primary text-primary-foreground"
                           : "text-muted-foreground hover:text-foreground hover:bg-muted/80"

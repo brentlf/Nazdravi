@@ -34,7 +34,7 @@ export default function Appointment() {
   // Show loading state if needed
   if (loading && user) {
     return (
-      <div className="min-h-screen flex items-center justify-center pt-16 pb-20">
+      <div className="h-full flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
           <p className="text-muted-foreground">Loading...</p>
@@ -44,7 +44,7 @@ export default function Appointment() {
   }
 
   return (
-    <div className="min-h-screen pt-16 pb-safe">
+    <div className="h-full overflow-y-auto">
       {/* Main content section */}
       <section className="px-4 sm:px-6 px-safe py-8">
         <div className="max-w-4xl mx-auto w-full">

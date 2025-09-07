@@ -155,7 +155,7 @@ export default function AdminMessages() {
 
   if (usersLoading) {
     return (
-      <div className="min-h-screen py-20 bg-background">
+      <div className="h-[calc(100vh-5rem)] sm:h-[calc(100vh-5rem)] py-20 bg-background">
         <div className="container mx-auto px-4">
           <Card>
             <CardContent className="p-8">

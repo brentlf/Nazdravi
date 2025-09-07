@@ -170,7 +170,7 @@ export default function ConsentForm() {
   // Show success screen after submission
   if (isSubmitted) {
     return (
-      <div className="min-h-screen py-20 bg-background">
+      <div className="h-full py-20 bg-background overflow-y-auto">
         <div className="container mx-auto px-4 max-w-3xl">
           <div className="text-center p-8 bg-success/10 rounded-2xl border border-success/30">
             <div className="w-16 h-16 bg-green-500 rounded-full flex items-center justify-center mx-auto mb-4">
@@ -203,7 +203,7 @@ export default function ConsentForm() {
 
   if (!user) {
     return (
-      <div className="min-h-screen py-20 bg-background">
+      <div className="h-full py-20 bg-background overflow-y-auto">
         <div className="container mx-auto px-4 max-w-3xl text-center">
           <h1 className="text-3xl font-bold mb-4">Sign in required</h1>
           <p className="text-muted-foreground mb-6">Please sign in to complete the consent form.</p>
@@ -216,7 +216,7 @@ export default function ConsentForm() {
   }
 
   return (
-    <div className="min-h-screen py-20 bg-background">
+    <div className="h-full py-20 bg-background overflow-y-auto">
       <div className="container mx-auto px-4 max-w-3xl">
         {/* Header */}
         <div className="text-center mb-8">

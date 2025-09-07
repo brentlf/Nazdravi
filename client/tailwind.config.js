@@ -5,6 +5,27 @@ export default {
     "./src/**/*.{js,ts,jsx,tsx}",
   ],
   theme: {
+    screens: {
+      // Width-based breakpoints (primary)
+      'xs': '320px',    // Small phones (iPhone SE, older Android)
+      'sm': '375px',    // iPhone X/11/12/13/14 in portrait
+      'md': '414px',    // Larger phones (iPhone Plus, Pro Max)
+      'lg': '768px',    // Tablets (iPad portrait)
+      'xl': '1024px',   // Tablets (iPad landscape, small laptops)
+      '2xl': '1280px',  // Desktops and large screens
+      '3xl': '1440px',  // Large desktops
+      
+      // Height-based breakpoints (secondary)
+      'h-xs': { 'raw': '(max-height: 568px)' },  // Short screens (iPhone SE: 568px)
+      'h-sm': { 'raw': '(max-height: 667px)' },  // Medium height screens
+      'h-md': { 'raw': '(max-height: 812px)' },  // Tall screens (iPhone X: 812px)
+      'h-lg': { 'raw': '(min-height: 900px)' },  // Very tall screens
+      
+      // Combined width + height breakpoints
+      'xs-h-short': { 'raw': '(max-width: 374px) and (max-height: 600px)' },  // Small + short
+      'landscape': { 'raw': '(orientation: landscape) and (max-height: 500px)' },  // Landscape phones
+      'portrait': { 'raw': '(orientation: portrait)' },
+    },
     extend: {
       colors: {
         background: "hsl(var(--background))",

@@ -56,15 +56,15 @@ export function MobileBottomNav() {
               <Link href={href}>
                 <div
                   className={cn(
-                    "flex flex-col items-center justify-center h-16 text-xs font-medium cursor-pointer",
+                    "flex flex-col items-center justify-center h-12 xs:h-14 text-xs font-medium cursor-pointer tap-target",
                     "text-muted-foreground hover:text-foreground",
                     active && "text-primary"
                   )}
                   aria-label={ariaLabel}
                   aria-current={active ? "page" : undefined}
                 >
-                  <Icon className={cn("h-5 w-5", active ? "scale-110" : "opacity-80")} />
-                  <span className="mt-1 leading-none">{label}</span>
+                  <Icon className={cn("h-3.5 w-3.5 xs:h-4 xs:w-4", active ? "scale-110" : "opacity-80")} />
+                  <span className="mt-0.5 xs:mt-1 leading-none text-xs">{label}</span>
                 </div>
               </Link>
             </li>

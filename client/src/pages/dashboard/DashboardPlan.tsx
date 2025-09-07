@@ -75,7 +75,7 @@ export default function DashboardPlan() {
 
   if (loading) {
     return (
-      <div className="min-h-screen py-20 bg-background">
+      <div className="h-[calc(100vh-5rem)] sm:h-[calc(100vh-5rem)] py-20 bg-background">
         <div className="container mx-auto px-4">
           <div className="max-w-4xl mx-auto">
             <Card className="animate-pulse">
@@ -92,7 +92,7 @@ export default function DashboardPlan() {
   }
 
   return (
-    <div className="min-h-screen py-20 bg-background">
+    <div className="h-[calc(100vh-5rem)] sm:h-[calc(100vh-5rem)] py-20 bg-background overflow-y-auto">
       <div className="container mx-auto px-4">
         {/* Back to Dashboard Navigation */}
         <div className="mb-6">
