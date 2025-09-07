@@ -130,24 +130,26 @@ export default function AdminUsers() {
   }
 
   return (
-    <div className="min-h-screen py-20 bg-gray-50 dark:bg-gray-900">
-      <div className="container mx-auto px-4">
-        {/* Header with Back Navigation */}
-        <div className="mb-8">
-          <Button variant="ghost" size="sm" className="mb-4" asChild>
+    <div className="min-h-screen py-4 sm:py-20 bg-gray-50 dark:bg-gray-900">
+      <div className="container mx-auto px-3 sm:px-4">
+        {/* Ultra-compact Header */}
+        <div className="mb-4 sm:mb-8">
+          <Button variant="ghost" size="sm" className="mb-2 sm:mb-4" asChild>
             <Link href="/admin">
               <ArrowLeft className="mr-2 h-4 w-4" />
-              Back to Admin Dashboard
+              <span className="hidden sm:inline">Back to Admin Dashboard</span>
+              <span className="sm:hidden">Back</span>
             </Link>
           </Button>
           <div className="flex justify-between items-start">
             <div>
-              <h1 className="text-3xl font-bold mb-2">User Management</h1>
-              <p className="text-muted-foreground">
-                Manage client accounts and user permissions
+              <h1 className="text-xl sm:text-3xl font-bold mb-1 sm:mb-2">User Management</h1>
+              <p className="text-sm sm:text-base text-muted-foreground">
+                <span className="hidden sm:inline">Manage client accounts and user permissions</span>
+                <span className="sm:hidden">Manage users</span>
               </p>
             </div>
-            <Button variant="outline" asChild className="bg-yellow-50 border-yellow-200 text-yellow-800 hover:bg-yellow-100">
+            <Button variant="outline" asChild className="bg-yellow-50 border-yellow-200 text-yellow-800 hover:bg-yellow-100 hidden sm:flex">
               <Link href="/admin/cleanup">
                 <Trash2 className="mr-2 h-4 w-4" />
                 Clean Up Duplicates
@@ -156,56 +158,170 @@ export default function AdminUsers() {
           </div>
         </div>
 
-        {/* Filters */}
-        <Card className="mb-8">
-          <CardContent className="p-6">
-            <div className="flex flex-col md:flex-row gap-4">
-              {/* Search */}
-              <div className="flex-1 relative">
-                <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-                <Input
-                  placeholder="Search users by name or email..."
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                  className="pl-9"
-                />
+        {/* Ultra-compact Filters */}
+        <Card className="mb-3 sm:mb-8">
+          <CardContent className="p-2 sm:p-6">
+            {/* Mobile: Ultra-compact filters */}
+            <div className="block sm:hidden">
+              <div className="flex gap-1 items-center">
+                <div className="flex-1 relative">
+                  <Search className="absolute left-2 top-2.5 h-3.5 w-3.5 text-muted-foreground" />
+                  <Input
+                    placeholder="Search..."
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    className="pl-7 h-8 text-sm"
+                  />
+                </div>
+                <Select value={roleFilter} onValueChange={setRoleFilter}>
+                  <SelectTrigger className="w-20 h-8 px-2">
+                    <SelectValue placeholder="Role" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">All</SelectItem>
+                    <SelectItem value="client">Client</SelectItem>
+                    <SelectItem value="admin">Admin</SelectItem>
+                  </SelectContent>
+                </Select>
               </div>
+            </div>
 
-              {/* Role Filter */}
-              <Select value={roleFilter} onValueChange={setRoleFilter}>
-                <SelectTrigger className="w-full md:w-48">
-                  <SelectValue placeholder="Filter by role" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">All Roles</SelectItem>
-                  <SelectItem value="client">Clients</SelectItem>
-                  <SelectItem value="admin">Admins</SelectItem>
-                </SelectContent>
-              </Select>
+            {/* Desktop: Full filters */}
+            <div className="hidden sm:block">
+              <div className="flex flex-col md:flex-row gap-4">
+                {/* Search */}
+                <div className="flex-1 relative">
+                  <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+                  <Input
+                    placeholder="Search users by name or email..."
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    className="pl-9"
+                  />
+                </div>
+
+                {/* Role Filter */}
+                <Select value={roleFilter} onValueChange={setRoleFilter}>
+                  <SelectTrigger className="w-full md:w-48">
+                    <SelectValue placeholder="Filter by role" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">All Roles</SelectItem>
+                    <SelectItem value="client">Clients</SelectItem>
+                    <SelectItem value="admin">Admins</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
             </div>
           </CardContent>
         </Card>
 
         {/* Users Table */}
         <Card>
-          <CardHeader>
+          <CardHeader className="pb-3 sm:pb-6">
             <CardTitle className="flex items-center justify-between">
-              <span>Users ({filteredUsers.length})</span>
-              <div className="flex gap-2">
-                <Badge variant="outline" className="flex items-center gap-1">
+              <span className="text-base sm:text-lg">Users ({filteredUsers.length})</span>
+              <div className="flex gap-1 sm:gap-2">
+                <Badge variant="outline" className="flex items-center gap-1 text-xs sm:text-sm">
                   <User className="w-3 h-3" />
-                  {filteredUsers.filter(u => u.role === "client").length} Clients
+                  <span className="hidden sm:inline">{filteredUsers.filter(u => u.role === "client").length} Clients</span>
+                  <span className="sm:hidden">{filteredUsers.filter(u => u.role === "client").length}</span>
                 </Badge>
-                <Badge variant="outline" className="flex items-center gap-1">
+                <Badge variant="outline" className="flex items-center gap-1 text-xs sm:text-sm">
                   <Shield className="w-3 h-3" />
-                  {filteredUsers.filter(u => u.role === "admin").length} Admins
+                  <span className="hidden sm:inline">{filteredUsers.filter(u => u.role === "admin").length} Admins</span>
+                  <span className="sm:hidden">{filteredUsers.filter(u => u.role === "admin").length}</span>
                 </Badge>
               </div>
             </CardTitle>
           </CardHeader>
           <CardContent>
             {filteredUsers.length > 0 ? (
-              <div className="h-96 overflow-y-auto border rounded-md">
+              <>
+                {/* Mobile: Ultra-compact card layout */}
+                <div className="block sm:hidden space-y-1 max-h-[75vh] overflow-y-auto">
+                  {filteredUsers.map((user) => (
+                    <div key={user.uid} className="border rounded-md p-2 bg-card">
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-1.5 flex-1 min-w-0">
+                          <Avatar className="h-6 w-6 flex-shrink-0">
+                            <AvatarImage src={user.photoURL} />
+                            <AvatarFallback className="text-[10px] font-medium">
+                              {user.name?.slice(0, 2).toUpperCase()}
+                            </AvatarFallback>
+                          </Avatar>
+                          <div className="flex-1 min-w-0">
+                            <p className="font-medium text-xs truncate">{user.name}</p>
+                            <div className="flex items-center gap-2 text-[10px] text-muted-foreground">
+                              <span className="truncate flex-1">{user.email}</span>
+                              <Badge className={`text-[9px] px-1 py-0 ${getRoleBadgeColor(user.role)}`}>
+                                {user.role === "admin" ? (
+                                  <>
+                                    <Shield className="w-2.5 h-2.5 mr-0.5" />
+                                    Admin
+                                  </>
+                                ) : (
+                                  <>
+                                    <User className="w-2.5 h-2.5 mr-0.5" />
+                                    Client
+                                  </>
+                                )}
+                              </Badge>
+                            </div>
+                          </div>
+                        </div>
+                        
+                        <div className="flex items-center gap-1 flex-shrink-0">
+                          <Badge variant="outline" className="text-[9px] px-1 py-0">
+                            {user.servicePlan || 'N/A'}
+                          </Badge>
+                          <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                              <Button size="icon" className="h-6 w-6 p-0">
+                                <MoreHorizontal className="w-3 h-3" />
+                              </Button>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent align="end">
+                              <DropdownMenuItem onClick={() => handleRoleChange(user.uid, user.role === "admin" ? "client" : "admin")}>
+                                <Edit className="mr-2 h-4 w-4" />
+                                Change Role
+                              </DropdownMenuItem>
+                              <DropdownMenuSeparator />
+                              <AlertDialog>
+                                <AlertDialogTrigger asChild>
+                                  <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
+                                    <Trash2 className="mr-2 h-4 w-4" />
+                                    Delete User
+                                  </DropdownMenuItem>
+                                </AlertDialogTrigger>
+                                <AlertDialogContent>
+                                  <AlertDialogHeader>
+                                    <AlertDialogTitle>Delete User</AlertDialogTitle>
+                                    <AlertDialogDescription>
+                                      Are you sure you want to delete {user.name}? This action cannot be undone.
+                                    </AlertDialogDescription>
+                                  </AlertDialogHeader>
+                                  <AlertDialogFooter>
+                                    <AlertDialogCancel>Cancel</AlertDialogCancel>
+                                    <AlertDialogAction
+                                      onClick={() => handleDeleteUser(user.uid, user.name)}
+                                      className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                                    >
+                                      Delete
+                                    </AlertDialogAction>
+                                  </AlertDialogFooter>
+                                </AlertDialogContent>
+                              </AlertDialog>
+                            </DropdownMenuContent>
+                          </DropdownMenu>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+
+                {/* Desktop: Full table */}
+                <div className="hidden sm:block h-96 overflow-y-auto border rounded-md">
                 <Table>
                 <TableHeader>
                   <TableRow>
@@ -394,7 +510,8 @@ export default function AdminUsers() {
                   ))}
                 </TableBody>
               </Table>
-              </div>
+                </div>
+              </>
             ) : (
               <div className="text-center py-12">
                 <User className="w-16 h-16 text-muted-foreground mx-auto mb-4" />
