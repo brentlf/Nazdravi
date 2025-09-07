@@ -401,7 +401,7 @@ function AdminUserProfile() {
   }
 
   return (
-    <div className="min-h-screen py-20 bg-gray-50 dark:bg-gray-900">
+    <div className="min-h-screen py-20 bg-background">
       <div className="container mx-auto px-4">
         <div className="mb-8">
           <Button variant="ghost" size="sm" className="mb-4" asChild>

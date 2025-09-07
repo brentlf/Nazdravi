@@ -169,7 +169,7 @@ export default function DashboardResources() {
 
   if (loading) {
     return (
-      <div className="min-h-screen py-20 bg-gray-50 dark:bg-gray-900">
+      <div className="min-h-screen py-20 bg-background">
         <div className="container mx-auto px-4 sm:px-6 px-safe">
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
             {[...Array(6)].map((_, i) => (
@@ -188,7 +188,7 @@ export default function DashboardResources() {
   }
 
   return (
-    <div className="min-h-screen py-20 bg-gray-50 dark:bg-gray-900">
+    <div className="min-h-screen py-20 bg-background">
       <div className="container mx-auto px-4 sm:px-6 px-safe">
         {/* Back to Dashboard Navigation */}
         <div className="mb-6">

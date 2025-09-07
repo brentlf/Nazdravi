@@ -739,7 +739,7 @@ export default function AdminAppointments() {
 
   if (loading) {
     return (
-      <div className="min-h-screen py-20 bg-gray-50 dark:bg-gray-900">
+      <div className="min-h-screen py-20 bg-background">
         <div className="container mx-auto px-4">
           <Card>
             <CardContent className="p-8">
@@ -756,7 +756,7 @@ export default function AdminAppointments() {
   }
 
   return (
-    <div className="min-h-screen py-4 sm:py-20 bg-gray-50 dark:bg-gray-900">
+    <div className="min-h-screen py-4 sm:py-20 bg-background">
       <div className="container mx-auto px-3 sm:px-4">
         {/* Header with Back Navigation - Compact on mobile */}
         <div className="mb-4 sm:mb-8">

@@ -266,7 +266,7 @@ export default function PayInvoice() {
 
   if (loading) {
     return (
-      <div className="min-h-screen py-20 bg-gray-50 dark:bg-gray-900">
+      <div className="min-h-screen py-20 bg-background">
         <div className="container mx-auto px-4">
           <div className="max-w-2xl mx-auto text-center">
             <Loader2 className="w-8 h-8 animate-spin mx-auto mb-4" />
@@ -279,7 +279,7 @@ export default function PayInvoice() {
 
   if (error || !invoice) {
     return (
-      <div className="min-h-screen py-20 bg-gray-50 dark:bg-gray-900">
+      <div className="min-h-screen py-20 bg-background">
         <div className="container mx-auto px-4">
           <div className="max-w-2xl mx-auto text-center">
             <h1 className="text-2xl font-bold text-destructive mb-4">Invoice Not Found</h1>

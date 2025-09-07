@@ -155,7 +155,7 @@ export default function AdminMessages() {
 
   if (usersLoading) {
     return (
-      <div className="min-h-screen py-20 bg-gray-50 dark:bg-gray-900">
+      <div className="min-h-screen py-20 bg-background">
         <div className="container mx-auto px-4">
           <Card>
             <CardContent className="p-8">
