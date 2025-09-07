@@ -300,15 +300,15 @@ export default function AdminMessages() {
                       
                       {/* Message Bubble */}
                       <div
-                        className={`max-w-[75%] px-1.5 py-0 rounded-lg ${
+                        className={`max-w-[75%] px-3 py-2 rounded-lg ${
                           isFromAdmin
                             ? 'bg-green-500 text-white rounded-br-sm'
                             : 'bg-blue-500 text-white rounded-bl-sm'
                         }`}
                       >
-                        <p className="text-[10px] leading-none">{message.text}</p>
+                        <p className="text-sm leading-tight">{message.text}</p>
                         <p
-                          className={`text-[8px] leading-none ${
+                          className={`text-xs ${
                             isFromAdmin 
                               ? 'text-green-100' 
                               : 'text-blue-100'
