@@ -2,7 +2,7 @@ import { useState } from "react";
 import { ConversationList } from "@/components/dashboard/ConversationList";
 import { MessageThread } from "@/components/dashboard/MessageThread";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, MoreVertical, Phone, Video } from "lucide-react";
+import { ArrowLeft, MoreVertical } from "lucide-react";
 import { Link } from "wouter";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useAuth } from "@/contexts/AuthContext";
@@ -43,35 +43,41 @@ export default function DashboardMessages() {
   return (
     <div className="h-screen bg-background flex flex-col">
       {/* Chat Header */}
-      <div className="bg-card border-b border-border text-foreground px-4 py-3 flex items-center justify-between flex-shrink-0">
-        <div className="flex items-center gap-3">
-          <Button variant="ghost" size="icon" className="text-muted-foreground hover:bg-muted h-8 w-8 p-0" onClick={handleBackToConversations}>
-            <ArrowLeft className="w-5 h-5" />
-          </Button>
+      <div className="bg-card border-b border-border text-foreground flex-shrink-0">
+        <div className="px-4 py-3 flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <Button variant="ghost" size="icon" className="text-muted-foreground hover:bg-muted h-8 w-8 p-0" onClick={handleBackToConversations}>
+              <ArrowLeft className="w-5 h-5" />
+            </Button>
+            
+            <Avatar className="h-10 w-10">
+              <AvatarImage src={otherUser?.photoURL} />
+              <AvatarFallback className="bg-primary text-primary-foreground">
+                <span className="text-sm font-medium">{otherUser?.name?.split(' ').map(n => n[0]).join('').toUpperCase()}</span>
+              </AvatarFallback>
+            </Avatar>
+            
+            <div className="flex-1 min-w-0">
+              <h1 className="font-semibold text-foreground truncate">{otherUser?.name || 'Nutritionist'}</h1>
+              <p className="text-xs text-muted-foreground truncate">Online</p>
+            </div>
+          </div>
           
-          <Avatar className="h-10 w-10">
-            <AvatarImage src={otherUser?.photoURL} />
-            <AvatarFallback className="bg-primary text-primary-foreground">
-              <span className="text-sm font-medium">{otherUser?.name?.split(' ').map(n => n[0]).join('').toUpperCase()}</span>
-            </AvatarFallback>
-          </Avatar>
-          
-          <div className="flex-1 min-w-0">
-            <h1 className="font-semibold text-foreground truncate">{otherUser?.name || 'Nutritionist'}</h1>
-            <p className="text-xs text-muted-foreground truncate">Online</p>
+          <div className="flex items-center gap-2">
+            <Button variant="ghost" size="icon" className="text-muted-foreground hover:bg-muted h-8 w-8 p-0">
+              <MoreVertical className="w-5 h-5" />
+            </Button>
           </div>
         </div>
         
-        <div className="flex items-center gap-2">
-          <Button variant="ghost" size="icon" className="text-muted-foreground hover:bg-muted h-8 w-8 p-0">
-            <Video className="w-5 h-5" />
-          </Button>
-          <Button variant="ghost" size="icon" className="text-muted-foreground hover:bg-muted h-8 w-8 p-0">
-            <Phone className="w-5 h-5" />
-          </Button>
-          <Button variant="ghost" size="icon" className="text-muted-foreground hover:bg-muted h-8 w-8 p-0">
-            <MoreVertical className="w-5 h-5" />
-          </Button>
+        {/* User Info Section - Fixed */}
+        <div className="px-4 pb-3 border-b border-border/50">
+          <div className="flex items-center gap-3">
+            <div className="flex-1 min-w-0">
+              <p className="text-sm font-medium text-foreground truncate">{otherUser?.name || 'Nutritionist'}</p>
+              <p className="text-xs text-muted-foreground truncate">{otherUser?.email || 'nutritionist@example.com'}</p>
+            </div>
+          </div>
         </div>
       </div>
 
