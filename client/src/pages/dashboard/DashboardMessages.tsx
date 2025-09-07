@@ -27,86 +27,116 @@ export default function DashboardMessages() {
     setSelectedConversation(null);
   };
 
-  // Unified Chat Layout - cohesive across all viewports
+  // Two-page design for mobile, split-pane for desktop
   return (
-    <div className="chat-app-container">
-      {/* Main Header - handled by site layout */}
-      <div className="chat-main-header"></div>
-      
-      {/* Content Area */}
-      <div className="chat-content">
-        {/* Conversation List - Always visible on desktop, conditional on mobile */}
-        <div className={`${selectedConversation ? 'hidden sm:block' : 'block'} conversation-selector`}>
+    <div className="h-full flex flex-col">
+      {/* Mobile: Show conversation list OR chat, not both */}
+      {!selectedConversation ? (
+        <div className="flex-1 h-full">
           <ConversationList 
             onSelectConversation={handleSelectConversation}
             onBack={() => window.history.back()}
             selectedConversation={selectedConversation}
           />
         </div>
-
-        {/* Chat Area - Hidden on mobile when no selection, always visible on desktop */}
-        <div className={`${selectedConversation ? 'block' : 'hidden sm:block'} chat-area`}>
-        {selectedConversation ? (
-          <>
-            {/* Fixed Combined Header */}
-            <div className="chat-header-main text-foreground shadow-sm">
-              <div className="px-4 py-2 flex items-center justify-start gap-3 h-full sm:px-6 sm:py-3">
-                <Button variant="ghost" size="icon" className="text-muted-foreground hover:bg-muted/50 h-9 w-9 p-0 rounded-full sm:hidden" onClick={handleBackToConversations}>
-                  <ArrowLeft className="w-5 h-5" />
-                </Button>
-                
-                <Avatar className="h-11 w-11 ring-2 ring-primary/30 bg-gradient-to-br from-primary/20 to-primary/10 shadow-md sm:h-12 sm:w-12">
-                  <AvatarImage src={otherUser?.photoURL} />
-                  <AvatarFallback className="bg-gradient-to-br from-primary to-primary/80 text-primary-foreground font-semibold">
-                    <span className="text-sm sm:text-base">{otherUser?.name?.split(' ').map(n => n[0]).join('').toUpperCase()}</span>
-                  </AvatarFallback>
-                </Avatar>
-                
-                <div className="flex-1 min-w-0 flex flex-col justify-center">
-                  <h1 className="font-semibold text-foreground truncate text-sm leading-tight sm:text-base sm:leading-normal">{otherUser?.name || 'Nutritionist'}</h1>
-                  <p className="text-xs text-muted-foreground truncate leading-tight sm:text-sm sm:leading-normal" style={{ marginTop: '2px' }}>{otherUser?.email || 'nutritionist@example.com'}</p>
-                </div>
-                
-                {/* Desktop Actions */}
-                <div className="hidden sm:flex items-center gap-2">
-                  <Button variant="ghost" size="icon" className="text-muted-foreground hover:bg-muted/50 h-9 w-9">
-                    <MoreVertical className="w-5 h-5" />
+      ) : (
+        <div className="flex-1 h-full flex flex-col">
+          {/* Desktop: Show both conversation list and chat */}
+          <div className="hidden sm:flex h-full">
+            <div className="w-80 border-r border-border">
+              <ConversationList 
+                onSelectConversation={handleSelectConversation}
+                onBack={() => window.history.back()}
+                selectedConversation={selectedConversation}
+              />
+            </div>
+            <div className="flex-1 flex flex-col">
+              {/* Chat Header */}
+              <div className="chat-header-main text-foreground shadow-sm">
+                <div className="px-4 py-2 flex items-center justify-start gap-3 h-full sm:px-6 sm:py-3">
+                  <Button variant="ghost" size="icon" className="text-muted-foreground hover:bg-muted/50 h-9 w-9 p-0 rounded-full sm:hidden" onClick={handleBackToConversations}>
+                    <ArrowLeft className="w-5 h-5" />
                   </Button>
+                  <Avatar className="h-11 w-11 ring-2 ring-primary/30 bg-gradient-to-br from-primary/20 to-primary/10 shadow-md sm:h-12 sm:w-12">
+                    <AvatarImage src={otherUser?.photoURL} />
+                    <AvatarFallback className="bg-gradient-to-br from-primary to-primary/80 text-primary-foreground font-semibold">
+                      <span className="text-sm sm:text-base">{otherUser?.name?.split(' ').map(n => n[0]).join('').toUpperCase()}</span>
+                    </AvatarFallback>
+                  </Avatar>
+                  <div className="flex-1 min-w-0 flex flex-col justify-center">
+                    <h1 className="font-semibold text-foreground truncate text-sm leading-tight sm:text-base sm:leading-normal">{otherUser?.name || 'Nutritionist'}</h1>
+                    <p className="text-xs text-muted-foreground truncate leading-tight sm:text-sm sm:leading-normal" style={{ marginTop: '2px' }}>{otherUser?.email || 'nutritionist@example.com'}</p>
+                  </div>
+                  <div className="hidden sm:flex items-center gap-2">
+                    <Button variant="ghost" size="icon" className="text-muted-foreground hover:bg-muted/50 h-9 w-9">
+                      <MoreVertical className="w-5 h-5" />
+                    </Button>
+                  </div>
+                </div>
+              </div>
+              {/* Chat Background */}
+              <div className="flex-1 bg-muted/30 relative overflow-hidden chat-messages-container">
+                <div
+                  className="absolute inset-0 opacity-5 dark:opacity-10"
+                  style={{
+                    backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23000000' fill-opacity='0.1'%3E%3Ccircle cx='30' cy='30' r='2'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
+                  }}
+                />
+                {/* Messages Container */}
+                <div className="relative z-10 h-full chat-message-thread">
+                  <MessageThread conversationId={selectedConversation} />
                 </div>
               </div>
             </div>
+          </div>
 
-            {/* Chat Background */}
+          {/* Mobile: Show only chat conversation */}
+          <div className="sm:hidden flex flex-col h-full">
+            {/* Mobile Chat Header */}
+            <div className="chat-header-main text-foreground shadow-sm">
+              <div className="px-4 py-2 flex items-center justify-start gap-3 h-full">
+                <Button variant="ghost" size="icon" className="text-muted-foreground hover:bg-muted/50 h-9 w-9 p-0 rounded-full" onClick={handleBackToConversations}>
+                  <ArrowLeft className="w-5 h-5" />
+                </Button>
+                <Avatar className="h-11 w-11 ring-2 ring-primary/30 bg-gradient-to-br from-primary/20 to-primary/10 shadow-md">
+                  <AvatarImage src={otherUser?.photoURL} />
+                  <AvatarFallback className="bg-gradient-to-br from-primary to-primary/80 text-primary-foreground font-semibold">
+                    <span className="text-sm">{otherUser?.name?.split(' ').map(n => n[0]).join('').toUpperCase()}</span>
+                  </AvatarFallback>
+                </Avatar>
+                <div className="flex-1 min-w-0 flex flex-col justify-center">
+                  <h1 className="font-semibold text-foreground truncate text-sm leading-tight">{otherUser?.name || 'Nutritionist'}</h1>
+                  <p className="text-xs text-muted-foreground truncate leading-tight" style={{ marginTop: '2px' }}>{otherUser?.email || 'nutritionist@example.com'}</p>
+                </div>
+              </div>
+            </div>
+            {/* Mobile Chat Background */}
             <div className="flex-1 bg-muted/30 relative overflow-hidden chat-messages-container">
-              {/* Subtle Pattern */}
               <div
                 className="absolute inset-0 opacity-5 dark:opacity-10"
                 style={{
                   backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23000000' fill-opacity='0.1'%3E%3Ccircle cx='30' cy='30' r='2'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
                 }}
               />
-              
               {/* Messages Container */}
               <div className="relative z-10 h-full chat-message-thread">
                 <MessageThread conversationId={selectedConversation} />
               </div>
             </div>
-          </>
-        ) : (
-          /* Desktop fallback when no conversation selected */
-          <div className="flex-1 flex items-center justify-center text-muted-foreground">
-            <div className="text-center">
-              <MessageCircle className="w-16 h-16 mx-auto mb-4 opacity-50" />
-              <p className="text-lg font-medium">Select a conversation</p>
-              <p className="text-sm">Choose a conversation from the list to start messaging</p>
-            </div>
           </div>
-        )}
         </div>
-      </div>
-      
-      {/* Main Footer - mobile nav */}
-      <div className="chat-main-footer"></div>
+      )}
+
+      {/* Desktop fallback when no conversation selected */}
+      {!selectedConversation && (
+        <div className="hidden sm:flex flex-1 items-center justify-center text-muted-foreground">
+          <div className="text-center">
+            <MessageCircle className="w-16 h-16 mx-auto mb-4 opacity-50" />
+            <p className="text-lg font-medium">Select a conversation</p>
+            <p className="text-sm">Choose a conversation from the list to start messaging</p>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

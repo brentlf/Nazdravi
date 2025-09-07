@@ -179,54 +179,59 @@ export default function AdminMessages() {
     setSelectedConversation(null);
   };
 
-  // Unified Chat Layout - cohesive across all viewports
+  // Two-page design for mobile, split-pane for desktop
   return (
-    <div className="chat-app-container">
-      {/* Main Header - handled by site layout */}
-      <div className="chat-main-header"></div>
-      
-      {/* Content Area */}
-      <div className="chat-content">
-        {/* Conversation List - Always visible on desktop, conditional on mobile */}
-        <div className={`${selectedConversation ? 'hidden sm:block' : 'block'} conversation-selector`}>
+    <div className="h-full flex flex-col">
+      {/* Mobile: Show conversation list OR chat, not both */}
+      {!selectedConversation ? (
+        <div className="flex-1 h-full">
           <AdminConversationList 
             onSelectConversation={handleSelectConversation}
             onBack={() => window.history.back()}
             selectedConversation={selectedConversation}
           />
         </div>
-
-        {/* Chat Area - Hidden on mobile when no selection, always visible on desktop */}
-        <div className={`${selectedConversation ? 'block' : 'hidden sm:block'} chat-area`}>
-        {selectedConversation ? (
-          <AdminConversationView 
-            selectedConversation={selectedConversation}
-            users={users}
-            onBackToConversations={handleBackToConversations}
-            messages={messages}
-            messagesLoading={messagesLoading}
-            newMessage={newMessage}
-            setNewMessage={setNewMessage}
-            handleSendMessage={handleSendMessage}
-            sendingMessage={sendingMessage}
-            messagesEndRef={messagesEndRef}
-            user={user}
-          />
-        ) : (
-          /* Desktop fallback when no conversation selected */
-          <div className="flex-1 flex items-center justify-center text-muted-foreground">
-            <div className="text-center">
-              <MessageCircle className="w-16 h-16 mx-auto mb-4 opacity-50" />
-              <p className="text-lg font-medium">Select a conversation</p>
-              <p className="text-sm">Choose a client conversation from the list to start messaging</p>
+      ) : (
+        <div className="flex-1 h-full flex flex-col">
+          {/* Desktop: Show both conversation list and chat */}
+          <div className="hidden sm:flex h-full">
+            <div className="w-80 border-r border-border">
+              <AdminConversationList 
+                onSelectConversation={handleSelectConversation}
+                onBack={() => window.history.back()}
+                selectedConversation={selectedConversation}
+              />
+            </div>
+            <div className="flex-1 flex flex-col">
+              <AdminConversationView 
+                selectedConversation={selectedConversation}
+                users={users}
+                onBackToConversations={handleBackToConversations}
+              />
             </div>
           </div>
-        )}
+
+          {/* Mobile: Show only chat conversation */}
+          <div className="sm:hidden flex flex-col h-full">
+            <AdminConversationView 
+              selectedConversation={selectedConversation}
+              users={users}
+              onBackToConversations={handleBackToConversations}
+            />
+          </div>
         </div>
-      </div>
-      
-      {/* Main Footer - mobile nav */}
-      <div className="chat-main-footer"></div>
+      )}
+
+      {/* Desktop fallback when no conversation selected */}
+      {!selectedConversation && (
+        <div className="hidden sm:flex flex-1 items-center justify-center text-muted-foreground">
+          <div className="text-center">
+            <MessageCircle className="w-16 h-16 mx-auto mb-4 opacity-50" />
+            <p className="text-lg font-medium">Select a conversation</p>
+            <p className="text-sm">Choose a client conversation from the list to start messaging</p>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
