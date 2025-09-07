@@ -262,7 +262,7 @@ export function MessageThread({ conversationId }: MessageThreadProps) {
                     
                     {/* Message Bubble */}
                     <div
-                      className={`max-w-[75%] px-2 py-0.5 rounded-lg ${
+                      className={`max-w-[75%] px-2 py-1 rounded-lg ${
                         isFromUser
                           ? 'bg-green-500 text-white rounded-br-sm'
                           : 'bg-blue-500 text-white rounded-bl-sm'
@@ -270,7 +270,7 @@ export function MessageThread({ conversationId }: MessageThreadProps) {
                     >
                       <p className="text-xs leading-none">{message.text}</p>
                       <p
-                        className={`text-[9px] -mt-1 -mb-1 ${
+                        className={`text-[9px] mt-0 leading-none ${
                           isFromUser 
                             ? 'text-green-100' 
                             : 'text-blue-100'
