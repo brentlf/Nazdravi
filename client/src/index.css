@@ -481,7 +481,7 @@
     left: 0 !important;
     right: 0 !important;
     z-index: 50 !important;
-    height: 72px !important; /* Increased from 64px */
+    height: 72px !important; /* Mobile height */
     background-color: hsl(var(--card)) !important;
     border-bottom: 1px solid hsl(var(--border)) !important;
     backdrop-filter: none !important; /* Ensure solid background */
@@ -491,13 +491,26 @@
     overflow: hidden !important;
   }
 
+  @media (min-width: 640px) {
+    .chat-header-main {
+      height: 80px !important; /* Desktop height */
+    }
+  }
+
 
   .chat-messages-container {
-    padding-top: 72px !important; /* Only the combined chat header height */
+    padding-top: 72px !important; /* Mobile header height */
     height: calc(100% - 72px - 64px) !important; /* Full container height minus chat header (72px) minus input (64px) */
     overflow-y: auto !important; /* Only messages scroll */
     scrollbar-width: none !important; /* Firefox */
     -ms-overflow-style: none !important; /* IE/Edge */
+  }
+
+  @media (min-width: 640px) {
+    .chat-messages-container {
+      padding-top: 80px !important; /* Desktop header height */
+      height: calc(100% - 80px - 64px) !important; /* Full container height minus chat header (80px) minus input (64px) */
+    }
   }
 
   .chat-messages-container::-webkit-scrollbar {

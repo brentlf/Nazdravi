@@ -12,9 +12,10 @@ import { useAuth } from "@/contexts/AuthContext";
 interface ConversationListProps {
   onSelectConversation: (conversationId: string) => void;
   onBack: () => void;
+  selectedConversation?: string | null;
 }
 
-export function ConversationList({ onSelectConversation, onBack }: ConversationListProps) {
+export function ConversationList({ onSelectConversation, onBack, selectedConversation }: ConversationListProps) {
   const [searchTerm, setSearchTerm] = useState("");
   const { effectiveUser: user } = useAuth();
   const { update: updateMessage } = useFirestoreActions("messages");
@@ -125,24 +126,24 @@ export function ConversationList({ onSelectConversation, onBack }: ConversationL
   return (
     <div className="flex flex-col h-screen">
       {/* Header */}
-      <div className="bg-card border-b border-border text-foreground px-4 py-3 flex items-center justify-between flex-shrink-0">
+      <div className="bg-card border-b border-border text-foreground px-4 py-3 flex items-center justify-between flex-shrink-0 sm:px-6 sm:py-4">
         <div className="flex items-center gap-3">
-          <Button variant="ghost" size="icon" className="text-muted-foreground hover:bg-muted h-8 w-8 p-0" onClick={onBack}>
+          <Button variant="ghost" size="icon" className="text-muted-foreground hover:bg-muted h-8 w-8 p-0 sm:hidden" onClick={onBack}>
             <ArrowLeft className="w-5 h-5" />
           </Button>
-          <h1 className="font-semibold text-foreground">Messages</h1>
+          <h1 className="font-semibold text-foreground text-lg sm:text-xl">Messages</h1>
         </div>
       </div>
 
       {/* Search */}
-      <div className="p-3 border-b border-border">
+      <div className="p-3 border-b border-border sm:p-4 sm:pb-6">
         <div className="relative">
-          <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+          <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground sm:left-4 sm:top-4 sm:h-5 sm:w-5" />
           <Input
             placeholder="Search conversations..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="pl-9"
+            className="pl-9 sm:pl-10 sm:h-12 sm:text-base"
           />
         </div>
       </div>
@@ -155,30 +156,32 @@ export function ConversationList({ onSelectConversation, onBack }: ConversationL
               <div
                 key={conversation.id}
                 onClick={() => onSelectConversation(conversation.id)}
-                className="px-3 py-2 border-b border-border/30 cursor-pointer hover:bg-muted transition-colors"
+                className={`px-3 py-3 border-b border-border/30 cursor-pointer hover:bg-muted transition-colors sm:px-6 sm:py-4 ${
+                  selectedConversation === conversation.id ? 'bg-muted border-l-4 border-l-primary' : ''
+                }`}
               >
-                <div className="flex items-center space-x-3">
+                <div className="flex items-center space-x-3 sm:space-x-4">
                   <div className="relative flex-shrink-0">
-                    <Avatar className="w-10 h-10">
+                    <Avatar className="w-10 h-10 sm:w-12 sm:h-12">
                       <AvatarImage src={conversation.otherUser.photoURL} />
                       <AvatarFallback className="bg-primary text-primary-foreground">
                         {conversation.otherUser.name.split(' ').map(n => n[0]).join('').toUpperCase()}
                       </AvatarFallback>
                     </Avatar>
                     {conversation.unreadCount > 0 && (
-                      <div className="absolute -top-1 -right-1 w-5 h-5 bg-destructive rounded-full flex items-center justify-center">
-                        <span className="text-xs text-destructive-foreground font-bold">{conversation.unreadCount}</span>
+                      <div className="absolute -top-1 -right-1 w-5 h-5 bg-destructive rounded-full flex items-center justify-center sm:w-6 sm:h-6">
+                        <span className="text-xs text-destructive-foreground font-bold sm:text-sm">{conversation.unreadCount}</span>
                       </div>
                     )}
                   </div>
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center justify-between">
-                      <p className="text-sm font-medium truncate">{conversation.otherUser.name}</p>
-                      <span className="text-xs text-muted-foreground">
+                      <p className="text-sm font-medium truncate sm:text-base">{conversation.otherUser.name}</p>
+                      <span className="text-xs text-muted-foreground sm:text-sm">
                         {formatMessageTime(conversation.lastMessage.createdAt)}
                       </span>
                     </div>
-                    <p className="text-xs text-muted-foreground truncate">
+                    <p className="text-xs text-muted-foreground truncate sm:text-sm sm:mt-1">
                       {conversation.lastMessage.text}
                     </p>
                   </div>
@@ -186,10 +189,10 @@ export function ConversationList({ onSelectConversation, onBack }: ConversationL
               </div>
             ))
           ) : (
-            <div className="p-8 text-center text-muted-foreground">
-              <MessageCircle className="w-12 h-12 mx-auto mb-4 opacity-50" />
-              <p>No conversations yet</p>
-              <p className="text-sm">Start a conversation with your nutritionist</p>
+            <div className="p-8 text-center text-muted-foreground sm:p-12">
+              <MessageCircle className="w-12 h-12 mx-auto mb-4 opacity-50 sm:w-16 sm:h-16 sm:mb-6" />
+              <p className="text-base sm:text-lg">No conversations yet</p>
+              <p className="text-sm sm:text-base mt-1">Start a conversation with your nutritionist</p>
             </div>
           )}
         </div>

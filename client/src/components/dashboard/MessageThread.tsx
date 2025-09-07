@@ -262,15 +262,15 @@ export function MessageThread({ conversationId }: MessageThreadProps) {
                     
                     {/* Message Bubble */}
                     <div
-                      className={`max-w-[75%] px-3 py-2 rounded-lg ${
+                      className={`max-w-[75%] px-3 py-2 rounded-lg sm:max-w-[60%] sm:px-4 sm:py-3 ${
                         isFromUser
                           ? 'bg-green-500 text-white rounded-br-sm'
                           : 'bg-blue-500 text-white rounded-bl-sm'
                       }`}
                     >
-                      <p className="text-sm leading-tight mb-0.5">{message.text}</p>
+                      <p className="text-sm leading-tight mb-0.5 sm:text-base sm:leading-normal sm:mb-1">{message.text}</p>
                       <p
-                        className={`text-xs mt-0.5 mb-0.5 ${
+                        className={`text-xs mt-0.5 mb-0.5 sm:text-sm sm:mt-1 sm:mb-1 ${
                           isFromUser 
                             ? 'text-green-100' 
                             : 'text-blue-100'
