@@ -199,7 +199,7 @@ export default function AdminMessages() {
   return (
     <div className="h-screen bg-background flex flex-col overflow-hidden">
       {/* Fixed Main Header */}
-      <div className="bg-card border-b border-border text-foreground fixed top-0 left-0 right-0 z-50">
+      <div className="chat-header-main text-foreground">
         <div className="px-4 py-3 flex items-center justify-between">
           <div className="flex items-center gap-3">
             <Button variant="ghost" size="icon" className="text-muted-foreground hover:bg-muted h-8 w-8 p-0" onClick={handleBackToConversations}>
@@ -228,19 +228,17 @@ export default function AdminMessages() {
       </div>
 
       {/* Fixed User Info Section - Below Header */}
-      <div className="bg-card border-b border-border text-foreground fixed top-20 left-0 right-0 z-40">
-        <div className="px-4 py-2">
-          <div className="flex items-center gap-2">
-            <div className="flex-1 min-w-0">
-              <p className="text-xs font-medium text-foreground truncate">{selectedClient?.name || 'Client'}</p>
-              <p className="text-[10px] text-muted-foreground truncate">{selectedClient?.email || 'client@example.com'}</p>
-            </div>
+      <div className="chat-header-user-info text-foreground">
+        <div className="px-4 py-2 h-full flex items-center">
+          <div className="flex-1 min-w-0">
+            <p className="text-xs font-medium text-foreground truncate">{selectedClient?.name || 'Client'}</p>
+            <p className="text-[10px] text-muted-foreground truncate">{selectedClient?.email || 'client@example.com'}</p>
           </div>
         </div>
       </div>
 
       {/* Chat Background */}
-      <div className="flex-1 bg-muted/30 relative overflow-hidden pt-28">
+      <div className="flex-1 bg-muted/30 relative overflow-hidden chat-messages-container">
         {/* Subtle Pattern */}
         <div 
           className="absolute inset-0 opacity-5 dark:opacity-10"
