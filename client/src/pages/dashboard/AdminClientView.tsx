@@ -82,21 +82,24 @@ export default function AdminClientView() {
 
   return (
     <div className="min-h-[calc(100vh-5rem-4rem)] flex flex-col bg-background">
-      {/* Compact Header */}
-      <div className="flex-none px-4 sm:px-6 px-safe py-2 border-b bg-card">
+      {/* Ultra-compact Header */}
+      <div className="flex-none px-3 sm:px-6 px-safe py-2 border-b bg-card">
         <div className="flex items-center justify-between max-w-7xl mx-auto">
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2 sm:gap-3">
             <Button variant="ghost" size="sm" asChild>
               <Link href="/admin">
                 <ArrowLeft className="mr-1 h-4 w-4" />
-                Back
+                <span className="hidden sm:inline">Back</span>
               </Link>
             </Button>
-            <div className="border-l pl-3">
-              <h1 className="text-lg font-semibold">Client Dashboard View</h1>
+            <div className="border-l pl-2 sm:pl-3">
+              <h1 className="text-base sm:text-lg font-semibold">
+                <span className="hidden sm:inline">Client Dashboard View</span>
+                <span className="sm:hidden">Clients</span>
+              </h1>
             </div>
           </div>
-          <div className="text-sm text-muted-foreground">
+          <div className="text-xs sm:text-sm text-muted-foreground">
             {filteredClients.length} clients
           </div>
         </div>
@@ -104,39 +107,77 @@ export default function AdminClientView() {
 
       {/* Main Content Area */}
       <div className="flex-1 flex flex-col overflow-hidden">
-        <div className="max-w-7xl mx-auto w-full h-full flex flex-col px-4 sm:px-6 px-safe py-2">
-          {/* Compact Search and Controls */}
+        <div className="max-w-7xl mx-auto w-full h-full flex flex-col px-3 sm:px-6 px-safe py-2">
+          {/* Ultra-compact Search and Controls */}
           <div className="flex-none mb-2">
-            <div className="flex gap-3 items-center p-3 bg-card rounded-lg border">
-              <div className="flex-1 relative">
-                <Search className="absolute left-2 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                <Input
-                  placeholder="Search clients..."
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                  className="pl-8 h-9"
-                />
+            {/* Mobile: Ultra-compact search */}
+            <div className="block sm:hidden">
+              <div className="flex gap-1 items-center p-2 bg-card rounded-lg border">
+                <div className="flex-1 relative">
+                  <Search className="absolute left-2 top-2.5 h-3.5 w-3.5 text-muted-foreground" />
+                  <Input
+                    placeholder="Search..."
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    className="pl-7 h-8 text-sm"
+                  />
+                </div>
+                <Select value={itemsPerPage.toString()} onValueChange={(value) => setItemsPerPage(Number(value))}>
+                  <SelectTrigger className="w-16 h-8 px-2">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent 
+                    className="admin-select-content"
+                    style={{
+                      backgroundColor: 'hsl(var(--popover))',
+                      color: 'hsl(var(--popover-foreground))',
+                      borderColor: 'hsl(var(--border))',
+                      opacity: 1,
+                      backdropFilter: 'none'
+                    }}
+                  >
+                    <SelectItem value="8">8</SelectItem>
+                    <SelectItem value="12">12</SelectItem>
+                    <SelectItem value="16">16</SelectItem>
+                    <SelectItem value="20">20</SelectItem>
+                  </SelectContent>
+                </Select>
               </div>
-              <Select value={itemsPerPage.toString()} onValueChange={(value) => setItemsPerPage(Number(value))}>
-                <SelectTrigger className="w-20 h-9">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent 
-                  className="admin-select-content"
-                  style={{
-                    backgroundColor: 'hsl(var(--popover))',
-                    color: 'hsl(var(--popover-foreground))',
-                    borderColor: 'hsl(var(--border))',
-                    opacity: 1,
-                    backdropFilter: 'none'
-                  }}
-                >
-                  <SelectItem value="8">8</SelectItem>
-                  <SelectItem value="12">12</SelectItem>
-                  <SelectItem value="16">16</SelectItem>
-                  <SelectItem value="20">20</SelectItem>
-                </SelectContent>
-              </Select>
+            </div>
+
+            {/* Desktop: Full search */}
+            <div className="hidden sm:block">
+              <div className="flex gap-3 items-center p-3 bg-card rounded-lg border">
+                <div className="flex-1 relative">
+                  <Search className="absolute left-2 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                  <Input
+                    placeholder="Search clients..."
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    className="pl-8 h-9"
+                  />
+                </div>
+                <Select value={itemsPerPage.toString()} onValueChange={(value) => setItemsPerPage(Number(value))}>
+                  <SelectTrigger className="w-20 h-9">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent 
+                    className="admin-select-content"
+                    style={{
+                      backgroundColor: 'hsl(var(--popover))',
+                      color: 'hsl(var(--popover-foreground))',
+                      borderColor: 'hsl(var(--border))',
+                      opacity: 1,
+                      backdropFilter: 'none'
+                    }}
+                  >
+                    <SelectItem value="8">8</SelectItem>
+                    <SelectItem value="12">12</SelectItem>
+                    <SelectItem value="16">16</SelectItem>
+                    <SelectItem value="20">20</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
             </div>
           </div>
 
@@ -144,53 +185,43 @@ export default function AdminClientView() {
           <div className="flex-1 bg-card rounded-lg border overflow-hidden flex flex-col min-h-0">
             {paginatedClients.length > 0 ? (
               <>
-                {/* Mobile Card View for small screens */}
-                <div className="block sm:hidden flex-1 overflow-auto min-h-0 p-2">
-                  <div className="space-y-2">
+                {/* Mobile: Ultra-compact card layout */}
+                <div className="block sm:hidden flex-1 overflow-auto min-h-0 p-1">
+                  <div className="space-y-1">
                     {paginatedClients.map((client) => (
                       <Card key={client.uid} className="p-2 hover:bg-muted/50 transition-colors">
                         <div className="flex items-center justify-between">
-                          <div className="flex items-center gap-2 flex-1 min-w-0">
-                            <Avatar className="h-7 w-7 flex-shrink-0">
+                          <div className="flex items-center gap-1.5 flex-1 min-w-0">
+                            <Avatar className="h-6 w-6 flex-shrink-0">
                               <AvatarImage src={client.photoURL} alt={client.name} />
-                              <AvatarFallback className="text-xs font-medium">
+                              <AvatarFallback className="text-[10px] font-medium">
                                 {client.name.slice(0, 2).toUpperCase()}
                               </AvatarFallback>
                             </Avatar>
                             <div className="flex-1 min-w-0">
-                              <p className="font-medium text-sm truncate">{client.name}</p>
-                              <p className="text-[11px] text-muted-foreground truncate">{client.email}</p>
-                              <div className="flex items-center gap-2 mt-1">
-                                <Badge variant="secondary" className="text-[10px] px-1 py-0">
+                              <p className="font-medium text-xs truncate">{client.name}</p>
+                              <div className="flex items-center gap-2 text-[10px] text-muted-foreground">
+                                <span className="truncate flex-1">{client.email}</span>
+                                <Badge variant="secondary" className="text-[9px] px-1 py-0">
                                   {client.preferredLanguage?.toUpperCase() || 'EN'}
                                 </Badge>
-                                <span className="text-[11px] text-muted-foreground">
-                                  {new Date(client.createdAt).toLocaleDateString('en-US', { 
-                                    month: 'short', 
-                                    day: 'numeric'
+                                <span className="text-[9px]">
+                                  {new Date(client.createdAt).toLocaleDateString('en-GB', { 
+                                    day: '2-digit', 
+                                    month: 'short'
                                   })}
                                 </span>
                               </div>
                             </div>
                           </div>
-                          {/* Mobile icon-only, desktop text button */}
-                          <div className="flex items-center gap-2">
-                            <Button 
-                              size="icon"
-                              className="h-8 w-8 p-0 sm:hidden"
-                              onClick={() => handleClientSelect(client.uid)}
-                              title="View"
-                            >
-                              <Eye className="w-4 h-4" />
-                            </Button>
-                            <Button 
-                              size="sm"
-                              className="h-8 px-3 text-xs hidden sm:inline-flex"
-                              onClick={() => handleClientSelect(client.uid)}
-                            >
-                              View
-                            </Button>
-                          </div>
+                          <Button 
+                            size="icon"
+                            className="h-6 w-6 p-0 flex-shrink-0"
+                            onClick={() => handleClientSelect(client.uid)}
+                            title="View"
+                          >
+                            <Eye className="w-3 h-3" />
+                          </Button>
                         </div>
                       </Card>
                     ))}
