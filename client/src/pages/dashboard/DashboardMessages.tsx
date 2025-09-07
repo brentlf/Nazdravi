@@ -10,44 +10,44 @@ export default function DashboardMessages() {
 
   return (
     <div className="h-[calc(100vh-8rem)] bg-background flex flex-col">
-      {/* WhatsApp-style Header */}
-      <div className="bg-green-600 dark:bg-green-700 text-white px-4 py-3 flex items-center justify-between flex-shrink-0">
+      {/* Subtle Header */}
+      <div className="bg-card border-b border-border text-foreground px-4 py-3 flex items-center justify-between flex-shrink-0">
         <div className="flex items-center gap-3">
           <Link href="/dashboard">
-            <Button variant="ghost" size="icon" className="text-white hover:bg-green-700 dark:hover:bg-green-800 h-8 w-8 p-0">
+            <Button variant="ghost" size="icon" className="text-muted-foreground hover:bg-muted h-8 w-8 p-0">
               <ArrowLeft className="w-5 h-5" />
             </Button>
           </Link>
           
           <Avatar className="h-10 w-10">
             <AvatarImage src="/api/placeholder/40/40" />
-            <AvatarFallback className="bg-green-500 text-white">
+            <AvatarFallback className="bg-primary text-primary-foreground">
               <span className="text-sm font-medium">N</span>
             </AvatarFallback>
           </Avatar>
           
           <div className="flex-1 min-w-0">
-            <h1 className="font-semibold text-white truncate">Nutritionist</h1>
-            <p className="text-xs text-green-100 truncate">Online</p>
+            <h1 className="font-semibold text-foreground truncate">Nutritionist</h1>
+            <p className="text-xs text-muted-foreground truncate">Online</p>
           </div>
         </div>
         
         <div className="flex items-center gap-2">
-          <Button variant="ghost" size="icon" className="text-white hover:bg-green-700 dark:hover:bg-green-800 h-8 w-8 p-0">
+          <Button variant="ghost" size="icon" className="text-muted-foreground hover:bg-muted h-8 w-8 p-0">
             <Video className="w-5 h-5" />
           </Button>
-          <Button variant="ghost" size="icon" className="text-white hover:bg-green-700 dark:hover:bg-green-800 h-8 w-8 p-0">
+          <Button variant="ghost" size="icon" className="text-muted-foreground hover:bg-muted h-8 w-8 p-0">
             <Phone className="w-5 h-5" />
           </Button>
-          <Button variant="ghost" size="icon" className="text-white hover:bg-green-700 dark:hover:bg-green-800 h-8 w-8 p-0">
+          <Button variant="ghost" size="icon" className="text-muted-foreground hover:bg-muted h-8 w-8 p-0">
             <MoreVertical className="w-5 h-5" />
           </Button>
         </div>
       </div>
 
-      {/* WhatsApp-style Background */}
-      <div className="flex-1 bg-[#e5ddd5] dark:bg-[#0a0a0a] relative overflow-hidden">
-        {/* Background Pattern */}
+      {/* Subtle Background */}
+      <div className="flex-1 bg-muted/30 relative overflow-hidden">
+        {/* Subtle Pattern */}
         <div 
           className="absolute inset-0 opacity-5 dark:opacity-10"
           style={{

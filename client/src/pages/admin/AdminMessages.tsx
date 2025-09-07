@@ -234,11 +234,11 @@ export default function AdminMessages() {
 
   return (
     <div className="h-screen bg-background flex flex-col">
-      {/* WhatsApp-style Header */}
-      <div className="bg-green-600 dark:bg-green-700 text-white px-4 py-3 flex items-center justify-between flex-shrink-0">
+      {/* Subtle Header */}
+      <div className="bg-card border-b border-border text-foreground px-4 py-3 flex items-center justify-between flex-shrink-0">
         <div className="flex items-center gap-3">
           <Link href="/admin">
-            <Button variant="ghost" size="icon" className="text-white hover:bg-green-700 dark:hover:bg-green-800 h-8 w-8 p-0">
+            <Button variant="ghost" size="icon" className="text-muted-foreground hover:bg-muted h-8 w-8 p-0">
               <ArrowLeft className="w-5 h-5" />
             </Button>
           </Link>
@@ -247,33 +247,33 @@ export default function AdminMessages() {
             <>
               <Avatar className="h-10 w-10">
                 <AvatarImage src={selectedClient.photoURL} />
-                <AvatarFallback className="bg-green-500 text-white">
+                <AvatarFallback className="bg-primary text-primary-foreground">
                   {selectedClient.name.split(' ').map(n => n[0]).join('').toUpperCase()}
                 </AvatarFallback>
               </Avatar>
               
               <div className="flex-1 min-w-0">
-                <h1 className="font-semibold text-white truncate">{selectedClient.name}</h1>
-                <p className="text-xs text-green-100 truncate">{selectedClient.email}</p>
+                <h1 className="font-semibold text-foreground truncate">{selectedClient.name}</h1>
+                <p className="text-xs text-muted-foreground truncate">{selectedClient.email}</p>
               </div>
             </>
           ) : (
             <div className="flex-1 min-w-0">
-              <h1 className="font-semibold text-white">Admin Messages</h1>
-              <p className="text-xs text-green-100">Select a client to start chatting</p>
+              <h1 className="font-semibold text-foreground">Admin Messages</h1>
+              <p className="text-xs text-muted-foreground">Select a client to start chatting</p>
             </div>
           )}
         </div>
         
         {selectedClient && (
           <div className="flex items-center gap-2">
-            <Button variant="ghost" size="icon" className="text-white hover:bg-green-700 dark:hover:bg-green-800 h-8 w-8 p-0">
+            <Button variant="ghost" size="icon" className="text-muted-foreground hover:bg-muted h-8 w-8 p-0">
               <Video className="w-5 h-5" />
             </Button>
-            <Button variant="ghost" size="icon" className="text-white hover:bg-green-700 dark:hover:bg-green-800 h-8 w-8 p-0">
+            <Button variant="ghost" size="icon" className="text-muted-foreground hover:bg-muted h-8 w-8 p-0">
               <Phone className="w-5 h-5" />
             </Button>
-            <Button variant="ghost" size="icon" className="text-white hover:bg-green-700 dark:hover:bg-green-800 h-8 w-8 p-0">
+            <Button variant="ghost" size="icon" className="text-muted-foreground hover:bg-muted h-8 w-8 p-0">
               <MoreVertical className="w-5 h-5" />
             </Button>
           </div>
@@ -282,9 +282,9 @@ export default function AdminMessages() {
 
       <div className="flex-1 flex overflow-hidden">
         {/* Client List Sidebar */}
-        <div className="w-80 bg-white dark:bg-gray-900 border-r border-gray-200 dark:border-gray-700 flex flex-col">
+        <div className="w-80 bg-card border-r border-border flex flex-col">
           {/* Search Header */}
-          <div className="p-4 border-b border-gray-200 dark:border-gray-700">
+          <div className="p-4 border-b border-border">
             <div className="relative">
               <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
               <Input
@@ -310,21 +310,21 @@ export default function AdminMessages() {
                   <div
                     key={client.uid}
                     onClick={() => setSelectedChatRoom(chatRoom)}
-                    className={`p-3 rounded-lg cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors ${
-                      isSelected ? 'bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-700' : ''
+                    className={`p-3 rounded-lg cursor-pointer hover:bg-muted transition-colors ${
+                      isSelected ? 'bg-primary/10 border border-primary/20' : ''
                     }`}
                   >
                     <div className="flex items-center space-x-3">
                       <div className="relative">
                         <Avatar className="w-12 h-12">
                           <AvatarImage src={client.photoURL} />
-                          <AvatarFallback className="bg-green-500 text-white">
+                          <AvatarFallback className="bg-primary text-primary-foreground">
                             {client.name.split(' ').map(n => n[0]).join('').toUpperCase()}
                           </AvatarFallback>
                         </Avatar>
                         {hasUnread && (
-                          <div className="absolute -top-1 -right-1 w-5 h-5 bg-red-500 rounded-full flex items-center justify-center">
-                            <span className="text-xs text-white font-bold">{unreadCount}</span>
+                          <div className="absolute -top-1 -right-1 w-5 h-5 bg-destructive rounded-full flex items-center justify-center">
+                            <span className="text-xs text-destructive-foreground font-bold">{unreadCount}</span>
                           </div>
                         )}
                       </div>
@@ -389,8 +389,8 @@ export default function AdminMessages() {
         <div className="flex-1 flex flex-col">
           {selectedChatRoom ? (
             <>
-              {/* WhatsApp-style Background */}
-              <div className="flex-1 bg-[#e5ddd5] dark:bg-[#0a0a0a] relative overflow-hidden">
+              {/* Subtle Background */}
+              <div className="flex-1 bg-muted/30 relative overflow-hidden">
                 {/* Background Pattern */}
                 <div 
                   className="absolute inset-0 opacity-5 dark:opacity-10"
@@ -463,16 +463,16 @@ export default function AdminMessages() {
                               <div
                                 className={`max-w-[70%] px-3 py-2 rounded-2xl ${
                                   isFromAdmin
-                                    ? 'bg-green-500 text-white rounded-br-md'
-                                    : 'bg-white dark:bg-gray-800 text-gray-900 dark:text-white rounded-bl-md shadow-sm'
+                                    ? 'bg-primary text-primary-foreground rounded-br-md'
+                                    : 'bg-card text-card-foreground rounded-bl-md shadow-sm border border-border'
                                 }`}
                               >
                                 <p className="text-sm leading-relaxed">{message.text}</p>
                                 <p
                                   className={`text-xs mt-1 ${
                                     isFromAdmin 
-                                      ? 'text-green-100' 
-                                      : 'text-gray-500 dark:text-gray-400'
+                                      ? 'text-primary-foreground/70' 
+                                      : 'text-muted-foreground'
                                   }`}
                                 >
                                   {(() => {
@@ -501,11 +501,11 @@ export default function AdminMessages() {
                       })
                     ) : (
                       <div className="flex flex-col items-center justify-center h-full text-center py-12">
-                        <div className="w-16 h-16 bg-green-500 rounded-full flex items-center justify-center mb-4">
-                          <MessageCircle className="w-8 h-8 text-white" />
+                        <div className="w-16 h-16 bg-primary rounded-full flex items-center justify-center mb-4">
+                          <MessageCircle className="w-8 h-8 text-primary-foreground" />
                         </div>
-                        <h3 className="text-white font-medium mb-2">Start a conversation</h3>
-                        <p className="text-white/70 text-sm">
+                        <h3 className="text-foreground font-medium mb-2">Start a conversation</h3>
+                        <p className="text-muted-foreground text-sm">
                           Send a message to {selectedClient?.name}
                         </p>
                       </div>
@@ -557,7 +557,7 @@ export default function AdminMessages() {
                         onClick={handleSendMessage}
                         disabled={sendingMessage}
                         size="icon"
-                        className="h-10 w-10 bg-green-500 hover:bg-green-600 text-white rounded-full"
+                        className="h-10 w-10 bg-primary hover:bg-primary/90 text-primary-foreground rounded-full"
                       >
                         <Send className="h-5 w-5" />
                       </Button>
@@ -566,7 +566,7 @@ export default function AdminMessages() {
                         type="button"
                         variant="ghost"
                         size="icon"
-                        className="h-10 w-10 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
+                        className="h-10 w-10 text-muted-foreground hover:text-foreground"
                       >
                         <Mic className="h-5 w-5" />
                       </Button>
@@ -576,13 +576,13 @@ export default function AdminMessages() {
               </div>
             </>
           ) : (
-            <div className="flex-1 flex items-center justify-center bg-[#e5ddd5] dark:bg-[#0a0a0a]">
-              <div className="text-center text-white">
-                <div className="w-16 h-16 bg-green-500 rounded-full flex items-center justify-center mb-4 mx-auto">
-                  <MessageCircle className="w-8 h-8 text-white" />
+            <div className="flex-1 flex items-center justify-center bg-muted/30">
+              <div className="text-center text-foreground">
+                <div className="w-16 h-16 bg-primary rounded-full flex items-center justify-center mb-4 mx-auto">
+                  <MessageCircle className="w-8 h-8 text-primary-foreground" />
                 </div>
                 <h3 className="text-lg font-semibold mb-2">Select a client to start messaging</h3>
-                <p className="text-white/70">Choose a client from the list to begin a conversation</p>
+                <p className="text-muted-foreground">Choose a client from the list to begin a conversation</p>
               </div>
             </div>
           )}

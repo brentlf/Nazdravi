@@ -260,16 +260,16 @@ export function MessageThread() {
                     <div
                       className={`max-w-[70%] px-3 py-2 rounded-2xl ${
                         isFromUser
-                          ? 'bg-green-500 text-white rounded-br-md'
-                          : 'bg-white dark:bg-gray-800 text-gray-900 dark:text-white rounded-bl-md shadow-sm'
+                          ? 'bg-primary text-primary-foreground rounded-br-md'
+                          : 'bg-card text-card-foreground rounded-bl-md shadow-sm border border-border'
                       }`}
                     >
                       <p className="text-sm leading-relaxed">{message.text}</p>
                       <p
                         className={`text-xs mt-1 ${
                           isFromUser 
-                            ? 'text-green-100' 
-                            : 'text-gray-500 dark:text-gray-400'
+                            ? 'text-primary-foreground/70' 
+                            : 'text-muted-foreground'
                         }`}
                       >
                         {formatMessageTime(message.createdAt)}
@@ -281,11 +281,11 @@ export function MessageThread() {
             })
           ) : (
             <div className="flex flex-col items-center justify-center h-full text-center py-12">
-              <div className="w-16 h-16 bg-green-500 rounded-full flex items-center justify-center mb-4">
-                <Bot className="w-8 h-8 text-white" />
+              <div className="w-16 h-16 bg-primary rounded-full flex items-center justify-center mb-4">
+                <Bot className="w-8 h-8 text-primary-foreground" />
               </div>
-              <h3 className="text-white font-medium mb-2">Start a conversation</h3>
-              <p className="text-white/70 text-sm">
+              <h3 className="text-foreground font-medium mb-2">Start a conversation</h3>
+              <p className="text-muted-foreground text-sm">
                 Send a message to your nutritionist
               </p>
             </div>
@@ -342,7 +342,7 @@ export function MessageThread() {
                 type="submit"
                 disabled={sending}
                 size="icon"
-                className="h-10 w-10 bg-green-500 hover:bg-green-600 text-white rounded-full"
+                className="h-10 w-10 bg-primary hover:bg-primary/90 text-primary-foreground rounded-full"
               >
                 <Send className="h-5 w-5" />
               </Button>
@@ -351,7 +351,7 @@ export function MessageThread() {
                 type="button"
                 variant="ghost"
                 size="icon"
-                className="h-10 w-10 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
+                className="h-10 w-10 text-muted-foreground hover:text-foreground"
               >
                 <Mic className="h-5 w-5" />
               </Button>
