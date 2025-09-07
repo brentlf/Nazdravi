@@ -474,22 +474,46 @@
     .show-on-mobile { display: block !important; }
   }
 
-  /* Fix for chat header positioning - only within right pane */
+  /* CSS Grid Layout for Chat Interface - works with existing site layout */
+  .chat-content {
+    display: grid !important;
+    grid-template-columns: 250px 1fr !important; /* sidebar + chat area */
+    overflow: hidden !important; /* prevents full page scrolling */
+    height: calc(100vh - 80px - 64px) !important; /* Full viewport minus site header (80px) minus mobile nav (64px) */
+  }
+
+  @media (min-width: 640px) {
+    .chat-content {
+      height: calc(100vh - 80px) !important; /* Full viewport minus site header (80px) only on desktop */
+    }
+  }
+
+  @media (max-width: 640px) {
+    .chat-content {
+      grid-template-columns: 1fr !important; /* single column on mobile */
+    }
+  }
+
+  .conversation-selector {
+    overflow-y: auto !important; /* scrollable */
+    background-color: hsl(var(--card)) !important;
+    border-right: 1px solid hsl(var(--border)) !important;
+  }
+
+  .chat-area {
+    display: grid !important;
+    grid-template-rows: auto 1fr auto !important; /* chat header, messages, input */
+    overflow: hidden !important;
+    height: 100% !important;
+  }
+
   .chat-header-main {
-    position: relative !important;
-    top: auto !important;
-    left: auto !important;
-    right: auto !important;
-    z-index: 10 !important;
-    height: 72px !important; /* Mobile height */
+    height: 72px !important; /* fixed height */
     background-color: hsl(var(--card)) !important;
     border-bottom: 1px solid hsl(var(--border)) !important;
-    backdrop-filter: none !important; /* Ensure solid background */
-    opacity: 1 !important; /* Ensure no transparency */
     display: flex !important;
     align-items: center !important;
-    overflow: hidden !important;
-    flex-shrink: 0 !important; /* Prevent shrinking */
+    flex-shrink: 0 !important;
   }
 
   @media (min-width: 640px) {
@@ -498,20 +522,10 @@
     }
   }
 
-
   .chat-messages-container {
-    padding-top: 0 !important; /* No padding needed with relative positioning */
-    height: calc(100% - 72px - 64px) !important; /* Full container height minus chat header (72px) minus input (64px) */
-    overflow-y: auto !important; /* Only messages scroll */
+    overflow-y: auto !important; /* scrollable */
     scrollbar-width: none !important; /* Firefox */
     -ms-overflow-style: none !important; /* IE/Edge */
-  }
-
-  @media (min-width: 640px) {
-    .chat-messages-container {
-      padding-top: 0 !important; /* No padding needed with relative positioning */
-      height: calc(100% - 80px - 64px) !important; /* Full container height minus chat header (80px) minus input (64px) */
-    }
   }
 
   .chat-messages-container::-webkit-scrollbar {

@@ -27,12 +27,11 @@ export default function DashboardMessages() {
     setSelectedConversation(null);
   };
 
-  // For mobile, show either conversation list or individual conversation
-  // For desktop, show both side by side
+  // CSS Grid Layout - no page scrolling, only conversation list and messages scroll
   return (
-    <div className="h-[calc(100vh-80px-64px)] sm:h-[calc(100vh-80px)] bg-background flex overflow-hidden max-h-[calc(100vh-80px-64px)] sm:max-h-[calc(100vh-80px)]">
+    <div className="chat-content">
       {/* Conversation List - Always visible on desktop, conditional on mobile */}
-      <div className={`${selectedConversation ? 'hidden sm:block' : 'block'} w-full sm:w-80 lg:w-96 border-r border-border flex-shrink-0`}>
+      <div className={`${selectedConversation ? 'hidden sm:block' : 'block'} conversation-selector`}>
         <ConversationList 
           onSelectConversation={handleSelectConversation}
           onBack={() => window.history.back()}
@@ -40,8 +39,8 @@ export default function DashboardMessages() {
         />
       </div>
 
-      {/* Individual Conversation - Hidden on mobile when no selection, always visible on desktop */}
-      <div className={`${selectedConversation ? 'block' : 'hidden sm:block'} flex-1 flex flex-col overflow-hidden chat-page-container`}>
+      {/* Chat Area - Hidden on mobile when no selection, always visible on desktop */}
+      <div className={`${selectedConversation ? 'block' : 'hidden sm:block'} chat-area`}>
         {selectedConversation ? (
           <>
             {/* Fixed Combined Header */}
