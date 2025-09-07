@@ -20,7 +20,7 @@ import {
 } from "lucide-react";
 import { Link } from "wouter";
 import { useFirestoreCollection } from "@/hooks/useFirestore";
-import { User, Appointment } from "@/types";
+import { User, Appointment, Message } from "@/types";
 import type { Invoice } from "@shared/firebase-schema";
 import { where, orderBy, limit } from "firebase/firestore";
 import { FloatingOrganic, DoodleConnector } from "@/components/ui/PageTransition";
@@ -113,6 +113,11 @@ export default function AdminHome() {
     new Date(inv.createdAt).getMonth() === new Date().getMonth()
   ).reduce((sum, inv) => sum + inv.amount, 0) || 0;
 
+  // Calculate unread messages to admin
+  const unreadMessagesToAdmin = messages?.filter(msg => 
+    msg.toUser === "admin" && (msg.read === false || msg.read === undefined)
+  ).length || 0;
+
   const quickStats = [
     {
       title: "Total Clients",
@@ -170,6 +175,14 @@ export default function AdminHome() {
       color: "text-indigo-600",
       bgColor: "bg-indigo-50 dark:bg-indigo-900/20",
       href: "/admin/emails"
+    },
+    {
+      title: "Unread Messages",
+      value: unreadMessagesToAdmin.toString(),
+      icon: MessageCircle,
+      color: "text-primary-600",
+      bgColor: "bg-primary-50 dark:bg-primary-900/20",
+      href: "/admin/messages"
     }
   ];
 
