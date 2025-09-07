@@ -260,16 +260,16 @@ export function MessageThread() {
                     <div
                       className={`max-w-[70%] px-3 py-2 rounded-2xl ${
                         isFromUser
-                          ? 'bg-primary text-primary-foreground rounded-br-md'
-                          : 'bg-card text-card-foreground rounded-bl-md shadow-sm border border-border'
+                          ? 'bg-green-500 text-white rounded-br-md'
+                          : 'bg-blue-500 text-white rounded-bl-md'
                       }`}
                     >
                       <p className="text-sm leading-relaxed">{message.text}</p>
                       <p
                         className={`text-xs mt-1 ${
                           isFromUser 
-                            ? 'text-primary-foreground/70' 
-                            : 'text-muted-foreground'
+                            ? 'text-green-100' 
+                            : 'text-blue-100'
                         }`}
                       >
                         {formatMessageTime(message.createdAt)}
