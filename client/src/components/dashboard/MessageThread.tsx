@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { Send, Bot, User, Smile, Paperclip, Mic } from "lucide-react";
+import { Send, Bot, User } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -298,20 +298,10 @@ export function MessageThread({ conversationId }: MessageThreadProps) {
         </div>
       </ScrollArea>
 
-      {/* Compact Input Area */}
-      <div className="bg-white dark:bg-gray-900 px-3 py-1.5 border-t border-gray-200 dark:border-gray-700 flex-shrink-0">
+      {/* Clean Input Area */}
+      <div className="bg-card border-t border-border px-4 py-3 flex-shrink-0 shadow-sm">
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="flex items-end gap-1.5">
-            {/* Attachment Button */}
-            <Button
-              type="button"
-              variant="ghost"
-              size="icon"
-              className="h-8 w-8 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
-            >
-              <Paperclip className="h-4 w-4" />
-            </Button>
-            
+          <form onSubmit={form.handleSubmit(onSubmit)} className="flex items-center gap-3">
             {/* Message Input */}
             <FormField
               control={form.control}
@@ -319,47 +309,26 @@ export function MessageThread({ conversationId }: MessageThreadProps) {
               render={({ field }) => (
                 <FormItem className="flex-1">
                   <FormControl>
-                    <div className="relative">
-                      <Input
-                        {...field}
-                        placeholder="Type a message"
-                        disabled={sending}
-                        className="pr-10 py-1.5 rounded-full border-gray-300 dark:border-gray-600 focus:ring-2 focus:ring-green-500 focus:border-transparent text-sm"
-                      />
-                      <Button
-                        type="button"
-                        variant="ghost"
-                        size="icon"
-                        className="absolute right-1 top-1/2 -translate-y-1/2 h-6 w-6 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
-                      >
-                        <Smile className="h-4 w-4" />
-                      </Button>
-                    </div>
+                    <Input
+                      {...field}
+                      placeholder="Type your message..."
+                      disabled={sending}
+                      className="py-3 px-4 rounded-full border-border bg-background focus:ring-2 focus:ring-primary focus:border-transparent text-sm placeholder:text-muted-foreground"
+                    />
                   </FormControl>
                 </FormItem>
               )}
             />
             
-            {/* Send/Voice Button */}
-            {form.watch("text")?.trim() ? (
-              <Button
-                type="submit"
-                disabled={sending}
-                size="icon"
-                className="h-8 w-8 bg-primary hover:bg-primary/90 text-primary-foreground rounded-full"
-              >
-                <Send className="h-4 w-4" />
-              </Button>
-            ) : (
-              <Button
-                type="button"
-                variant="ghost"
-                size="icon"
-                className="h-8 w-8 text-muted-foreground hover:text-foreground"
-              >
-                <Mic className="h-4 w-4" />
-              </Button>
-            )}
+            {/* Send Button */}
+            <Button
+              type="submit"
+              disabled={sending || !form.watch("text")?.trim()}
+              size="icon"
+              className="h-10 w-10 bg-primary hover:bg-primary/90 text-primary-foreground rounded-full shadow-md disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              <Send className="h-4 w-4" />
+            </Button>
           </form>
         </Form>
       </div>

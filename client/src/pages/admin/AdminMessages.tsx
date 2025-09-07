@@ -199,28 +199,28 @@ export default function AdminMessages() {
   return (
     <div className="h-screen bg-background flex flex-col overflow-hidden chat-page-container">
       {/* Fixed Combined Header */}
-      <div className="chat-header-main text-foreground">
-        <div className="px-4 py-2 flex items-center justify-between">
+      <div className="chat-header-main text-foreground shadow-sm">
+        <div className="px-4 py-3 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <Button variant="ghost" size="icon" className="text-muted-foreground hover:bg-muted h-8 w-8 p-0" onClick={handleBackToConversations}>
+            <Button variant="ghost" size="icon" className="text-muted-foreground hover:bg-muted/50 h-9 w-9 p-0 rounded-full" onClick={handleBackToConversations}>
               <ArrowLeft className="w-5 h-5" />
             </Button>
             
-            <Avatar className="h-10 w-10 ring-2 ring-primary/20 bg-primary/10">
+            <Avatar className="h-11 w-11 ring-2 ring-primary/30 bg-gradient-to-br from-primary/20 to-primary/10 shadow-md">
               <AvatarImage src={selectedClient?.photoURL} />
-              <AvatarFallback className="bg-primary text-primary-foreground">
-                <span className="text-sm font-medium">{selectedClient?.name?.split(' ').map(n => n[0]).join('').toUpperCase()}</span>
+              <AvatarFallback className="bg-gradient-to-br from-primary to-primary/80 text-primary-foreground font-semibold">
+                <span className="text-sm">{selectedClient?.name?.split(' ').map(n => n[0]).join('').toUpperCase()}</span>
               </AvatarFallback>
             </Avatar>
             
             <div className="flex-1 min-w-0">
-              <h1 className="font-semibold text-foreground truncate text-sm leading-tight">{selectedClient?.name || 'Client'}</h1>
-              <p className="text-xs text-muted-foreground truncate leading-tight" style={{ marginTop: '1px' }}>{selectedClient?.email || 'client@example.com'}</p>
+              <h1 className="font-semibold text-foreground truncate text-base leading-tight">{selectedClient?.name || 'Client'}</h1>
+              <p className="text-xs text-muted-foreground truncate leading-tight" style={{ marginTop: '2px' }}>{selectedClient?.email || 'client@example.com'}</p>
             </div>
           </div>
           
-          <div className="flex items-center gap-2">
-            <Button variant="ghost" size="icon" className="text-muted-foreground hover:bg-muted h-8 w-8 p-0">
+          <div className="flex items-center gap-1">
+            <Button variant="ghost" size="icon" className="text-muted-foreground hover:bg-muted/50 h-9 w-9 p-0 rounded-full">
               <MoreVertical className="w-5 h-5" />
             </Button>
           </div>
