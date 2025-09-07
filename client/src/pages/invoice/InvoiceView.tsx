@@ -21,7 +21,7 @@ const InvoiceView: React.FC = () => {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center min-h-screen">
+      <div className="viewport-fit flex items-center justify-center">
         <div className="animate-spin w-8 h-8 border-4 border-primary border-t-transparent rounded-full" />
       </div>
     );
@@ -29,7 +29,7 @@ const InvoiceView: React.FC = () => {
 
   if (error || !invoice) {
     return (
-      <div className="flex items-center justify-center min-h-screen">
+      <div className="viewport-fit flex items-center justify-center">
         <Card className="w-full max-w-md">
           <CardHeader>
             <CardTitle className="text-center text-red-600">Invoice Not Found</CardTitle>

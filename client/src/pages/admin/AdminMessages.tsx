@@ -155,7 +155,8 @@ export default function AdminMessages() {
 
   if (usersLoading) {
     return (
-      <div className="h-[calc(100vh-5rem)] sm:h-[calc(100vh-5rem)] py-20 bg-background">
+      <div className="viewport-fit bg-background">
+        <div className="viewport-content py-20">
         <div className="container mx-auto px-4">
           <Card>
             <CardContent className="p-8">
@@ -166,6 +167,7 @@ export default function AdminMessages() {
               </div>
             </CardContent>
           </Card>
+        </div>
         </div>
       </div>
     );

@@ -64,15 +64,13 @@ function Layout({ children }: { children: React.ReactNode }) {
   const isDashboardRoute = location.startsWith("/dashboard") || location.startsWith("/admin");
   
   return (
-    <div className={`min-h-[100svh] relative bg-background text-foreground ${!isHomePage ? (isDashboardRoute ? "pb-[calc(env(safe-area-inset-bottom)+80px)]" : "pb-[calc(env(safe-area-inset-bottom)+120px)]") : ""}`}>
+    <div className="flex-layout bg-background text-foreground h-screen overflow-hidden">
       <Header />
-      <main className={`${isDashboardRoute ? 'pb-16 xs:pb-16 sm:pb-0' : 'pb-20 xs:pb-20 sm:pb-0'}`}>
+      <main className={`flex-content overflow-y-auto ${!isHomePage ? 'main-with-fixed-header' : ''}`}>
         {children}
       </main>
       {!isHomePage && !isDashboardRoute && (
-        <div className="fixed bottom-0 left-0 right-0 z-50">
-          <Footer overlay={true} />
-        </div>
+        <Footer />
       )}
       <MobileBottomNav />
     </div>

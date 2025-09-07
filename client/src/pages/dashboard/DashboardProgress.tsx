@@ -116,7 +116,7 @@ export default function DashboardProgress() {
 
   if (loading) {
     return (
-      <div className="min-h-screen py-20 bg-background">
+      <div className="viewport-fit bg-background">
         <div className="container mx-auto px-4 sm:px-6 px-safe">
           <div className="animate-pulse space-y-8">
             <div className="h-8 bg-muted rounded w-1/3"></div>
@@ -133,8 +133,8 @@ export default function DashboardProgress() {
   }
 
   return (
-    <div className="h-[calc(100vh-5rem)] sm:h-[calc(100vh-5rem)] bg-background">
-      <div className="container mx-auto px-4 sm:px-6 px-safe py-4 h-full flex flex-col">
+    <div className="viewport-fit bg-background">
+      <div className="viewport-content container mx-auto px-4 sm:px-6 px-safe py-4">
         {/* Compact Header with Back Navigation */}
         <div className="flex items-center justify-between mb-4 flex-shrink-0">
           <div className="flex items-center gap-4">

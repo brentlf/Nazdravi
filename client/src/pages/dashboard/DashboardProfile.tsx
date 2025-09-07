@@ -576,7 +576,9 @@ export default function DashboardProfile() {
   };
 
   return (
-    <div className="max-w-4xl mx-auto space-y-6">
+    <div className="h-full">
+      <div className="h-full overflow-y-auto p-4 sm:p-6 lg:p-8">
+        <div className="max-w-4xl mx-auto space-y-6">
       <div className="bg-gradient-to-r from-primary/10 to-primary/5 border border-primary/20 rounded-lg p-6">
         <h1 className="text-3xl font-bold text-gray-900 dark:text-white flex items-center gap-3">
           <div className="w-10 h-10 bg-primary/20 rounded-full flex items-center justify-center">
@@ -1057,6 +1059,8 @@ export default function DashboardProfile() {
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
+        </div>
+      </div>
     </div>
   );
 }

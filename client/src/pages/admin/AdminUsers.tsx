@@ -125,8 +125,8 @@ export default function AdminUsers() {
 
   if (loading) {
     return (
-      <div className="h-[calc(100vh-5rem)] sm:h-[calc(100vh-5rem)] py-20 bg-background">
-        <div className="container mx-auto px-4">
+      <div className="h-full bg-background">
+        <div className="h-full overflow-y-auto container mx-auto px-4 py-20">
           <Card>
             <CardContent className="p-8">
               <div className="animate-pulse space-y-4">
@@ -142,8 +142,8 @@ export default function AdminUsers() {
   }
 
   return (
-    <div className="h-[calc(100vh-5rem)] sm:h-[calc(100vh-5rem)] py-4 sm:py-20 bg-background overflow-y-auto">
-      <div className="container mx-auto px-3 sm:px-4">
+    <div className="h-full bg-background">
+      <div className="h-full overflow-y-auto container mx-auto px-3 sm:px-4 py-4 sm:py-20">
         {/* Ultra-compact Header */}
         <div className="mb-4 sm:mb-8">
           <Button variant="ghost" size="sm" className="mb-2 sm:mb-4" asChild>

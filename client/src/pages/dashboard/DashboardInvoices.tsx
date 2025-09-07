@@ -59,7 +59,7 @@ export default function DashboardInvoices() {
 
   if (loading) {
     return (
-      <div className="min-h-screen py-20 bg-background">
+      <div className="h-full bg-background">
         <div className="container mx-auto px-4 sm:px-6 px-safe">
           <div className="animate-pulse space-y-4">
             <div className="h-8 bg-muted rounded w-1/4"></div>
@@ -74,8 +74,8 @@ export default function DashboardInvoices() {
   const totalPending = pendingInvoices.reduce((sum, invoice) => sum + (invoice.amount || 0), 0);
 
   return (
-    <div className="h-[calc(100vh-5rem)] sm:h-[calc(100vh-5rem)] bg-background">
-      <div className="container mx-auto px-4 sm:px-6 px-safe py-4 h-full flex flex-col">
+    <div className="h-full bg-background">
+      <div className="h-full overflow-y-auto container mx-auto px-4 sm:px-6 px-safe py-4">
         {/* Compact Header with Back Navigation */}
         <div className="flex items-center justify-between mb-4 flex-shrink-0">
           <div className="flex items-center gap-4">

@@ -88,7 +88,7 @@ export default function AdminPlans() {
 
   if (loading) {
     return (
-      <div className="min-h-screen py-20 bg-background">
+      <div className="viewport-fit bg-background">        <div className="viewport-content py-20">
         <div className="container mx-auto px-4">
           <Card>
             <CardContent className="p-8">
@@ -100,12 +100,13 @@ export default function AdminPlans() {
             </CardContent>
           </Card>
         </div>
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen py-20 bg-background">
+    <div className="viewport-fit bg-background">      <div className="viewport-content py-20">
       <div className="container mx-auto px-4">
         {/* Header with Back Navigation */}
         <div className="mb-8">
@@ -292,6 +293,7 @@ export default function AdminPlans() {
             )}
           </CardContent>
         </Card>
+        </div>
       </div>
     </div>
   );

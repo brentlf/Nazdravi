@@ -44,49 +44,49 @@ export default function Appointment() {
   }
 
   return (
-    <div className="h-full overflow-y-auto">
+    <div className="h-full">
       {/* Main content section */}
-      <section className="px-4 sm:px-6 px-safe py-8">
+      <section className="h-full overflow-y-auto p-4 sm:p-6 lg:p-8">
         <div className="max-w-4xl mx-auto w-full">
           {/* Header Section */}
-          <div className="text-center mb-8">
-            <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-primary/20 to-primary/10 rounded-2xl mb-6 shadow-lg">
-              <Calendar className="h-8 w-8 text-primary" />
+          <div className="text-center mb-6 xs:mb-8">
+            <div className="inline-flex items-center justify-center w-12 h-12 xs:w-14 xs:h-14 sm:w-16 sm:h-16 bg-gradient-to-br from-primary/20 to-primary/10 rounded-2xl mb-4 xs:mb-6 shadow-lg">
+              <Calendar className="h-6 w-6 xs:h-7 xs:w-7 sm:h-8 sm:w-8 text-primary" />
             </div>
-            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-4 leading-tight text-foreground font-serif">
+            <h1 className="text-2xl xs:text-3xl sm:text-4xl lg:text-5xl font-bold mb-3 xs:mb-4 leading-tight text-foreground font-serif">
               Book Consultation
             </h1>
-            <p className="text-lg text-muted-foreground max-w-2xl mx-auto leading-relaxed">
+            <p className="text-base xs:text-lg text-muted-foreground max-w-2xl mx-auto leading-relaxed">
               Begin your personalized nutrition journey with expert guidance in English and Czech.
             </p>
           </div>
 
           {/* Requirements Status Section */}
-          <div className="grid md:grid-cols-2 gap-6 mb-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 xs:gap-6 mb-6 xs:mb-8">
             {/* Account Status Card */}
             <Card className="group relative overflow-hidden bg-gradient-to-br from-card via-card/95 to-muted/30 border hover:border-primary/20 hover:shadow-lg hover:shadow-primary/5 transition-all duration-300">
-              <CardContent className="p-6">
-                <div className="flex items-center gap-4">
+              <CardContent className="p-4 xs:p-6">
+                <div className="flex items-center gap-3 xs:gap-4">
                   {user ? (
-                    <div className="inline-flex items-center justify-center w-12 h-12 bg-gradient-to-br from-green-500 to-emerald-500 rounded-xl shadow-sm">
-                      <CheckCircle className="w-6 h-6 text-white" />
+                    <div className="inline-flex items-center justify-center w-10 h-10 xs:w-12 xs:h-12 bg-gradient-to-br from-green-500 to-emerald-500 rounded-xl shadow-sm">
+                      <CheckCircle className="w-5 h-5 xs:w-6 xs:h-6 text-white" />
                     </div>
                   ) : (
-                    <div className="inline-flex items-center justify-center w-12 h-12 bg-gradient-to-br from-blue-500 to-indigo-500 rounded-xl shadow-sm">
-                      <User className="w-6 h-6 text-white" />
+                    <div className="inline-flex items-center justify-center w-10 h-10 xs:w-12 xs:h-12 bg-gradient-to-br from-blue-500 to-indigo-500 rounded-xl shadow-sm">
+                      <User className="w-5 h-5 xs:w-6 xs:h-6 text-white" />
                     </div>
                   )}
                   <div className="flex-1">
-                    <CardTitle className="text-lg font-semibold mb-1 text-card-foreground">
+                    <CardTitle className="text-base xs:text-lg font-semibold mb-1 text-card-foreground">
                       {user ? "Account Verified ✓" : "Let's Get Started!"}
                     </CardTitle>
-                    <p className="text-muted-foreground text-sm">
+                    <p className="text-muted-foreground text-xs xs:text-sm">
                       {user ? "You're signed in and ready to book" : "Create your account to begin your nutrition journey"}
                     </p>
                     {!user && (
                       <Link href="/login">
-                        <Button size="sm" className="mt-4 bg-gradient-to-r from-blue-500 to-indigo-500 hover:from-blue-600 hover:to-indigo-600 text-white shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 border-2 border-blue-400/30 px-6 py-2 font-semibold">
-                          <User className="w-4 h-4 mr-2" />
+                        <Button size="sm" className="mt-3 xs:mt-4 bg-gradient-to-r from-sky-400 to-blue-500 hover:from-sky-500 hover:to-blue-600 text-white shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 border-2 border-sky-300/30 px-4 xs:px-6 py-2 font-semibold text-xs xs:text-sm">
+                          <User className="w-3 h-3 xs:w-4 xs:h-4 mr-2" />
                           Join Us Today
                         </Button>
                       </Link>
@@ -98,28 +98,28 @@ export default function Appointment() {
 
             {/* Consent Status Card */}
             <Card className="group relative overflow-hidden bg-gradient-to-br from-card via-card/95 to-muted/30 border hover:border-primary/20 hover:shadow-lg hover:shadow-primary/5 transition-all duration-300">
-              <CardContent className="p-6">
-                <div className="flex items-center gap-4">
+              <CardContent className="p-4 xs:p-6">
+                <div className="flex items-center gap-3 xs:gap-4">
                   {hasConsent ? (
-                    <div className="inline-flex items-center justify-center w-12 h-12 bg-gradient-to-br from-green-500 to-emerald-500 rounded-xl shadow-sm">
-                      <CheckCircle className="w-6 h-6 text-white" />
+                    <div className="inline-flex items-center justify-center w-10 h-10 xs:w-12 xs:h-12 bg-gradient-to-br from-green-500 to-emerald-500 rounded-xl shadow-sm">
+                      <CheckCircle className="w-5 h-5 xs:w-6 xs:h-6 text-white" />
                     </div>
                   ) : (
-                    <div className="inline-flex items-center justify-center w-12 h-12 bg-gradient-to-br from-purple-500 to-pink-500 rounded-xl shadow-sm">
-                      <Shield className="w-6 h-6 text-white" />
+                    <div className="inline-flex items-center justify-center w-10 h-10 xs:w-12 xs:h-12 bg-gradient-to-br from-purple-500 to-pink-500 rounded-xl shadow-sm">
+                      <Shield className="w-5 h-5 xs:w-6 xs:h-6 text-white" />
                     </div>
                   )}
                   <div className="flex-1">
-                    <CardTitle className="text-lg font-semibold mb-1 text-card-foreground">
+                    <CardTitle className="text-base xs:text-lg font-semibold mb-1 text-card-foreground">
                       {hasConsent ? "Consent Completed ✓" : "Almost There!"}
                     </CardTitle>
-                    <p className="text-muted-foreground text-sm">
+                    <p className="text-muted-foreground text-xs xs:text-sm">
                       {hasConsent ? "All legal requirements are met" : "Just a quick form to ensure we can help you safely"}
                     </p>
                     {!hasConsent && (
                       <Link href="/consent-form">
-                        <Button size="sm" className="mt-4 bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 border-2 border-purple-400/30 px-6 py-2 font-semibold">
-                          <Shield className="w-4 h-4 mr-2" />
+                        <Button size="sm" className="mt-3 xs:mt-4 bg-gradient-to-r from-cyan-400 to-blue-500 hover:from-cyan-500 hover:to-blue-600 text-white shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 border-2 border-cyan-300/30 px-4 xs:px-6 py-2 font-semibold text-xs xs:text-sm">
+                          <Shield className="w-3 h-3 xs:w-4 xs:h-4 mr-2" />
                           Complete Form
                         </Button>
                       </Link>
@@ -140,7 +140,7 @@ export default function Appointment() {
               >
                 <div className="flex items-center justify-between">
                   <div className="text-center flex-1">
-                    <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-primary to-primary/80 rounded-2xl mb-4 shadow-lg">
+                    <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-sky-400 to-blue-500 rounded-2xl mb-4 shadow-lg">
                       <Calendar className="h-8 w-8 text-white" />
                     </div>
                     <h2 className="text-2xl font-bold text-card-foreground mb-3">Schedule Your Session</h2>
@@ -154,7 +154,7 @@ export default function Appointment() {
                             e.stopPropagation();
                             setIsFormExpanded(true);
                           }}
-                          className="bg-gradient-to-r from-primary via-primary to-primary/90 hover:from-primary/90 hover:via-primary hover:to-primary text-white shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:scale-105 border-2 border-primary/30 px-8 py-4 text-lg font-semibold rounded-xl"
+                          className="bg-gradient-to-r from-sky-400 to-blue-500 hover:from-sky-500 hover:to-blue-600 text-white shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:scale-105 border-2 border-sky-300/30 px-8 py-4 text-lg font-semibold rounded-xl"
                         >
                           <Calendar className="w-5 h-5 mr-2" />
                           📝 Start Booking
@@ -196,7 +196,7 @@ export default function Appointment() {
                 <div className="flex flex-col sm:flex-row gap-4 justify-center">
                   {!user && (
                     <Link href="/login">
-                      <Button className="bg-gradient-to-r from-orange-500 to-yellow-500 hover:from-orange-600 hover:to-yellow-600 text-white shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:scale-105 border-2 border-orange-400/30 px-8 py-4 text-lg font-semibold rounded-xl">
+                      <Button className="bg-gradient-to-r from-sky-400 to-blue-500 hover:from-sky-500 hover:to-blue-600 text-white shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:scale-105 border-2 border-sky-300/30 px-8 py-4 text-lg font-semibold rounded-xl">
                         <User className="w-5 h-5 mr-2" />
                         Get Started
                       </Button>
@@ -204,7 +204,7 @@ export default function Appointment() {
                   )}
                   {user && !hasConsent && (
                     <Link href="/consent-form">
-                      <Button className="bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:scale-105 border-2 border-purple-400/30 px-8 py-4 text-lg font-semibold rounded-xl">
+                      <Button className="bg-gradient-to-r from-cyan-400 to-blue-500 hover:from-cyan-500 hover:to-blue-600 text-white shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:scale-105 border-2 border-cyan-300/30 px-8 py-4 text-lg font-semibold rounded-xl">
                         <Shield className="w-5 h-5 mr-2" />
                         Complete Form
                       </Button>

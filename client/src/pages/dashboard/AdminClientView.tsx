@@ -66,7 +66,7 @@ export default function AdminClientView() {
 
   if (loading) {
     return (
-      <div className="h-[calc(100vh-5rem)] sm:h-[calc(100vh-5rem)] flex items-center justify-center bg-background">
+      <div className="viewport-fit flex items-center justify-center bg-background">
         <Card className="w-full max-w-4xl mx-4">
           <CardContent className="p-6">
             <div className="animate-pulse space-y-3">
@@ -81,7 +81,7 @@ export default function AdminClientView() {
   }
 
   return (
-    <div className="h-[calc(100vh-5rem)] sm:h-[calc(100vh-5rem)] flex flex-col bg-background">
+    <div className="viewport-fit bg-background">
       {/* Ultra-compact Header */}
       <div className="flex-none px-3 sm:px-6 px-safe py-2 border-b bg-card">
         <div className="flex items-center justify-between max-w-7xl mx-auto">
@@ -107,7 +107,7 @@ export default function AdminClientView() {
 
       {/* Main Content Area */}
       <div className="flex-1 flex flex-col overflow-hidden">
-        <div className="max-w-7xl mx-auto w-full h-full flex flex-col px-3 sm:px-6 px-safe py-2">
+        <div className="viewport-content max-w-7xl mx-auto w-full px-3 sm:px-6 px-safe py-2">
           {/* Ultra-compact Search and Controls */}
           <div className="flex-none mb-2">
             {/* Mobile: Ultra-compact search */}

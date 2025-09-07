@@ -82,7 +82,7 @@ export default function Login() {
   };
 
   return (
-    <div className="h-full relative overflow-hidden">
+    <div className="min-viewport-height relative overflow-hidden">
       {/* Background Image */}
       <div 
         className="absolute inset-0 bg-cover bg-center bg-no-repeat"
@@ -119,33 +119,33 @@ export default function Login() {
         </div>
       </div>
 
-      <div className="relative z-10 h-full flex items-center justify-center py-16 px-4 sm:px-6 lg:px-8 px-safe pb-safe">
-        <div className="max-w-md w-full space-y-10">
+      <div className="relative z-10 h-full flex items-center justify-center py-8 xs:py-12 sm:py-16 px-4 sm:px-6 lg:px-8 px-safe pb-safe">
+        <div className="max-w-md w-full space-y-6 xs:space-y-8 sm:space-y-10">
           {/* Sophisticated Header */}
-          <div className="text-center space-y-6 animate-in fade-in-0 slide-in-from-top-4 duration-700 delay-200">
+          <div className="text-center space-y-4 xs:space-y-6 animate-in fade-in-0 slide-in-from-top-4 duration-700 delay-200">
             <Link href="/">
-              <div className="flex items-center justify-center space-x-3 cursor-pointer group">
-                <div className="w-12 h-12 bg-white/20 backdrop-blur-sm rounded-xl flex items-center justify-center transition-all duration-300 group-hover:scale-110 group-hover:shadow-lg group-hover:bg-white/30">
-                  <Leaf className="h-7 w-7 text-white" />
+              <div className="flex items-center justify-center space-x-2 xs:space-x-3 cursor-pointer group">
+                <div className="w-10 h-10 xs:w-12 xs:h-12 bg-white/20 backdrop-blur-sm rounded-xl flex items-center justify-center transition-all duration-300 group-hover:scale-110 group-hover:shadow-lg group-hover:bg-white/30">
+                  <Leaf className="h-6 w-6 xs:h-7 xs:w-7 text-white" />
                 </div>
-                <span className="font-bold text-3xl text-white tracking-tight drop-shadow-lg" style={{fontFamily: 'DM Sans, sans-serif'}}>
+                <span className="font-bold text-2xl xs:text-3xl text-white tracking-tight drop-shadow-lg" style={{fontFamily: 'DM Sans, sans-serif'}}>
                   Nazdravi
                 </span>
               </div>
             </Link>
             <div className="text-center">
-              <h1 className="text-4xl font-light text-white mb-3 drop-shadow-lg" style={{fontFamily: 'DM Sans, sans-serif'}}>
+              <h1 className="text-3xl xs:text-4xl font-light text-white mb-2 xs:mb-3 drop-shadow-lg" style={{fontFamily: 'DM Sans, sans-serif'}}>
                 Welcome back
               </h1>
-              <p className="text-white/90 text-lg font-light leading-relaxed drop-shadow-md" style={{fontFamily: 'DM Sans, sans-serif'}}>
+              <p className="text-white/90 text-base xs:text-lg font-light leading-relaxed drop-shadow-md" style={{fontFamily: 'DM Sans, sans-serif'}}>
                 Sign in to your account to continue your wellness journey
               </p>
             </div>
           </div>
 
           <Card className={`${actualTheme === 'dark' ? 'bg-black border-gray-800' : 'bg-white border-gray-200'} shadow-2xl animate-in fade-in-0 slide-in-from-bottom-4 duration-700`}>
-            <CardHeader className="space-y-3 pb-6">
-              <CardTitle className={`text-2xl font-semibold text-center ${actualTheme === 'dark' ? 'text-white' : 'text-gray-900'}`} style={{fontFamily: 'Playfair Display, serif'}}>
+            <CardHeader className="space-y-2 xs:space-y-3 pb-4 xs:pb-6">
+              <CardTitle className={`text-xl xs:text-2xl font-semibold text-center ${actualTheme === 'dark' ? 'text-white' : 'text-gray-900'}`} style={{fontFamily: 'Playfair Display, serif'}}>
                 Sign in to your account
               </CardTitle>
               <CardDescription className={`text-center ${actualTheme === 'dark' ? 'text-gray-300' : 'text-gray-600'}`} style={{fontFamily: 'DM Sans, sans-serif'}}>

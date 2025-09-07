@@ -401,7 +401,7 @@ function AdminUserProfile() {
   }
 
   return (
-    <div className="min-h-screen py-20 bg-background">
+    <div className="viewport-fit bg-background">      <div className="viewport-content py-20">
       <div className="container mx-auto px-4">
         <div className="mb-8">
           <Button variant="ghost" size="sm" className="mb-4" asChild>
@@ -773,6 +773,7 @@ function AdminUserProfile() {
           </Card>
         </TabsContent>
       </Tabs>
+        </div>
       </div>
     </div>
   );

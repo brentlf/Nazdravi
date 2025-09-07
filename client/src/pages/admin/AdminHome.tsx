@@ -30,10 +30,6 @@ function parseAppointmentDate(appointment: Appointment): Date {
   return new Date(year, month - 1, day);
 }
 
-// Helper function to get sender name
-function getSenderName(message: any): string {
-  return message.senderName || message.sender || 'Unknown';
-}
 
 export default function AdminHome() {
   const [calendarView, setCalendarView] = useState<'month' | 'week'>('month');
@@ -77,7 +73,7 @@ export default function AdminHome() {
 
   // Fetch messages for desktop view
   const { data: messages } = useFirestoreCollection("messages", [
-    orderBy("timestamp", "desc"),
+    orderBy("createdAt", "desc"),
     limit(10)
   ]);
 
@@ -97,8 +93,42 @@ export default function AdminHome() {
     return dateA.getTime() - dateB.getTime();
   }) || [];
 
-  // Process messages for desktop view
-  const recentMessages = messages || [];
+  // Process messages for desktop view - group by client and get most recent conversation per client
+  const recentMessages = (() => {
+    if (!messages || !users) return [];
+    
+    // Group messages by client
+    const messagesByClient = messages.reduce((acc, message) => {
+      // Determine the client user (non-admin)
+      const clientUserId = message.fromUser === "admin" ? message.toUser : message.fromUser;
+      const clientUser = users.find(u => u.uid === clientUserId);
+      
+      if (!clientUser || clientUserId === "admin") return acc;
+      
+      if (!acc[clientUserId]) {
+        acc[clientUserId] = {
+          clientUser,
+          messages: []
+        };
+      }
+      
+      acc[clientUserId].messages.push(message);
+      return acc;
+    }, {} as Record<string, { clientUser: User; messages: any[] }>);
+    
+    // Get the most recent message for each client and sort by most recent
+    return Object.values(messagesByClient)
+      .map(clientData => ({
+        ...clientData,
+        lastMessage: clientData.messages.sort((a: any, b: any) => 
+          new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+        )[0]
+      }))
+      .sort((a: any, b: any) => 
+        new Date(b.lastMessage.createdAt).getTime() - new Date(a.lastMessage.createdAt).getTime()
+      )
+      .slice(0, 3); // Show top 3 most recent conversations
+  })();
   const completeProgramUsers = users?.filter(user => (user as any).servicePlan === "complete-program").length || 0;
   
   const pendingAppointments = appointments?.filter(apt => apt.status === "pending").length || 0;
@@ -212,8 +242,8 @@ export default function AdminHome() {
 
 
   return (
-    <div className="h-[calc(100vh-5rem)] sm:h-[calc(100vh-5rem)] bg-gradient-to-br from-background via-background to-muted/10 relative">
-      <div className="container mx-auto px-3 sm:px-4 lg:px-6 py-1 sm:py-2 lg:py-3 relative z-10 h-full flex flex-col">
+    <div className="h-full bg-gradient-to-br from-background via-background to-muted/10 relative">
+      <div className="h-full flex flex-col p-4 sm:p-6 lg:p-8 relative z-10">
         {/* Header with Navigation and Organic Design */}
         <div className="mb-1 lg:mb-2 relative flex-shrink-0">
           <div className="flex items-center justify-between">
@@ -251,7 +281,8 @@ export default function AdminHome() {
 
 
         {/* Main Dashboard Content */}
-        <div className="grid grid-cols-1 lg:grid-cols-5 gap-2 lg:gap-3 mb-2 lg:mb-3 flex-shrink-0">
+        <div className="flex-1 overflow-y-auto">
+          <div className="grid grid-cols-1 lg:grid-cols-5 gap-2 lg:gap-3 mb-2 lg:mb-3">
           {/* Key Metrics */}
           <div className="lg:col-span-5">
             <h3 className="text-sm lg:text-base font-semibold mb-1.5 lg:mb-2 flex items-center gap-2 text-foreground">
@@ -752,33 +783,49 @@ export default function AdminHome() {
                 <MessageCircle className="w-4 h-4" />
                 Recent Messages
               </h3>
-              <div className="space-y-1.5">
+              <div className="space-y-1">
                 {recentMessages.length > 0 ? (
                   <>
-                    {recentMessages.slice(0, 3).map((message, index) => (
-                      <div key={index} className="flex items-start gap-2 p-2 bg-muted/30 rounded-md">
-                        <div className="w-6 h-6 rounded-full bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center flex-shrink-0">
-                          <MessageCircle className="w-3 h-3 text-blue-600" />
+                    {recentMessages.map((conversation, index) => (
+                      <div key={index} className="flex items-start gap-1.5 p-1.5 bg-green-50/50 dark:bg-green-900/10 rounded-md border border-green-100/50 dark:border-green-800/20">
+                        <div className="w-5 h-5 rounded-full bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center flex-shrink-0">
+                          <MessageCircle className="w-2.5 h-2.5 text-blue-600" />
                         </div>
                         <div className="flex-1 min-w-0">
-                          <div className="flex items-center justify-between mb-1">
-                            <p className="font-medium text-xs truncate">
-                              {getSenderName(message)}
+                          <div className="flex items-center justify-between mb-0">
+                            <p className="font-medium text-xs truncate leading-tight m-0">
+                              {conversation.clientUser.name}
                             </p>
-                            <p className="text-xs text-muted-foreground">
-                              {new Date(message.timestamp).toLocaleDateString('en-GB', {
-                                month: 'short',
-                                day: 'numeric'
-                              })}
+                            <p className="text-xs text-muted-foreground leading-tight m-0">
+                              {(() => {
+                                try {
+                                  let date;
+                                  if (conversation.lastMessage.createdAt instanceof Date) {
+                                    date = conversation.lastMessage.createdAt;
+                                  } else if (conversation.lastMessage.createdAt && typeof conversation.lastMessage.createdAt === 'object' && 'toDate' in conversation.lastMessage.createdAt) {
+                                    date = (conversation.lastMessage.createdAt as any).toDate();
+                                  } else {
+                                    date = new Date();
+                                  }
+                                  return date.toLocaleDateString('en-GB', {
+                                    month: 'short',
+                                    day: 'numeric'
+                                  });
+                                } catch (error) {
+                                  return 'Recent';
+                                }
+                              })()}
                             </p>
                           </div>
-                          <p className="text-xs text-muted-foreground line-clamp-2">
-                            {message.content}
+                          <p className="text-xs text-muted-foreground line-clamp-1 leading-tight m-0">
+                            <span className="font-medium">
+                              {conversation.lastMessage.fromUser === "admin" ? "Admin:" : "Client:"}
+                            </span> {conversation.lastMessage.text}
                           </p>
                         </div>
                       </div>
                     ))}
-                    <Button variant="outline" size="sm" className="w-full text-xs" asChild>
+                    <Button variant="outline" size="sm" className="w-full text-xs bg-blue-50 hover:bg-blue-100 dark:bg-blue-900/20 dark:hover:bg-blue-900/30 border-blue-200 dark:border-blue-800" asChild>
                       <Link href="/admin/messages">View All Messages</Link>
                     </Button>
                   </>
@@ -816,8 +863,8 @@ export default function AdminHome() {
             </CardContent>
           </Card>
         )}
-
-      </div>
+          </div>
+        </div>
       
       {/* Floating background elements - Hidden on mobile */}
       <FloatingOrganic className="hidden sm:block absolute top-20 -right-24 opacity-15" size="large" delay={1} />

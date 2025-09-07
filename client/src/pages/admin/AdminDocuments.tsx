@@ -238,7 +238,7 @@ export default function AdminDocuments() {
   };
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="viewport-fit bg-background">      <div className="viewport-content">
       <div className="container mx-auto px-3 py-4">
         {/* Header with Back Navigation */}
         <div className="mb-4">
@@ -627,6 +627,7 @@ export default function AdminDocuments() {
               </CardContent>
             </Card>
           </div>
+        </div>
         </div>
       </div>
     </div>

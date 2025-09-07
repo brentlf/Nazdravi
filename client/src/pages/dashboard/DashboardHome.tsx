@@ -3,11 +3,11 @@ import { FloatingOrganic, DoodleConnector } from "@/components/ui/PageTransition
 
 export default function DashboardHome() {
   return (
-    <div className="h-[calc(100vh-5rem)] sm:h-[calc(100vh-5rem)] bg-gradient-to-br from-background via-background to-muted/10 relative">
-      <div className="container mx-auto px-3 sm:px-4 lg:px-6 px-safe py-1 sm:py-2 relative z-10 h-full flex flex-col">
+    <div className="viewport-fit bg-gradient-to-br from-background via-background to-muted/10 relative">
+      <div className="adaptive-content">
 
         {/* Main dashboard content with flex-1 to fill remaining space */}
-        <div className="flex-1 overflow-y-auto">
+        <div className="content-section">
           <DashboardOverview />
         </div>
       </div>

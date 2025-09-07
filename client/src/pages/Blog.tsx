@@ -135,8 +135,8 @@ export default function Blog() {
 
   if (loading) {
     return (
-      <div className="h-full overflow-y-auto">
-        <div className="container mx-auto px-4 sm:px-6 px-safe py-8">
+      <div className="page-wrapper">
+        <div className="page-content container mx-auto px-4 sm:px-6 px-safe py-8">
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
             {[...Array(6)].map((_, i) => (
               <Card key={i} className="animate-pulse border border-border">
@@ -155,9 +155,9 @@ export default function Blog() {
   }
 
   return (
-    <div className="h-full overflow-y-auto">
+    <div className="page-wrapper">
       {/* Main content section */}
-      <section className="px-4 sm:px-6 px-safe py-8">
+      <section className="page-content px-4 sm:px-6 px-safe py-8">
         <div className="max-w-7xl mx-auto w-full">
           {/* Header Section */}
           <div className="text-center mb-6 xs:mb-8 sm:mb-12">
@@ -418,7 +418,7 @@ export default function Blog() {
                 Our blog articles provide general guidance, but for personalized recommendations tailored to your specific needs, book a consultation with our expert dietitian.
               </p>
               <Link href="/appointment">
-                <Button size="lg" className="px-8 py-3">
+                <Button size="lg" className="px-8 py-3 bg-gradient-to-r from-sky-400 to-blue-500 hover:from-sky-500 hover:to-blue-600 text-white border-0 shadow-lg hover:shadow-xl transition-all duration-300">
                   Book Consultation
                   <ArrowRight className="ml-2 h-4 w-4" />
                 </Button>

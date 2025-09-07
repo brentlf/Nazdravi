@@ -49,20 +49,20 @@ export function Header() {
     <header className={`${
       isOverlayHeader 
         ? "absolute top-0 left-0 right-0 z-50 border-white/20 bg-transparent text-white" 
-        : "sticky top-0 z-50 border-border/40 bg-background/80 backdrop-blur-xl supports-[backdrop-filter]:bg-background/60 text-foreground"
-    } w-full border-b transition-all duration-300 nav-responsive`}>
-      <div className="container mx-auto flex h-14 xs:h-16 sm:h-18 lg:h-20 items-center justify-between px-3 sm:px-4 lg:px-6 px-safe">
+        : "fixed top-0 left-0 right-0 z-50 border-border/40 bg-background/80 backdrop-blur-xl supports-[backdrop-filter]:bg-background/60 text-foreground"
+    } w-full border-b transition-all duration-300 header-responsive`}>
+      <div className="responsive-container flex items-center justify-between h-full">
         {/* Logo */}
         <Link href="/">
           <div className="flex items-center space-x-2 xs:space-x-3 cursor-pointer group">
-            <div className={`w-7 h-7 xs:w-8 xs:h-8 sm:w-10 sm:h-10 rounded-xl flex items-center justify-center transition-all duration-300 group-hover:scale-110 group-hover:shadow-lg ${
+            <div className={`w-6 h-6 xs:w-7 xs:h-7 sm:w-8 sm:h-8 md:w-10 md:h-10 rounded-xl flex items-center justify-center transition-all duration-300 group-hover:scale-110 group-hover:shadow-lg ${
               isOverlayHeader ? "bg-white/20 backdrop-blur-sm" : "bg-primary"
             }`}>
-              <Leaf className={`h-3.5 w-3.5 xs:h-4 xs:w-4 sm:h-6 sm:w-6 ${
+              <Leaf className={`h-3 w-3 xs:h-3.5 xs:w-3.5 sm:h-4 sm:w-4 md:h-6 md:w-6 ${
                 isOverlayHeader ? "text-white" : "text-primary-foreground"
               }`} />
             </div>
-            <span className={`font-bold text-base xs:text-lg sm:text-xl tracking-tight ${
+            <span className={`font-bold text-sm xs:text-base sm:text-lg md:text-xl tracking-tight ${
               isOverlayHeader ? "text-white" : "text-primary"
             }`}>
               Nazdravi
@@ -97,17 +97,17 @@ export function Header() {
         </nav>
 
         {/* Right side controls */}
-        <div className="flex items-center space-x-1 xs:space-x-2 sm:space-x-4">
-          <ThemeToggle className="tap-target h-7 w-7 xs:h-8 xs:w-8 sm:h-10 sm:w-10" />
+        <div className="flex items-center space-x-1 xs:space-x-2 sm:space-x-3 md:space-x-4">
+          <ThemeToggle className="tap-target h-6 w-6 xs:h-7 xs:w-7 sm:h-8 sm:w-8 md:h-10 md:w-10" />
 
           {/* User menu or auth buttons */}
           {user ? (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="ghost" className={`relative h-7 w-7 xs:h-8 xs:w-8 sm:h-10 sm:w-10 rounded-full hover:bg-muted/80 ${
+                <Button variant="ghost" className={`relative h-6 w-6 xs:h-7 xs:w-7 sm:h-8 sm:w-8 md:h-10 md:w-10 rounded-full hover:bg-muted/80 ${
                   isOverlayHeader ? "text-white hover:bg-white/20" : ""
                 }`}>
-                  <Avatar className="h-7 w-7 xs:h-8 xs:w-8 sm:h-10 sm:w-10">
+                  <Avatar className="h-6 w-6 xs:h-7 xs:w-7 sm:h-8 sm:w-8 md:h-10 md:w-10">
                     <AvatarImage src={user.photoURL} alt={user.name} />
                     <AvatarFallback className={`font-semibold text-xs ${
                       isOverlayHeader ? "bg-white/20 text-white" : "bg-primary text-primary-foreground"
@@ -177,7 +177,7 @@ export function Header() {
           ) : (
             <div className="flex items-center space-x-1 xs:space-x-2 sm:space-x-3">
               <Link href="/login">
-                <Button variant="ghost" className={`font-medium text-xs xs:text-sm sm:text-base px-1 xs:px-2 sm:px-4 ${
+                <Button variant="ghost" className={`font-medium text-xs xs:text-sm sm:text-base px-1 xs:px-2 sm:px-3 md:px-4 ${
                   isOverlayHeader 
                     ? "text-white hover:bg-white/20" 
                     : "hover:bg-muted/80"
@@ -186,7 +186,7 @@ export function Header() {
                 </Button>
               </Link>
               <Link href="/register">
-                <Button className={`font-medium text-xs xs:text-sm sm:text-base px-1 xs:px-2 sm:px-4 shadow-soft hover:shadow-elegant transition-all duration-300 ${
+                <Button className={`font-medium text-xs xs:text-sm sm:text-base px-1 xs:px-2 sm:px-3 md:px-4 shadow-soft hover:shadow-elegant transition-all duration-300 ${
                   isOverlayHeader 
                     ? "bg-white/20 text-white hover:bg-white/30 border-white/30" 
                     : ""
@@ -203,12 +203,12 @@ export function Header() {
               <Button
                 variant="ghost"
                 size="icon"
-                className={`lg:hidden h-7 w-7 xs:h-8 xs:w-8 sm:h-10 sm:w-10 tap-target ${
+                className={`lg:hidden h-6 w-6 xs:h-7 xs:w-7 sm:h-8 sm:w-8 tap-target ${
                   isOverlayHeader ? "text-white hover:bg-white/20" : ""
                 }`}
                 onClick={() => setIsOpen(true)}
               >
-                <Menu className="h-3.5 w-3.5 xs:h-4 xs:w-4 sm:h-5 sm:w-5" />
+                <Menu className="h-3 w-3 xs:h-3.5 xs:w-3.5 sm:h-4 sm:w-4" />
                 <span className="sr-only">Toggle menu</span>
               </Button>
             </SheetTrigger>

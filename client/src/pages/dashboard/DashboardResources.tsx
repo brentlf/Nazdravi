@@ -169,7 +169,7 @@ export default function DashboardResources() {
 
   if (loading) {
     return (
-      <div className="h-[calc(100vh-5rem)] sm:h-[calc(100vh-5rem)] py-20 bg-background">
+      <div className="h-full bg-background">
         <div className="container mx-auto px-4 sm:px-6 px-safe">
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
             {[...Array(6)].map((_, i) => (
@@ -188,8 +188,8 @@ export default function DashboardResources() {
   }
 
   return (
-    <div className="h-[calc(100vh-5rem)] sm:h-[calc(100vh-5rem)] py-20 bg-background overflow-y-auto">
-      <div className="container mx-auto px-4 sm:px-6 px-safe">
+    <div className="h-full bg-background">
+      <div className="h-full overflow-y-auto container mx-auto px-4 sm:px-6 px-safe py-20">
         {/* Back to Dashboard Navigation */}
         <div className="mb-6">
           <Link href="/dashboard">

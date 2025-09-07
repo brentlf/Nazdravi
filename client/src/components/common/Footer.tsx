@@ -11,8 +11,8 @@ export function Footer({ overlay = false }: FooterProps) {
       overlay 
         ? "bg-black/60 backdrop-blur-sm text-white border-white/20" 
         : "bg-background text-foreground border-border/40"
-    } border-t`}>
-      <div className="container mx-auto px-3 sm:px-4 lg:px-6 px-safe py-2 sm:py-3 pb-safe">
+    } border-t flex-shrink-0`}>
+      <div className="responsive-container py-2 sm:py-3 pb-safe">
         {/* Single minimalistic row with logo, contact, and essential links */}
         <div className="flex flex-col sm:flex-row items-center justify-between gap-2 sm:gap-3">
           {/* Logo and branding */}

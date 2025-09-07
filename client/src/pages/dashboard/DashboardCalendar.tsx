@@ -103,7 +103,7 @@ export default function DashboardCalendar() {
 
   if (loading) {
     return (
-      <div className="h-[calc(100vh-5rem)] sm:h-[calc(100vh-5rem)] flex items-center justify-center bg-background">
+      <div className="viewport-fit flex items-center justify-center bg-background">
         <Card className="w-full max-w-4xl mx-4">
           <CardContent className="p-6">
             <div className="animate-pulse space-y-3">
@@ -118,8 +118,8 @@ export default function DashboardCalendar() {
   }
 
   return (
-    <div className="h-[calc(100vh-5rem)] sm:h-[calc(100vh-5rem)] bg-background">
-      <div className="container mx-auto px-3 sm:px-4 lg:px-6 px-safe py-1 sm:py-2 h-full flex flex-col">
+    <div className="viewport-fit bg-background">
+      <div className="viewport-content container mx-auto px-3 sm:px-4 lg:px-6 px-safe py-1 sm:py-2">
         
         {/* Calendar Header */}
         <Card className="mb-2 flex-shrink-0">

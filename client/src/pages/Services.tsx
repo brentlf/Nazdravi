@@ -139,60 +139,60 @@ export default function Services() {
   ];
 
   return (
-    <div className="h-full overflow-y-auto">
+    <div className="page-wrapper">
       {/* Main content section */}
-      <section className="px-4 sm:px-6 px-safe py-8">
+      <section className="page-content p-4 sm:p-6 lg:p-8">
         <div className="max-w-7xl mx-auto w-full">
           {/* Header Section */}
-          <div className="text-center mb-6 xs:mb-8 sm:mb-12">
-            <div className="inline-flex items-center justify-center w-10 h-10 xs:w-12 xs:h-12 bg-primary/10 rounded-full mb-3 xs:mb-4">
-              <Leaf className="h-5 w-5 xs:h-6 xs:w-6 text-primary" />
+          <div className="text-center mb-4 xs:mb-6 sm:mb-8 md:mb-10 lg:mb-12">
+            <div className="inline-flex items-center justify-center w-8 h-8 xs:w-10 xs:h-10 sm:w-12 sm:h-12 bg-primary/10 rounded-full mb-2 xs:mb-3 sm:mb-4">
+              <Leaf className="h-4 w-4 xs:h-5 xs:h-5 sm:h-6 sm:h-6 text-primary" />
             </div>
-            <h1 className="text-2xl xs:text-3xl sm:text-4xl lg:text-5xl font-bold mb-3 xs:mb-4 leading-tight text-foreground font-serif h-short-heading">
+            <h1 className="text-xl xs:text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-2 xs:mb-3 sm:mb-4 leading-tight text-foreground font-serif">
               Nutrition Services
             </h1>
-            <p className="text-base xs:text-lg text-muted-foreground max-w-2xl mx-auto leading-relaxed h-short-text">
+            <p className="text-sm xs:text-base sm:text-lg text-muted-foreground max-w-2xl mx-auto leading-relaxed">
               Transform your health with evidence-based nutrition guidance tailored to your unique needs and lifestyle.
             </p>
           </div>
 
           {/* Services Grid */}
-          <div className="grid grid-cols-1 xs:grid-cols-2 lg:grid-cols-3 gap-4 xs:gap-6 mb-8 xs:mb-12">
+          <div className="grid grid-cols-1 xs:grid-cols-2 lg:grid-cols-3 gap-3 xs:gap-4 sm:gap-6 mb-6 xs:mb-8 sm:mb-10 md:mb-12">
             {services.map((service, index) => (
               <Card key={index} className={`relative border border-border bg-card hover:shadow-lg transition-all duration-300 ${service.popular ? 'ring-2 ring-yellow-400/50' : ''}`}>
                 {service.popular && (
                   <div className="absolute -top-3 left-1/2 transform -translate-x-1/2">
-                    <Badge className="bg-warning text-primary-foreground px-3 py-1 font-medium">
+                    <Badge className="bg-gradient-to-r from-yellow-400 to-orange-500 text-white px-4 py-2 font-bold text-sm shadow-lg border-2 border-yellow-300/50">
                       Most Popular
                     </Badge>
                   </div>
                 )}
-                <CardContent className="p-4 xs:p-6 text-card-foreground h-full flex flex-col">
-                  <div className={`inline-flex items-center justify-center w-10 h-10 xs:w-12 xs:h-12 bg-gradient-to-br ${service.color} rounded-xl mb-3 xs:mb-4`}>
-                    <service.icon className="h-5 w-5 xs:h-6 xs:w-6 text-foreground" />
+                <CardContent className="p-3 xs:p-4 sm:p-6 text-card-foreground h-full flex flex-col">
+                  <div className={`inline-flex items-center justify-center w-8 h-8 xs:w-10 xs:h-10 sm:w-12 sm:h-12 bg-gradient-to-br ${service.color} rounded-xl mb-2 xs:mb-3 sm:mb-4`}>
+                    <service.icon className="h-4 w-4 xs:h-5 xs:w-5 sm:h-6 sm:w-6 text-foreground" />
                   </div>
                   
-                  <h3 className="text-lg xs:text-xl font-bold mb-2 xs:mb-3 h-short-heading">
+                  <h3 className="text-base xs:text-lg sm:text-xl font-bold mb-1 xs:mb-2 sm:mb-3">
                     {service.title}
                   </h3>
                   
-                  <p className="text-muted-foreground mb-3 xs:mb-4 leading-relaxed flex-grow text-sm xs:text-base h-short-text">
+                  <p className="text-muted-foreground mb-2 xs:mb-3 sm:mb-4 leading-relaxed flex-grow text-xs xs:text-sm sm:text-base">
                     {service.description}
                   </p>
                   
-                  <div className="flex items-center justify-between mb-3 xs:mb-4">
+                  <div className="flex items-center justify-between mb-2 xs:mb-3 sm:mb-4">
                     <div className="text-xs xs:text-sm text-muted-foreground">
                       Duration: {service.duration}
                     </div>
-                    <div className="text-xl xs:text-2xl font-bold text-primary">
+                    <div className="text-lg xs:text-xl sm:text-2xl font-bold text-primary">
                       {service.price}
                     </div>
                   </div>
                   
-                  <ul className="space-y-1.5 xs:space-y-2 mb-4 xs:mb-6 flex-grow">
+                  <ul className="space-y-1 xs:space-y-1.5 sm:space-y-2 mb-3 xs:mb-4 sm:mb-6 flex-grow">
                     {service.features.slice(0, 4).map((feature, featureIndex) => (
-                      <li key={featureIndex} className="flex items-start gap-1.5 xs:gap-2">
-                        <CheckCircle className="h-3.5 w-3.5 xs:h-4 xs:w-4 text-green-500 flex-shrink-0 mt-0.5" />
+                      <li key={featureIndex} className="flex items-start gap-1 xs:gap-1.5 sm:gap-2">
+                        <CheckCircle className="h-3 w-3 xs:h-3.5 xs:w-3.5 sm:h-4 sm:w-4 text-green-500 flex-shrink-0 mt-0.5" />
                         <span className="text-muted-foreground text-xs xs:text-sm">{feature}</span>
                       </li>
                     ))}
@@ -203,7 +203,7 @@ export default function Services() {
                   
                   <Button 
                     variant="outline"
-                    className={`w-full font-semibold py-3 transition-all duration-300 transform hover:scale-105 ${
+                    className={`w-full font-semibold py-2 xs:py-3 text-xs xs:text-sm sm:text-base transition-all duration-300 transform hover:scale-105 ${
                       service.popular 
                         ? 'bg-gradient-to-r from-yellow-500 to-orange-500 hover:from-yellow-600 hover:to-orange-600 shadow-lg hover:shadow-xl border-2 border-yellow-400/30' 
                         : '!bg-primary/10 hover:!bg-primary/20 !border-2 !border-primary/30 shadow-md hover:shadow-lg'
@@ -215,7 +215,7 @@ export default function Services() {
                     onClick={() => handleServicePlanSelection(service.id as any)}
                   >
                     {service.id === "program" ? "Start Program" : "Book Now"}
-                    <ChevronRight className="ml-2 h-4 w-4" />
+                    <ChevronRight className="ml-2 h-3 w-3 xs:h-4 xs:w-4" />
                   </Button>
                 </CardContent>
               </Card>
@@ -223,15 +223,15 @@ export default function Services() {
           </div>
 
           {/* CTA Section */}
-          <div className="text-center bg-gradient-to-br from-primary/5 to-primary/10 border border-primary/20 rounded-2xl p-8 shadow-lg">
-            <h3 className="text-2xl font-bold text-foreground mb-4">💡 Not sure which option is right for you?</h3>
-            <p className="text-muted-foreground mb-8 max-w-2xl mx-auto text-lg">
+          <div className="text-center bg-gradient-to-br from-primary/5 to-primary/10 border border-primary/20 rounded-2xl p-4 xs:p-6 sm:p-8 shadow-lg">
+            <h3 className="text-lg xs:text-xl sm:text-2xl font-bold text-foreground mb-3 xs:mb-4">💡 Not sure which option is right for you?</h3>
+            <p className="text-muted-foreground mb-6 xs:mb-8 max-w-2xl mx-auto text-sm xs:text-base sm:text-lg">
               Schedule a free 15-minute consultation to discuss your goals and find the perfect service for your needs.
             </p>
             <Link href="/appointment">
-              <Button size="lg" className="px-12 py-4 text-lg font-semibold shadow-lg hover:shadow-xl transition-all duration-300 bg-gradient-to-r from-primary to-primary/90 hover:from-primary/90 hover:to-primary transform hover:scale-105 border-2 border-primary/20">
+              <Button size="lg" className="px-8 xs:px-10 sm:px-12 py-3 xs:py-4 text-sm xs:text-base sm:text-lg font-semibold shadow-lg hover:shadow-xl transition-all duration-300 bg-gradient-to-r from-primary to-primary/90 hover:from-primary/90 hover:to-primary transform hover:scale-105 border-2 border-primary/20">
                 Book Your Consultation
-                <ArrowRight className="ml-2 h-5 w-5" />
+                <ArrowRight className="ml-2 h-4 w-4 xs:h-5 xs:w-5" />
               </Button>
             </Link>
           </div>

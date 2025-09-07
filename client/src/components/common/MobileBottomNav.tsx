@@ -42,13 +42,13 @@ export function MobileBottomNav() {
   return (
     <nav
       className={cn(
-        "sm:hidden fixed bottom-0 left-0 right-0 z-50",
+        "sm:hidden fixed bottom-0 left-0 right-0 z-50 mobile-nav-responsive",
         "border-t border-border bg-card/95 backdrop-blur-sm text-card-foreground"
       )}
       role="navigation"
       aria-label={isAdminDashboard ? "Admin bottom navigation" : "Client bottom navigation"}
     >
-      <ul className="grid grid-cols-5 px-safe pb-safe">
+      <ul className="grid grid-cols-5 px-safe pb-safe h-full">
         {items.map(({ label, icon: Icon, href, ariaLabel }) => {
           const active = location === href;
           return (
@@ -56,15 +56,15 @@ export function MobileBottomNav() {
               <Link href={href}>
                 <div
                   className={cn(
-                    "flex flex-col items-center justify-center h-12 xs:h-14 text-xs font-medium cursor-pointer tap-target",
+                    "flex flex-col items-center justify-center h-full text-xs font-medium cursor-pointer tap-target",
                     "text-muted-foreground hover:text-foreground",
                     active && "text-primary"
                   )}
                   aria-label={ariaLabel}
                   aria-current={active ? "page" : undefined}
                 >
-                  <Icon className={cn("h-3.5 w-3.5 xs:h-4 xs:w-4", active ? "scale-110" : "opacity-80")} />
-                  <span className="mt-0.5 xs:mt-1 leading-none text-xs">{label}</span>
+                  <Icon className={cn("h-3.5 w-3.5 xs:h-4 xs:w-4 mb-0.5", active ? "scale-110" : "opacity-80")} />
+                  <span className="leading-none text-xs">{label}</span>
                 </div>
               </Link>
             </li>

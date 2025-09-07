@@ -269,7 +269,7 @@ export function DashboardOverview() {
   ];
 
   return (
-    <div className="space-y-2 relative h-full flex flex-col">
+    <div className="space-y-2 relative viewport-fit adaptive-content">
       {/* Compact Welcome Section */}
       <div className="relative overflow-hidden mediterranean-card p-2 xs:p-3 sm:p-4 text-white bg-gradient-to-br from-primary to-accent warm-glow flex-shrink-0">
         {isAdminViewingClient && (

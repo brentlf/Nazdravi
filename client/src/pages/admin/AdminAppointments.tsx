@@ -739,8 +739,8 @@ export default function AdminAppointments() {
 
   if (loading) {
     return (
-      <div className="min-h-screen py-20 bg-background">
-        <div className="container mx-auto px-4">
+      <div className="h-full bg-background">
+        <div className="h-full overflow-y-auto container mx-auto px-4 py-20">
           <Card>
             <CardContent className="p-8">
               <div className="animate-pulse space-y-4">
@@ -756,8 +756,8 @@ export default function AdminAppointments() {
   }
 
   return (
-    <div className="min-h-screen py-4 sm:py-20 bg-background">
-      <div className="container mx-auto px-3 sm:px-4">
+    <div className="h-full bg-background">
+      <div className="h-full overflow-y-auto container mx-auto px-3 sm:px-4 py-4 sm:py-20">
         {/* Header with Back Navigation - Compact on mobile */}
         <div className="mb-4 sm:mb-8">
           <Button variant="ghost" size="sm" className="mb-2 sm:mb-4" asChild>
