@@ -198,24 +198,24 @@ export default function AdminMessages() {
   // Show individual conversation
   return (
     <div className="h-screen bg-background flex flex-col overflow-hidden chat-page-container">
-      {/* Fixed Main Header */}
+      {/* Fixed Combined Header */}
       <div className="chat-header-main text-foreground">
-        <div className="px-4 py-3 flex items-center justify-between">
+        <div className="px-4 py-2 flex items-center justify-between">
           <div className="flex items-center gap-3">
             <Button variant="ghost" size="icon" className="text-muted-foreground hover:bg-muted h-8 w-8 p-0" onClick={handleBackToConversations}>
               <ArrowLeft className="w-5 h-5" />
             </Button>
             
-            <Avatar className="h-10 w-10">
+            <Avatar className="h-10 w-10 ring-2 ring-primary/20 bg-primary/10">
               <AvatarImage src={selectedClient?.photoURL} />
               <AvatarFallback className="bg-primary text-primary-foreground">
-                {selectedClient?.name?.split(' ').map(n => n[0]).join('').toUpperCase()}
+                <span className="text-sm font-medium">{selectedClient?.name?.split(' ').map(n => n[0]).join('').toUpperCase()}</span>
               </AvatarFallback>
             </Avatar>
             
             <div className="flex-1 min-w-0">
-              <h1 className="font-semibold text-foreground truncate">{selectedClient?.name || 'Client'}</h1>
-              <p className="text-xs text-muted-foreground truncate">Online</p>
+              <h1 className="font-semibold text-foreground truncate text-sm leading-tight">{selectedClient?.name || 'Client'}</h1>
+              <p className="text-xs text-muted-foreground truncate leading-tight" style={{ marginTop: '1px' }}>{selectedClient?.email || 'client@example.com'}</p>
             </div>
           </div>
           
@@ -223,16 +223,6 @@ export default function AdminMessages() {
             <Button variant="ghost" size="icon" className="text-muted-foreground hover:bg-muted h-8 w-8 p-0">
               <MoreVertical className="w-5 h-5" />
             </Button>
-          </div>
-        </div>
-      </div>
-
-      {/* Fixed User Info Section - Below Header */}
-      <div className="chat-header-user-info text-foreground">
-        <div className="px-4 h-full flex items-center">
-          <div className="flex-1 min-w-0">
-            <p className="font-medium text-foreground truncate" style={{ fontSize: '9px', lineHeight: '1.2' }}>{selectedClient?.name || 'Client'}</p>
-            <p className="text-muted-foreground truncate" style={{ fontSize: '8px', lineHeight: '1.2' }}>{selectedClient?.email || 'client@example.com'}</p>
           </div>
         </div>
       </div>

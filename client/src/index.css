@@ -481,25 +481,15 @@
     left: 0 !important;
     right: 0 !important;
     z-index: 50 !important;
-    height: 80px !important;
+    height: 72px !important;
     background-color: hsl(var(--card)) !important;
     border-bottom: 1px solid hsl(var(--border)) !important;
   }
 
-  .chat-header-user-info {
-    position: fixed !important;
-    top: 160px !important;
-    left: 0 !important;
-    right: 0 !important;
-    z-index: 40 !important;
-    height: 24px !important;
-    background-color: hsl(var(--card)) !important;
-    border-bottom: 1px solid hsl(var(--border)) !important;
-  }
 
   .chat-messages-container {
-    padding-top: 104px !important; /* 80px chat header + 24px user info */
-    height: calc(100vh - 296px) !important; /* Full viewport minus all fixed elements: site header (80px) + mobile nav (64px) + chat header (80px) + user info (24px) + input (48px) = 296px */
+    padding-top: 152px !important; /* 80px site header + 72px combined chat header */
+    height: calc(100vh - 264px) !important; /* Full viewport minus all fixed elements: site header (80px) + mobile nav (64px) + combined chat header (72px) + input (48px) = 264px */
     overflow-y: auto !important; /* Only messages scroll */
     scrollbar-width: none !important; /* Firefox */
     -ms-overflow-style: none !important; /* IE/Edge */
@@ -526,8 +516,4 @@
     border-color: hsl(220 10% 22%) !important;
   }
 
-  .dark .chat-header-user-info {
-    background-color: hsl(220 15% 12%) !important;
-    border-color: hsl(220 10% 22%) !important;
-  }
 }
