@@ -749,19 +749,21 @@ export default function AdminAppointments() {
   }
 
   return (
-    <div className="min-h-screen py-20 bg-gray-50 dark:bg-gray-900">
-      <div className="container mx-auto px-4">
-        {/* Header with Back Navigation */}
-        <div className="mb-8">
-          <Button variant="ghost" size="sm" className="mb-4" asChild>
+    <div className="min-h-screen py-4 sm:py-20 bg-gray-50 dark:bg-gray-900">
+      <div className="container mx-auto px-3 sm:px-4">
+        {/* Header with Back Navigation - Compact on mobile */}
+        <div className="mb-4 sm:mb-8">
+          <Button variant="ghost" size="sm" className="mb-2 sm:mb-4" asChild>
             <Link href="/admin">
               <ArrowLeft className="mr-2 h-4 w-4" />
-              Back to Admin Dashboard
+              <span className="hidden sm:inline">Back to Admin Dashboard</span>
+              <span className="sm:hidden">Back</span>
             </Link>
           </Button>
-          <h1 className="text-3xl font-bold mb-2">Appointment Management</h1>
-          <p className="text-muted-foreground">
-            Review and manage client appointment requests
+          <h1 className="text-xl sm:text-3xl font-bold mb-1 sm:mb-2">Appointment Management</h1>
+          <p className="text-sm sm:text-base text-muted-foreground">
+            <span className="hidden sm:inline">Review and manage client appointment requests</span>
+            <span className="sm:hidden">Manage appointments</span>
           </p>
         </div>
 
@@ -863,61 +865,119 @@ export default function AdminAppointments() {
           </>
         )}
 
-        {/* Enhanced Filters */}
-        <Card className="mb-8">
-          <CardContent className="p-6">
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+        {/* Enhanced Filters - Compact on mobile */}
+        <Card className="mb-4 sm:mb-8">
+          <CardContent className="p-3 sm:p-6">
+            {/* Mobile: Compact filters */}
+            <div className="block sm:hidden space-y-3">
               {/* Search */}
-              <div className="lg:col-span-2 relative">
+              <div className="relative">
                 <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
                 <Input
-                  placeholder="Search appointments by name, email, or type..."
+                  placeholder="Search appointments..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  className="pl-9"
+                  className="pl-9 h-9"
                 />
               </div>
+              
+              {/* Filters row */}
+              <div className="flex gap-2">
+                <Select value={statusFilter} onValueChange={setStatusFilter}>
+                  <SelectTrigger className="flex-1 h-9">
+                    <Filter className="w-4 h-4 mr-1" />
+                    <SelectValue placeholder="Status" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">All Statuses</SelectItem>
+                    <SelectItem value="pending">Pending</SelectItem>
+                    <SelectItem value="confirmed">Confirmed</SelectItem>
+                    <SelectItem value="done">Completed</SelectItem>
+                    <SelectItem value="cancelled">Cancelled</SelectItem>
+                    <SelectItem value="clientRescheduleRequested">Client Reschedule</SelectItem>
+                    <SelectItem value="confirmRescheduleRequest">Confirm Reschedule</SelectItem>
+                    <SelectItem value="veeRescheduleRequest">Vee Reschedule</SelectItem>
+                    <SelectItem value="no-show">No-Show</SelectItem>
+                  </SelectContent>
+                </Select>
 
-              {/* Status Filter */}
-              <Select value={statusFilter} onValueChange={setStatusFilter}>
-                <SelectTrigger>
-                  <Filter className="w-4 h-4 mr-2" />
-                  <SelectValue placeholder="All Statuses" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">All Statuses</SelectItem>
-                  <SelectItem value="pending">Pending</SelectItem>
-                  <SelectItem value="confirmed">Confirmed</SelectItem>
-                  <SelectItem value="done">Completed</SelectItem>
-                  <SelectItem value="cancelled">Cancelled</SelectItem>
-                  <SelectItem value="clientRescheduleRequested">Client Reschedule Request</SelectItem>
-                  <SelectItem value="confirmRescheduleRequest">Confirm Reschedule</SelectItem>
-                  <SelectItem value="veeRescheduleRequest">Vee Reschedule Request</SelectItem>
-                  <SelectItem value="no-show">No-Show</SelectItem>
-                </SelectContent>
-              </Select>
-
-              {/* Date Filter */}
-              <Select value={dateFilter} onValueChange={setDateFilter}>
-                <SelectTrigger>
-                  <Calendar className="w-4 h-4 mr-2" />
-                  <SelectValue placeholder="All Dates" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">All Dates</SelectItem>
-                  <SelectItem value="today">Today</SelectItem>
-                  <SelectItem value="tomorrow">Tomorrow</SelectItem>
-                  <SelectItem value="this-week">This Week</SelectItem>
-                  <SelectItem value="future">Future</SelectItem>
-                  <SelectItem value="past">Past</SelectItem>
-                </SelectContent>
-              </Select>
+                <Select value={dateFilter} onValueChange={setDateFilter}>
+                  <SelectTrigger className="flex-1 h-9">
+                    <Calendar className="w-4 h-4 mr-1" />
+                    <SelectValue placeholder="Date" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">All Dates</SelectItem>
+                    <SelectItem value="today">Today</SelectItem>
+                    <SelectItem value="tomorrow">Tomorrow</SelectItem>
+                    <SelectItem value="this-week">This Week</SelectItem>
+                    <SelectItem value="future">Future</SelectItem>
+                    <SelectItem value="past">Past</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              
+              {/* Results count */}
+              <div className="text-xs text-muted-foreground text-center">
+                {processedAppointments.length} of {appointments?.length || 0} appointments
+              </div>
             </div>
 
-            {/* Results Summary */}
-            <div className="flex items-center justify-end mt-4 pt-4 border-t">
-              <div className="text-sm text-muted-foreground">
-                Showing {processedAppointments.length} of {appointments?.length || 0} appointments
+            {/* Desktop: Full filters */}
+            <div className="hidden sm:block">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                {/* Search */}
+                <div className="lg:col-span-2 relative">
+                  <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+                  <Input
+                    placeholder="Search appointments by name, email, or type..."
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    className="pl-9"
+                  />
+                </div>
+
+                {/* Status Filter */}
+                <Select value={statusFilter} onValueChange={setStatusFilter}>
+                  <SelectTrigger>
+                    <Filter className="w-4 h-4 mr-2" />
+                    <SelectValue placeholder="All Statuses" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">All Statuses</SelectItem>
+                    <SelectItem value="pending">Pending</SelectItem>
+                    <SelectItem value="confirmed">Confirmed</SelectItem>
+                    <SelectItem value="done">Completed</SelectItem>
+                    <SelectItem value="cancelled">Cancelled</SelectItem>
+                    <SelectItem value="clientRescheduleRequested">Client Reschedule Request</SelectItem>
+                    <SelectItem value="confirmRescheduleRequest">Confirm Reschedule</SelectItem>
+                    <SelectItem value="veeRescheduleRequest">Vee Reschedule Request</SelectItem>
+                    <SelectItem value="no-show">No-Show</SelectItem>
+                  </SelectContent>
+                </Select>
+
+                {/* Date Filter */}
+                <Select value={dateFilter} onValueChange={setDateFilter}>
+                  <SelectTrigger>
+                    <Calendar className="w-4 h-4 mr-2" />
+                    <SelectValue placeholder="All Dates" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">All Dates</SelectItem>
+                    <SelectItem value="today">Today</SelectItem>
+                    <SelectItem value="tomorrow">Tomorrow</SelectItem>
+                    <SelectItem value="this-week">This Week</SelectItem>
+                    <SelectItem value="future">Future</SelectItem>
+                    <SelectItem value="past">Past</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+
+              {/* Results Summary */}
+              <div className="flex items-center justify-end mt-4 pt-4 border-t">
+                <div className="text-sm text-muted-foreground">
+                  Showing {processedAppointments.length} of {appointments?.length || 0} appointments
+                </div>
               </div>
             </div>
           </CardContent>
@@ -925,17 +985,19 @@ export default function AdminAppointments() {
 
         {/* Appointments Table */}
         <Card>
-          <CardHeader>
+          <CardHeader className="pb-3 sm:pb-6">
             <CardTitle className="flex items-center justify-between">
-              <span>Appointments ({processedAppointments.length})</span>
-              <div className="flex gap-2">
-                <Badge variant="outline" className="flex items-center gap-1">
+              <span className="text-base sm:text-lg">Appointments ({processedAppointments.length})</span>
+              <div className="flex gap-1 sm:gap-2">
+                <Badge variant="outline" className="flex items-center gap-1 text-xs sm:text-sm">
                   <AlertCircle className="w-3 h-3 text-yellow-500" />
-                  {processedAppointments.filter(a => a.status === "pending").length} Pending
+                  <span className="hidden sm:inline">{processedAppointments.filter(a => a.status === "pending").length} Pending</span>
+                  <span className="sm:hidden">{processedAppointments.filter(a => a.status === "pending").length}</span>
                 </Badge>
-                <Badge variant="outline" className="flex items-center gap-1">
+                <Badge variant="outline" className="flex items-center gap-1 text-xs sm:text-sm">
                   <CheckCircle className="w-3 h-3 text-green-500" />
-                  {processedAppointments.filter(a => a.status === "confirmed").length} Confirmed
+                  <span className="hidden sm:inline">{processedAppointments.filter(a => a.status === "confirmed").length} Confirmed</span>
+                  <span className="sm:hidden">{processedAppointments.filter(a => a.status === "confirmed").length}</span>
                 </Badge>
               </div>
             </CardTitle>
@@ -1461,43 +1523,70 @@ export default function AdminAppointments() {
           </DialogContent>
         </Dialog>
 
-        {/* Summary Stats */}
-        <div className="grid md:grid-cols-4 gap-6 mt-8">
-          <Card>
-            <CardContent className="p-6 text-center">
-              <AlertCircle className="w-8 h-8 text-yellow-500 mx-auto mb-2" />
-              <p className="text-2xl font-bold">{filteredAppointments.filter(a => a.status === "pending").length}</p>
-              <p className="text-sm text-muted-foreground">Pending</p>
-            </CardContent>
-          </Card>
-          
-          <Card>
-            <CardContent className="p-6 text-center">
-              <CheckCircle className="w-8 h-8 text-green-500 mx-auto mb-2" />
-              <p className="text-2xl font-bold">{filteredAppointments.filter(a => a.status === "confirmed").length}</p>
-              <p className="text-sm text-muted-foreground">Confirmed</p>
-            </CardContent>
-          </Card>
-          
-          <Card>
-            <CardContent className="p-6 text-center">
-              <CheckCircle className="w-8 h-8 text-blue-500 mx-auto mb-2" />
-              <p className="text-2xl font-bold">{filteredAppointments.filter(a => a.status === "done").length}</p>
-              <p className="text-sm text-muted-foreground">Completed</p>
-            </CardContent>
-          </Card>
-          
-          <Card>
-            <CardContent className="p-6 text-center">
-              <Calendar className="w-8 h-8 text-primary-500 mx-auto mb-2" />
-              <p className="text-2xl font-bold">
-                {appointments?.filter(a => 
+        {/* Summary Stats - Compact on mobile */}
+        <div className="mt-4 sm:mt-8">
+          {/* Mobile: Horizontal compact stats */}
+          <div className="block sm:hidden">
+            <div className="flex gap-2 overflow-x-auto pb-2">
+              <div className="flex items-center gap-1 bg-yellow-50 dark:bg-yellow-900/20 px-3 py-2 rounded text-xs whitespace-nowrap">
+                <AlertCircle className="h-3 w-3 text-yellow-500" />
+                <span className="font-medium text-yellow-700 dark:text-yellow-300">{filteredAppointments.filter(a => a.status === "pending").length} Pending</span>
+              </div>
+              <div className="flex items-center gap-1 bg-green-50 dark:bg-green-900/20 px-3 py-2 rounded text-xs whitespace-nowrap">
+                <CheckCircle className="h-3 w-3 text-green-500" />
+                <span className="font-medium text-green-700 dark:text-green-300">{filteredAppointments.filter(a => a.status === "confirmed").length} Confirmed</span>
+              </div>
+              <div className="flex items-center gap-1 bg-blue-50 dark:bg-blue-900/20 px-3 py-2 rounded text-xs whitespace-nowrap">
+                <CheckCircle className="h-3 w-3 text-blue-500" />
+                <span className="font-medium text-blue-700 dark:text-blue-300">{filteredAppointments.filter(a => a.status === "done").length} Done</span>
+              </div>
+              <div className="flex items-center gap-1 bg-primary/10 px-3 py-2 rounded text-xs whitespace-nowrap">
+                <Calendar className="h-3 w-3 text-primary" />
+                <span className="font-medium text-primary">{appointments?.filter(a => 
                   new Date(a.date).getMonth() === new Date().getMonth()
-                ).length || 0}
-              </p>
-              <p className="text-sm text-muted-foreground">This Month</p>
-            </CardContent>
-          </Card>
+                ).length || 0} This Month</span>
+              </div>
+            </div>
+          </div>
+
+          {/* Desktop: Full stats cards */}
+          <div className="hidden sm:grid grid-cols-2 md:grid-cols-4 gap-6">
+            <Card>
+              <CardContent className="p-6 text-center">
+                <AlertCircle className="w-8 h-8 text-yellow-500 mx-auto mb-2" />
+                <p className="text-2xl font-bold">{filteredAppointments.filter(a => a.status === "pending").length}</p>
+                <p className="text-sm text-muted-foreground">Pending</p>
+              </CardContent>
+            </Card>
+            
+            <Card>
+              <CardContent className="p-6 text-center">
+                <CheckCircle className="w-8 h-8 text-green-500 mx-auto mb-2" />
+                <p className="text-2xl font-bold">{filteredAppointments.filter(a => a.status === "confirmed").length}</p>
+                <p className="text-sm text-muted-foreground">Confirmed</p>
+              </CardContent>
+            </Card>
+            
+            <Card>
+              <CardContent className="p-6 text-center">
+                <CheckCircle className="w-8 h-8 text-blue-500 mx-auto mb-2" />
+                <p className="text-2xl font-bold">{filteredAppointments.filter(a => a.status === "done").length}</p>
+                <p className="text-sm text-muted-foreground">Completed</p>
+              </CardContent>
+            </Card>
+            
+            <Card>
+              <CardContent className="p-6 text-center">
+                <Calendar className="w-8 h-8 text-primary-500 mx-auto mb-2" />
+                <p className="text-2xl font-bold">
+                  {appointments?.filter(a => 
+                    new Date(a.date).getMonth() === new Date().getMonth()
+                  ).length || 0}
+                </p>
+                <p className="text-sm text-muted-foreground">This Month</p>
+              </CardContent>
+            </Card>
+          </div>
         </div>
       </div>
     </div>
