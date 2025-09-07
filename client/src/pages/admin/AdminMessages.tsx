@@ -298,7 +298,7 @@ export default function AdminMessages() {
 
           {/* Client List */}
           <ScrollArea className="flex-1">
-            <div className="space-y-0.5 sm:space-y-1 p-1 sm:p-2">
+            <div className="space-y-0 sm:space-y-0.5 p-1">
               {filteredUsers.map((client) => {
                 const chatRoom = createChatRoom(client.uid);
                 const lastMessage = getLastMessage(client.uid);
@@ -310,31 +310,31 @@ export default function AdminMessages() {
                   <div
                     key={client.uid}
                     onClick={() => setSelectedChatRoom(chatRoom)}
-                    className={`p-2 sm:p-3 rounded-lg cursor-pointer hover:bg-muted transition-colors ${
-                      isSelected ? 'bg-primary/10 border border-primary/20' : ''
+                    className={`px-2 py-1.5 sm:px-3 sm:py-2 border-b border-border/30 cursor-pointer hover:bg-muted transition-colors ${
+                      isSelected ? 'bg-primary/10 border-l-2 border-l-primary' : ''
                     }`}
                   >
-                    <div className="flex items-center space-x-2 sm:space-x-3">
+                    <div className="flex items-center space-x-2">
                       <div className="relative flex-shrink-0">
-                        <Avatar className="w-8 h-8 sm:w-12 sm:h-12">
+                        <Avatar className="w-6 h-6 sm:w-8 sm:h-8">
                           <AvatarImage src={client.photoURL} />
-                          <AvatarFallback className="bg-primary text-primary-foreground text-xs sm:text-sm">
+                          <AvatarFallback className="bg-primary text-primary-foreground text-[10px] sm:text-xs">
                             {client.name.split(' ').map(n => n[0]).join('').toUpperCase()}
                           </AvatarFallback>
                         </Avatar>
                         {hasUnread && (
-                          <div className="absolute -top-1 -right-1 w-4 h-4 sm:w-5 sm:h-5 bg-destructive rounded-full flex items-center justify-center">
-                            <span className="text-[10px] sm:text-xs text-destructive-foreground font-bold">{unreadCount}</span>
+                          <div className="absolute -top-0.5 -right-0.5 w-3 h-3 sm:w-4 sm:h-4 bg-destructive rounded-full flex items-center justify-center">
+                            <span className="text-[8px] sm:text-[10px] text-destructive-foreground font-bold">{unreadCount}</span>
                           </div>
                         )}
                       </div>
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center justify-between">
-                          <p className={`text-xs sm:text-sm truncate ${hasUnread ? 'font-semibold' : 'font-medium'}`}>
-                            {client.name.length > 12 ? `${client.name.substring(0, 12)}...` : client.name}
+                          <p className={`text-[11px] sm:text-xs truncate ${hasUnread ? 'font-semibold' : 'font-medium'}`}>
+                            {client.name.length > 10 ? `${client.name.substring(0, 10)}...` : client.name}
                           </p>
                           {lastMessage && (
-                            <span className="text-[10px] sm:text-xs text-muted-foreground ml-1 flex-shrink-0">
+                            <span className="text-[9px] sm:text-[10px] text-muted-foreground ml-1 flex-shrink-0">
                               {(() => {
                                 try {
                                   let date;
@@ -363,12 +363,9 @@ export default function AdminMessages() {
                             </span>
                           )}
                         </div>
-                        <p className="text-[10px] sm:text-xs text-muted-foreground truncate">
-                          {client.email.length > 20 ? `${client.email.substring(0, 20)}...` : client.email}
-                        </p>
                         {lastMessage && (
-                          <p className="text-[10px] sm:text-xs text-muted-foreground truncate mt-0.5">
-                            {lastMessage.text.length > 25 ? `${lastMessage.text.substring(0, 25)}...` : lastMessage.text}
+                          <p className="text-[9px] sm:text-[10px] text-muted-foreground truncate">
+                            {lastMessage.text.length > 20 ? `${lastMessage.text.substring(0, 20)}...` : lastMessage.text}
                           </p>
                         )}
                       </div>
