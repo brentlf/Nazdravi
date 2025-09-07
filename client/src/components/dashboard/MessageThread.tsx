@@ -270,7 +270,7 @@ export function MessageThread({ conversationId }: MessageThreadProps) {
                     >
                       <p className="text-sm leading-tight mb-0.5">{message.text}</p>
                       <p
-                        className={`text-xs mt-0.5 ${
+                        className={`text-xs mt-0.5 mb-0.5 ${
                           isFromUser 
                             ? 'text-green-100' 
                             : 'text-blue-100'

@@ -59,7 +59,7 @@ export default function DashboardMessages() {
             
             <div className="flex-1 min-w-0">
               <h1 className="font-semibold text-foreground truncate text-sm leading-none">{otherUser?.name || 'Nutritionist'}</h1>
-              <p className="text-xs text-muted-foreground truncate leading-none" style={{ marginTop: '1px' }}>{otherUser?.email || 'nutritionist@example.com'}</p>
+              <p className="text-xs text-muted-foreground truncate leading-none" style={{ marginTop: '0px' }}>{otherUser?.email || 'nutritionist@example.com'}</p>
             </div>
           </div>
           

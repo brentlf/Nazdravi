@@ -215,7 +215,7 @@ export default function AdminMessages() {
             
             <div className="flex-1 min-w-0">
               <h1 className="font-semibold text-foreground truncate text-sm leading-none">{selectedClient?.name || 'Client'}</h1>
-              <p className="text-xs text-muted-foreground truncate leading-none" style={{ marginTop: '1px' }}>{selectedClient?.email || 'client@example.com'}</p>
+              <p className="text-xs text-muted-foreground truncate leading-none" style={{ marginTop: '0px' }}>{selectedClient?.email || 'client@example.com'}</p>
             </div>
           </div>
           
@@ -308,7 +308,7 @@ export default function AdminMessages() {
                       >
                         <p className="text-sm leading-tight mb-0.5">{message.text}</p>
                         <p
-                          className={`text-xs mt-0.5 ${
+                          className={`text-xs mt-0.5 mb-0.5 ${
                             isFromAdmin 
                               ? 'text-green-100' 
                               : 'text-blue-100'
