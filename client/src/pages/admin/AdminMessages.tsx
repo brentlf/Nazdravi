@@ -96,7 +96,7 @@ export default function AdminMessages() {
   ) || [];
 
   const handleSendMessage = async () => {
-    if (!newMessage.trim() || !selectedConversation || !user) return;
+    if (!newMessage?.trim() || !selectedConversation || !user) return;
 
     try {
       // Extract client user ID from conversation ID
@@ -207,6 +207,14 @@ export default function AdminMessages() {
                 selectedConversation={selectedConversation}
                 users={users}
                 onBackToConversations={handleBackToConversations}
+                messages={messages}
+                messagesLoading={messagesLoading}
+                newMessage={newMessage}
+                setNewMessage={setNewMessage}
+                handleSendMessage={handleSendMessage}
+                sendingMessage={sendingMessage}
+                messagesEndRef={messagesEndRef}
+                user={user}
               />
             </div>
           </div>
@@ -217,6 +225,14 @@ export default function AdminMessages() {
               selectedConversation={selectedConversation}
               users={users}
               onBackToConversations={handleBackToConversations}
+              messages={messages}
+              messagesLoading={messagesLoading}
+              newMessage={newMessage}
+              setNewMessage={setNewMessage}
+              handleSendMessage={handleSendMessage}
+              sendingMessage={sendingMessage}
+              messagesEndRef={messagesEndRef}
+              user={user}
             />
           </div>
         </div>
@@ -432,7 +448,7 @@ function AdminConversationView({
             {/* Send Button */}
             <Button
               onClick={handleSendMessage}
-              disabled={sendingMessage || !newMessage.trim()}
+              disabled={sendingMessage || !newMessage?.trim()}
               size="icon"
               className="h-10 w-10 bg-primary hover:bg-primary/90 text-primary-foreground rounded-full shadow-md disabled:opacity-50 disabled:cursor-not-allowed"
             >
