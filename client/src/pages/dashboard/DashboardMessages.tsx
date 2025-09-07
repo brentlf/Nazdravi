@@ -92,7 +92,7 @@ export default function DashboardMessages() {
         />
         
         {/* Messages Container */}
-        <div className="relative z-10 h-full">
+        <div className="relative z-10 h-full chat-message-thread">
           <MessageThread conversationId={selectedConversation} />
         </div>
       </div>
