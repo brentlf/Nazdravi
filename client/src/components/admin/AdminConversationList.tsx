@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { MessageCircle, Search, ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Link } from "wouter";
 import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -81,6 +82,15 @@ export function AdminConversationList({ onSelectConversation, onBack, selectedCo
     conv.clientUser.email.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
+  // Debug logging
+  console.log('AdminConversationList Debug:');
+  console.log('- All messages:', allMessages?.length || 0);
+  console.log('- Users:', users?.length || 0);
+  console.log('- Conversations object:', conversations);
+  console.log('- Conversation list:', conversationList.length);
+  console.log('- Filtered conversations:', filteredConversations.length);
+  console.log('- User:', user?.uid);
+
 
   const formatMessageTime = (timestamp: any) => {
     if (!timestamp) return "";
@@ -134,7 +144,16 @@ export function AdminConversationList({ onSelectConversation, onBack, selectedCo
           <Button variant="ghost" size="icon" className="text-muted-foreground hover:bg-muted h-8 w-8 p-0 sm:hidden" onClick={onBack}>
             <ArrowLeft className="w-5 h-5" />
           </Button>
-          <h1 className="font-semibold text-foreground text-lg sm:text-xl">Admin Messages</h1>
+          <div className="flex flex-col sm:flex-row sm:items-center sm:gap-4">
+            <h1 className="font-semibold text-foreground text-lg sm:text-xl">Admin Messages</h1>
+            {/* Back to Dashboard - Desktop only */}
+            <Link href="/admin" className="hidden sm:block">
+              <Button variant="ghost" size="sm" className="text-xs text-muted-foreground">
+                <ArrowLeft className="w-3 h-3 mr-1" />
+                Dashboard
+              </Button>
+            </Link>
+          </div>
         </div>
       </div>
 
@@ -154,6 +173,10 @@ export function AdminConversationList({ onSelectConversation, onBack, selectedCo
       {/* Conversations List */}
       <ScrollArea className="flex-1">
         <div className="space-y-0">
+          {/* Debug indicator */}
+          <div className="bg-green-100 text-green-800 text-xs p-2 text-center border-b">
+            DEBUG: {filteredConversations.length} conversations found
+          </div>
           {filteredConversations.length > 0 ? (
             filteredConversations.map((conversation: any) => (
               <div

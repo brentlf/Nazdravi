@@ -527,9 +527,8 @@
     height: calc(100vh - 80px - 64px); /* Mobile */
     overflow: hidden;
     background: hsl(var(--background));
-    /* Mobile: No grid, use flex for single-page navigation */
-    display: flex;
-    flex-direction: column;
+    /* Mobile: Single page - children handle their own visibility */
+    position: relative;
   }
 
   @media (min-width: 640px) {
@@ -547,16 +546,20 @@
     overflow-y: auto;
     display: flex;
     flex-direction: column;
-    /* Mobile: Full height */
+    /* Mobile: Full height when visible */
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
     height: 100%;
-    flex: 1;
   }
 
   @media (min-width: 640px) {
     .conversation-sidebar {
       /* Desktop: Grid handles sizing */
+      position: static;
       height: auto;
-      flex: none;
     }
   }
 
@@ -566,16 +569,20 @@
     grid-template-rows: auto 1fr auto; /* header, messages, input */
     overflow: hidden;
     background: hsl(var(--background));
-    /* Mobile: Full height */
+    /* Mobile: Full height when visible */
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
     height: 100%;
-    flex: 1;
   }
 
   @media (min-width: 640px) {
     .chat-main {
       /* Desktop: Grid handles sizing */
+      position: static;
       height: auto;
-      flex: none;
     }
   }
 
