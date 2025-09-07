@@ -44,7 +44,7 @@ export default function DashboardMessages() {
     <div className="h-screen bg-background flex flex-col overflow-hidden chat-page-container">
       {/* Fixed Combined Header */}
       <div className="chat-header-main text-foreground shadow-sm">
-        <div className="px-4 py-2 flex items-center gap-3 h-full">
+        <div className="px-4 py-2 flex items-center justify-start gap-3 h-full">
           <Button variant="ghost" size="icon" className="text-muted-foreground hover:bg-muted/50 h-9 w-9 p-0 rounded-full" onClick={handleBackToConversations}>
             <ArrowLeft className="w-5 h-5" />
           </Button>
@@ -56,10 +56,10 @@ export default function DashboardMessages() {
             </AvatarFallback>
           </Avatar>
           
-          <div className="flex-1 min-w-0">
-            <h1 className="font-semibold text-foreground truncate text-sm leading-none">{otherUser?.name || 'Nutritionist'}</h1>
-            <p className="text-xs text-muted-foreground truncate leading-none" style={{ marginTop: '0px' }}>{otherUser?.email || 'nutritionist@example.com'}</p>
-          </div>
+            <div className="flex-1 min-w-0">
+              <h1 className="font-semibold text-foreground truncate text-sm leading-tight">{otherUser?.name || 'Nutritionist'}</h1>
+              <p className="text-xs text-muted-foreground truncate leading-tight" style={{ marginTop: '2px' }}>{otherUser?.email || 'nutritionist@example.com'}</p>
+            </div>
         </div>
       </div>
 
