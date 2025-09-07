@@ -20,7 +20,7 @@ import {
 } from "lucide-react";
 import { Link } from "wouter";
 import { useFirestoreCollection } from "@/hooks/useFirestore";
-import { User, Appointment, Message } from "@/types";
+import { User, Appointment } from "@/types";
 import type { Invoice } from "@shared/firebase-schema";
 import { where, orderBy, limit } from "firebase/firestore";
 import { FloatingOrganic, DoodleConnector } from "@/components/ui/PageTransition";
@@ -113,11 +113,6 @@ export default function AdminHome() {
     new Date(inv.createdAt).getMonth() === new Date().getMonth()
   ).reduce((sum, inv) => sum + inv.amount, 0) || 0;
 
-  // Calculate unread messages to admin
-  const unreadMessagesToAdmin = messages?.filter(msg => 
-    msg.toUser === "admin" && (msg.read === false || msg.read === undefined)
-  ).length || 0;
-
   const quickStats = [
     {
       title: "Total Clients",
@@ -175,14 +170,6 @@ export default function AdminHome() {
       color: "text-indigo-600",
       bgColor: "bg-indigo-50 dark:bg-indigo-900/20",
       href: "/admin/emails"
-    },
-    {
-      title: "Unread Messages",
-      value: unreadMessagesToAdmin.toString(),
-      icon: MessageCircle,
-      color: "text-primary-600",
-      bgColor: "bg-primary-50 dark:bg-primary-900/20",
-      href: "/admin/messages"
     }
   ];
 
@@ -218,17 +205,28 @@ export default function AdminHome() {
   ];
 
   return (
-    <div className="dashboard-page relative">
-      <div className="dashboard-content">
-        {/* Dashboard Header */}
-        <div className="dashboard-header">
+    <div className="h-[calc(100vh-8rem)] bg-gradient-to-br from-background via-background to-muted/10 relative">
+      <div className="container mx-auto px-4 sm:px-6 py-2 lg:py-6 relative z-10 h-full flex flex-col">
+        {/* Header with Navigation and Organic Design */}
+        <div className="mb-2 lg:mb-4 relative">
           <div className="flex items-center justify-between">
-            <div>
-              <h1 className="dashboard-title">Admin Dashboard</h1>
-              <p className="dashboard-subtitle">Overview of your nutrition practice and client management</p>
+            <div className="relative">
+              <div className="doodle-arrow mb-1">
+                <h1 className="font-display text-xl md:text-2xl mb-1 text-foreground handwritten-accent">
+                  Admin Dashboard
+                </h1>
+              </div>
+              <p className="serif-body text-base text-muted-foreground leading-relaxed">
+                Overview of your nutrition practice and client management
+              </p>
+              
+              {/* Handwritten flourish */}
+              <div className="absolute -bottom-4 -right-8">
+                <span className="text-accent text-lg transform rotate-12 inline-block">✨</span>
+              </div>
             </div>
-            <div className="flex items-center gap-3">
-              <Button variant="outline" asChild>
+            <div className="relative">
+              <Button variant="outline" asChild className="mediterranean-card floating-element">
                 <Link href="/admin-client-view">
                   <Users className="mr-2 h-4 w-4" />
                   View Client Dashboard
@@ -779,9 +777,11 @@ export default function AdminHome() {
 
       </div>
       
-      {/* Subtle background elements */}
-      <FloatingOrganic className="hidden lg:block absolute top-20 -right-20 opacity-5" size="large" delay={1} />
-      <FloatingOrganic className="hidden lg:block absolute bottom-20 -left-20 opacity-5" size="large" delay={3} />
+      {/* Floating background elements - Hidden on mobile */}
+      <FloatingOrganic className="hidden sm:block absolute top-20 -right-24 opacity-15" size="large" delay={1} />
+      <FloatingOrganic className="hidden sm:block absolute bottom-20 -left-24 opacity-15" size="large" delay={3} />
+      <FloatingOrganic className="hidden sm:block absolute top-1/2 right-10 opacity-10" size="medium" delay={2} />
+      <FloatingOrganic className="hidden sm:block absolute bottom-1/3 left-10 opacity-10" size="medium" delay={4} />
     </div>
   );
 }
