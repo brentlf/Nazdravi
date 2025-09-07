@@ -72,7 +72,7 @@ export default function DashboardMessages() {
       </div>
 
       {/* Fixed User Info Section - Below Header */}
-      <div className="bg-card border-b border-border text-foreground fixed top-16 left-0 right-0 z-40">
+      <div className="bg-card border-b border-border text-foreground fixed top-20 left-0 right-0 z-40">
         <div className="px-4 py-2">
           <div className="flex items-center gap-2">
             <div className="flex-1 min-w-0">
@@ -84,7 +84,7 @@ export default function DashboardMessages() {
       </div>
 
       {/* Chat Background */}
-      <div className="flex-1 bg-muted/30 relative overflow-hidden pt-32">
+      <div className="flex-1 bg-muted/30 relative overflow-hidden pt-28">
         {/* Subtle Pattern */}
         <div 
           className="absolute inset-0 opacity-5 dark:opacity-10"
