@@ -1,33 +1,63 @@
+import { useState } from "react";
+import { ConversationList } from "@/components/dashboard/ConversationList";
 import { MessageThread } from "@/components/dashboard/MessageThread";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, MoreVertical, Phone, Video } from "lucide-react";
 import { Link } from "wouter";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useAuth } from "@/contexts/AuthContext";
+import { useFirestoreCollection } from "@/hooks/useFirestore";
+import { User as UserType } from "@/types";
+import { where } from "firebase/firestore";
 
 export default function DashboardMessages() {
+  const [selectedConversation, setSelectedConversation] = useState<string | null>(null);
   const { effectiveUser: user } = useAuth();
 
+  // Get the other user in the conversation
+  const { data: users } = useFirestoreCollection<UserType>("users");
+  const otherUserId = selectedConversation ? selectedConversation.split('_').find(id => id !== user?.uid) : null;
+  const otherUser = users?.find(u => u.uid === otherUserId);
+
+  const handleSelectConversation = (conversationId: string) => {
+    setSelectedConversation(conversationId);
+  };
+
+  const handleBackToConversations = () => {
+    setSelectedConversation(null);
+  };
+
+  // If no conversation is selected, show conversation list
+  if (!selectedConversation) {
+    return (
+      <div className="h-[calc(100vh-8rem)] bg-background">
+        <ConversationList 
+          onSelectConversation={handleSelectConversation}
+          onBack={() => window.history.back()}
+        />
+      </div>
+    );
+  }
+
+  // Show individual conversation
   return (
     <div className="h-[calc(100vh-8rem)] bg-background flex flex-col">
-      {/* Subtle Header */}
+      {/* Chat Header */}
       <div className="bg-card border-b border-border text-foreground px-4 py-3 flex items-center justify-between flex-shrink-0">
         <div className="flex items-center gap-3">
-          <Link href="/dashboard">
-            <Button variant="ghost" size="icon" className="text-muted-foreground hover:bg-muted h-8 w-8 p-0">
-              <ArrowLeft className="w-5 h-5" />
-            </Button>
-          </Link>
+          <Button variant="ghost" size="icon" className="text-muted-foreground hover:bg-muted h-8 w-8 p-0" onClick={handleBackToConversations}>
+            <ArrowLeft className="w-5 h-5" />
+          </Button>
           
           <Avatar className="h-10 w-10">
-            <AvatarImage src="/api/placeholder/40/40" />
+            <AvatarImage src={otherUser?.photoURL} />
             <AvatarFallback className="bg-primary text-primary-foreground">
-              <span className="text-sm font-medium">N</span>
+              <span className="text-sm font-medium">{otherUser?.name?.split(' ').map(n => n[0]).join('').toUpperCase()}</span>
             </AvatarFallback>
           </Avatar>
           
           <div className="flex-1 min-w-0">
-            <h1 className="font-semibold text-foreground truncate">Nutritionist</h1>
+            <h1 className="font-semibold text-foreground truncate">{otherUser?.name || 'Nutritionist'}</h1>
             <p className="text-xs text-muted-foreground truncate">Online</p>
           </div>
         </div>
@@ -45,7 +75,7 @@ export default function DashboardMessages() {
         </div>
       </div>
 
-      {/* Subtle Background */}
+      {/* Chat Background */}
       <div className="flex-1 bg-muted/30 relative overflow-hidden">
         {/* Subtle Pattern */}
         <div 
@@ -57,7 +87,7 @@ export default function DashboardMessages() {
         
         {/* Messages Container */}
         <div className="relative z-10 h-full">
-          <MessageThread />
+          <MessageThread conversationId={selectedConversation} />
         </div>
       </div>
     </div>

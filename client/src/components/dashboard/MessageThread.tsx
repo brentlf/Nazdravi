@@ -24,13 +24,17 @@ const messageSchema = z.object({
 
 type MessageFormData = z.infer<typeof messageSchema>;
 
-export function MessageThread() {
+interface MessageThreadProps {
+  conversationId?: string;
+}
+
+export function MessageThread({ conversationId }: MessageThreadProps) {
   const { effectiveUser: user, isAdminViewingClient } = useAuth();
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const { add: addMessage, update: updateMessage, loading: sending } = useFirestoreActions("messages");
 
-  // Create chat room ID (user_admin format)
-  const chatRoom = user ? `${user.uid}_admin` : "";
+  // Use provided conversationId or create default chat room ID
+  const chatRoom = conversationId || (user ? `${user.uid}_admin` : "");
 
   // Fetch messages with fallback approach - try without orderBy first to test
   const { data: messagesNew } = useFirestoreCollection<Message>("messages", 
