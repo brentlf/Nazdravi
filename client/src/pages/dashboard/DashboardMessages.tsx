@@ -30,7 +30,7 @@ export default function DashboardMessages() {
   // If no conversation is selected, show conversation list
   if (!selectedConversation) {
     return (
-      <div className="h-[calc(100vh-8rem)] bg-background">
+      <div className="h-screen bg-background">
         <ConversationList 
           onSelectConversation={handleSelectConversation}
           onBack={() => window.history.back()}
@@ -41,7 +41,7 @@ export default function DashboardMessages() {
 
   // Show individual conversation
   return (
-    <div className="h-[calc(100vh-8rem)] bg-background flex flex-col">
+    <div className="h-screen bg-background flex flex-col">
       {/* Chat Header */}
       <div className="bg-card border-b border-border text-foreground px-4 py-3 flex items-center justify-between flex-shrink-0">
         <div className="flex items-center gap-3">

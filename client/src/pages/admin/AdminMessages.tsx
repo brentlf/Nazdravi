@@ -79,7 +79,7 @@ export default function AdminMessages() {
         }
       });
     }
-  }, [messages, selectedChatRoom, updateMessage]);
+  }, [messages, selectedConversation, updateMessage]);
 
   // Auto-scroll to bottom when new messages arrive
   useEffect(() => {
@@ -152,35 +152,6 @@ export default function AdminMessages() {
     }
   };
 
-  const createChatRoom = (clientUserId: string) => {
-    // Always use standardized format for admin chat rooms
-    return `${clientUserId}_admin`;
-  };
-
-  const getLastMessage = (clientUserId: string) => {
-    const chatRoom = createChatRoom(clientUserId);
-    // Filter messages for this standardized chat room format
-    const roomMessages = allMessages?.filter(m => 
-      m.chatRoom === chatRoom || 
-      m.chatRoom === `admin_${clientUserId}` ||
-      (m.fromUser === clientUserId && m.toUser === "admin") ||
-      (m.fromUser === "admin" && m.toUser === clientUserId)
-    ) || [];
-    return roomMessages[roomMessages.length - 1];
-  };
-
-  const getUnreadCount = (clientUserId: string) => {
-    const chatRoom = createChatRoom(clientUserId);
-    // Count unread messages from client to admin
-    const unreadMessages = allMessages?.filter(m => 
-      (m.chatRoom === chatRoom || 
-       m.chatRoom === `admin_${clientUserId}` ||
-       (m.fromUser === clientUserId && m.toUser === "admin")) &&
-      m.fromUser === clientUserId &&
-      (m.read === false || m.read === undefined)
-    ) || [];
-    return unreadMessages.length;
-  };
 
   if (usersLoading) {
     return (

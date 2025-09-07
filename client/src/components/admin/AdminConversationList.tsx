@@ -125,7 +125,7 @@ export function AdminConversationList({ onSelectConversation, onBack }: AdminCon
   }
 
   return (
-    <div className="flex flex-col h-full">
+    <div className="flex flex-col h-screen">
       {/* Header */}
       <div className="bg-card border-b border-border text-foreground px-4 py-3 flex items-center justify-between flex-shrink-0">
         <div className="flex items-center gap-3">
