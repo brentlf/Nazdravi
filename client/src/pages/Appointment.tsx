@@ -85,7 +85,7 @@ export default function Appointment() {
                     </p>
                     {!user && (
                       <Link href="/login">
-                        <Button size="sm" className="mt-3 bg-gradient-to-r from-blue-500 to-indigo-500 hover:from-blue-600 hover:to-indigo-600 text-white shadow-sm">
+                        <Button size="sm" className="mt-3 bg-gradient-to-r from-blue-500 to-indigo-500 hover:from-blue-600 hover:to-indigo-600 text-white shadow-sm border-2 border-blue-400/30">
                           Join Us Today
                         </Button>
                       </Link>
@@ -117,7 +117,7 @@ export default function Appointment() {
                     </p>
                     {!hasConsent && (
                       <Link href="/consent-form">
-                        <Button size="sm" className="mt-3 bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white shadow-sm">
+                        <Button size="sm" className="mt-3 bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white shadow-sm border-2 border-purple-400/30">
                           Complete Form
                         </Button>
                       </Link>
@@ -148,6 +148,7 @@ export default function Appointment() {
                           e.stopPropagation();
                           setIsFormExpanded(true);
                         }}
+                        className="bg-gradient-to-r from-primary to-primary/90 hover:from-primary/90 hover:to-primary text-white shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 border-2 border-primary/20"
                       >
                         📝 Start Booking
                       </Button>
@@ -185,14 +186,14 @@ export default function Appointment() {
                 <div className="flex flex-col sm:flex-row gap-3 justify-center">
                   {!user && (
                     <Link href="/login">
-                      <Button className="bg-gradient-to-r from-orange-500 to-yellow-500 hover:from-orange-600 hover:to-yellow-600 text-white shadow-sm">
+                      <Button className="bg-gradient-to-r from-orange-500 to-yellow-500 hover:from-orange-600 hover:to-yellow-600 text-white shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 border-2 border-orange-400/30">
                         Get Started
                       </Button>
                     </Link>
                   )}
                   {user && !hasConsent && (
                     <Link href="/consent-form">
-                      <Button className="bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white shadow-sm">
+                      <Button className="bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 border-2 border-purple-400/30">
                         Complete Form
                       </Button>
                     </Link>

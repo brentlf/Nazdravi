@@ -270,48 +270,48 @@ export function DashboardOverview() {
             <Target className="w-4 h-4" />
             Quick Overview
           </h3>
-          <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-2">
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-1.5 sm:gap-2">
             {quickStats.map((stat, index) => {
               const Icon = stat.icon;
               return (
                 <Card
                   key={index}
-                  className="group relative overflow-hidden bg-gradient-to-br from-card via-card/95 to-muted/30 border hover:border-primary/20 hover:shadow-lg hover:shadow-primary/5 transition-all duration-300 h-40"
+                  className="group relative overflow-hidden bg-gradient-to-br from-card via-card/95 to-muted/30 border hover:border-primary/20 hover:shadow-lg hover:shadow-primary/5 transition-all duration-300 h-20 sm:h-32 md:h-40"
                 >
-                  <CardContent className="p-3 flex flex-col h-full relative z-10">
-                    {/* Fixed Header - 24px height */}
-                    <div className="flex items-center gap-1.5 h-6 flex-shrink-0">
-                      <div className={`w-5 h-5 rounded-md flex items-center justify-center ${stat.bgColor} shadow-sm transition-transform duration-300 group-hover:scale-110`}>
-                        <Icon className={`w-2.5 h-2.5 ${stat.color}`} />
+                  <CardContent className="p-1.5 sm:p-3 flex flex-col h-full relative z-10">
+                    {/* Fixed Header - Smaller on mobile */}
+                    <div className="flex items-center gap-1 h-4 sm:h-6 flex-shrink-0">
+                      <div className={`w-3 h-3 sm:w-5 sm:h-5 rounded-md flex items-center justify-center ${stat.bgColor} shadow-sm transition-transform duration-300 group-hover:scale-110`}>
+                        <Icon className={`w-1.5 h-1.5 sm:w-2.5 sm:h-2.5 ${stat.color}`} />
                       </div>
                       <div className="flex-1 min-w-0">
-                        <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide leading-none truncate" title={stat.title}>
+                        <p className="text-[10px] sm:text-xs font-medium text-muted-foreground uppercase tracking-wide leading-none truncate" title={stat.title}>
                           {stat.title}
                         </p>
                       </div>
                     </div>
                     
                     {/* Flexible Content Area - Takes remaining space */}
-                    <div className="flex-1 flex flex-col justify-center py-2">
+                    <div className="flex-1 flex flex-col justify-center py-1 sm:py-2">
                       <div className="text-center">
-                        <p className="text-xl font-bold text-foreground leading-none mb-1 transition-colors duration-300 group-hover:text-primary">
+                        <p className="text-sm sm:text-xl font-bold text-foreground leading-none mb-0.5 sm:mb-1 transition-colors duration-300 group-hover:text-primary">
                           {stat.value}
                         </p>
                         {stat.subtitle && (
-                          <p className="text-xs text-muted-foreground leading-tight">
+                          <p className="text-[9px] sm:text-xs text-muted-foreground leading-tight">
                             {stat.subtitle}
                           </p>
                         )}
                       </div>
                     </div>
                     
-                    {/* Fixed Button Area - 32px height */}
-                    <div className="h-8 flex-shrink-0">
+                    {/* Fixed Button Area - Smaller on mobile */}
+                    <div className="h-5 sm:h-8 flex-shrink-0">
                       <Button 
                         size="sm" 
                         variant="default" 
                         asChild 
-                        className="w-full h-full text-xs font-medium bg-blue-500 text-white hover:bg-blue-600 transition-all duration-300 shadow-sm"
+                        className="w-full h-full text-[9px] sm:text-xs font-medium bg-blue-500 text-white hover:bg-blue-600 transition-all duration-300 shadow-sm"
                       >
                         <Link href={stat.href} className="flex items-center justify-center">{stat.action}</Link>
                       </Button>
@@ -332,7 +332,7 @@ export function DashboardOverview() {
             <Crown className="w-4 h-4" />
             Program Status
           </h3>
-          <div className="h-40 flex flex-col gap-2">
+          <div className="h-32 sm:h-40 flex flex-col gap-2">
             <div className="flex-1">
               <ServicePlanStatusWidget user={user} />
             </div>
@@ -347,7 +347,7 @@ export function DashboardOverview() {
       </div>
 
       {/* Compact Main Content - Messages + Quick Actions */}
-      <div className="grid lg:grid-cols-3 gap-3 flex-1 min-h-0">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-3 flex-1 min-h-0">
         {/* Recent Messages */}
         <div className="lg:col-span-2 min-h-0">
           <Card className="h-full flex flex-col bg-gradient-to-br from-card via-card/95 to-muted/20 border hover:border-primary/20 transition-all duration-300 shadow-sm">

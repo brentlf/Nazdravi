@@ -765,69 +765,102 @@ export default function AdminAppointments() {
           </p>
         </div>
 
-        {/* Status Overview Dashboard */}
+        {/* Status Overview Dashboard - Compact on mobile */}
         {statusOverview && (
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 mb-8">
-            <Card className="p-4">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm font-medium text-muted-foreground">Pending Invoices</p>
-                  <p className="text-2xl font-bold text-orange-600">{statusOverview.pendingInvoices}</p>
+          <>
+            {/* Mobile: Compact horizontal metrics bar */}
+            <div className="block sm:hidden mb-4">
+              <div className="flex gap-2 overflow-x-auto pb-2">
+                <div className="flex items-center gap-1 bg-orange-50 dark:bg-orange-900/20 px-2 py-1 rounded text-xs whitespace-nowrap">
+                  <AlertCircle className="h-3 w-3 text-orange-500" />
+                  <span className="font-medium text-orange-700 dark:text-orange-300">{statusOverview.pendingInvoices}</span>
                 </div>
-                <AlertCircle className="h-8 w-8 text-orange-500" />
+                <div className="flex items-center gap-1 bg-red-50 dark:bg-red-900/20 px-2 py-1 rounded text-xs whitespace-nowrap">
+                  <XCircle className="h-3 w-3 text-red-500" />
+                  <span className="font-medium text-red-700 dark:text-red-300">{statusOverview.missingConsentForms}</span>
+                </div>
+                <div className="flex items-center gap-1 bg-yellow-50 dark:bg-yellow-900/20 px-2 py-1 rounded text-xs whitespace-nowrap">
+                  <Clock className="h-3 w-3 text-yellow-500" />
+                  <span className="font-medium text-yellow-700 dark:text-yellow-300">{statusOverview.pendingPreEvaluation}</span>
+                </div>
+                <div className="flex items-center gap-1 bg-purple-50 dark:bg-purple-900/20 px-2 py-1 rounded text-xs whitespace-nowrap">
+                  <RotateCcw className="h-3 w-3 text-purple-500" />
+                  <span className="font-medium text-purple-700 dark:text-purple-300">{statusOverview.lateChanges}</span>
+                </div>
+                <div className="flex items-center gap-1 bg-red-50 dark:bg-red-900/20 px-2 py-1 rounded text-xs whitespace-nowrap">
+                  <CalendarX className="h-3 w-3 text-red-500" />
+                  <span className="font-medium text-red-700 dark:text-red-300">{statusOverview.noShows}</span>
+                </div>
+                <div className="flex items-center gap-1 bg-green-50 dark:bg-green-900/20 px-2 py-1 rounded text-xs whitespace-nowrap">
+                  <Calendar className="h-3 w-3 text-green-500" />
+                  <span className="font-medium text-green-700 dark:text-green-300">{statusOverview.totalAppointments}</span>
+                </div>
               </div>
-            </Card>
+            </div>
 
-            <Card className="p-4">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm font-medium text-muted-foreground">Missing Consent</p>
-                  <p className="text-2xl font-bold text-red-600">{statusOverview.missingConsentForms}</p>
+            {/* Desktop: Full metrics cards */}
+            <div className="hidden sm:grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 mb-8">
+              <Card className="p-4">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-sm font-medium text-muted-foreground">Pending Invoices</p>
+                    <p className="text-2xl font-bold text-orange-600">{statusOverview.pendingInvoices}</p>
+                  </div>
+                  <AlertCircle className="h-8 w-8 text-orange-500" />
                 </div>
-                <XCircle className="h-8 w-8 text-red-500" />
-              </div>
-            </Card>
+              </Card>
 
-            <Card className="p-4">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm font-medium text-muted-foreground">Pre-Evaluation</p>
-                  <p className="text-2xl font-bold text-yellow-600">{statusOverview.pendingPreEvaluation}</p>
+              <Card className="p-4">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-sm font-medium text-muted-foreground">Missing Consent</p>
+                    <p className="text-2xl font-bold text-red-600">{statusOverview.missingConsentForms}</p>
+                  </div>
+                  <XCircle className="h-8 w-8 text-red-500" />
                 </div>
-                <Clock className="h-8 w-8 text-yellow-500" />
-              </div>
-            </Card>
+              </Card>
 
-            <Card className="p-4">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm font-medium text-muted-foreground">Late Changes</p>
-                  <p className="text-2xl font-bold text-purple-600">{statusOverview.lateChanges}</p>
+              <Card className="p-4">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-sm font-medium text-muted-foreground">Pre-Evaluation</p>
+                    <p className="text-2xl font-bold text-yellow-600">{statusOverview.pendingPreEvaluation}</p>
+                  </div>
+                  <Clock className="h-8 w-8 text-yellow-500" />
                 </div>
-                <RotateCcw className="h-8 w-8 text-purple-500" />
-              </div>
-            </Card>
+              </Card>
 
-            <Card className="p-4">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm font-medium text-muted-foreground">No Shows</p>
-                  <p className="text-2xl font-bold text-red-600">{statusOverview.noShows}</p>
+              <Card className="p-4">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-sm font-medium text-muted-foreground">Late Changes</p>
+                    <p className="text-2xl font-bold text-purple-600">{statusOverview.lateChanges}</p>
+                  </div>
+                  <RotateCcw className="h-8 w-8 text-purple-500" />
                 </div>
-                <CalendarX className="h-8 w-8 text-red-500" />
-              </div>
-            </Card>
+              </Card>
 
-            <Card className="p-4">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm font-medium text-muted-foreground">Total Appointments</p>
-                  <p className="text-2xl font-bold text-green-600">{statusOverview.totalAppointments}</p>
+              <Card className="p-4">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-sm font-medium text-muted-foreground">No Shows</p>
+                    <p className="text-2xl font-bold text-red-600">{statusOverview.noShows}</p>
+                  </div>
+                  <CalendarX className="h-8 w-8 text-red-500" />
                 </div>
-                <Calendar className="h-8 w-8 text-green-500" />
-              </div>
-            </Card>
-          </div>
+              </Card>
+
+              <Card className="p-4">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-sm font-medium text-muted-foreground">Total Appointments</p>
+                    <p className="text-2xl font-bold text-green-600">{statusOverview.totalAppointments}</p>
+                  </div>
+                  <Calendar className="h-8 w-8 text-green-500" />
+                </div>
+              </Card>
+            </div>
+          </>
         )}
 
         {/* Enhanced Filters */}
@@ -909,7 +942,62 @@ export default function AdminAppointments() {
           </CardHeader>
           <CardContent>
             {processedAppointments.length > 0 ? (
-              <div className="h-96 overflow-y-auto border rounded-md">
+              <>
+                {/* Mobile: Compact card layout */}
+                <div className="block sm:hidden space-y-2 max-h-[70vh] overflow-y-auto">
+                  {processedAppointments.map((appointment) => (
+                    <div key={appointment.id} className="border rounded-lg p-3 bg-card">
+                      <div className="flex items-center justify-between mb-2">
+                        <div className="flex items-center gap-2 min-w-0">
+                          <div className="w-8 h-8 bg-primary/10 rounded-full flex items-center justify-center flex-shrink-0">
+                            <UserCheck className="w-4 h-4 text-primary" />
+                          </div>
+                          <div className="min-w-0">
+                            <p className="font-medium text-sm truncate">{appointment.name}</p>
+                            <p className="text-xs text-muted-foreground truncate">{appointment.email}</p>
+                          </div>
+                        </div>
+                        <Badge className={`text-[10px] px-1.5 py-0 ${getStatusColor(appointment.status)}`}>
+                          {appointment.status}
+                        </Badge>
+                      </div>
+                      
+                      <div className="flex items-center justify-between text-xs text-muted-foreground mb-2">
+                        <div className="flex items-center gap-1">
+                          <Calendar className="w-3 h-3" />
+                          <span>{new Date(appointment.date).toLocaleDateString()}</span>
+                        </div>
+                        <div className="flex items-center gap-1">
+                          <Clock className="w-3 h-3" />
+                          <span>{appointment.timeslot}</span>
+                        </div>
+                      </div>
+                      
+                      <div className="flex items-center justify-between">
+                        <Badge className={getTypeColor(appointment.type)} variant="outline">
+                          {appointment.type}
+                        </Badge>
+                        <div className="flex gap-1">
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            onClick={() => {
+                              setSelectedAppointment(appointment);
+                              setIsEditingAppointment(true);
+                            }}
+                            className="h-7 px-2 text-xs"
+                          >
+                            <Edit className="w-3 h-3 mr-1" />
+                            Edit
+                          </Button>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+
+                {/* Desktop: Full table */}
+                <div className="hidden sm:block h-96 overflow-y-auto border rounded-md">
                 <Table>
                 <TableHeader>
                   <TableRow>
@@ -1285,7 +1373,8 @@ export default function AdminAppointments() {
                   ))}
                 </TableBody>
               </Table>
-              </div>
+                </div>
+              </>
             ) : (
               <div className="text-center py-12">
                 <Calendar className="w-16 h-16 text-muted-foreground mx-auto mb-4" />

@@ -1745,7 +1745,7 @@ export const processMonthlyBilling = functions.pubsub
                 clientEmail: userData.email,
                 month: billingDate.getMonth() + 1,
                 year: billingDate.getFullYear(),
-                subscriptionAmount: userData.monthlyAmount || 150,
+                subscriptionAmount: userData.monthlyAmount || 100,
                 billingCycle: nextCycle
               };
 

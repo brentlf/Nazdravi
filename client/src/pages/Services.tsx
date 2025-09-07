@@ -95,13 +95,12 @@ export default function Services() {
       title: "Initial Consultation",
       description: "Comprehensive assessment and personalized nutrition strategy",
       duration: "60 minutes",
-      price: "€120",
+      price: "€95",
       features: [
         "Detailed health history review",
         "Current eating habits analysis",
-        "Body composition assessment",
         "Personalized nutrition plan",
-        "30-day follow-up support",
+        "Goal setting & recommendations",
       ],
       color: "from-emerald-500 to-teal-500",
       popular: false,
@@ -111,14 +110,12 @@ export default function Services() {
       icon: MessageCircle,
       title: "Follow-up Sessions",
       description: "Ongoing support and plan adjustments",
-      duration: "45 minutes",
-      price: "€80",
+      duration: "30 minutes",
+      price: "€40",
       features: [
-        "Progress review and assessment",
-        "Plan adjustments and optimization",
-        "New goal setting",
-        "Continued motivation and support",
-        "Recipe and meal suggestions",
+        "Progress review and accountability",
+        "Adjustments to nutrition plan",
+        "Motivation and practical tips",
       ],
       color: "from-blue-500 to-cyan-500",
       popular: false,
@@ -129,14 +126,12 @@ export default function Services() {
       title: "Complete Program",
       description: "Comprehensive 3-month transformation journey",
       duration: "3 months",
-      price: "€450",
+      price: "€300",
       features: [
-        "Initial consultation + 6 follow-ups",
-        "Weekly meal plans and recipes",
-        "24/7 messaging support",
+        "Initial consultation (60 min) + 5 follow-up sessions (30 min each)",
+        "Weekly meal plans & recipes",
+        "Messaging support for questions and accountability",
         "Progress tracking tools",
-        "Educational resources",
-        "Final assessment and maintenance plan",
       ],
       color: "from-purple-500 to-pink-500",
       popular: true,
@@ -167,14 +162,14 @@ export default function Services() {
               <Card key={index} className={`relative border border-border bg-card hover:shadow-lg transition-all duration-300 ${service.popular ? 'ring-2 ring-yellow-400/50' : ''}`}>
                 {service.popular && (
                   <div className="absolute -top-3 left-1/2 transform -translate-x-1/2">
-                    <Badge className="bg-yellow-400 text-gray-900 px-3 py-1 font-medium">
+                    <Badge className="bg-warning text-primary-foreground px-3 py-1 font-medium">
                       Most Popular
                     </Badge>
                   </div>
                 )}
                 <CardContent className="p-6 text-card-foreground h-full flex flex-col">
                   <div className={`inline-flex items-center justify-center w-12 h-12 bg-gradient-to-br ${service.color} rounded-xl mb-4`}>
-                    <service.icon className="h-6 w-6 text-white" />
+                    <service.icon className="h-6 w-6 text-foreground" />
                   </div>
                   
                   <h3 className="text-xl font-bold mb-3">
@@ -207,7 +202,16 @@ export default function Services() {
                   </ul>
                   
                   <Button 
-                    className="w-full"
+                    variant="outline"
+                    className={`w-full font-semibold py-3 transition-all duration-300 transform hover:scale-105 ${
+                      service.popular 
+                        ? 'bg-gradient-to-r from-yellow-500 to-orange-500 hover:from-yellow-600 hover:to-orange-600 shadow-lg hover:shadow-xl border-2 border-yellow-400/30' 
+                        : '!bg-primary/10 hover:!bg-primary/20 !border-2 !border-primary/30 shadow-md hover:shadow-lg'
+                    }`}
+                    style={service.popular ? {} : {
+                      backgroundColor: 'hsl(var(--primary) / 0.1)',
+                      borderColor: 'hsl(var(--primary) / 0.3)'
+                    }}
                     onClick={() => handleServicePlanSelection(service.id as any)}
                   >
                     {service.id === "program" ? "Start Program" : "Book Now"}
@@ -219,15 +223,15 @@ export default function Services() {
           </div>
 
           {/* CTA Section */}
-          <div className="text-center bg-card border border-border rounded-2xl p-8">
-            <h3 className="text-xl font-bold text-card-foreground mb-4">Not sure which option is right for you?</h3>
-            <p className="text-muted-foreground mb-6">
+          <div className="text-center bg-gradient-to-br from-primary/5 to-primary/10 border border-primary/20 rounded-2xl p-8 shadow-lg">
+            <h3 className="text-2xl font-bold text-foreground mb-4">💡 Not sure which option is right for you?</h3>
+            <p className="text-muted-foreground mb-8 max-w-2xl mx-auto text-lg">
               Schedule a free 15-minute consultation to discuss your goals and find the perfect service for your needs.
             </p>
             <Link href="/appointment">
-              <Button size="lg" className="px-8 py-3">
+              <Button size="lg" className="px-12 py-4 text-lg font-semibold shadow-lg hover:shadow-xl transition-all duration-300 bg-gradient-to-r from-primary to-primary/90 hover:from-primary/90 hover:to-primary transform hover:scale-105 border-2 border-primary/20">
                 Book Your Consultation
-                <ArrowRight className="ml-2 h-4 w-4" />
+                <ArrowRight className="ml-2 h-5 w-5" />
               </Button>
             </Link>
           </div>
@@ -248,14 +252,13 @@ export default function Services() {
               The Complete Program includes:
             </p>
             <ul className="mt-2 space-y-1 text-sm text-muted-foreground">
-              <li>• Initial consultation + 6 follow-ups</li>
-              <li>• Weekly meal plans and recipes</li>
-              <li>• 24/7 messaging support</li>
+              <li>• Initial consultation (60 min) + 5 follow-up sessions (30 min each)</li>
+              <li>• Weekly meal plans & recipes</li>
+              <li>• Messaging support for questions and accountability</li>
               <li>• Progress tracking tools</li>
-              <li>• Educational resources</li>
             </ul>
             <div className="mt-4 p-3 bg-muted rounded-lg">
-              <p className="text-sm font-medium text-foreground">Total: €450</p>
+              <p className="text-sm font-medium text-foreground">Total: €300</p>
             </div>
           </div>
           <DialogFooter>

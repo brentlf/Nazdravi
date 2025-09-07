@@ -632,15 +632,15 @@ export default function DashboardAppointments() {
 
   if (loading) {
     return (
-      <div className="h-[calc(100vh-8rem)] bg-gray-50 dark:bg-gray-900">
-        <div className="container mx-auto px-6 py-4 h-full flex flex-col">
+      <div className="h-[calc(100vh-8rem)] bg-background">
+        <div className="container mx-auto px-4 sm:px-6 px-safe py-4 h-full flex flex-col">
           <div className="grid gap-6">
             {[...Array(3)].map((_, i) => (
               <Card key={i} className="animate-pulse">
                 <CardContent className="p-6">
-                  <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded mb-4"></div>
-                  <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded mb-2"></div>
-                  <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-3/4"></div>
+                  <div className="h-4 bg-muted rounded mb-4"></div>
+                  <div className="h-4 bg-muted rounded mb-2"></div>
+                  <div className="h-4 bg-muted rounded w-3/4"></div>
                 </CardContent>
               </Card>
             ))}
@@ -651,10 +651,10 @@ export default function DashboardAppointments() {
   }
 
   return (
-    <div className="h-[calc(100vh-8rem)] bg-gradient-to-br from-background to-muted/30 country-texture relative overflow-hidden">
-      <div className="container mx-auto px-6 py-4 relative z-10 h-full flex flex-col">
+    <div className="min-h-[calc(100vh-8rem)] bg-gradient-to-br from-background to-muted/30 country-texture relative">
+      <div className="container mx-auto px-4 sm:px-6 px-safe py-2 relative z-10 min-h-full flex flex-col">
         {/* Compact Header with Back Navigation */}
-        <div className="flex items-center justify-between mb-4 flex-shrink-0">
+        <div className="flex items-center justify-between mb-2 flex-shrink-0">
           <div className="flex items-center gap-4">
             <Link href="/dashboard">
               <Button variant="ghost" size="sm" className="flex items-center gap-2">
@@ -671,11 +671,11 @@ export default function DashboardAppointments() {
           </div>
         </div>
 
-        {/* Booking Requirements - Condensed */}
+        {/* Booking Requirements - Condensed (hidden on mobile to prioritize list) */}
         {(!hasConsent || (!hasPreEvaluation && hasConsent)) && (
-          <Card className="mb-6">
-            <CardHeader className="pb-3">
-              <CardTitle className="text-lg">Booking Requirements</CardTitle>
+          <Card className="mb-3 hidden sm:block">
+            <CardHeader className="pb-2">
+              <CardTitle className="text-base">Booking Requirements</CardTitle>
             </CardHeader>
             <CardContent className="space-y-3">
               {!hasConsent && (
@@ -690,7 +690,7 @@ export default function DashboardAppointments() {
                   <Button 
                     size="sm"
                     onClick={() => window.location.href = '/consent-form'}
-                    className="bg-red-600 hover:bg-red-700 text-white"
+                    className="bg-destructive hover:brightness-110 text-destructive-foreground"
                   >
                     Complete
                   </Button>
@@ -709,7 +709,7 @@ export default function DashboardAppointments() {
                   <Button 
                     size="sm"
                     onClick={() => setIsPreEvaluationOpen(true)}
-                    className="bg-orange-600 hover:bg-orange-700 text-white"
+                    className="bg-warning hover:brightness-110 text-primary-foreground"
                   >
                     Complete
                   </Button>
@@ -719,9 +719,9 @@ export default function DashboardAppointments() {
           </Card>
         )}
 
-        {/* Next Upcoming Appointment */}
+        {/* Next Upcoming Appointment (hidden on mobile to prioritize list) */}
         {nextAppointment && (
-          <Card className="mb-6">
+          <Card className="mb-6 hidden sm:block">
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <Clock className="w-5 h-5" />
@@ -742,7 +742,7 @@ export default function DashboardAppointments() {
                     <Button 
                       size="sm" 
                       onClick={() => setIsPreEvaluationOpen(true)}
-                      className="bg-orange-600 hover:bg-orange-700 text-white"
+                      className="bg-warning hover:brightness-110 text-primary-foreground"
                     >
                       Complete Now
                     </Button>
@@ -816,13 +816,13 @@ export default function DashboardAppointments() {
 
         {/* Main Content Area - Flexible */}
         <div className="flex-1 min-h-0">
-          <div className="grid lg:grid-cols-2 gap-6 h-full">
+          <div className="grid lg:grid-cols-3 gap-4 h-full">
           {/* My Appointments Section */}
-          <div className="flex flex-col h-full">
+          <div className="flex flex-col h-full lg:col-span-2">
             <Card className="flex-1 flex flex-col h-full">
-              <CardHeader className="flex flex-row items-center justify-between flex-shrink-0">
-                <CardTitle className="flex items-center gap-2">
-                  <Calendar className="w-5 h-5" />
+              <CardHeader className="flex flex-row items-center justify-between flex-shrink-0 pb-2">
+                <CardTitle className="flex items-center gap-2 text-sm sm:text-base">
+                  <Calendar className="w-4 h-4" />
                   My Appointments
                 </CardTitle>
                 <Button 
@@ -831,14 +831,14 @@ export default function DashboardAppointments() {
                   className={!hasConsent ? "opacity-50 cursor-not-allowed" : ""}
                   title={!hasConsent ? "Complete informed consent form to book appointments" : "Book a new appointment"}
                 >
-                  <Plus className="w-4 h-4 mr-2" />
-                  Book New
+                  <span className="sm:hidden inline-flex"><Plus className="w-4 h-4" /></span>
+                  <span className="hidden sm:inline-flex"><Plus className="w-4 h-4 mr-2" />Book New</span>
                 </Button>
               </CardHeader>
               <CardContent className="flex-1 flex flex-col">
                 {!effectiveAppointments?.length ? (
-                  <div className="text-center py-8">
-                    <Calendar className="w-12 h-12 mx-auto text-gray-400 mb-4" />
+                  <div className="text-center py-6 sm:py-8">
+                    <Calendar className="w-12 h-12 mx-auto text-muted-foreground mb-4" />
                     <h3 className="font-semibold mb-2">No appointments yet</h3>
                     <p className="text-muted-foreground text-sm mb-4">
                       Book your first consultation to get started
@@ -854,110 +854,127 @@ export default function DashboardAppointments() {
                     </Button>
                   </div>
                 ) : (
-                  <div className="space-y-4 flex-1 overflow-y-auto">
+                  <div className="space-y-2 sm:space-y-4 flex-1 overflow-y-auto">
                     {(showAllAppointments ? sortedAppointments : sortedAppointments.slice(0, 3)).map((appointment) => {
                       const appointmentDate = parseAppointmentDate(appointment);
                       const isFuture = appointmentDate > new Date();
                       
                       return (
-                        <div key={appointment.id} className="border rounded-lg p-4">
-                          {/* Pre-evaluation alert on individual appointments */}
-                          {!hasPreEvaluation && isFuture && (
-                            <div className="flex items-center gap-2 mb-3 text-orange-600 dark:text-orange-400">
-                              <AlertCircle className="w-4 h-4" />
-                              <span className="text-sm">Pre-evaluation form required</span>
-                            </div>
-                          )}
-                          
-                          <div className="flex items-center justify-between">
-                            <div className="flex items-center gap-3">
+                        <div key={appointment.id} className="border rounded-lg p-2 sm:p-4">
+                          {/* Mobile compact row */}
+                          <div className="flex items-center justify-between sm:hidden">
+                            <div className="flex items-center gap-2 min-w-0">
                               {getStatusIcon(appointment.status)}
-                              <div>
-                                <p className="font-medium">
-                                  {appointmentDate.toLocaleDateString('en-GB')}
+                              <div className="min-w-0">
+                                <p className="text-xs font-medium truncate">
+                                  {appointmentDate.toLocaleDateString('en-GB', { day: '2-digit', month: 'short' })} • {appointment.timeslot}
                                 </p>
-                                <p className="text-sm text-muted-foreground">
-                                  {appointment.timeslot} • {appointment.type}
-                                </p>
+                                <p className="text-[11px] text-muted-foreground truncate">{appointment.type}</p>
                               </div>
                             </div>
-                            <div className="flex items-center gap-2">
-                              <Badge className={getStatusColor(appointment.status)}>
+                            <div className="flex items-center gap-1 flex-shrink-0">
+                              <Badge className={`text-[10px] px-1.5 py-0 ${getStatusColor(appointment.status)}`}>
                                 {appointment.status}
                               </Badge>
-                              
-                              {/* Teams Meeting Link for confirmed appointments */}
                               {appointment.status === 'confirmed' && appointment.teamsJoinUrl && (
-                                <Button
-                                  size="sm"
-                                  variant="outline"
-                                  onClick={() => window.open(appointment.teamsJoinUrl, '_blank')}
-                                  title="Join Teams Meeting"
-                                  className="text-green-600 hover:text-green-700 border-green-200 hover:border-green-300"
-                                >
-                                  <Video className="w-3 h-3 mr-1" />
-                                  Join Meeting
+                                <Button size="icon" variant="outline" className="h-7 w-7 p-0" onClick={() => window.open(appointment.teamsJoinUrl, '_blank')} title="Join">
+                                  <Video className="w-3.5 h-3.5" />
                                 </Button>
                               )}
-                              
-                              {/* Show edit options for appointments that can be modified */}
-                              {canModifyAppointment(appointment) && (
-                                <div className="flex gap-1">
+                            </div>
+                          </div>
+
+                          {/* Desktop detailed row */}
+                          <div className="hidden sm:block">
+                            {/* Pre-evaluation alert on individual appointments */}
+                            {!hasPreEvaluation && isFuture && (
+                              <div className="flex items-center gap-2 mb-3 text-orange-600 dark:text-orange-400">
+                                <AlertCircle className="w-4 h-4" />
+                                <span className="text-sm">Pre-evaluation form required</span>
+                              </div>
+                            )}
+                            <div className="flex items-center justify-between">
+                              <div className="flex items-center gap-3">
+                                {getStatusIcon(appointment.status)}
+                                <div>
+                                  <p className="font-medium">
+                                    {appointmentDate.toLocaleDateString('en-GB')}
+                                  </p>
+                                  <p className="text-sm text-muted-foreground">
+                                    {appointment.timeslot} • {appointment.type}
+                                  </p>
+                                </div>
+                              </div>
+                              <div className="flex items-center gap-2">
+                                <Badge className={getStatusColor(appointment.status)}>
+                                  {appointment.status}
+                                </Badge>
+                                {appointment.status === 'confirmed' && appointment.teamsJoinUrl && (
                                   <Button
                                     size="sm"
                                     variant="outline"
-                                    onClick={() => {
-                                      setSelectedAppointment(appointment);
-                                      setIsRescheduleOpen(true);
-                                    }}
-                                    title="Reschedule appointment"
+                                    onClick={() => window.open(appointment.teamsJoinUrl, '_blank')}
+                                    title="Join Teams Meeting"
+                                    className="text-green-600 hover:text-green-700 border-green-200 hover:border-green-300"
                                   >
-                                    <Edit className="w-3 h-3" />
+                                    <Video className="w-3 h-3 mr-1" />
+                                    Join Meeting
                                   </Button>
-                                  <Button
-                                    size="sm"
-                                    variant="outline"
-                                    onClick={() => {
-                                      setSelectedAppointment(appointment);
-                                      setIsCancelOpen(true);
-                                    }}
-                                    title="Cancel appointment"
-                                  >
-                                    <Trash2 className="w-3 h-3" />
-                                  </Button>
+                                )}
+                                {canModifyAppointment(appointment) && (
+                                  <div className="flex gap-1">
+                                    <Button
+                                      size="sm"
+                                      variant="outline"
+                                      onClick={() => {
+                                        setSelectedAppointment(appointment);
+                                        setIsRescheduleOpen(true);
+                                      }}
+                                      title="Reschedule appointment"
+                                    >
+                                      <Edit className="w-3 h-3" />
+                                    </Button>
+                                    <Button
+                                      size="sm"
+                                      variant="outline"
+                                      onClick={() => {
+                                        setSelectedAppointment(appointment);
+                                        setIsCancelOpen(true);
+                                      }}
+                                      title="Cancel appointment"
+                                    >
+                                      <Trash2 className="w-3 h-3" />
+                                    </Button>
+                                  </div>
+                                )}
+                              </div>
+                            </div>
+                            <div className="mt-3 pt-3 border-t space-y-2">
+                              {appointment.status === "confirmed" && isFuture && (
+                                <Button size="sm" variant="outline" className="w-full" asChild>
+                                  <a href={getTeamsUrl(appointment)} target="_blank" rel="noopener noreferrer">
+                                    <Video className="w-4 h-4 mr-2" />
+                                    Join Teams Meeting
+                                    <ExternalLink className="w-3 h-3 ml-2" />
+                                  </a>
+                                </Button>
+                              )}
+                              {appointment.status === "pending" && (
+                                <div className="text-center">
+                                  <p className="text-xs text-muted-foreground">
+                                    Awaiting confirmation - you'll receive an email once confirmed
+                                  </p>
+                                </div>
+                              )}
+                              {!isFuture && (
+                                <div className="text-center">
+                                  <p className="text-xs text-muted-foreground">
+                                    {appointment.status === "done" ? "Session completed" : "Past appointment"}
+                                  </p>
                                 </div>
                               )}
                             </div>
                           </div>
-                          
-                          {/* Show action buttons for different appointment states */}
-                        <div className="mt-3 pt-3 border-t space-y-2">
-                          {appointment.status === "confirmed" && isFuture && (
-                            <Button size="sm" variant="outline" className="w-full" asChild>
-                              <a href={getTeamsUrl(appointment)} target="_blank" rel="noopener noreferrer">
-                                <Video className="w-4 h-4 mr-2" />
-                                Join Teams Meeting
-                                <ExternalLink className="w-3 h-3 ml-2" />
-                              </a>
-                            </Button>
-                          )}
-                          
-                          {appointment.status === "pending" && (
-                            <div className="text-center">
-                              <p className="text-xs text-muted-foreground">
-                                Awaiting confirmation - you'll receive an email once confirmed
-                              </p>
-                            </div>
-                          )}
-                          
-                          {!isFuture && (
-                            <div className="text-center">
-                              <p className="text-xs text-muted-foreground">
-                                {appointment.status === "done" ? "Session completed" : "Past appointment"}
-                              </p>
-                            </div>
-                          )}
-                        </div>
                         </div>
                       );
                     })}
@@ -989,22 +1006,22 @@ export default function DashboardAppointments() {
           </div>
 
           {/* Appointment Calendar & Requirements */}
-          <div className="flex flex-col space-y-6 h-full">
+          <div className="flex flex-col space-y-4 h-full">
             <Card className="flex-1 flex flex-col">
-              <CardHeader className="flex-shrink-0">
-                <CardTitle className="flex items-center gap-2">
-                  <Calendar className="w-5 h-5" />
+              <CardHeader className="flex-shrink-0 pb-3">
+                <CardTitle className="flex items-center gap-2 text-base">
+                  <Calendar className="w-4 h-4" />
                   Appointment Calendar
                 </CardTitle>
               </CardHeader>
               <CardContent className="flex-1">
                 {upcomingAppointments.length > 0 ? (
                   <div className="space-y-4">
-                    {/* Mini Calendar Grid */}
-                    <div className="grid grid-cols-7 gap-2 mb-4">
+                    {/* Mini Calendar Grid - Mobile Responsive */}
+                    <div className="grid grid-cols-7 gap-1 sm:gap-2 mb-4">
                       {/* Day Headers */}
                       {['S', 'M', 'T', 'W', 'T', 'F', 'S'].map((day, index) => (
-                        <div key={index} className="text-center text-xs font-medium text-muted-foreground p-2">
+                        <div key={index} className="text-center text-xs font-medium text-muted-foreground p-1 sm:p-2">
                           {day}
                         </div>
                       ))}
@@ -1032,7 +1049,7 @@ export default function DashboardAppointments() {
                           <div
                             key={index}
                             className={`
-                              relative h-8 w-8 flex items-center justify-center text-xs rounded
+                              relative h-6 w-6 sm:h-8 sm:w-8 flex items-center justify-center text-xs rounded
                               ${isCurrentMonth ? 'text-foreground' : 'text-muted-foreground'}
                               ${isToday ? 'bg-primary text-primary-foreground font-bold' : ''}
                               ${hasAppointment ? 'bg-mint-green/20 border border-mint-green' : ''}
@@ -1056,7 +1073,7 @@ export default function DashboardAppointments() {
                     </div>
 
                     {/* Upcoming Appointments List - Only Future Appointments */}
-                    <div className="space-y-3 border-t pt-4">
+                    <div className="space-y-2 sm:space-y-3 border-t pt-4">
                       <h4 className="font-medium text-sm text-muted-foreground">Upcoming Sessions</h4>
                       {upcomingAppointments.slice(0, 4).map((appointment) => {
                         const appointmentDate = parseAppointmentDate(appointment);
@@ -1067,33 +1084,33 @@ export default function DashboardAppointments() {
                         if (appointmentDateTime <= now) return null;
                         
                         return (
-                          <div key={appointment.id} className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-800 rounded-lg">
-                            <div className="flex items-center gap-3">
-                              <div className="flex flex-col items-center">
+                          <div key={appointment.id} className="flex items-center justify-between p-2 sm:p-3 bg-muted rounded-lg">
+                            <div className="flex items-center gap-2 sm:gap-3 flex-1 min-w-0">
+                              <div className="flex flex-col items-center flex-shrink-0">
                                 <span className="text-xs font-medium text-mint-green">
                                   {appointmentDate.toLocaleDateString('en-GB', { 
                                     month: 'short' 
                                   }).toUpperCase()}
                                 </span>
-                                <span className="text-lg font-bold">
+                                <span className="text-sm sm:text-lg font-bold">
                                   {appointmentDate.getDate()}
                                 </span>
                               </div>
-                              <div>
-                                <p className="font-medium text-sm">
+                              <div className="flex-1 min-w-0">
+                                <p className="font-medium text-xs sm:text-sm truncate">
                                   {appointment.timeslot}
                                 </p>
-                                <p className="text-xs text-muted-foreground">
+                                <p className="text-xs text-muted-foreground truncate">
                                   {appointment.type} Session
                                 </p>
                               </div>
                             </div>
-                            <div className="flex items-center gap-2">
+                            <div className="flex items-center gap-1 sm:gap-2 flex-shrink-0">
                               <Badge variant="outline" className="text-xs">
                                 {appointment.status}
                               </Badge>
                               {appointment.status === "confirmed" && (
-                                <Button size="sm" variant="ghost" asChild>
+                                <Button size="sm" variant="ghost" className="h-6 w-6 p-0" asChild>
                                   <a href={getTeamsUrl(appointment)} target="_blank" rel="noopener noreferrer">
                                     <Video className="w-3 h-3" />
                                   </a>
@@ -1112,7 +1129,7 @@ export default function DashboardAppointments() {
                   </div>
                 ) : (
                   <div className="text-center py-8">
-                    <Calendar className="w-12 h-12 mx-auto text-gray-400 mb-4" />
+                    <Calendar className="w-12 h-12 mx-auto text-muted-foreground mb-4" />
                     <p className="text-muted-foreground text-sm">
                       No upcoming appointments
                     </p>
@@ -2067,7 +2084,7 @@ export default function DashboardAppointments() {
                                   <p className={`text-sm ${userData?.servicePlan === "complete-program" || field.value === "complete-program" ? "text-green-700 dark:text-green-300" : "text-gray-600 dark:text-gray-400"}`}>
                                     {userData?.servicePlan === "complete-program" 
                                       ? "Currently enrolled - unlimited consultations"
-                                      : "Monthly billing - €299/month unlimited consultations"
+                                      : "Monthly billing - €100/month (3 months, total €300)"
                                     }
                                   </p>
                                 </div>
@@ -2118,15 +2135,15 @@ export default function DashboardAppointments() {
                           >
                             <div className="flex items-center justify-between">
                               <div className="flex items-center space-x-3">
-                                <DollarSign className={`h-5 w-5 ${userData?.servicePlan === "complete-program" ? "text-gray-400" : "text-blue-500"}`} />
+                                <DollarSign className={`h-5 w-5 ${userData?.servicePlan === "complete-program" ? "text-muted-foreground" : "text-info"}`} />
                                 <div>
-                                  <p className={`font-medium ${userData?.servicePlan === "complete-program" ? "text-gray-500 dark:text-gray-400" : "text-gray-900 dark:text-gray-100"}`}>
+                                  <p className={`font-medium ${userData?.servicePlan === "complete-program" ? "text-muted-foreground" : "text-foreground"}`}>
                                     Pay-as-you-go
                                   </p>
                                   <p className="text-sm text-muted-foreground">
                                     {userData?.servicePlan === "complete-program" 
                                       ? "Not available with Complete Program"
-                                      : "Individual session billing - €89/session"
+                                      : "Individual session billing - €95 initial / €40 follow-up"
                                     }
                                   </p>
                                 </div>
@@ -2255,7 +2272,7 @@ export default function DashboardAppointments() {
                   <select 
                     value={rescheduleTimeslot}
                     onChange={(e) => setRescheduleTimeslot(e.target.value)}
-                    className="w-full p-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100"
+                    className="w-full p-2 border border-border rounded-md bg-card text-foreground"
                   >
                     <option value="">Select a time</option>
                     {rescheduleSlots.map((slot) => (
@@ -2335,8 +2352,8 @@ export default function DashboardAppointments() {
                   <span className="font-semibold text-yellow-900 dark:text-yellow-100">Billing Information</span>
                 </div>
                 <p className="text-sm text-yellow-800 dark:text-yellow-200">
-                  By confirming, you will be charged <strong>€299 for the first month</strong> of the Complete Program. 
-                  Your subscription will automatically renew monthly unless cancelled.
+                  By confirming, you will be charged <strong>€100 for the first month</strong> of the Complete Program. 
+                  Your subscription will automatically renew monthly for 3 months (total €300).
                 </p>
               </div>
               
@@ -2355,10 +2372,10 @@ export default function DashboardAppointments() {
               </Button>
               <Button 
                 onClick={handleBillingConfirmation}
-                className="flex-1 bg-blue-600 hover:bg-blue-700 text-white"
+                className="flex-1 bg-brand text-brand-foreground hover:brightness-110"
                 disabled={booking}
               >
-                {booking ? "Processing..." : "Confirm & Pay €299"}
+                {booking ? "Processing..." : "Confirm & Pay €100"}
               </Button>
             </DialogFooter>
           </DialogContent>

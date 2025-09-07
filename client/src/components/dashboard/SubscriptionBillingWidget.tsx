@@ -88,7 +88,7 @@ export default function SubscriptionBillingWidget({ user }: SubscriptionBillingW
           clientName: user.name,
           clientEmail: user.email,
           programStartDate,
-          monthlyAmount: 150 // Default monthly amount
+          monthlyAmount: 100 // Updated monthly amount (3 x €100 = €300)
         }),
       });
 
@@ -221,7 +221,7 @@ export default function SubscriptionBillingWidget({ user }: SubscriptionBillingW
               </p>
             </div>
             <Badge className="bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-200 text-xs">
-              €150/month
+              €100/month
             </Badge>
           </div>
         </div>

@@ -116,16 +116,16 @@ export default function DashboardProgress() {
 
   if (loading) {
     return (
-      <div className="min-h-screen py-20 bg-gray-50 dark:bg-gray-900">
-        <div className="container mx-auto px-4">
+      <div className="min-h-screen py-20 bg-background">
+        <div className="container mx-auto px-4 sm:px-6 px-safe">
           <div className="animate-pulse space-y-8">
-            <div className="h-8 bg-gray-200 dark:bg-gray-700 rounded w-1/3"></div>
+            <div className="h-8 bg-muted rounded w-1/3"></div>
             <div className="grid md:grid-cols-3 gap-6">
               {[...Array(3)].map((_, i) => (
-                <div key={i} className="h-32 bg-gray-200 dark:bg-gray-700 rounded-lg"></div>
+                <div key={i} className="h-32 bg-muted rounded-lg"></div>
               ))}
             </div>
-            <div className="h-96 bg-gray-200 dark:bg-gray-700 rounded-lg"></div>
+            <div className="h-96 bg-muted rounded-lg"></div>
           </div>
         </div>
       </div>
@@ -133,8 +133,8 @@ export default function DashboardProgress() {
   }
 
   return (
-    <div className="h-[calc(100vh-8rem)] bg-gray-50 dark:bg-gray-900">
-      <div className="container mx-auto px-6 py-4 h-full flex flex-col">
+    <div className="h-[calc(100vh-8rem)] bg-background">
+      <div className="container mx-auto px-4 sm:px-6 px-safe py-4 h-full flex flex-col">
         {/* Compact Header with Back Navigation */}
         <div className="flex items-center justify-between mb-4 flex-shrink-0">
           <div className="flex items-center gap-4">
@@ -154,7 +154,7 @@ export default function DashboardProgress() {
           
           <Dialog open={isAddingProgress} onOpenChange={setIsAddingProgress}>
             <DialogTrigger asChild>
-              <Button className="bg-primary-500 hover:bg-primary-600">
+              <Button className="bg-brand text-brand-foreground hover:brightness-110">
                 <Plus className="w-4 h-4 mr-2" />
                 Log Progress
               </Button>
@@ -257,7 +257,7 @@ export default function DashboardProgress() {
                     <Button
                       type="submit"
                       disabled={adding}
-                      className="flex-1 bg-primary-500 hover:bg-primary-600"
+                      className="flex-1 bg-brand text-brand-foreground hover:brightness-110"
                     >
                       {adding ? "Saving..." : "Save Progress"}
                     </Button>
@@ -343,7 +343,7 @@ export default function DashboardProgress() {
                 <p className="text-sm text-muted-foreground mb-4">
                   Log your first entry to see charts and trends
                 </p>
-                <Button onClick={() => setIsAddingProgress(true)} className="bg-primary-500 hover:bg-primary-600">
+                <Button onClick={() => setIsAddingProgress(true)} className="bg-brand text-brand-foreground hover:brightness-110">
                   <Plus className="w-4 h-4 mr-2" />
                   Log Your First Entry
                 </Button>

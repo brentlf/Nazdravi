@@ -76,7 +76,9 @@ export default function AdminInvoices() {
   // Helper functions for invoice services
   const calculateInvoiceTotal = () => {
     let total = 0;
-    if (invoiceServices.standardFee) total += 75;
+    // Session fee based on appointment type: Initial €95, Follow-up €40
+    const sessionFee = selectedAppointment?.type === 'Initial' ? 95 : 40;
+    if (invoiceServices.standardFee) total += sessionFee;
     if (invoiceServices.lateReschedule) total += 5;
     if (invoiceServices.noShowFee) total += 37.5;
     if (invoiceServices.customAmount && customAmountValue) {
@@ -208,7 +210,7 @@ export default function AdminInvoices() {
         clientName: selectedUser!.name,
         clientEmail: selectedUser!.email,
         programStartDate,
-        monthlyAmount: 150
+        monthlyAmount: 100
       });
 
       toast({
@@ -631,7 +633,7 @@ export default function AdminInvoices() {
                     <div className="text-sm text-green-600">Total Programs</div>
                   </div>
                   <div className="text-center p-3 bg-blue-50 rounded-lg">
-                    <div className="text-xl font-bold text-blue-600">€{completeProgramUsers?.length * 150 || 0}</div>
+                    <div className="text-xl font-bold text-blue-600">€{completeProgramUsers?.length * 100 || 0}</div>
                     <div className="text-sm text-blue-600">Monthly Revenue</div>
                   </div>
                 </div>
@@ -1165,14 +1167,14 @@ export default function AdminInvoices() {
                   <p><span className="font-medium">Client:</span> {selectedUser.name}</p>
                   <p><span className="font-medium">Email:</span> {selectedUser.email}</p>
                   <p><span className="font-medium">Program Start:</span> {formatDate(programStartDate)}</p>
-                  <p><span className="font-medium">Monthly Amount:</span> €150.00</p>
+                  <p><span className="font-medium">Monthly Amount:</span> €100.00</p>
                   <p><span className="font-medium">Billing Cycle:</span> 3 months</p>
                 </div>
               </div>
               
               <div className="p-3 bg-blue-50 rounded-lg">
                 <p className="text-sm text-blue-800">
-                  This will generate 3 monthly invoices of €150 each, starting from the program start date.
+                  This will generate 3 monthly invoices of €100 each, starting from the program start date.
                 </p>
               </div>
 
@@ -1278,11 +1280,13 @@ export default function AdminInvoices() {
                       className="w-4 h-4"
                     />
                     <div>
-                      <Label htmlFor="standardFee" className="font-medium">Standard Consultation Fee</Label>
-                      <p className="text-sm text-muted-foreground">Regular session rate</p>
+                      <Label htmlFor="standardFee" className="font-medium">Consultation Fee</Label>
+                      <p className="text-sm text-muted-foreground">Initial €95 • Follow-up €40</p>
                     </div>
                   </div>
-                  <span className="font-medium">€75.00</span>
+                  <span className="font-medium">
+                    {selectedAppointment?.type === 'Initial' ? '€95.00' : '€40.00'}
+                  </span>
                 </div>
 
                 {/* Late Reschedule Penalty */}

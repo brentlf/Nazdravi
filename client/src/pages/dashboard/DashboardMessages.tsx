@@ -5,19 +5,24 @@ import { Link } from "wouter";
 
 export default function DashboardMessages() {
   return (
-    <div className="h-[calc(100vh-8rem)] bg-gray-50 dark:bg-gray-900">
-      <div className="container mx-auto px-6 py-4 h-full flex flex-col">
+    <div className="min-h-[calc(100vh-8rem)] bg-background">
+      <div className="container mx-auto px-3 sm:px-6 px-safe py-2 h-full flex flex-col">
         {/* Compact Header with Back Navigation */}
-        <div className="flex items-center gap-4 mb-4 flex-shrink-0">
+        <div className="flex items-center gap-2 sm:gap-4 mb-2 flex-shrink-0">
           <Link href="/dashboard">
-            <Button variant="ghost" size="sm" className="flex items-center gap-2">
+            <Button variant="ghost" size="icon" className="sm:hidden h-8 w-8 p-0" title="Back">
+              <ArrowLeft className="w-4 h-4" />
+            </Button>
+          </Link>
+          <Link href="/dashboard" className="hidden sm:block">
+            <Button variant="ghost" size="sm" className="items-center gap-2">
               <ArrowLeft className="w-4 h-4" />
               Back
             </Button>
           </Link>
           <div>
-            <h1 className="text-xl font-bold">Messages</h1>
-            <p className="text-sm text-muted-foreground">
+            <h1 className="text-base sm:text-lg font-bold">Messages</h1>
+            <p className="text-[11px] sm:text-xs text-muted-foreground">
               Chat with your nutritionist
             </p>
           </div>

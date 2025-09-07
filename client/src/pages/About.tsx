@@ -79,17 +79,20 @@ export default function About() {
           </div>
 
           {/* CTA Section */}
-          <div className="text-center">
-            <h3 className="text-xl font-bold text-foreground mb-6">Ready to Start Your Journey?</h3>
+          <div className="text-center bg-gradient-to-br from-primary/5 to-primary/10 rounded-2xl p-8 border border-primary/20">
+            <h3 className="text-2xl font-bold text-foreground mb-4">Ready to Start Your Journey?</h3>
+            <p className="text-muted-foreground mb-8 max-w-2xl mx-auto">
+              Take the first step towards better health with a personalized nutrition consultation.
+            </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link href="/appointment">
-                <Button size="lg" className="px-8 py-3">
+                <Button size="lg" className="px-10 py-4 text-lg font-semibold shadow-lg hover:shadow-xl transition-all duration-300 bg-gradient-to-r from-primary to-primary/90 hover:from-primary/90 hover:to-primary transform hover:scale-105 border-2 border-primary/20">
                   Book Consultation
-                  <ArrowRight className="ml-2 h-4 w-4" />
+                  <ArrowRight className="ml-2 h-5 w-5" />
                 </Button>
               </Link>
               <Link href="/services">
-                <Button variant="outline" size="lg" className="px-8 py-3">
+                <Button variant="outline" size="lg" className="px-10 py-4 text-lg font-semibold border-2 bg-primary/5 hover:bg-primary/10 transition-all duration-300 transform hover:scale-105">
                   View Services
                 </Button>
               </Link>

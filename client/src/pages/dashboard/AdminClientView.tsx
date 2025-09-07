@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { ArrowLeft, User, Search, ChevronLeft, ChevronRight } from "lucide-react";
+import { ArrowLeft, User, Search, ChevronLeft, ChevronRight, Eye } from "lucide-react";
 import { Link, useLocation } from "wouter";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -81,9 +81,9 @@ export default function AdminClientView() {
   }
 
   return (
-    <div className="h-[calc(100vh-5rem-4rem)] flex flex-col bg-background overflow-hidden">
+    <div className="min-h-[calc(100vh-5rem-4rem)] flex flex-col bg-background">
       {/* Compact Header */}
-      <div className="flex-none px-4 py-2 border-b bg-card">
+      <div className="flex-none px-4 sm:px-6 px-safe py-2 border-b bg-card">
         <div className="flex items-center justify-between max-w-7xl mx-auto">
           <div className="flex items-center gap-3">
             <Button variant="ghost" size="sm" asChild>
@@ -104,7 +104,7 @@ export default function AdminClientView() {
 
       {/* Main Content Area */}
       <div className="flex-1 flex flex-col overflow-hidden">
-        <div className="max-w-7xl mx-auto w-full h-full flex flex-col px-4 py-2">
+        <div className="max-w-7xl mx-auto w-full h-full flex flex-col px-4 sm:px-6 px-safe py-2">
           {/* Compact Search and Controls */}
           <div className="flex-none mb-2">
             <div className="flex gap-3 items-center p-3 bg-card rounded-lg border">
@@ -144,8 +144,61 @@ export default function AdminClientView() {
           <div className="flex-1 bg-card rounded-lg border overflow-hidden flex flex-col min-h-0">
             {paginatedClients.length > 0 ? (
               <>
-                {/* Table with fixed height */}
-                <div className="flex-1 overflow-auto min-h-0">
+                {/* Mobile Card View for small screens */}
+                <div className="block sm:hidden flex-1 overflow-auto min-h-0 p-2">
+                  <div className="space-y-2">
+                    {paginatedClients.map((client) => (
+                      <Card key={client.uid} className="p-2 hover:bg-muted/50 transition-colors">
+                        <div className="flex items-center justify-between">
+                          <div className="flex items-center gap-2 flex-1 min-w-0">
+                            <Avatar className="h-7 w-7 flex-shrink-0">
+                              <AvatarImage src={client.photoURL} alt={client.name} />
+                              <AvatarFallback className="text-xs font-medium">
+                                {client.name.slice(0, 2).toUpperCase()}
+                              </AvatarFallback>
+                            </Avatar>
+                            <div className="flex-1 min-w-0">
+                              <p className="font-medium text-sm truncate">{client.name}</p>
+                              <p className="text-[11px] text-muted-foreground truncate">{client.email}</p>
+                              <div className="flex items-center gap-2 mt-1">
+                                <Badge variant="secondary" className="text-[10px] px-1 py-0">
+                                  {client.preferredLanguage?.toUpperCase() || 'EN'}
+                                </Badge>
+                                <span className="text-[11px] text-muted-foreground">
+                                  {new Date(client.createdAt).toLocaleDateString('en-US', { 
+                                    month: 'short', 
+                                    day: 'numeric'
+                                  })}
+                                </span>
+                              </div>
+                            </div>
+                          </div>
+                          {/* Mobile icon-only, desktop text button */}
+                          <div className="flex items-center gap-2">
+                            <Button 
+                              size="icon"
+                              className="h-8 w-8 p-0 sm:hidden"
+                              onClick={() => handleClientSelect(client.uid)}
+                              title="View"
+                            >
+                              <Eye className="w-4 h-4" />
+                            </Button>
+                            <Button 
+                              size="sm"
+                              className="h-8 px-3 text-xs hidden sm:inline-flex"
+                              onClick={() => handleClientSelect(client.uid)}
+                            >
+                              View
+                            </Button>
+                          </div>
+                        </div>
+                      </Card>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Desktop Table View */}
+                <div className="hidden sm:block flex-1 overflow-auto min-h-0">
                   <Table>
                     <TableHeader className="sticky top-0 bg-card z-10">
                       <TableRow className="border-b">

@@ -315,13 +315,13 @@ export function AppointmentForm() {
                             <div className="flex items-center space-x-2">
                               <RadioGroupItem value="Initial" id="initial" className="w-3 h-3" />
                               <Label htmlFor="initial" className="text-xs cursor-pointer">
-                                Initial (60min - €89)
+                                Initial (60min - €95)
                               </Label>
                             </div>
                             <div className="flex items-center space-x-2">
                               <RadioGroupItem value="Follow-up" id="followup" className="w-3 h-3" />
                               <Label htmlFor="followup" className="text-xs cursor-pointer">
-                                Follow-up (30min - €49)
+                                Follow-up (30min - €40)
                               </Label>
                             </div>
                           </RadioGroup>
@@ -360,7 +360,7 @@ export function AppointmentForm() {
                                 htmlFor="payasyougo" 
                                 className={`text-xs cursor-pointer ${userData?.servicePlan === "complete-program" ? "text-gray-400" : ""}`}
                               >
-                                Pay-as-you-go (€89)
+                                Pay-as-you-go (€95 initial / €40 follow-up)
                                 {userData?.servicePlan === "complete-program" && (
                                   <span className="text-gray-400"> - Disabled</span>
                                 )}
@@ -369,7 +369,7 @@ export function AppointmentForm() {
                             <div className="flex items-center space-x-2">
                               <RadioGroupItem value="complete-program" id="completeprogram" className="w-3 h-3" />
                               <Label htmlFor="completeprogram" className="text-xs cursor-pointer">
-                                Complete Program (€299)
+                                Complete Program (€100/month for 3 months, total €300)
                                 {userData?.servicePlan === "complete-program" && (
                                   <span className="text-green-600 font-semibold"> ✓ ACTIVE</span>
                                 )}
@@ -550,8 +550,8 @@ export function AppointmentForm() {
                 <span className="font-semibold text-yellow-900 dark:text-yellow-100">Billing Information</span>
               </div>
               <p className="text-sm text-yellow-800 dark:text-yellow-200">
-                By confirming, you will be charged <strong>€299 for the first month</strong> of the Complete Program. 
-                Your subscription will automatically renew monthly unless cancelled.
+                By confirming, you will be charged <strong>€100 for the first month</strong> of the Complete Program.
+                Your subscription will renew monthly for 3 months (total €300).
               </p>
             </div>
             
@@ -573,7 +573,7 @@ export function AppointmentForm() {
               className="flex-1 bg-blue-600 hover:bg-blue-700 text-white"
               disabled={loading}
             >
-              {loading ? "Processing..." : "Confirm & Pay €299"}
+              {loading ? "Processing..." : "Confirm & Pay €100"}
             </Button>
           </DialogFooter>
         </DialogContent>

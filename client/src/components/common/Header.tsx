@@ -212,23 +212,13 @@ export function Header() {
                 <span className="sr-only">Toggle menu</span>
               </Button>
             </SheetTrigger>
-            <SheetContent side="right" className="w-[82vw] max-w-[400px] px-safe pb-safe">
+            <SheetContent side="right" className="w-[82vw] max-w-[400px] px-safe pb-safe bg-background text-foreground border-l border-border/40 backdrop-blur-xl">
               <div className="flex flex-col h-full">
-                <div className="flex items-center justify-between mb-8">
-                  <div className="flex items-center space-x-3">
-                    <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
-                      <Leaf className="h-5 w-5 text-primary-foreground" />
-                    </div>
-                    <span className="font-bold text-lg text-primary">Nazdravi</span>
+                <div className="flex items-center space-x-3 mb-8">
+                  <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
+                    <Leaf className="h-5 w-5 text-primary-foreground" />
                   </div>
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    onClick={() => setIsOpen(false)}
-                    className="h-10 w-10 tap-target"
-                  >
-                    <X className="h-4 w-4" />
-                  </Button>
+                  <span className="font-bold text-lg text-primary">Nazdravi</span>
                 </div>
                 
                 <nav className="flex-1 space-y-2">

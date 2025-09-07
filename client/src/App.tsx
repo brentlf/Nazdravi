@@ -8,6 +8,7 @@ import { ThemeProvider } from "@/contexts/ThemeContext";
 import { LanguageProvider } from "@/contexts/LanguageContext";
 import { Header } from "@/components/common/Header";
 import { Footer } from "@/components/common/Footer";
+import { MobileBottomNav } from "@/components/common/MobileBottomNav";
 import { RouteGuard } from "@/components/common/RouteGuard";
 import { ErrorBoundary } from "@/components/ui/ErrorBoundary";
 import NotFound from "@/pages/not-found";
@@ -30,6 +31,7 @@ import CookiePolicy from "@/pages/CookiePolicy";
 
 // Dashboard pages
 import DashboardHome from "@/pages/dashboard/DashboardHome";
+import DashboardCalendar from "@/pages/dashboard/DashboardCalendar";
 import DashboardAppointments from "@/pages/dashboard/DashboardAppointments";
 import DashboardMessages from "@/pages/dashboard/DashboardMessages";
 import DashboardPlan from "@/pages/dashboard/DashboardPlan";
@@ -42,6 +44,7 @@ import AdminClientView from "@/pages/dashboard/AdminClientView";
 
 // Admin pages
 import AdminHome from "@/pages/admin/AdminHome";
+import AdminCalendar from "@/pages/admin/AdminCalendar";
 import AdminUsers from "@/pages/admin/AdminUsers";
 import AdminAppointments from "@/pages/admin/AdminAppointments";
 import AdminMessages from "@/pages/admin/AdminMessages";
@@ -60,18 +63,20 @@ import InvoiceView from "@/pages/invoice/InvoiceView";
 function Layout({ children }: { children: React.ReactNode }) {
   const [location] = useLocation();
   const isHomePage = location === "/";
+  const isDashboardRoute = location.startsWith("/dashboard") || location.startsWith("/admin");
   
   return (
-    <div className={`min-h-[100svh] relative bg-background text-foreground ${!isHomePage ? "pb-[calc(env(safe-area-inset-bottom)+120px)]" : ""} px-safe`}>
+    <div className={`min-h-[100svh] relative bg-background text-foreground ${!isHomePage ? (isDashboardRoute ? "pb-[calc(env(safe-area-inset-bottom)+80px)]" : "pb-[calc(env(safe-area-inset-bottom)+120px)]") : ""}`}>
       <Header />
       <main className="relative">
         {children}
       </main>
-      {!isHomePage && (
+      {!isHomePage && !isDashboardRoute && (
         <div className="fixed bottom-0 left-0 right-0 z-50">
           <Footer overlay={true} />
         </div>
       )}
+      <MobileBottomNav />
 
     </div>
   );
@@ -106,6 +111,11 @@ function Router() {
       <Route path="/dashboard">
         <RouteGuard role="client">
           <Layout><DashboardHome /></Layout>
+        </RouteGuard>
+      </Route>
+      <Route path="/dashboard/calendar">
+        <RouteGuard role="client">
+          <Layout><DashboardCalendar /></Layout>
         </RouteGuard>
       </Route>
       <Route path="/dashboard/appointments">
@@ -153,6 +163,11 @@ function Router() {
       <Route path="/admin">
         <RouteGuard role="admin">
           <Layout><AdminHome /></Layout>
+        </RouteGuard>
+      </Route>
+      <Route path="/admin/calendar">
+        <RouteGuard role="admin">
+          <Layout><AdminCalendar /></Layout>
         </RouteGuard>
       </Route>
       <Route path="/admin/users">
