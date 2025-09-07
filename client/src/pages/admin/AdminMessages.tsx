@@ -1,28 +1,41 @@
-import { useState, useRef, useEffect } from "react";
-import { MessageCircle, ArrowLeft, MoreVertical, Send } from "lucide-react";
+import { useState, useEffect, useRef } from "react";
+import { MessageCircle, Send, Search, User, Clock, ArrowLeft, MoreVertical } from "lucide-react";
 import { Link } from "wouter";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import { Badge } from "@/components/ui/badge";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { AdminConversationList } from "@/components/admin/AdminConversationList";
-import { useAuth } from "@/contexts/AuthContext";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { useToast } from "@/hooks/use-toast";
 import { useFirestoreCollection, useFirestoreActions } from "@/hooks/useFirestore";
-import { User, Message } from "@/types";
-import { where, orderBy } from "firebase/firestore";
+import { Message, User as UserType } from "@/types";
+import { orderBy, where } from "firebase/firestore";
+import { useAuth } from "@/contexts/AuthContext";
 
 export default function AdminMessages() {
   const [selectedConversation, setSelectedConversation] = useState<string | null>(null);
   const [newMessage, setNewMessage] = useState("");
+  const [searchTerm, setSearchTerm] = useState("");
+  const { user } = useAuth();
+  const { toast } = useToast();
   const messagesEndRef = useRef<HTMLDivElement>(null);
-  const { effectiveUser: user } = useAuth();
 
-  // Fetch users
-  const { data: users } = useFirestoreCollection<User>("users", [
-    orderBy("createdAt", "desc")
+  // Fetch all users for chat selection
+  const { data: users, loading: usersLoading } = useFirestoreCollection<UserType>("users", [
+    where("role", "==", "client")
   ]);
 
-  // Fetch all messages
+  // Simple approach: Get all messages and filter them
   const { data: allMessages, loading: messagesLoading } = useFirestoreCollection<Message>(
     "messages",
     [orderBy("createdAt", "asc")]
@@ -44,7 +57,119 @@ export default function AdminMessages() {
     return isFromConversation;
   }) || [];
 
-  const { add: addMessage, loading: sendingMessage } = useFirestoreActions("messages");
+  console.log('Final filtered messages:', messages.length, 'out of', allMessages?.length || 0);
+  console.log('Selected conversation:', selectedConversation);
+  console.log('Sample message structure:', allMessages?.[0]);
+  console.log('All message chatRooms:', allMessages?.map(m => m.chatRoom));
+
+  const { add: addMessage, update: updateMessage, loading: sendingMessage } = useFirestoreActions("messages");
+
+  // Mark messages as read when admin views them
+  useEffect(() => {
+    if (messages && selectedConversation && updateMessage) {
+      const unreadMessagesToAdmin = messages.filter(msg => 
+        msg.toUser === "admin" && (msg.read === false || msg.read === undefined)
+      );
+      
+      unreadMessagesToAdmin.forEach(async (message) => {
+        try {
+          await updateMessage(message.id, { read: true });
+        } catch (error) {
+          console.error('Failed to mark admin message as read:', error);
+        }
+      });
+    }
+  }, [messages, selectedConversation, updateMessage]);
+
+  // Auto-scroll to bottom when new messages arrive
+  useEffect(() => {
+    if (messages && messages.length > 0) {
+      messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    }
+  }, [messages]);
+
+  // Filter users based on search
+  const filteredUsers = users?.filter(u => 
+    !searchTerm || 
+    u.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    u.email.toLowerCase().includes(searchTerm.toLowerCase())
+  ) || [];
+
+  const handleSendMessage = async () => {
+    if (!newMessage.trim() || !selectedConversation || !user) return;
+
+    try {
+      // Extract client user ID from conversation ID
+      const clientUserId = selectedConversation.replace('_admin', '');
+      
+      await addMessage({
+        fromUser: "admin", // Always use "admin" for consistency across admin accounts
+        toUser: clientUserId,
+        text: newMessage,
+        chatRoom: selectedConversation, // Use the conversation ID
+        createdAt: new Date(),
+        read: false,
+        messageType: "text"
+      });
+
+      // Send email notification to client
+      try {
+        const response = await fetch('/api/emails/message-notification', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            fromUserId: "admin",
+            toUserId: clientUserId,
+            messageType: "General",
+            urgency: "Medium",
+            content: newMessage
+          }),
+        });
+        
+        if (response.ok) {
+          console.log('Client notification sent successfully');
+        } else {
+          console.error('Failed to send client notification');
+        }
+      } catch (emailError) {
+        console.error('Email notification error:', emailError);
+        // Don't fail the message sending if email notification fails
+      }
+
+      setNewMessage("");
+      toast({
+        title: "Message sent",
+        description: "Your message has been delivered successfully.",
+      });
+    } catch (error) {
+      toast({
+        title: "Failed to send message",
+        description: "Please try again.",
+        variant: "destructive",
+      });
+    }
+  };
+
+
+  if (usersLoading) {
+    return (
+      <div className="min-h-screen py-20 bg-gray-50 dark:bg-gray-900">
+        <div className="container mx-auto px-4">
+          <Card>
+            <CardContent className="p-8">
+              <div className="animate-pulse space-y-4">
+                {[...Array(5)].map((_, i) => (
+                  <div key={i} className="h-16 bg-gray-200 dark:bg-gray-700 rounded"></div>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+      </div>
+    );
+  }
 
   const handleSelectConversation = (conversationId: string) => {
     setSelectedConversation(conversationId);
@@ -54,91 +179,54 @@ export default function AdminMessages() {
     setSelectedConversation(null);
   };
 
-  const handleSendMessage = async () => {
-    if (!newMessage.trim() || !selectedConversation || !user) return;
-
-    const clientUserId = selectedConversation.replace('_admin', '');
-    
-    try {
-      await addMessage({
-        text: newMessage.trim(),
-        fromUser: user.uid,
-        toUser: clientUserId,
-        chatRoom: selectedConversation,
-        createdAt: new Date(),
-        read: false,
-        messageType: 'text'
-      });
-      
-      setNewMessage("");
-    } catch (error) {
-      console.error('Failed to send message:', error);
-    }
-  };
-
-  // Scroll to bottom when messages change
-  useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [messages]);
-
+  // Unified Chat Layout - cohesive across all viewports
   return (
-    <div className="min-h-[calc(100vh-8rem)] bg-gradient-to-br from-background to-muted/30 relative">
-      <div className="container mx-auto px-4 sm:px-6 px-safe py-2 relative z-10 min-h-full flex flex-col">
-        {/* Header with Back Navigation - Only show on mobile when no conversation selected */}
-        {!selectedConversation && (
-          <div className="flex items-center justify-between mb-4 flex-shrink-0 sm:hidden">
-            <div className="flex items-center gap-4">
-              <Link href="/admin">
-                <Button variant="ghost" size="sm" className="flex items-center gap-2">
-                  <ArrowLeft className="w-4 h-4" />
-                  Dashboard
-                </Button>
-              </Link>
+    <div className="chat-app-container">
+      {/* Main Header - handled by site layout */}
+      <div className="chat-main-header"></div>
+      
+      {/* Content Area */}
+      <div className="chat-content">
+        {/* Conversation List - Always visible on desktop, conditional on mobile */}
+        <div className={`${selectedConversation ? 'hidden sm:block' : 'block'} conversation-selector`}>
+          <AdminConversationList 
+            onSelectConversation={handleSelectConversation}
+            onBack={() => window.history.back()}
+            selectedConversation={selectedConversation}
+          />
+        </div>
+
+        {/* Chat Area - Hidden on mobile when no selection, always visible on desktop */}
+        <div className={`${selectedConversation ? 'block' : 'hidden sm:block'} chat-area`}>
+        {selectedConversation ? (
+          <AdminConversationView 
+            selectedConversation={selectedConversation}
+            users={users}
+            onBackToConversations={handleBackToConversations}
+            messages={messages}
+            messagesLoading={messagesLoading}
+            newMessage={newMessage}
+            setNewMessage={setNewMessage}
+            handleSendMessage={handleSendMessage}
+            sendingMessage={sendingMessage}
+            messagesEndRef={messagesEndRef}
+            user={user}
+          />
+        ) : (
+          /* Desktop fallback when no conversation selected */
+          <div className="flex-1 flex items-center justify-center text-muted-foreground">
+            <div className="text-center">
+              <MessageCircle className="w-16 h-16 mx-auto mb-4 opacity-50" />
+              <p className="text-lg font-medium">Select a conversation</p>
+              <p className="text-sm">Choose a client conversation from the list to start messaging</p>
             </div>
-            <h1 className="text-lg font-semibold">Messages</h1>
           </div>
         )}
-
-        {/* Chat Content */}
-        <div className="chat-content flex-1">
-          {/* Conversation List - Always visible on desktop, conditional on mobile */}
-          <div className={`${selectedConversation ? 'hidden sm:block' : 'block'} conversation-selector`}>
-            <AdminConversationList 
-              onSelectConversation={handleSelectConversation}
-              onBack={() => window.location.href = '/admin'}
-              selectedConversation={selectedConversation}
-            />
-          </div>
-
-          {/* Chat Area - Hidden on mobile when no selection, always visible on desktop */}
-          <div className={`${selectedConversation ? 'block' : 'hidden sm:block'} chat-area`}>
-            {selectedConversation ? (
-              <AdminConversationView 
-                selectedConversation={selectedConversation}
-                users={users}
-                onBackToConversations={handleBackToConversations}
-                messages={messages}
-                messagesLoading={messagesLoading}
-                newMessage={newMessage}
-                setNewMessage={setNewMessage}
-                handleSendMessage={handleSendMessage}
-                sendingMessage={sendingMessage}
-                messagesEndRef={messagesEndRef}
-                user={user}
-              />
-            ) : (
-              /* Desktop fallback when no conversation selected */
-              <div className="flex-1 flex items-center justify-center text-muted-foreground">
-                <div className="text-center">
-                  <MessageCircle className="w-16 h-16 mx-auto mb-4 opacity-50" />
-                  <p className="text-lg font-medium">Select a conversation</p>
-                  <p className="text-sm">Choose a client conversation from the list to start messaging</p>
-                </div>
-              </div>
-            )}
-          </div>
         </div>
       </div>
+      
+      {/* Main Footer - mobile nav */}
+      <div className="chat-main-footer"></div>
     </div>
   );
 }
@@ -159,29 +247,6 @@ function AdminConversationView({
 }: any) {
   const clientUserId = selectedConversation.replace('_admin', '');
   const selectedClient = users?.find((u: any) => u.uid === clientUserId);
-
-  const formatMessageTime = (timestamp: any) => {
-    if (!timestamp) return "";
-    
-    try {
-      let date;
-      if (timestamp && typeof timestamp === 'object' && 'toDate' in timestamp) {
-        date = timestamp.toDate();
-      } else if (timestamp instanceof Date) {
-        date = timestamp;
-      } else if (typeof timestamp === 'string' || typeof timestamp === 'number') {
-        date = new Date(timestamp);
-      } else {
-        return "";
-      }
-      
-      if (isNaN(date.getTime())) return "";
-      
-      return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-    } catch (error) {
-      return "";
-    }
-  };
 
   return (
     <>
@@ -216,68 +281,129 @@ function AdminConversationView({
       {/* Chat Background */}
       <div className="flex-1 bg-muted/30 relative overflow-hidden chat-messages-container">
         {/* Subtle Pattern */}
-        <div
+        <div 
           className="absolute inset-0 opacity-5 dark:opacity-10"
           style={{
             backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23000000' fill-opacity='0.1'%3E%3Ccircle cx='30' cy='30' r='2'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
           }}
         />
-
-        {/* Messages Container */}
-        <div className="relative z-10 h-full chat-message-thread">
-          <ScrollArea className="h-full px-4 py-2">
-            <div className="space-y-1 pb-2">
-              {messagesLoading ? (
-                <div className="space-y-4">
-                  {[...Array(3)].map((_, i) => (
-                    <div key={i} className="animate-pulse">
-                      <div className="flex items-start gap-3">
-                        <div className="w-8 h-8 bg-gray-300 rounded-full flex-shrink-0"></div>
-                        <div className="flex-1 space-y-2">
-                          <div className="h-4 bg-gray-300 rounded w-3/4"></div>
-                          <div className="h-3 bg-gray-200 rounded w-1/2"></div>
+        
+                {/* Messages Container */}
+                <div className="relative z-10 h-full chat-message-thread">
+                  <ScrollArea className="h-full px-4 py-2">
+          <div className="space-y-1 pb-2">
+            {messagesLoading ? (
+              <div className="space-y-4">
+                {[...Array(3)].map((_, i) => (
+                  <div key={i} className="animate-pulse">
+                    <div className="h-10 bg-white/20 rounded-lg"></div>
+                  </div>
+                ))}
+              </div>
+            ) : messages && messages.length > 0 ? (
+              messages.map((message: any, index: number) => {
+                const isFromAdmin = message.fromUser === "admin" || message.fromUser === user?.uid;
+                const prevMessage = index > 0 ? messages[index - 1] : null;
+                const showTime = !prevMessage || 
+                  Math.abs(new Date(message.createdAt).getTime() - new Date(prevMessage.createdAt).getTime()) > 5 * 60 * 1000; // 5 minutes
+                
+                return (
+                  <div key={message.id}>
+                    {/* Time separator */}
+                    {showTime && (
+                      <div className="flex justify-center my-4">
+                        <div className="bg-black/10 dark:bg-white/10 text-white/70 text-xs px-3 py-1 rounded-full">
+                          {(() => {
+                            try {
+                              let date;
+                              if (message.createdAt instanceof Date) {
+                                date = message.createdAt;
+                              } else if (message.createdAt && typeof message.createdAt === 'object' && 'toDate' in message.createdAt) {
+                                date = (message.createdAt as any).toDate();
+                              } else {
+                                date = new Date();
+                              }
+                              return date.toLocaleTimeString([], {
+                                hour: '2-digit',
+                                minute: '2-digit'
+                              });
+                            } catch (error) {
+                              return 'Just now';
+                            }
+                          })()}
                         </div>
                       </div>
-                    </div>
-                  ))}
-                </div>
-              ) : messages && messages.length > 0 ? (
-                messages.map((message: any, index: number) => {
-                  const isFromAdmin = message.fromUser === "admin" || message.fromUser === user?.uid;
-                  const prevMessage = index > 0 ? messages[index - 1] : null;
-                  const showTime = !prevMessage || 
-                    Math.abs(new Date(message.createdAt).getTime() - new Date(prevMessage.createdAt).getTime()) > 5 * 60 * 1000; // 5 minutes
-
-                  return (
-                    <div key={message.id || index} className={`flex ${isFromAdmin ? 'justify-end' : 'justify-start'} mb-1`}>
-                      <div className={`max-w-[75%] px-3 py-2 rounded-lg sm:max-w-[60%] sm:px-4 sm:py-3 ${
-                        isFromAdmin
-                          ? 'bg-green-500 text-white rounded-br-sm'
-                          : 'bg-blue-500 text-white rounded-bl-sm'
-                      }`}>
-                        <p className="text-sm leading-tight mb-0.5 sm:text-base sm:leading-normal sm:mb-1">{message.text}</p>
-                        <p className={`text-xs mt-0.5 mb-0.5 sm:text-sm sm:mt-1 sm:mb-1 ${
+                    )}
+                    
+                    <div className={`flex gap-1.5 ${isFromAdmin ? 'justify-end' : 'justify-start'}`}>
+                      {/* Client Avatar */}
+                      {!isFromAdmin && (
+                        <Avatar className="h-6 w-6 flex-shrink-0">
+                          <AvatarImage src={selectedClient?.photoURL} />
+                          <AvatarFallback className="bg-blue-500 text-white text-xs">
+                            {selectedClient?.name?.split(' ').map(n => n[0]).join('').toUpperCase()}
+                          </AvatarFallback>
+                        </Avatar>
+                      )}
+                      
+                      {/* Spacer for admin messages */}
+                      {isFromAdmin && <div className="w-6" />}
+                      
+                      {/* Message Bubble */}
+                      <div
+                        className={`max-w-[75%] px-3 py-2 rounded-lg sm:max-w-[60%] sm:px-4 sm:py-3 ${
                           isFromAdmin
-                            ? 'text-green-100'
-                            : 'text-blue-100'
-                        }`}>
-                          {formatMessageTime(message.createdAt)}
+                            ? 'bg-green-500 text-white rounded-br-sm'
+                            : 'bg-blue-500 text-white rounded-bl-sm'
+                        }`}
+                      >
+                        <p className="text-sm leading-tight mb-0.5 sm:text-base sm:leading-normal sm:mb-1">{message.text}</p>
+                        <p
+                          className={`text-xs mt-0.5 mb-0.5 sm:text-sm sm:mt-1 sm:mb-1 ${
+                            isFromAdmin 
+                              ? 'text-green-100' 
+                              : 'text-blue-100'
+                          }`}
+                        >
+                          {(() => {
+                            try {
+                              let date;
+                              if (message.createdAt instanceof Date) {
+                                date = message.createdAt;
+                              } else if (message.createdAt && typeof message.createdAt === 'object' && 'toDate' in message.createdAt) {
+                                date = (message.createdAt as any).toDate();
+                              } else {
+                                date = new Date();
+                              }
+                              return date.toLocaleTimeString([], {
+                                hour: '2-digit',
+                                minute: '2-digit'
+                              });
+                            } catch (error) {
+                              return 'Just now';
+                            }
+                          })()}
                         </p>
                       </div>
                     </div>
-                  );
-                })
-              ) : (
-                <div className="flex flex-col items-center justify-center h-full text-center py-12">
-                  <MessageCircle className="w-16 h-16 text-muted-foreground/50 mb-4" />
-                  <h3 className="text-lg font-medium text-foreground mb-2">No messages yet</h3>
-                  <p className="text-muted-foreground mb-4">Start the conversation with {selectedClient?.name}</p>
+                  </div>
+                );
+              })
+            ) : (
+              <div className="flex flex-col items-center justify-center h-full text-center py-12">
+                <div className="w-16 h-16 bg-primary rounded-full flex items-center justify-center mb-4">
+                  <MessageCircle className="w-8 h-8 text-primary-foreground" />
                 </div>
-              )}
-              <div ref={messagesEndRef} />
-            </div>
-          </ScrollArea>
-        </div>
+                <h3 className="text-foreground font-medium mb-2">Start a conversation</h3>
+                <p className="text-muted-foreground text-sm">
+                  Send a message to {selectedClient?.name}
+                </p>
+              </div>
+            )}
+            <div ref={messagesEndRef} />
+          </div>
+        </ScrollArea>
+                </div>
 
         {/* Clean Input Area */}
         <div className="bg-card border-t border-border px-4 py-2 flex-shrink-0 shadow-sm">
@@ -297,7 +423,7 @@ function AdminConversationView({
                 className="py-2 px-4 rounded-full border-border bg-background focus:ring-2 focus:ring-primary focus:border-transparent resize-none min-h-[36px] max-h-[80px] text-sm placeholder:text-muted-foreground"
               />
             </div>
-
+            
             {/* Send Button */}
             <Button
               onClick={handleSendMessage}

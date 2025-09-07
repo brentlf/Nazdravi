@@ -132,11 +132,6 @@ export function ConversationList({ onSelectConversation, onBack, selectedConvers
           <Button variant="ghost" size="icon" className="text-muted-foreground hover:bg-muted h-8 w-8 p-0 sm:hidden" onClick={onBack}>
             <ArrowLeft className="w-5 h-5" />
           </Button>
-          {/* Desktop back navigation */}
-          <Button variant="ghost" size="sm" className="hidden sm:flex items-center gap-2 text-muted-foreground hover:text-foreground" onClick={onBack}>
-            <ArrowLeft className="w-4 h-4" />
-            Dashboard
-          </Button>
           <h1 className="font-semibold text-foreground text-lg sm:text-xl">Messages</h1>
         </div>
       </div>
