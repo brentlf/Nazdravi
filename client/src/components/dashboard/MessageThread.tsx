@@ -262,15 +262,15 @@ export function MessageThread({ conversationId }: MessageThreadProps) {
                     
                     {/* Message Bubble */}
                     <div
-                      className={`max-w-[75%] px-1.5 py-1 rounded-lg ${
+                      className={`max-w-[75%] px-2 py-0.5 rounded-lg ${
                         isFromUser
                           ? 'bg-green-500 text-white rounded-br-sm'
                           : 'bg-blue-500 text-white rounded-bl-sm'
                       }`}
                     >
-                      <p className="text-xs leading-tight">{message.text}</p>
+                      <p className="text-xs leading-none">{message.text}</p>
                       <p
-                        className={`text-[9px] mt-0.5 ${
+                        className={`text-[9px] mt-0 ${
                           isFromUser 
                             ? 'text-green-100' 
                             : 'text-blue-100'
@@ -299,7 +299,7 @@ export function MessageThread({ conversationId }: MessageThreadProps) {
       </ScrollArea>
 
       {/* Clean Input Area */}
-      <div className="bg-card border-t border-border px-4 py-3 flex-shrink-0 shadow-sm">
+      <div className="bg-card border-t border-border px-4 py-2 flex-shrink-0 shadow-sm">
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="flex items-center gap-3">
             {/* Message Input */}
@@ -313,7 +313,7 @@ export function MessageThread({ conversationId }: MessageThreadProps) {
                       {...field}
                       placeholder="Type your message..."
                       disabled={sending}
-                      className="py-3 px-4 rounded-full border-border bg-background focus:ring-2 focus:ring-primary focus:border-transparent text-sm placeholder:text-muted-foreground"
+                        className="py-2 px-4 rounded-full border-border bg-background focus:ring-2 focus:ring-primary focus:border-transparent text-sm placeholder:text-muted-foreground"
                     />
                   </FormControl>
                 </FormItem>

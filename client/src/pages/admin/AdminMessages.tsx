@@ -214,8 +214,8 @@ export default function AdminMessages() {
             </Avatar>
             
             <div className="flex-1 min-w-0">
-              <h1 className="font-semibold text-foreground truncate text-base leading-tight">{selectedClient?.name || 'Client'}</h1>
-              <p className="text-xs text-muted-foreground truncate leading-tight" style={{ marginTop: '2px' }}>{selectedClient?.email || 'client@example.com'}</p>
+              <h1 className="font-semibold text-foreground truncate text-sm leading-none">{selectedClient?.name || 'Client'}</h1>
+              <p className="text-xs text-muted-foreground truncate leading-none" style={{ marginTop: '1px' }}>{selectedClient?.email || 'client@example.com'}</p>
             </div>
           </div>
           
@@ -300,15 +300,15 @@ export default function AdminMessages() {
                       
                       {/* Message Bubble */}
                       <div
-                        className={`max-w-[75%] px-2 py-1.5 rounded-lg ${
+                        className={`max-w-[75%] px-2 py-0.5 rounded-lg ${
                           isFromAdmin
                             ? 'bg-green-500 text-white rounded-br-sm'
                             : 'bg-blue-500 text-white rounded-bl-sm'
                         }`}
                       >
-                        <p className="text-xs leading-tight">{message.text}</p>
+                        <p className="text-xs leading-none">{message.text}</p>
                         <p
-                          className={`text-[10px] mt-0.5 ${
+                          className={`text-[9px] mt-0 ${
                             isFromAdmin 
                               ? 'text-green-100' 
                               : 'text-blue-100'
@@ -355,7 +355,7 @@ export default function AdminMessages() {
                 </div>
 
         {/* Clean Input Area */}
-        <div className="bg-card border-t border-border px-4 py-3 flex-shrink-0 shadow-sm">
+        <div className="bg-card border-t border-border px-4 py-2 flex-shrink-0 shadow-sm">
           <div className="flex items-center gap-3">
             {/* Message Input */}
             <div className="flex-1">
@@ -369,7 +369,7 @@ export default function AdminMessages() {
                     handleSendMessage();
                   }
                 }}
-                className="py-3 px-4 rounded-full border-border bg-background focus:ring-2 focus:ring-primary focus:border-transparent resize-none min-h-[40px] max-h-[80px] text-sm placeholder:text-muted-foreground"
+                className="py-2 px-4 rounded-full border-border bg-background focus:ring-2 focus:ring-primary focus:border-transparent resize-none min-h-[36px] max-h-[80px] text-sm placeholder:text-muted-foreground"
               />
             </div>
             
