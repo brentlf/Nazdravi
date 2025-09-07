@@ -223,7 +223,7 @@ export function MessageThread() {
     <div className="flex flex-col h-full">
       {/* Messages Area - WhatsApp Style */}
       <ScrollArea className="flex-1 px-4 py-2">
-        <div className="space-y-2 pb-4">
+        <div className="space-y-1 pb-2">
           {messages && messages.length > 0 ? (
             messages.map((message, index) => {
               const isFromUser = message.fromUser === user?.uid;
@@ -243,30 +243,30 @@ export function MessageThread() {
                     </div>
                   )}
                   
-                  <div className={`flex gap-2 ${isFromUser ? 'justify-end' : 'justify-start'}`}>
+                  <div className={`flex gap-1.5 ${isFromUser ? 'justify-end' : 'justify-start'}`}>
                     {/* Nutritionist Avatar */}
                     {!isFromUser && showAvatar && (
-                      <Avatar className="h-8 w-8 flex-shrink-0">
+                      <Avatar className="h-6 w-6 flex-shrink-0">
                         <AvatarFallback className="bg-green-500 text-white">
-                          <Bot className="h-4 w-4" />
+                          <Bot className="h-3 w-3" />
                         </AvatarFallback>
                       </Avatar>
                     )}
                     
                     {/* Spacer for user messages */}
-                    {isFromUser && <div className="w-8" />}
+                    {isFromUser && <div className="w-6" />}
                     
                     {/* Message Bubble */}
                     <div
-                      className={`max-w-[70%] px-3 py-2 rounded-2xl ${
+                      className={`max-w-[75%] px-2 py-1.5 rounded-lg ${
                         isFromUser
-                          ? 'bg-green-500 text-white rounded-br-md'
-                          : 'bg-blue-500 text-white rounded-bl-md'
+                          ? 'bg-green-500 text-white rounded-br-sm'
+                          : 'bg-blue-500 text-white rounded-bl-sm'
                       }`}
                     >
-                      <p className="text-sm leading-relaxed">{message.text}</p>
+                      <p className="text-xs leading-tight">{message.text}</p>
                       <p
-                        className={`text-xs mt-1 ${
+                        className={`text-[10px] mt-0.5 ${
                           isFromUser 
                             ? 'text-green-100' 
                             : 'text-blue-100'
@@ -294,18 +294,18 @@ export function MessageThread() {
         </div>
       </ScrollArea>
 
-      {/* WhatsApp-style Input Area */}
-      <div className="bg-white dark:bg-gray-900 px-4 py-3 border-t border-gray-200 dark:border-gray-700">
+      {/* Compact Input Area */}
+      <div className="bg-white dark:bg-gray-900 px-3 py-2 border-t border-gray-200 dark:border-gray-700">
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="flex items-end gap-2">
+          <form onSubmit={form.handleSubmit(onSubmit)} className="flex items-end gap-1.5">
             {/* Attachment Button */}
             <Button
               type="button"
               variant="ghost"
               size="icon"
-              className="h-10 w-10 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
+              className="h-8 w-8 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
             >
-              <Paperclip className="h-5 w-5" />
+              <Paperclip className="h-4 w-4" />
             </Button>
             
             {/* Message Input */}
@@ -320,15 +320,15 @@ export function MessageThread() {
                         {...field}
                         placeholder="Type a message"
                         disabled={sending}
-                        className="pr-12 py-3 rounded-full border-gray-300 dark:border-gray-600 focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                        className="pr-10 py-2 rounded-full border-gray-300 dark:border-gray-600 focus:ring-2 focus:ring-green-500 focus:border-transparent text-sm"
                       />
                       <Button
                         type="button"
                         variant="ghost"
                         size="icon"
-                        className="absolute right-1 top-1/2 -translate-y-1/2 h-8 w-8 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
+                        className="absolute right-1 top-1/2 -translate-y-1/2 h-6 w-6 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
                       >
-                        <Smile className="h-5 w-5" />
+                        <Smile className="h-4 w-4" />
                       </Button>
                     </div>
                   </FormControl>
@@ -342,18 +342,18 @@ export function MessageThread() {
                 type="submit"
                 disabled={sending}
                 size="icon"
-                className="h-10 w-10 bg-primary hover:bg-primary/90 text-primary-foreground rounded-full"
+                className="h-8 w-8 bg-primary hover:bg-primary/90 text-primary-foreground rounded-full"
               >
-                <Send className="h-5 w-5" />
+                <Send className="h-4 w-4" />
               </Button>
             ) : (
               <Button
                 type="button"
                 variant="ghost"
                 size="icon"
-                className="h-10 w-10 text-muted-foreground hover:text-foreground"
+                className="h-8 w-8 text-muted-foreground hover:text-foreground"
               >
-                <Mic className="h-5 w-5" />
+                <Mic className="h-4 w-4" />
               </Button>
             )}
           </form>
