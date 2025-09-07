@@ -121,6 +121,16 @@ export default function DashboardCalendar() {
     <div className="viewport-fit bg-background">
       <div className="viewport-content container mx-auto px-3 sm:px-4 lg:px-6 px-safe py-1 sm:py-2">
         
+        {/* Back Navigation */}
+        <div className="mb-4 flex-shrink-0">
+          <Link href="/dashboard">
+            <Button variant="ghost" size="sm" className="flex items-center gap-2">
+              <ChevronLeft className="w-4 h-4" />
+              Back to Dashboard
+            </Button>
+          </Link>
+        </div>
+        
         {/* Calendar Header */}
         <Card className="mb-2 flex-shrink-0">
           <CardHeader className="pb-2">

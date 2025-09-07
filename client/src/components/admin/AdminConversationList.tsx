@@ -13,9 +13,10 @@ interface AdminConversationListProps {
   onSelectConversation: (conversationId: string) => void;
   onBack: () => void;
   selectedConversation?: string | null;
+  isConversationOpen?: boolean;
 }
 
-export function AdminConversationList({ onSelectConversation, onBack, selectedConversation }: AdminConversationListProps) {
+export function AdminConversationList({ onSelectConversation, onBack, selectedConversation, isConversationOpen = false }: AdminConversationListProps) {
   const [searchTerm, setSearchTerm] = useState("");
   const { user } = useAuth();
   const { update: updateMessage } = useFirestoreActions("messages");
@@ -134,7 +135,7 @@ export function AdminConversationList({ onSelectConversation, onBack, selectedCo
           <Button variant="ghost" size="icon" className="text-muted-foreground hover:bg-muted h-8 w-8 p-0 sm:hidden" onClick={onBack}>
             <ArrowLeft className="w-5 h-5" />
           </Button>
-          <h1 className="font-semibold text-foreground text-lg sm:text-xl">Admin Messages</h1>
+          <h1 className="font-semibold text-foreground text-lg sm:text-xl mb-0">Admin Messages</h1>
         </div>
       </div>
 
@@ -153,21 +154,21 @@ export function AdminConversationList({ onSelectConversation, onBack, selectedCo
 
       {/* Conversations List */}
       <ScrollArea className="flex-1">
-        <div className="space-y-0">
+        <div className="space-y-1">
           {filteredConversations.length > 0 ? (
             filteredConversations.map((conversation: any) => (
               <div
                 key={conversation.id}
                 onClick={() => onSelectConversation(conversation.id)}
-                className={`px-3 py-3 border-b border-border/30 cursor-pointer hover:bg-muted transition-colors sm:px-6 sm:py-4 ${
+                className={`px-1 py-0.5 border-b border-border/30 cursor-pointer hover:bg-muted transition-colors sm:px-2 sm:py-1 ${
                   selectedConversation === conversation.id ? 'bg-muted border-l-4 border-l-primary' : ''
                 }`}
               >
-                <div className="flex items-center space-x-3 sm:space-x-4">
+                <div className="flex items-center space-x-1 sm:space-x-2">
                   <div className="relative flex-shrink-0">
                     <Avatar className="w-10 h-10 sm:w-12 sm:h-12">
                       <AvatarImage src={conversation.clientUser.photoURL} />
-                      <AvatarFallback className="bg-primary text-primary-foreground">
+                      <AvatarFallback className="bg-blue-600 text-white">
                         {conversation.clientUser.name.split(' ').map((n: any) => n[0]).join('').toUpperCase()}
                       </AvatarFallback>
                     </Avatar>
@@ -177,14 +178,15 @@ export function AdminConversationList({ onSelectConversation, onBack, selectedCo
                       </div>
                     )}
                   </div>
-                  <div className="flex-1 min-w-0">
+                  <div className="flex-1 min-w-0 overflow-hidden">
                     <div className="flex items-center justify-between">
-                      <p className="text-sm font-medium truncate sm:text-base">{conversation.clientUser.name}</p>
-                      <span className="text-xs text-muted-foreground sm:text-sm">
+                      <p className="text-sm font-medium truncate sm:text-base mb-0 flex-1 min-w-0">{conversation.clientUser.name}</p>
+                      <span className="text-xs text-muted-foreground sm:text-sm flex-shrink-0 ml-2">
                         {formatMessageTime(conversation.lastMessage.createdAt)}
                       </span>
                     </div>
-                    <p className="text-xs text-muted-foreground truncate sm:text-sm sm:mt-1">
+                    <p className={`text-xs text-muted-foreground sm:text-sm mt-0 mb-0 w-full ${isConversationOpen ? 'line-clamp-2' : 'truncate'}`}>
+                      <span className="font-medium">{conversation.lastMessage.fromUser === 'admin' ? 'You: ' : `${conversation.clientUser.name}: `}</span>
                       {conversation.lastMessage.text}
                     </p>
                   </div>

@@ -13,9 +13,10 @@ interface ConversationListProps {
   onSelectConversation: (conversationId: string) => void;
   onBack: () => void;
   selectedConversation?: string | null;
+  isConversationOpen?: boolean;
 }
 
-export function ConversationList({ onSelectConversation, onBack, selectedConversation }: ConversationListProps) {
+export function ConversationList({ onSelectConversation, onBack, selectedConversation, isConversationOpen = false }: ConversationListProps) {
   const [searchTerm, setSearchTerm] = useState("");
   const { effectiveUser: user } = useAuth();
   const { update: updateMessage } = useFirestoreActions("messages");
@@ -132,7 +133,7 @@ export function ConversationList({ onSelectConversation, onBack, selectedConvers
           <Button variant="ghost" size="icon" className="text-muted-foreground hover:bg-muted h-8 w-8 p-0 sm:hidden" onClick={onBack}>
             <ArrowLeft className="w-5 h-5" />
           </Button>
-          <h1 className="font-semibold text-foreground text-lg sm:text-xl">Messages</h1>
+          <h1 className="font-semibold text-foreground text-lg sm:text-xl mb-0">Messages</h1>
         </div>
       </div>
 
@@ -151,23 +152,23 @@ export function ConversationList({ onSelectConversation, onBack, selectedConvers
 
       {/* Conversations List */}
       <ScrollArea className="flex-1">
-        <div className="space-y-0">
+        <div className="space-y-1">
           {filteredConversations.length > 0 ? (
             filteredConversations.map((conversation: any) => (
               <div
                 key={conversation.id}
                 onClick={() => onSelectConversation(conversation.id)}
-                className={`px-3 py-3 border-b border-border/30 cursor-pointer hover:bg-muted transition-colors sm:px-6 sm:py-4 ${
+                className={`px-1 py-0.5 border-b border-border/30 cursor-pointer hover:bg-muted transition-colors sm:px-2 sm:py-1 ${
                   selectedConversation === conversation.id 
                     ? 'bg-primary/10 border-l-4 border-l-primary shadow-sm ring-1 ring-primary/20' 
                     : ''
                 }`}
               >
-                <div className="flex items-center space-x-3 sm:space-x-4">
+                <div className="flex items-center space-x-1 sm:space-x-2">
                   <div className="relative flex-shrink-0">
                     <Avatar className="w-10 h-10 sm:w-12 sm:h-12">
                       <AvatarImage src={conversation.otherUser.photoURL} />
-                      <AvatarFallback className="bg-primary text-primary-foreground">
+                      <AvatarFallback className="bg-blue-600 text-white">
                         {conversation.otherUser.name.split(' ').map(n => n[0]).join('').toUpperCase()}
                       </AvatarFallback>
                     </Avatar>
@@ -177,19 +178,20 @@ export function ConversationList({ onSelectConversation, onBack, selectedConvers
                       </div>
                     )}
                   </div>
-                  <div className="flex-1 min-w-0">
+                  <div className="flex-1 min-w-0 overflow-hidden">
                     <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-2">
-                        <p className="text-sm font-medium truncate sm:text-base">{conversation.otherUser.name}</p>
+                      <div className="flex items-center gap-2 min-w-0 flex-1">
+                        <p className="text-sm font-medium truncate sm:text-base mb-0">{conversation.otherUser.name}</p>
                         {selectedConversation === conversation.id && (
-                          <div className="w-2 h-2 bg-primary rounded-full"></div>
+                          <div className="w-2 h-2 bg-primary rounded-full flex-shrink-0"></div>
                         )}
                       </div>
-                      <span className="text-xs text-muted-foreground sm:text-sm">
+                      <span className="text-xs text-muted-foreground sm:text-sm flex-shrink-0 ml-2">
                         {formatMessageTime(conversation.lastMessage.createdAt)}
                       </span>
                     </div>
-                    <p className="text-xs text-muted-foreground truncate sm:text-sm sm:mt-1">
+                    <p className={`text-xs text-muted-foreground sm:text-sm mt-0 mb-0 w-full ${isConversationOpen ? 'line-clamp-2' : 'truncate'}`}>
+                      <span className="font-medium">{conversation.lastMessage.fromUser === user?.uid ? 'You: ' : `${conversation.otherUser.name}: `}</span>
                       {conversation.lastMessage.text}
                     </p>
                   </div>

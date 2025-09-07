@@ -257,8 +257,9 @@ export function MessageThread({ conversationId }: MessageThreadProps) {
   return (
     <div className="flex flex-col h-full">
       {/* Messages Area - WhatsApp Style */}
-      <ScrollArea className="flex-1 px-4 py-2">
-        <div className="space-y-0.5 pb-2">
+      <div className="flex-1 min-h-0">
+        <ScrollArea className="h-full px-2 py-0.5">
+          <div className="space-y-1 pb-4">
           {messages && messages.length > 0 ? (
             messages.map((message, index) => {
               const isFromUser = message.fromUser === user?.uid;
@@ -271,14 +272,14 @@ export function MessageThread({ conversationId }: MessageThreadProps) {
                 <div key={message.id}>
                   {/* Time separator */}
                   {showTime && (
-                    <div className="flex justify-center my-4">
+                    <div className="flex justify-center">
                       <div className="bg-black/10 dark:bg-white/10 text-white/70 text-xs px-3 py-1 rounded-full">
                         {formatMessageTime(message.createdAt)}
                       </div>
                     </div>
                   )}
                   
-                  <div className={`flex gap-1.5 ${isFromUser ? 'justify-end' : 'justify-start'}`}>
+                  <div className={`flex gap-0.5 ${isFromUser ? 'justify-end' : 'justify-start'}`}>
                     {/* Nutritionist Avatar */}
                     {!isFromUser && showAvatar && (
                       <Avatar className="h-6 w-6 flex-shrink-0">
@@ -293,19 +294,15 @@ export function MessageThread({ conversationId }: MessageThreadProps) {
                     
                     {/* Message Bubble */}
                     <div
-                      className={`max-w-[75%] px-3 py-2 rounded-lg sm:max-w-[60%] sm:px-4 sm:py-3 ${
+                      className={`max-w-[75%] px-1.5 py-0.5 rounded-lg sm:max-w-[60%] sm:px-2 sm:py-1 ${
                         isFromUser
                           ? 'bg-green-500 text-white rounded-br-sm'
                           : 'bg-blue-500 text-white rounded-bl-sm'
                       }`}
                     >
-                      <p className="text-sm leading-tight mb-0.5 sm:text-base sm:leading-normal sm:mb-1">{message.text}</p>
+                      <p className="text-xs leading-tight sm:text-sm sm:leading-normal mb-0 text-white">{message.text}</p>
                       <p
-                        className={`text-xs mt-0.5 mb-0.5 sm:text-sm sm:mt-1 sm:mb-1 ${
-                          isFromUser 
-                            ? 'text-green-100' 
-                            : 'text-blue-100'
-                        }`}
+                        className={`text-xs sm:text-sm mt-0 mb-0 text-gray-300`}
                       >
                         {formatMessageTime(message.createdAt)}
                       </p>
@@ -326,43 +323,10 @@ export function MessageThread({ conversationId }: MessageThreadProps) {
             </div>
           )}
           <div ref={messagesEndRef} />
-        </div>
-      </ScrollArea>
-
-      {/* Clean Input Area */}
-      <div className="bg-card border-t border-border px-4 py-2 flex-shrink-0 shadow-sm">
-        <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="flex items-center gap-3">
-            {/* Message Input */}
-            <FormField
-              control={form.control}
-              name="text"
-              render={({ field }) => (
-                <FormItem className="flex-1">
-                  <FormControl>
-                    <Input
-                      {...field}
-                      placeholder="Type your message..."
-                      disabled={sending}
-                        className="py-2 px-4 rounded-full border-border bg-background focus:ring-2 focus:ring-primary focus:border-transparent text-sm placeholder:text-muted-foreground"
-                    />
-                  </FormControl>
-                </FormItem>
-              )}
-            />
-            
-            {/* Send Button */}
-            <Button
-              type="submit"
-              disabled={sending || !form.watch("text")?.trim()}
-              size="icon"
-              className="h-10 w-10 bg-primary hover:bg-primary/90 text-primary-foreground rounded-full shadow-md disabled:opacity-50 disabled:cursor-not-allowed"
-            >
-              <Send className="h-4 w-4" />
-            </Button>
-          </form>
-        </Form>
+          </div>
+        </ScrollArea>
       </div>
+
     </div>
   );
 }

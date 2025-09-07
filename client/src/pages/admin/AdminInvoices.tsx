@@ -525,6 +525,16 @@ export default function AdminInvoices() {
 
   return (
     <div className="container mx-auto px-4 py-6 space-y-6 max-w-7xl">
+      {/* Back Navigation */}
+      <div className="mb-4">
+        <Link href="/admin">
+          <Button variant="ghost" size="sm" className="flex items-center gap-2">
+            <ArrowLeft className="w-4 h-4" />
+            Back to Admin Dashboard
+          </Button>
+        </Link>
+      </div>
+      
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-bold">Invoice Management</h1>

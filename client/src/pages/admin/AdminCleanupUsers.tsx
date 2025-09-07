@@ -91,9 +91,9 @@ export default function AdminCleanupUsers() {
     <div className="container mx-auto px-4 py-8">
       <div className="mb-8">
         <Button variant="ghost" size="sm" className="mb-4" asChild>
-          <Link href="/admin/users">
+          <Link href="/admin">
             <ArrowLeft className="mr-2 h-4 w-4" />
-            Back to Users
+            Back to Admin Dashboard
           </Link>
         </Button>
       </div>

@@ -13,7 +13,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { doc, getDoc, setDoc, addDoc, collection, query, where, orderBy, limit, getDocs, Timestamp } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { User, Lock, Heart, Globe, Mail, Phone, Crown, AlertTriangle } from "lucide-react";
+import { User, Lock, Heart, Globe, Mail, Phone, Crown, AlertTriangle, ArrowLeft } from "lucide-react";
 import { emailService } from "@/lib/emailService";
 import {
   AlertDialog,
@@ -26,6 +26,7 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { HealthInformationForm } from "@/components/dashboard/HealthInformationForm";
+import { Link } from "wouter";
 
 // Profile update schema
 const profileSchema = z.object({
@@ -579,17 +580,27 @@ export default function DashboardProfile() {
     <div className="h-full">
       <div className="h-full overflow-y-auto p-4 sm:p-6 lg:p-8">
         <div className="max-w-4xl mx-auto space-y-6">
-      <div className="bg-gradient-to-r from-primary/10 to-primary/5 border border-primary/20 rounded-lg p-6">
-        <h1 className="text-3xl font-bold text-gray-900 dark:text-white flex items-center gap-3">
-          <div className="w-10 h-10 bg-primary/20 rounded-full flex items-center justify-center">
-            <User className="w-5 h-5 text-primary" />
+          {/* Back Navigation */}
+          <div className="mb-4 flex-shrink-0">
+            <Link href="/dashboard">
+              <Button variant="ghost" size="sm" className="flex items-center gap-2">
+                <ArrowLeft className="w-4 h-4" />
+                Back to Dashboard
+              </Button>
+            </Link>
           </div>
-          Profile Settings
-        </h1>
-        <p className="text-gray-600 dark:text-gray-300 mt-2 ml-13">
-          Manage your account information, health details, and preferences
-        </p>
-      </div>
+          
+          <div className="bg-gradient-to-r from-primary/10 to-primary/5 border border-primary/20 rounded-lg p-6">
+            <h1 className="text-3xl font-bold text-gray-900 dark:text-white flex items-center gap-3">
+              <div className="w-10 h-10 bg-primary/20 rounded-full flex items-center justify-center">
+                <User className="w-5 h-5 text-primary" />
+              </div>
+              Profile Settings
+            </h1>
+            <p className="text-gray-600 dark:text-gray-300 mt-2 ml-13">
+              Manage your account information, health details, and preferences
+            </p>
+          </div>
 
       <Tabs defaultValue="profile" className="space-y-6">
         <TabsList className="grid w-full grid-cols-4">

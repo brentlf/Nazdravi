@@ -1,21 +1,12 @@
 import { useState, useEffect, useRef } from "react";
-import { MessageCircle, Send, Search, User, Clock, ArrowLeft, MoreVertical } from "lucide-react";
+import { MessageCircle, Send, ArrowLeft, MoreVertical } from "lucide-react";
 import { Link } from "wouter";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { AdminConversationList } from "@/components/admin/AdminConversationList";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
 import { useFirestoreCollection, useFirestoreActions } from "@/hooks/useFirestore";
 import { Message, User as UserType } from "@/types";
@@ -25,7 +16,6 @@ import { useAuth } from "@/contexts/AuthContext";
 export default function AdminMessages() {
   const [selectedConversation, setSelectedConversation] = useState<string | null>(null);
   const [newMessage, setNewMessage] = useState("");
-  const [searchTerm, setSearchTerm] = useState("");
   const { user } = useAuth();
   const { toast } = useToast();
   const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -88,12 +78,6 @@ export default function AdminMessages() {
     }
   }, [messages]);
 
-  // Filter users based on search
-  const filteredUsers = users?.filter(u => 
-    !searchTerm || 
-    u.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    u.email.toLowerCase().includes(searchTerm.toLowerCase())
-  ) || [];
 
   const handleSendMessage = async () => {
     if (!newMessage?.trim() || !selectedConversation || !user) return;
@@ -183,10 +167,20 @@ export default function AdminMessages() {
 
   // Two-page design for mobile, split-pane for desktop
   return (
-    <div className="h-full flex flex-col">
+    <div className="flex flex-col max-w-7xl mx-auto w-full" style={{ height: 'calc(100vh - 80px)' }}>
+      {/* Back Navigation - Always visible */}
+      <div className="flex-shrink-0 px-4 py-2 border-b border-border bg-card">
+        <Link href="/admin">
+          <Button variant="ghost" size="sm" className="flex items-center gap-2">
+            <ArrowLeft className="w-4 h-4" />
+            Back to Admin Dashboard
+          </Button>
+        </Link>
+      </div>
+      
       {/* Mobile: Show conversation list OR chat, not both */}
       {!selectedConversation ? (
-        <div className="flex-1 h-full">
+        <div className="flex-1 overflow-hidden" style={{ marginBottom: '20px' }}>
           <AdminConversationList 
             onSelectConversation={handleSelectConversation}
             onBack={() => window.history.back()}
@@ -194,7 +188,7 @@ export default function AdminMessages() {
           />
         </div>
       ) : (
-        <div className="flex-1 h-full flex flex-col">
+        <div className="flex-1 flex flex-col" style={{ height: 'calc(100% - 80px)', marginBottom: '20px' }}>
           {/* Desktop: Show both conversation list and chat */}
           <div className="hidden sm:flex h-full">
             <div className="w-80 border-r border-border">
@@ -202,6 +196,7 @@ export default function AdminMessages() {
                 onSelectConversation={handleSelectConversation}
                 onBack={() => window.history.back()}
                 selectedConversation={selectedConversation}
+                isConversationOpen={true}
               />
             </div>
             <div className="flex-1 flex flex-col">
@@ -211,31 +206,77 @@ export default function AdminMessages() {
                 onBackToConversations={handleBackToConversations}
                 messages={messages}
                 messagesLoading={messagesLoading}
-                newMessage={newMessage}
-                setNewMessage={setNewMessage}
-                handleSendMessage={handleSendMessage}
-                sendingMessage={sendingMessage}
                 messagesEndRef={messagesEndRef}
                 user={user}
               />
+              {/* Input Area - Outside message container */}
+              <div className="bg-card border-t border-border px-2 py-0.5 flex-shrink-0 shadow-sm">
+                <div className="flex items-center gap-1">
+                  <div className="flex-1">
+                    <Textarea
+                      placeholder="Type your message..."
+                      value={newMessage}
+                      onChange={(e) => setNewMessage(e.target.value)}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter' && !e.shiftKey) {
+                          e.preventDefault();
+                          handleSendMessage();
+                        }
+                      }}
+                      className="py-2 px-4 rounded-full border-border bg-background focus:ring-2 focus:ring-primary focus:border-transparent resize-none min-h-[36px] max-h-[80px] text-sm placeholder:text-muted-foreground"
+                    />
+                  </div>
+                  <Button
+                    onClick={handleSendMessage}
+                    disabled={sendingMessage || !newMessage?.trim()}
+                    size="icon"
+                    className="h-10 w-10 bg-primary hover:bg-primary/90 text-primary-foreground rounded-full shadow-md disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    <Send className="h-4 w-4" />
+                  </Button>
+                </div>
+              </div>
             </div>
           </div>
 
           {/* Mobile: Show only chat conversation */}
-          <div className="sm:hidden flex flex-col h-full">
+          <div className="sm:hidden flex flex-col" style={{ height: 'calc(100% - 80px)', marginBottom: '20px' }}>
             <AdminConversationView 
               selectedConversation={selectedConversation}
               users={users}
               onBackToConversations={handleBackToConversations}
               messages={messages}
               messagesLoading={messagesLoading}
-              newMessage={newMessage}
-              setNewMessage={setNewMessage}
-              handleSendMessage={handleSendMessage}
-              sendingMessage={sendingMessage}
               messagesEndRef={messagesEndRef}
               user={user}
             />
+            {/* Mobile Input Area - Outside message container */}
+            <div className="bg-card border-t border-border px-2 py-0.5 flex-shrink-0 shadow-sm">
+              <div className="flex items-center gap-1">
+                <div className="flex-1">
+                  <Textarea
+                    placeholder="Type your message..."
+                    value={newMessage}
+                    onChange={(e) => setNewMessage(e.target.value)}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter' && !e.shiftKey) {
+                        e.preventDefault();
+                        handleSendMessage();
+                      }
+                    }}
+                    className="py-2 px-4 rounded-full border-border bg-background focus:ring-2 focus:ring-primary focus:border-transparent resize-none min-h-[36px] max-h-[80px] text-sm placeholder:text-muted-foreground"
+                  />
+                </div>
+                <Button
+                  onClick={handleSendMessage}
+                  disabled={sendingMessage || !newMessage?.trim()}
+                  size="icon"
+                  className="h-10 w-10 bg-primary hover:bg-primary/90 text-primary-foreground rounded-full shadow-md disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  <Send className="h-4 w-4" />
+                </Button>
+              </div>
+            </div>
           </div>
         </div>
       )}
@@ -261,10 +302,6 @@ function AdminConversationView({
   onBackToConversations, 
   messages, 
   messagesLoading, 
-  newMessage, 
-  setNewMessage, 
-  handleSendMessage, 
-  sendingMessage, 
   messagesEndRef,
   user
 }: any) {
@@ -275,7 +312,7 @@ function AdminConversationView({
     <>
       {/* Fixed Combined Header */}
       <div className="chat-header-main text-foreground shadow-sm">
-        <div className="px-4 py-2 flex items-center justify-start gap-3 h-full sm:px-6 sm:py-3">
+        <div className="px-2 py-0.5 flex items-center justify-start gap-1 h-full sm:px-3 sm:py-1">
           <Button variant="ghost" size="icon" className="text-muted-foreground hover:bg-muted/50 h-9 w-9 p-0 rounded-full sm:hidden" onClick={onBackToConversations}>
             <ArrowLeft className="w-5 h-5" />
           </Button>
@@ -283,13 +320,13 @@ function AdminConversationView({
           <Avatar className="h-11 w-11 ring-2 ring-primary/30 bg-gradient-to-br from-primary/20 to-primary/10 shadow-md sm:h-12 sm:w-12">
             <AvatarImage src={selectedClient?.photoURL} />
             <AvatarFallback className="bg-gradient-to-br from-primary to-primary/80 text-primary-foreground font-semibold">
-              <span className="text-sm sm:text-base">{selectedClient?.name?.split(' ').map((n: any) => n[0]).join('').toUpperCase()}</span>
+              <span className="text-sm sm:text-base">{selectedClient?.name?.split(' ').map((n: string) => n[0]).join('').toUpperCase()}</span>
             </AvatarFallback>
           </Avatar>
           
-          <div className="flex-1 min-w-0 flex flex-col justify-center">
-            <h1 className="font-semibold text-foreground truncate text-sm leading-tight sm:text-base sm:leading-normal">{selectedClient?.name || 'Client'}</h1>
-            <p className="text-xs text-muted-foreground truncate leading-tight sm:text-sm sm:leading-normal" style={{ marginTop: '2px' }}>{selectedClient?.email || 'client@example.com'}</p>
+          <div className="flex-1 min-w-0 flex flex-col justify-center overflow-hidden">
+            <h1 className="font-semibold text-foreground truncate text-sm leading-tight sm:text-base sm:leading-normal mb-0 w-full">{selectedClient?.name || 'Client'}</h1>
+            <p className="text-xs text-muted-foreground truncate leading-tight sm:text-sm sm:leading-normal mt-0 mb-0 w-full">{selectedClient?.email || 'client@example.com'}</p>
           </div>
           
           {/* Desktop Actions */}
@@ -302,7 +339,7 @@ function AdminConversationView({
       </div>
 
       {/* Chat Background */}
-      <div className="flex-1 bg-muted/30 relative overflow-hidden chat-messages-container">
+      <div className="flex-1 bg-muted/30 relative overflow-hidden chat-messages-container min-h-0" style={{ height: 'calc(100% - 80px)' }}>
         {/* Subtle Pattern */}
         <div 
           className="absolute inset-0 opacity-5 dark:opacity-10"
@@ -312,9 +349,10 @@ function AdminConversationView({
         />
         
                 {/* Messages Container */}
-                <div className="relative z-10 h-full chat-message-thread">
-                  <ScrollArea className="h-full px-4 py-2">
-          <div className="space-y-1 pb-2">
+                <div className="relative z-10 h-full chat-message-thread flex flex-col">
+                  <div className="flex-1 min-h-0">
+                    <ScrollArea className="h-full px-2 py-0.5">
+                      <div className="space-y-1 pb-4">
             {messagesLoading ? (
               <div className="space-y-4">
                 {[...Array(3)].map((_, i) => (
@@ -334,7 +372,7 @@ function AdminConversationView({
                   <div key={message.id}>
                     {/* Time separator */}
                     {showTime && (
-                      <div className="flex justify-center my-4">
+                      <div className="flex justify-center">
                         <div className="bg-black/10 dark:bg-white/10 text-white/70 text-xs px-3 py-1 rounded-full">
                           {(() => {
                             try {
@@ -358,13 +396,13 @@ function AdminConversationView({
                       </div>
                     )}
                     
-                    <div className={`flex gap-1.5 ${isFromAdmin ? 'justify-end' : 'justify-start'}`}>
+                    <div className={`flex gap-0.5 ${isFromAdmin ? 'justify-end' : 'justify-start'}`}>
                       {/* Client Avatar */}
                       {!isFromAdmin && (
                         <Avatar className="h-6 w-6 flex-shrink-0">
                           <AvatarImage src={selectedClient?.photoURL} />
                           <AvatarFallback className="bg-blue-500 text-white text-xs">
-                            {selectedClient?.name?.split(' ').map(n => n[0]).join('').toUpperCase()}
+                            {selectedClient?.name?.split(' ').map((n: string) => n[0]).join('').toUpperCase()}
                           </AvatarFallback>
                         </Avatar>
                       )}
@@ -374,19 +412,15 @@ function AdminConversationView({
                       
                       {/* Message Bubble */}
                       <div
-                        className={`max-w-[75%] px-3 py-2 rounded-lg sm:max-w-[60%] sm:px-4 sm:py-3 ${
+                        className={`max-w-[75%] px-1.5 py-0.5 rounded-lg sm:max-w-[60%] sm:px-2 sm:py-1 ${
                           isFromAdmin
                             ? 'bg-green-500 text-white rounded-br-sm'
                             : 'bg-blue-500 text-white rounded-bl-sm'
                         }`}
                       >
-                        <p className="text-sm leading-tight mb-0.5 sm:text-base sm:leading-normal sm:mb-1">{message.text}</p>
+                        <p className="text-xs leading-tight sm:text-sm sm:leading-normal mb-0 text-white">{message.text}</p>
                         <p
-                          className={`text-xs mt-0.5 mb-0.5 sm:text-sm sm:mt-1 sm:mb-1 ${
-                            isFromAdmin 
-                              ? 'text-green-100' 
-                              : 'text-blue-100'
-                          }`}
+                          className={`text-xs sm:text-sm mt-0 mb-0 text-gray-300`}
                         >
                           {(() => {
                             try {
@@ -424,40 +458,11 @@ function AdminConversationView({
               </div>
             )}
             <div ref={messagesEndRef} />
-          </div>
-        </ScrollArea>
+                      </div>
+                    </ScrollArea>
+                  </div>
                 </div>
 
-        {/* Clean Input Area */}
-        <div className="bg-card border-t border-border px-4 py-2 flex-shrink-0 shadow-sm">
-          <div className="flex items-center gap-3">
-            {/* Message Input */}
-            <div className="flex-1">
-              <Textarea
-                placeholder="Type your message..."
-                value={newMessage}
-                onChange={(e) => setNewMessage(e.target.value)}
-                onKeyDown={(e) => {
-                  if (e.key === 'Enter' && !e.shiftKey) {
-                    e.preventDefault();
-                    handleSendMessage();
-                  }
-                }}
-                className="py-2 px-4 rounded-full border-border bg-background focus:ring-2 focus:ring-primary focus:border-transparent resize-none min-h-[36px] max-h-[80px] text-sm placeholder:text-muted-foreground"
-              />
-            </div>
-            
-            {/* Send Button */}
-            <Button
-              onClick={handleSendMessage}
-              disabled={sendingMessage || !newMessage?.trim()}
-              size="icon"
-              className="h-10 w-10 bg-primary hover:bg-primary/90 text-primary-foreground rounded-full shadow-md disabled:opacity-50 disabled:cursor-not-allowed"
-            >
-              <Send className="h-4 w-4" />
-            </Button>
-          </div>
-        </div>
       </div>
     </>
   );

@@ -51,7 +51,7 @@ export function Header() {
         ? "absolute top-0 left-0 right-0 z-50 border-white/20 bg-transparent text-white" 
         : "fixed top-0 left-0 right-0 z-50 border-border/40 bg-background/80 backdrop-blur-xl supports-[backdrop-filter]:bg-background/60 text-foreground"
     } w-full border-b transition-all duration-300 header-responsive`}>
-      <div className="responsive-container flex items-center justify-between h-full">
+      <div className="responsive-container flex items-center justify-between h-full max-w-7xl mx-auto w-full">
         {/* Logo */}
         <Link href="/">
           <div className="flex items-center space-x-2 xs:space-x-3 cursor-pointer group">

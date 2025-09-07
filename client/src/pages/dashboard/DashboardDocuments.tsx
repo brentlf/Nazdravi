@@ -1,10 +1,11 @@
-import { Download, FileText, Calendar } from "lucide-react";
+import { Download, FileText, Calendar, ArrowLeft } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { useFirestoreCollection } from "@/hooks/useFirestore";
 import { useAuth } from "@/contexts/AuthContext";
 import { Plan } from "@/types";
 import { where, orderBy } from "firebase/firestore";
+import { Link } from "wouter";
 
 export default function DashboardDocuments() {
   const { effectiveUser } = useAuth();
@@ -81,16 +82,28 @@ export default function DashboardDocuments() {
   }
 
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle className="flex items-center gap-2">
-          <FileText className="w-5 h-5" />
-          My Documents
-        </CardTitle>
-        <p className="text-sm text-muted-foreground mt-2">
-          Download your nutrition plans and documents provided by your nutritionist
-        </p>
-      </CardHeader>
+    <div className="h-full bg-background">
+      <div className="container mx-auto px-4 sm:px-6 px-safe py-4">
+        {/* Back Navigation */}
+        <div className="mb-4 flex-shrink-0">
+          <Link href="/dashboard">
+            <Button variant="ghost" size="sm" className="flex items-center gap-2">
+              <ArrowLeft className="w-4 h-4" />
+              Back to Dashboard
+            </Button>
+          </Link>
+        </div>
+        
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <FileText className="w-5 h-5" />
+              My Documents
+            </CardTitle>
+            <p className="text-sm text-muted-foreground mt-2">
+              Download your nutrition plans and documents provided by your nutritionist
+            </p>
+          </CardHeader>
       <CardContent>
         {documents && documents.length > 0 ? (
           <div className="space-y-4">
@@ -145,5 +158,7 @@ export default function DashboardDocuments() {
         )}
       </CardContent>
     </Card>
+      </div>
+    </div>
   );
 }
