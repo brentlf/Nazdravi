@@ -282,23 +282,23 @@ export default function AdminMessages() {
 
       <div className="flex-1 flex overflow-hidden">
         {/* Client List Sidebar */}
-        <div className="w-80 bg-card border-r border-border flex flex-col">
+        <div className="w-64 sm:w-80 bg-card border-r border-border flex flex-col">
           {/* Search Header */}
-          <div className="p-4 border-b border-border">
+          <div className="p-2 sm:p-4 border-b border-border">
             <div className="relative">
-              <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+              <Search className="absolute left-2 sm:left-3 top-2.5 sm:top-3 h-3.5 sm:h-4 w-3.5 sm:w-4 text-muted-foreground" />
               <Input
-                placeholder="Search clients..."
+                placeholder="Search..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="pl-9"
+                className="pl-7 sm:pl-9 h-8 sm:h-10 text-sm"
               />
             </div>
           </div>
 
           {/* Client List */}
           <ScrollArea className="flex-1">
-            <div className="space-y-1 p-2">
+            <div className="space-y-0.5 sm:space-y-1 p-1 sm:p-2">
               {filteredUsers.map((client) => {
                 const chatRoom = createChatRoom(client.uid);
                 const lastMessage = getLastMessage(client.uid);
@@ -310,31 +310,31 @@ export default function AdminMessages() {
                   <div
                     key={client.uid}
                     onClick={() => setSelectedChatRoom(chatRoom)}
-                    className={`p-3 rounded-lg cursor-pointer hover:bg-muted transition-colors ${
+                    className={`p-2 sm:p-3 rounded-lg cursor-pointer hover:bg-muted transition-colors ${
                       isSelected ? 'bg-primary/10 border border-primary/20' : ''
                     }`}
                   >
-                    <div className="flex items-center space-x-3">
-                      <div className="relative">
-                        <Avatar className="w-12 h-12">
+                    <div className="flex items-center space-x-2 sm:space-x-3">
+                      <div className="relative flex-shrink-0">
+                        <Avatar className="w-8 h-8 sm:w-12 sm:h-12">
                           <AvatarImage src={client.photoURL} />
-                          <AvatarFallback className="bg-primary text-primary-foreground">
+                          <AvatarFallback className="bg-primary text-primary-foreground text-xs sm:text-sm">
                             {client.name.split(' ').map(n => n[0]).join('').toUpperCase()}
                           </AvatarFallback>
                         </Avatar>
                         {hasUnread && (
-                          <div className="absolute -top-1 -right-1 w-5 h-5 bg-destructive rounded-full flex items-center justify-center">
-                            <span className="text-xs text-destructive-foreground font-bold">{unreadCount}</span>
+                          <div className="absolute -top-1 -right-1 w-4 h-4 sm:w-5 sm:h-5 bg-destructive rounded-full flex items-center justify-center">
+                            <span className="text-[10px] sm:text-xs text-destructive-foreground font-bold">{unreadCount}</span>
                           </div>
                         )}
                       </div>
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center justify-between">
-                          <p className={`text-sm truncate ${hasUnread ? 'font-semibold' : 'font-medium'}`}>
-                            {client.name}
+                          <p className={`text-xs sm:text-sm truncate ${hasUnread ? 'font-semibold' : 'font-medium'}`}>
+                            {client.name.length > 12 ? `${client.name.substring(0, 12)}...` : client.name}
                           </p>
                           {lastMessage && (
-                            <span className="text-xs text-muted-foreground">
+                            <span className="text-[10px] sm:text-xs text-muted-foreground ml-1 flex-shrink-0">
                               {(() => {
                                 try {
                                   let date;
@@ -363,10 +363,12 @@ export default function AdminMessages() {
                             </span>
                           )}
                         </div>
-                        <p className="text-xs text-muted-foreground truncate">{client.email}</p>
+                        <p className="text-[10px] sm:text-xs text-muted-foreground truncate">
+                          {client.email.length > 20 ? `${client.email.substring(0, 20)}...` : client.email}
+                        </p>
                         {lastMessage && (
-                          <p className="text-xs text-muted-foreground truncate mt-1">
-                            {lastMessage.text}
+                          <p className="text-[10px] sm:text-xs text-muted-foreground truncate mt-0.5">
+                            {lastMessage.text.length > 25 ? `${lastMessage.text.substring(0, 25)}...` : lastMessage.text}
                           </p>
                         )}
                       </div>
