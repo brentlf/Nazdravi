@@ -75,8 +75,8 @@ export default function DashboardMessages() {
       <div className="chat-header-user-info text-foreground">
         <div className="px-4 py-1 h-full flex items-center">
           <div className="flex-1 min-w-0">
-            <p className="text-xs font-medium text-foreground truncate">{otherUser?.name || 'Nutritionist'}</p>
-            <p className="text-[10px] text-muted-foreground truncate">{otherUser?.email || 'nutritionist@example.com'}</p>
+            <p className="text-[10px] font-medium text-foreground truncate">{otherUser?.name || 'Nutritionist'}</p>
+            <p className="text-[9px] text-muted-foreground truncate">{otherUser?.email || 'nutritionist@example.com'}</p>
           </div>
         </div>
       </div>
