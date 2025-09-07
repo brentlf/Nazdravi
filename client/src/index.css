@@ -481,17 +481,19 @@
     left: 0 !important;
     right: 0 !important;
     z-index: 50 !important;
-    height: 80px !important;
+    height: 64px !important; /* Reduced from 80px */
     background-color: hsl(var(--card)) !important;
     border-bottom: 1px solid hsl(var(--border)) !important;
     backdrop-filter: none !important; /* Ensure solid background */
     opacity: 1 !important; /* Ensure no transparency */
+    display: flex !important;
+    align-items: center !important;
   }
 
 
   .chat-messages-container {
-    padding-top: 80px !important; /* Only the combined chat header height */
-    height: calc(100% - 80px - 64px) !important; /* Full container height minus chat header (80px) minus input (64px) */
+    padding-top: 64px !important; /* Only the combined chat header height */
+    height: calc(100% - 64px - 64px) !important; /* Full container height minus chat header (64px) minus input (64px) */
     overflow-y: auto !important; /* Only messages scroll */
     scrollbar-width: none !important; /* Firefox */
     -ms-overflow-style: none !important; /* IE/Edge */
