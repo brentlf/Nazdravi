@@ -31,7 +31,6 @@ export default function Login() {
   const { toast } = useToast();
   const { signIn, signInWithGoogle, user } = useAuth();
 
-  const loginSchema = createLoginSchema(t);
   type LoginFormData = z.infer<typeof loginSchema>;
 
   const form = useForm<LoginFormData>({
@@ -58,13 +57,13 @@ export default function Login() {
     try {
       await signIn(data.email, data.password);
       toast({
-        title: t("welcome-back-toast", "login"),
-        description: t("sign-in-success", "login"),
+        title: "Welcome back!",
+        description: "Successfully signed in!",
       });
     } catch (error: any) {
       toast({
-        title: t("sign-in-failed", "login"),
-        description: error.message || t("check-credentials", "login"),
+        title: "Sign in failed",
+        description: error.message || "Please check your credentials and try again.",
         variant: "destructive",
       });
     } finally {
@@ -78,8 +77,8 @@ export default function Login() {
       await signInWithGoogle();
     } catch (error: any) {
       toast({
-        title: t("google-sign-in-failed", "login"),
-        description: error.message || t("try-again-later", "login"),
+        title: "Google sign in failed",
+        description: error.message || "Please try again later.",
         variant: "destructive",
       });
       setLoading(false);
@@ -123,7 +122,7 @@ export default function Login() {
                 Welcome back
               </h1>
               <p className="text-white/90 text-lg font-light" style={{fontFamily: 'DM Sans, sans-serif'}}>
-                {t("sign-in-description", "login")}
+                Sign in to your account to continue your wellness journey
               </p>
             </div>
           </div>
@@ -165,7 +164,7 @@ export default function Login() {
                     d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"
                   />
                 </svg>
-                {t("continue-with-google", "login")}
+                Continue with Google
               </Button>
 
               <div className="relative my-8">
@@ -174,7 +173,7 @@ export default function Login() {
                 </div>
                 <div className="relative flex justify-center text-sm">
                   <span className="bg-card px-4 text-muted-foreground font-medium" style={{fontFamily: 'DM Sans, sans-serif'}}>
-                    {t("or-continue-with-email", "login")}
+                    Or continue with email
                   </span>
                 </div>
               </div>
@@ -188,7 +187,7 @@ export default function Login() {
                     render={({ field }) => (
                       <FormItem className="space-y-2">
                         <FormLabel className="text-sm font-semibold text-foreground" style={{fontFamily: 'DM Sans, sans-serif'}}>
-                          {t("email-address", "login")}
+                          Email Address
                         </FormLabel>
                         <FormControl>
                           <div className="relative">
@@ -196,7 +195,7 @@ export default function Login() {
                             <Input
                               {...field}
                               type="email"
-                              placeholder={t("enter-your-email", "login")}
+                              placeholder="Enter your email address"
                               className="pl-10 h-12 text-base border-2 focus:border-primary/50 transition-colors"
                               style={{fontFamily: 'DM Sans, sans-serif'}}
                             />
@@ -213,7 +212,7 @@ export default function Login() {
                     render={({ field }) => (
                       <FormItem className="space-y-2">
                         <FormLabel className="text-sm font-semibold text-foreground" style={{fontFamily: 'DM Sans, sans-serif'}}>
-                          {t("password", "login")}
+                          Password
                         </FormLabel>
                         <FormControl>
                           <div className="relative">
@@ -221,7 +220,7 @@ export default function Login() {
                             <Input
                               {...field}
                               type={showPassword ? "text" : "password"}
-                              placeholder={t("enter-your-password", "login")}
+                              placeholder="Enter your password"
                               className="pl-10 pr-12 h-12 text-base border-2 focus:border-primary/50 transition-colors"
                               style={{fontFamily: 'DM Sans, sans-serif'}}
                             />
@@ -251,7 +250,7 @@ export default function Login() {
                     disabled={loading}
                     style={{fontFamily: 'DM Sans, sans-serif'}}
                   >
-                    {loading ? t("signing-in", "login") : t("sign-in", "login")}
+                    {loading ? "Signing in..." : "Sign In"}
                   </Button>
                 </form>
               </Form>
@@ -259,14 +258,14 @@ export default function Login() {
 
             <CardFooter className="flex flex-col space-y-4 px-8 pb-8">
               <div className="text-center text-muted-foreground" style={{fontFamily: 'DM Sans, sans-serif'}}>
-                {t("dont-have-account", "login")}{" "}
+                Don't have an account?{" "}
                 <Link href="/register" className="text-primary hover:text-primary/80 font-semibold underline underline-offset-4 transition-colors">
-                  {t("sign-up-here", "login")}
+                  Sign up here
                 </Link>
               </div>
               <div className="text-center">
                 <Link href="/forgot-password" className="text-muted-foreground hover:text-foreground font-medium transition-colors underline underline-offset-4" style={{fontFamily: 'DM Sans, sans-serif'}}>
-                  {t("forgot-your-password", "login")}
+                  Forgot your password?
                 </Link>
               </div>
             </CardFooter>

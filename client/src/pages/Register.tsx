@@ -19,6 +19,7 @@ import {
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/contexts/AuthContext";
 import { ThemeToggle } from "@/components/common/ThemeToggle";
+import { useTheme } from "@/contexts/ThemeContext";
 
 const registerSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters"),
@@ -41,6 +42,7 @@ export default function Register() {
   const [, setLocation] = useLocation();
   const { toast } = useToast();
   const { signUp, signInWithGoogle, user } = useAuth();
+  const { actualTheme } = useTheme();
 
   const form = useForm<RegisterFormData>({
     resolver: zodResolver(registerSchema),
@@ -132,30 +134,30 @@ export default function Register() {
           <div className="text-center space-y-6 animate-in fade-in-0 slide-in-from-top-4 duration-700 delay-200">
             <Link href="/">
               <div className="flex items-center justify-center space-x-3 cursor-pointer group">
-                <div className="w-12 h-12 bg-primary rounded-xl flex items-center justify-center transition-all duration-300 group-hover:scale-110 group-hover:shadow-lg group-hover:bg-primary/90">
-                  <Leaf className="h-7 w-7 text-primary-foreground" />
+                <div className="w-12 h-12 bg-white/20 backdrop-blur-sm rounded-xl flex items-center justify-center transition-all duration-300 group-hover:scale-110 group-hover:shadow-lg group-hover:bg-white/30">
+                  <Leaf className="h-7 w-7 text-white" />
                 </div>
-                <span className="font-bold text-3xl text-primary tracking-tight" style={{fontFamily: 'DM Sans, sans-serif'}}>
+                <span className="font-bold text-3xl text-white tracking-tight drop-shadow-lg" style={{fontFamily: 'DM Sans, sans-serif'}}>
                   Nazdravi
                 </span>
               </div>
             </Link>
             <div className="text-center">
-              <h1 className="text-4xl font-light text-foreground mb-3" style={{fontFamily: 'DM Sans, sans-serif'}}>
+              <h1 className="text-4xl font-light text-white mb-3 drop-shadow-lg" style={{fontFamily: 'DM Sans, sans-serif'}}>
                 Join our community
               </h1>
-              <p className="text-muted-foreground text-lg font-light leading-relaxed" style={{fontFamily: 'DM Sans, sans-serif'}}>
+              <p className="text-white/90 text-lg font-light leading-relaxed drop-shadow-md" style={{fontFamily: 'DM Sans, sans-serif'}}>
                 Start your wellness journey with Nazdravi
               </p>
             </div>
           </div>
 
-          <Card className="backdrop-blur-xl bg-white/95 dark:bg-gray-900/95 border border-white/20 dark:border-gray-700/30 shadow-2xl animate-in fade-in-0 slide-in-from-bottom-4 duration-700">
+          <Card className={`${actualTheme === 'dark' ? 'bg-black border-gray-800' : 'bg-white border-gray-200'} shadow-2xl animate-in fade-in-0 slide-in-from-bottom-4 duration-700`}>
             <CardHeader className="space-y-3 pb-6">
-              <CardTitle className="text-2xl font-semibold text-center text-foreground" style={{fontFamily: 'Playfair Display, serif'}}>
+              <CardTitle className={`text-2xl font-semibold text-center ${actualTheme === 'dark' ? 'text-white' : 'text-gray-900'}`} style={{fontFamily: 'Playfair Display, serif'}}>
                 Create your account
               </CardTitle>
-              <CardDescription className="text-center text-muted-foreground" style={{fontFamily: 'DM Sans, sans-serif'}}>
+              <CardDescription className={`text-center ${actualTheme === 'dark' ? 'text-gray-300' : 'text-gray-600'}`} style={{fontFamily: 'DM Sans, sans-serif'}}>
                 Begin your personalized wellness journey
               </CardDescription>
             </CardHeader>
@@ -208,7 +210,7 @@ export default function Register() {
               {/* Google Sign Up */}
               <Button
                 variant="outline"
-                className="w-full h-12 text-base font-medium border-2 hover:bg-muted/50 transition-all duration-300 hover:scale-[1.02] hover:shadow-lg"
+                className="w-full h-12 text-base font-semibold bg-green-50 hover:bg-green-100 text-green-700 hover:text-green-800 border border-green-200 hover:border-green-300 transition-all duration-300 hover:scale-[1.01] hover:shadow-md"
                 onClick={handleGoogleSignUp}
                 disabled={loading}
                 style={{fontFamily: 'DM Sans, sans-serif'}}
@@ -253,7 +255,7 @@ export default function Register() {
                     name="name"
                     render={({ field }) => (
                       <FormItem className="space-y-2">
-                        <FormLabel className="text-sm font-semibold text-foreground" style={{fontFamily: 'DM Sans, sans-serif'}}>
+                        <FormLabel className={`text-sm font-semibold ${actualTheme === 'dark' ? 'text-white' : 'text-gray-900'}`} style={{fontFamily: 'DM Sans, sans-serif'}}>
                           Full name
                         </FormLabel>
                         <FormControl>
@@ -282,7 +284,7 @@ export default function Register() {
                     name="email"
                     render={({ field }) => (
                       <FormItem className="space-y-2">
-                        <FormLabel className="text-sm font-semibold text-foreground" style={{fontFamily: 'DM Sans, sans-serif'}}>
+                        <FormLabel className={`text-sm font-semibold ${actualTheme === 'dark' ? 'text-white' : 'text-gray-900'}`} style={{fontFamily: 'DM Sans, sans-serif'}}>
                           Email address
                         </FormLabel>
                         <FormControl>
@@ -312,7 +314,7 @@ export default function Register() {
                     name="password"
                     render={({ field }) => (
                       <FormItem className="space-y-2">
-                        <FormLabel className="text-sm font-semibold text-foreground" style={{fontFamily: 'DM Sans, sans-serif'}}>
+                        <FormLabel className={`text-sm font-semibold ${actualTheme === 'dark' ? 'text-white' : 'text-gray-900'}`} style={{fontFamily: 'DM Sans, sans-serif'}}>
                           Password
                         </FormLabel>
                         <FormControl>
@@ -355,7 +357,7 @@ export default function Register() {
                     name="confirmPassword"
                     render={({ field }) => (
                       <FormItem className="space-y-2">
-                        <FormLabel className="text-sm font-semibold text-foreground" style={{fontFamily: 'DM Sans, sans-serif'}}>
+                        <FormLabel className={`text-sm font-semibold ${actualTheme === 'dark' ? 'text-white' : 'text-gray-900'}`} style={{fontFamily: 'DM Sans, sans-serif'}}>
                           Confirm password
                         </FormLabel>
                         <FormControl>
@@ -393,9 +395,9 @@ export default function Register() {
                     )}
                   />
 
-                  <Button 
+                  <Button
                     type="submit" 
-                    className="w-full h-12 text-base font-semibold bg-primary hover:bg-primary/90 transition-all duration-300 hover:scale-[1.02] hover:shadow-lg mt-8" 
+                    className="w-full h-12 text-base font-semibold bg-blue-50 hover:bg-blue-100 text-blue-700 hover:text-blue-800 border border-blue-200 hover:border-blue-300 transition-all duration-300 hover:scale-[1.01] hover:shadow-md mt-8" 
                     disabled={loading}
                     style={{fontFamily: 'DM Sans, sans-serif'}}
                   >
@@ -405,22 +407,22 @@ export default function Register() {
               </Form>
 
               {/* Terms and Privacy */}
-              <p className="text-sm text-muted-foreground text-center leading-relaxed mt-6" style={{fontFamily: 'DM Sans, sans-serif'}}>
+              <p className="text-sm text-gray-600 dark:text-gray-300 text-center leading-relaxed mt-6" style={{fontFamily: 'DM Sans, sans-serif'}}>
                 By creating an account, you agree to our{" "}
-                <Link href="/terms" className="text-primary hover:text-primary/80 underline underline-offset-4 transition-colors">
+                <Link href="/terms" className="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 underline underline-offset-4 transition-colors">
                   Terms of Service
                 </Link>{" "}
                 and{" "}
-                <Link href="/privacy" className="text-primary hover:text-primary/80 underline underline-offset-4 transition-colors">
+                <Link href="/privacy" className="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 underline underline-offset-4 transition-colors">
                   Privacy Policy
                 </Link>
               </p>
             </CardContent>
 
             <CardFooter className="flex flex-col space-y-4 px-8 pb-8">
-              <div className="text-center text-muted-foreground" style={{fontFamily: 'DM Sans, sans-serif'}}>
+              <div className="text-center text-gray-600 dark:text-gray-300" style={{fontFamily: 'DM Sans, sans-serif'}}>
                 Already have an account?{" "}
-                <Link href="/login" className="text-primary hover:text-primary/80 font-semibold underline underline-offset-4 transition-colors">
+                <Link href="/login" className="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 font-semibold underline underline-offset-4 transition-colors">
                   Sign in here
                 </Link>
               </div>
