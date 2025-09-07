@@ -1002,41 +1002,37 @@ export default function AdminAppointments() {
           <CardContent>
             {processedAppointments.length > 0 ? (
               <>
-                {/* Mobile: Compact card layout */}
-                <div className="block sm:hidden space-y-2 max-h-[70vh] overflow-y-auto">
+                {/* Mobile: Ultra-compact card layout */}
+                <div className="block sm:hidden space-y-1 max-h-[75vh] overflow-y-auto">
                   {processedAppointments.map((appointment) => (
-                    <div key={appointment.id} className="border rounded-lg p-3 bg-card">
-                      <div className="flex items-center justify-between mb-2">
-                        <div className="flex items-center gap-2 min-w-0">
-                          <div className="w-8 h-8 bg-primary/10 rounded-full flex items-center justify-center flex-shrink-0">
-                            <UserCheck className="w-4 h-4 text-primary" />
-                          </div>
-                          <div className="min-w-0">
-                            <p className="font-medium text-sm truncate">{appointment.name}</p>
-                            <p className="text-xs text-muted-foreground truncate">{appointment.email}</p>
-                          </div>
-                        </div>
-                        <Badge className={`text-[10px] px-1.5 py-0 ${getStatusColor(appointment.status)}`}>
-                          {appointment.status}
-                        </Badge>
-                      </div>
-                      
-                      <div className="flex items-center justify-between text-xs text-muted-foreground mb-2">
-                        <div className="flex items-center gap-1">
-                          <Calendar className="w-3 h-3" />
-                          <span>{new Date(appointment.date).toLocaleDateString()}</span>
-                        </div>
-                        <div className="flex items-center gap-1">
-                          <Clock className="w-3 h-3" />
-                          <span>{appointment.timeslot}</span>
-                        </div>
-                      </div>
-                      
+                    <div key={appointment.id} className="border rounded-md p-2 bg-card">
                       <div className="flex items-center justify-between">
-                        <Badge className={getTypeColor(appointment.type)} variant="outline">
-                          {appointment.type}
-                        </Badge>
-                        <div className="flex gap-1">
+                        <div className="flex items-center gap-1.5 min-w-0 flex-1">
+                          <div className="w-6 h-6 bg-primary/10 rounded-full flex items-center justify-center flex-shrink-0">
+                            <UserCheck className="w-3 h-3 text-primary" />
+                          </div>
+                          <div className="min-w-0 flex-1">
+                            <p className="font-medium text-xs truncate">{appointment.name}</p>
+                            <div className="flex items-center gap-2 text-[10px] text-muted-foreground">
+                              <span className="flex items-center gap-0.5">
+                                <Calendar className="w-2.5 h-2.5" />
+                                {new Date(appointment.date).toLocaleDateString('en-GB', { day: '2-digit', month: 'short' })}
+                              </span>
+                              <span className="flex items-center gap-0.5">
+                                <Clock className="w-2.5 h-2.5" />
+                                {appointment.timeslot}
+                              </span>
+                            </div>
+                          </div>
+                        </div>
+                        
+                        <div className="flex items-center gap-1 flex-shrink-0">
+                          <Badge className={`text-[9px] px-1 py-0 ${getStatusColor(appointment.status)}`}>
+                            {appointment.status}
+                          </Badge>
+                          <Badge className={`text-[9px] px-1 py-0 ${getTypeColor(appointment.type)}`} variant="outline">
+                            {appointment.type}
+                          </Badge>
                           <Button
                             size="sm"
                             variant="outline"
@@ -1044,10 +1040,9 @@ export default function AdminAppointments() {
                               setSelectedAppointment(appointment);
                               setIsEditingAppointment(true);
                             }}
-                            className="h-7 px-2 text-xs"
+                            className="h-6 w-6 p-0"
                           >
-                            <Edit className="w-3 h-3 mr-1" />
-                            Edit
+                            <Edit className="w-3 h-3" />
                           </Button>
                         </div>
                       </div>
