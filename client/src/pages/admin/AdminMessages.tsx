@@ -179,11 +179,11 @@ export default function AdminMessages() {
     setSelectedConversation(null);
   };
 
-  // CSS Grid Layout - no page scrolling, only conversation list and messages scroll
+  // Clean unified chat layout
   return (
-    <div className="chat-content">
-      {/* Conversation List - Always visible on desktop, conditional on mobile */}
-      <div className={`${selectedConversation ? 'hidden sm:block' : 'block'} conversation-selector`}>
+    <div className="chat-container">
+      {/* Conversation Sidebar - Always visible on desktop, conditional on mobile */}
+      <div className={`${selectedConversation ? 'hidden sm:block' : 'block'} conversation-sidebar`}>
         <AdminConversationList 
           onSelectConversation={handleSelectConversation}
           onBack={() => window.history.back()}
@@ -191,8 +191,8 @@ export default function AdminMessages() {
         />
       </div>
 
-      {/* Chat Area - Hidden on mobile when no selection, always visible on desktop */}
-      <div className={`${selectedConversation ? 'block' : 'hidden sm:block'} chat-area`}>
+      {/* Chat Main Area - Hidden on mobile when no selection, always visible on desktop */}
+      <div className={`${selectedConversation ? 'block' : 'hidden sm:block'} chat-main`}>
         {selectedConversation ? (
           <AdminConversationView 
             selectedConversation={selectedConversation}
@@ -241,8 +241,8 @@ function AdminConversationView({
 
   return (
     <>
-      {/* Fixed Combined Header */}
-      <div className="chat-header-main text-foreground shadow-sm">
+      {/* Chat Header */}
+      <div className="chat-header">
         <div className="px-4 py-2 flex items-center justify-start gap-3 h-full sm:px-6 sm:py-3">
           <Button variant="ghost" size="icon" className="text-muted-foreground hover:bg-muted/50 h-9 w-9 p-0 rounded-full sm:hidden" onClick={onBackToConversations}>
             <ArrowLeft className="w-5 h-5" />
@@ -269,18 +269,8 @@ function AdminConversationView({
         </div>
       </div>
 
-      {/* Chat Background */}
-      <div className="flex-1 bg-muted/30 relative overflow-hidden chat-messages-container">
-        {/* Subtle Pattern */}
-        <div 
-          className="absolute inset-0 opacity-5 dark:opacity-10"
-          style={{
-            backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23000000' fill-opacity='0.1'%3E%3Ccircle cx='30' cy='30' r='2'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
-          }}
-        />
-        
-                {/* Messages Container */}
-                <div className="relative z-10 h-full chat-message-thread">
+      {/* Messages Area */}
+      <div className="chat-messages">
                   <ScrollArea className="h-full px-4 py-2">
           <div className="space-y-1 pb-2">
             {messagesLoading ? (
@@ -396,8 +386,8 @@ function AdminConversationView({
         </ScrollArea>
                 </div>
 
-        {/* Clean Input Area */}
-        <div className="bg-card border-t border-border px-4 py-2 flex-shrink-0 shadow-sm">
+      {/* Chat Input */}
+      <div className="chat-input">
           <div className="flex items-center gap-3">
             {/* Message Input */}
             <div className="flex-1">
@@ -426,7 +416,6 @@ function AdminConversationView({
             </Button>
           </div>
         </div>
-      </div>
     </>
   );
 }

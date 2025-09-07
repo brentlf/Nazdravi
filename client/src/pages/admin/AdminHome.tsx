@@ -205,28 +205,17 @@ export default function AdminHome() {
   ];
 
   return (
-    <div className="h-[calc(100vh-8rem)] bg-gradient-to-br from-background via-background to-muted/10 relative">
-      <div className="container mx-auto px-4 sm:px-6 py-2 lg:py-6 relative z-10 h-full flex flex-col">
-        {/* Header with Navigation and Organic Design */}
-        <div className="mb-2 lg:mb-4 relative">
+    <div className="dashboard-page relative">
+      <div className="dashboard-content">
+        {/* Dashboard Header */}
+        <div className="dashboard-header">
           <div className="flex items-center justify-between">
-            <div className="relative">
-              <div className="doodle-arrow mb-1">
-                <h1 className="font-display text-xl md:text-2xl mb-1 text-foreground handwritten-accent">
-                  Admin Dashboard
-                </h1>
-              </div>
-              <p className="serif-body text-base text-muted-foreground leading-relaxed">
-                Overview of your nutrition practice and client management
-              </p>
-              
-              {/* Handwritten flourish */}
-              <div className="absolute -bottom-4 -right-8">
-                <span className="text-accent text-lg transform rotate-12 inline-block">✨</span>
-              </div>
+            <div>
+              <h1 className="dashboard-title">Admin Dashboard</h1>
+              <p className="dashboard-subtitle">Overview of your nutrition practice and client management</p>
             </div>
-            <div className="relative">
-              <Button variant="outline" asChild className="mediterranean-card floating-element">
+            <div className="flex items-center gap-3">
+              <Button variant="outline" asChild>
                 <Link href="/admin-client-view">
                   <Users className="mr-2 h-4 w-4" />
                   View Client Dashboard
@@ -777,11 +766,9 @@ export default function AdminHome() {
 
       </div>
       
-      {/* Floating background elements - Hidden on mobile */}
-      <FloatingOrganic className="hidden sm:block absolute top-20 -right-24 opacity-15" size="large" delay={1} />
-      <FloatingOrganic className="hidden sm:block absolute bottom-20 -left-24 opacity-15" size="large" delay={3} />
-      <FloatingOrganic className="hidden sm:block absolute top-1/2 right-10 opacity-10" size="medium" delay={2} />
-      <FloatingOrganic className="hidden sm:block absolute bottom-1/3 left-10 opacity-10" size="medium" delay={4} />
+      {/* Subtle background elements */}
+      <FloatingOrganic className="hidden lg:block absolute top-20 -right-20 opacity-5" size="large" delay={1} />
+      <FloatingOrganic className="hidden lg:block absolute bottom-20 -left-20 opacity-5" size="large" delay={3} />
     </div>
   );
 }
