@@ -155,6 +155,14 @@ export default function AdminHome() {
       href: "/admin/users"
     },
     {
+      title: "Messages",
+      value: "Chat",
+      icon: MessageCircle,
+      color: "text-primary-600",
+      bgColor: "bg-primary-50 dark:bg-primary-900/20",
+      href: "/admin/messages"
+    },
+    {
       title: "Daily Emails",
       value: (() => {
         const tomorrow = new Date();
