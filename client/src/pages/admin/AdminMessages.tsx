@@ -197,7 +197,7 @@ export default function AdminMessages() {
 
   // Show individual conversation
   return (
-    <div className="h-screen bg-background flex flex-col overflow-hidden">
+    <div className="h-screen bg-background flex flex-col overflow-hidden chat-page-container">
       {/* Fixed Main Header */}
       <div className="chat-header-main text-foreground">
         <div className="px-4 py-3 flex items-center justify-between">
@@ -229,7 +229,7 @@ export default function AdminMessages() {
 
       {/* Fixed User Info Section - Below Header */}
       <div className="chat-header-user-info text-foreground">
-        <div className="px-4 py-2 h-full flex items-center">
+        <div className="px-4 py-1 h-full flex items-center">
           <div className="flex-1 min-w-0">
             <p className="text-xs font-medium text-foreground truncate">{selectedClient?.name || 'Client'}</p>
             <p className="text-[10px] text-muted-foreground truncate">{selectedClient?.email || 'client@example.com'}</p>
