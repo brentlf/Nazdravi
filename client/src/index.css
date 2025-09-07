@@ -547,12 +547,18 @@
     display: flex;
     flex-direction: column;
     /* Mobile: Full height when visible */
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
     height: 100%;
+  }
+
+  @media (max-width: 639px) {
+    .conversation-sidebar {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      z-index: 10;
+    }
   }
 
   @media (min-width: 640px) {
@@ -570,12 +576,18 @@
     overflow: hidden;
     background: hsl(var(--background));
     /* Mobile: Full height when visible */
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
     height: 100%;
+  }
+
+  @media (max-width: 639px) {
+    .chat-main {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      z-index: 20; /* Higher than conversation sidebar */
+    }
   }
 
   @media (min-width: 640px) {
