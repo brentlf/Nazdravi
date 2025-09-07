@@ -2,10 +2,9 @@ import { useState, useEffect, useRef } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { Send, Bot, User } from "lucide-react";
+import { Send, Bot, User, Smile, Paperclip, Mic } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
@@ -211,118 +210,155 @@ export function MessageThread() {
 
   if (loading) {
     return (
-      <Card>
-        <CardHeader>
-          <CardTitle>Messages</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="flex items-center justify-center h-64">
-            <div className="animate-pulse text-muted-foreground">Loading messages...</div>
-          </div>
-        </CardContent>
-      </Card>
+      <div className="flex items-center justify-center h-full">
+        <div className="text-center">
+          <div className="animate-pulse text-white/70 mb-2">Loading messages...</div>
+          <div className="w-8 h-8 border-2 border-white/30 border-t-white rounded-full animate-spin mx-auto"></div>
+        </div>
+      </div>
     );
   }
 
   return (
-    <Card className="flex flex-col h-[600px]">
-      <CardHeader className="flex-shrink-0">
-        <CardTitle className="flex items-center gap-2">
-          <Bot className="w-5 h-5" />
-          Chat with Your Nutritionist
-        </CardTitle>
-      </CardHeader>
-
-      {/* Messages Area */}
-      <CardContent className="flex-1 flex flex-col p-0">
-        <div className="flex-1 overflow-hidden">
-          <div className="h-full overflow-y-auto p-6 space-y-4" style={{ maxHeight: '400px' }}>
-            {messages && messages.length > 0 ? (
-              messages.map((message) => {
-                const isFromUser = message.fromUser === user?.uid;
-                
-                return (
-                  <div
-                    key={message.id}
-                    className={`flex gap-3 ${isFromUser ? 'justify-end' : 'justify-start'}`}
-                  >
-                    {!isFromUser && (
-                      <Avatar className="h-8 w-8">
-                        <AvatarFallback className="bg-primary-100 dark:bg-primary-900/30">
-                          <Bot className="h-4 w-4 text-primary-600 dark:text-primary-400" />
+    <div className="flex flex-col h-full">
+      {/* Messages Area - WhatsApp Style */}
+      <ScrollArea className="flex-1 px-4 py-2">
+        <div className="space-y-2 pb-4">
+          {messages && messages.length > 0 ? (
+            messages.map((message, index) => {
+              const isFromUser = message.fromUser === user?.uid;
+              const prevMessage = index > 0 ? messages[index - 1] : null;
+              const showAvatar = !isFromUser && (!prevMessage || prevMessage.fromUser !== message.fromUser);
+              const showTime = !prevMessage || 
+                Math.abs(new Date(message.createdAt).getTime() - new Date(prevMessage.createdAt).getTime()) > 5 * 60 * 1000; // 5 minutes
+              
+              return (
+                <div key={message.id}>
+                  {/* Time separator */}
+                  {showTime && (
+                    <div className="flex justify-center my-4">
+                      <div className="bg-black/10 dark:bg-white/10 text-white/70 text-xs px-3 py-1 rounded-full">
+                        {formatMessageTime(message.createdAt)}
+                      </div>
+                    </div>
+                  )}
+                  
+                  <div className={`flex gap-2 ${isFromUser ? 'justify-end' : 'justify-start'}`}>
+                    {/* Nutritionist Avatar */}
+                    {!isFromUser && showAvatar && (
+                      <Avatar className="h-8 w-8 flex-shrink-0">
+                        <AvatarFallback className="bg-green-500 text-white">
+                          <Bot className="h-4 w-4" />
                         </AvatarFallback>
                       </Avatar>
                     )}
                     
+                    {/* Spacer for user messages */}
+                    {isFromUser && <div className="w-8" />}
+                    
+                    {/* Message Bubble */}
                     <div
-                      className={`max-w-[80%] p-3 rounded-lg ${
+                      className={`max-w-[70%] px-3 py-2 rounded-2xl ${
                         isFromUser
-                          ? 'bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-200 border border-blue-200 dark:border-blue-700'
-                          : 'bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-200 border border-green-200 dark:border-green-700'
+                          ? 'bg-green-500 text-white rounded-br-md'
+                          : 'bg-white dark:bg-gray-800 text-gray-900 dark:text-white rounded-bl-md shadow-sm'
                       }`}
                     >
-                      <p className="text-sm">{message.text}</p>
+                      <p className="text-sm leading-relaxed">{message.text}</p>
                       <p
                         className={`text-xs mt-1 ${
                           isFromUser 
-                            ? 'text-blue-600 dark:text-blue-300' 
-                            : 'text-green-600 dark:text-green-300'
+                            ? 'text-green-100' 
+                            : 'text-gray-500 dark:text-gray-400'
                         }`}
                       >
                         {formatMessageTime(message.createdAt)}
                       </p>
                     </div>
-
-                    {isFromUser && (
-                      <Avatar className="h-8 w-8">
-                        <AvatarImage src={user?.photoURL} />
-                        <AvatarFallback>
-                          {user?.name?.slice(0, 2).toUpperCase()}
-                        </AvatarFallback>
-                      </Avatar>
-                    )}
                   </div>
-                );
-              })
-            ) : (
-              <div className="text-center py-8">
-                <Bot className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
-                <p className="text-muted-foreground">No messages yet</p>
-                <p className="text-sm text-muted-foreground">
-                  Start a conversation with your nutritionist
-                </p>
+                </div>
+              );
+            })
+          ) : (
+            <div className="flex flex-col items-center justify-center h-full text-center py-12">
+              <div className="w-16 h-16 bg-green-500 rounded-full flex items-center justify-center mb-4">
+                <Bot className="w-8 h-8 text-white" />
               </div>
-            )}
-            <div ref={messagesEndRef} />
-          </div>
+              <h3 className="text-white font-medium mb-2">Start a conversation</h3>
+              <p className="text-white/70 text-sm">
+                Send a message to your nutritionist
+              </p>
+            </div>
+          )}
+          <div ref={messagesEndRef} />
         </div>
+      </ScrollArea>
 
-        {/* Message Input */}
-        <div className="p-6 border-t">
-          <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="flex gap-3">
-              <FormField
-                control={form.control}
-                name="text"
-                render={({ field }) => (
-                  <FormItem className="flex-1">
-                    <FormControl>
+      {/* WhatsApp-style Input Area */}
+      <div className="bg-white dark:bg-gray-900 px-4 py-3 border-t border-gray-200 dark:border-gray-700">
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit)} className="flex items-end gap-2">
+            {/* Attachment Button */}
+            <Button
+              type="button"
+              variant="ghost"
+              size="icon"
+              className="h-10 w-10 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
+            >
+              <Paperclip className="h-5 w-5" />
+            </Button>
+            
+            {/* Message Input */}
+            <FormField
+              control={form.control}
+              name="text"
+              render={({ field }) => (
+                <FormItem className="flex-1">
+                  <FormControl>
+                    <div className="relative">
                       <Input
                         {...field}
-                        placeholder="Type your message..."
+                        placeholder="Type a message"
                         disabled={sending}
+                        className="pr-12 py-3 rounded-full border-gray-300 dark:border-gray-600 focus:ring-2 focus:ring-green-500 focus:border-transparent"
                       />
-                    </FormControl>
-                  </FormItem>
-                )}
-              />
-              <Button type="submit" disabled={sending} size="icon">
-                <Send className="h-4 w-4" />
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        size="icon"
+                        className="absolute right-1 top-1/2 -translate-y-1/2 h-8 w-8 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
+                      >
+                        <Smile className="h-5 w-5" />
+                      </Button>
+                    </div>
+                  </FormControl>
+                </FormItem>
+              )}
+            />
+            
+            {/* Send/Voice Button */}
+            {form.watch("text")?.trim() ? (
+              <Button
+                type="submit"
+                disabled={sending}
+                size="icon"
+                className="h-10 w-10 bg-green-500 hover:bg-green-600 text-white rounded-full"
+              >
+                <Send className="h-5 w-5" />
               </Button>
-            </form>
-          </Form>
-        </div>
-      </CardContent>
-    </Card>
+            ) : (
+              <Button
+                type="button"
+                variant="ghost"
+                size="icon"
+                className="h-10 w-10 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
+              >
+                <Mic className="h-5 w-5" />
+              </Button>
+            )}
+          </form>
+        </Form>
+      </div>
+    </div>
   );
 }
