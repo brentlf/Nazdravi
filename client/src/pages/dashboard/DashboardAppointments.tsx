@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { Calendar, Clock, Plus, CheckCircle, XCircle, AlertCircle, Shield, ArrowLeft, Edit, Trash2, FileText, ChevronDown, ChevronUp, ExternalLink, Video, Crown, CreditCard, DollarSign } from "lucide-react";
+import { Calendar, Clock, Plus, CheckCircle, XCircle, AlertCircle, Shield, ArrowLeft, Edit, Trash2, FileText, ChevronDown, ChevronUp, ExternalLink, Video, Crown, CreditCard, DollarSign, MoreVertical } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -35,6 +35,12 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/contexts/AuthContext";
 import { useFirestoreCollection, useFirestoreActions, useFirestoreDocument } from "@/hooks/useFirestore";
@@ -881,6 +887,51 @@ export default function DashboardAppointments() {
                                   <Video className="w-3.5 h-3.5" />
                                 </Button>
                               )}
+                              {/* Mobile 3-dot menu */}
+                              <DropdownMenu>
+                                <DropdownMenuTrigger asChild>
+                                  <Button size="icon" variant="ghost" className="h-7 w-7 p-0" title="More options">
+                                    <MoreVertical className="w-4 h-4" />
+                                  </Button>
+                                </DropdownMenuTrigger>
+                                <DropdownMenuContent align="end" className="w-48">
+                                  {appointment.status === 'confirmed' && isFuture && (
+                                    <DropdownMenuItem onClick={() => window.open(getTeamsUrl(appointment), '_blank')}>
+                                      <Video className="w-4 h-4 mr-2" />
+                                      Join Meeting
+                                    </DropdownMenuItem>
+                                  )}
+                                  {canModifyAppointment(appointment) && (
+                                    <>
+                                      <DropdownMenuItem onClick={() => {
+                                        setSelectedAppointment(appointment);
+                                        setIsRescheduleOpen(true);
+                                      }}>
+                                        <Edit className="w-4 h-4 mr-2" />
+                                        Reschedule
+                                      </DropdownMenuItem>
+                                      <DropdownMenuItem 
+                                        onClick={() => {
+                                          setSelectedAppointment(appointment);
+                                          setIsCancelOpen(true);
+                                        }}
+                                        className="text-red-600 focus:text-red-600"
+                                      >
+                                        <Trash2 className="w-4 h-4 mr-2" />
+                                        Cancel
+                                      </DropdownMenuItem>
+                                    </>
+                                  )}
+                                  <DropdownMenuItem onClick={() => {
+                                    // Show appointment details in a dialog
+                                    setSelectedAppointment(appointment);
+                                    // You could add a details dialog state here if needed
+                                  }}>
+                                    <FileText className="w-4 h-4 mr-2" />
+                                    View Details
+                                  </DropdownMenuItem>
+                                </DropdownMenuContent>
+                              </DropdownMenu>
                             </div>
                           </div>
 

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Search, Calendar, Clock, CheckCircle, XCircle, AlertCircle, Filter, ArrowLeft, CalendarX, RotateCcw, Edit, FileText, Mail, Euro, UserCheck, ClipboardList, Video, ArrowUpDown, ArrowUp, ArrowDown, UserX } from "lucide-react";
+import { Search, Calendar, Clock, CheckCircle, XCircle, AlertCircle, Filter, ArrowLeft, CalendarX, RotateCcw, Edit, FileText, Mail, Euro, UserCheck, ClipboardList, Video, ArrowUpDown, ArrowUp, ArrowDown, UserX, MoreVertical } from "lucide-react";
 import { Link } from "wouter";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -22,6 +22,12 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import {
   Tooltip,
   TooltipContent,
@@ -1033,17 +1039,37 @@ export default function AdminAppointments() {
                           <Badge className={`text-[9px] px-1 py-0 ${getTypeColor(appointment.type)}`} variant="outline">
                             {appointment.type}
                           </Badge>
-                          <Button
-                            size="sm"
-                            variant="outline"
-                            onClick={() => {
-                              setSelectedAppointment(appointment);
-                              setIsEditingAppointment(true);
-                            }}
-                            className="h-6 w-6 p-0"
-                          >
-                            <Edit className="w-3 h-3" />
-                          </Button>
+                          {/* Mobile 3-dot menu */}
+                          <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                              <Button size="sm" variant="ghost" className="h-6 w-6 p-0" title="More options">
+                                <MoreVertical className="w-3 h-3" />
+                              </Button>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent align="end" className="w-48">
+                              <DropdownMenuItem onClick={() => {
+                                setSelectedAppointment(appointment);
+                                setIsEditingAppointment(true);
+                              }}>
+                                <Edit className="w-4 h-4 mr-2" />
+                                Edit Appointment
+                              </DropdownMenuItem>
+                              <DropdownMenuItem onClick={() => {
+                                // Add view details functionality
+                                setSelectedAppointment(appointment);
+                                // You could add a details dialog state here if needed
+                              }}>
+                                <FileText className="w-4 h-4 mr-2" />
+                                View Details
+                              </DropdownMenuItem>
+                              {appointment.status === 'confirmed' && appointment.teamsJoinUrl && (
+                                <DropdownMenuItem onClick={() => window.open(appointment.teamsJoinUrl, '_blank')}>
+                                  <Video className="w-4 h-4 mr-2" />
+                                  Join Meeting
+                                </DropdownMenuItem>
+                              )}
+                            </DropdownMenuContent>
+                          </DropdownMenu>
                         </div>
                       </div>
                     </div>
