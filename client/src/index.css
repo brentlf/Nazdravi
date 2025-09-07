@@ -474,13 +474,13 @@
     .show-on-mobile { display: block !important; }
   }
 
-  /* Fix for chat header positioning - ensure no overlap */
+  /* Fix for chat header positioning - only within right pane */
   .chat-header-main {
-    position: fixed !important;
-    top: 80px !important;
-    left: 0 !important;
-    right: 0 !important;
-    z-index: 50 !important;
+    position: relative !important;
+    top: auto !important;
+    left: auto !important;
+    right: auto !important;
+    z-index: 10 !important;
     height: 72px !important; /* Mobile height */
     background-color: hsl(var(--card)) !important;
     border-bottom: 1px solid hsl(var(--border)) !important;
@@ -489,6 +489,7 @@
     display: flex !important;
     align-items: center !important;
     overflow: hidden !important;
+    flex-shrink: 0 !important; /* Prevent shrinking */
   }
 
   @media (min-width: 640px) {
@@ -499,7 +500,7 @@
 
 
   .chat-messages-container {
-    padding-top: 72px !important; /* Mobile header height */
+    padding-top: 0 !important; /* No padding needed with relative positioning */
     height: calc(100% - 72px - 64px) !important; /* Full container height minus chat header (72px) minus input (64px) */
     overflow-y: auto !important; /* Only messages scroll */
     scrollbar-width: none !important; /* Firefox */
@@ -508,7 +509,7 @@
 
   @media (min-width: 640px) {
     .chat-messages-container {
-      padding-top: 80px !important; /* Desktop header height */
+      padding-top: 0 !important; /* No padding needed with relative positioning */
       height: calc(100% - 80px - 64px) !important; /* Full container height minus chat header (80px) minus input (64px) */
     }
   }
