@@ -39,8 +39,8 @@ export function ConversationList({ onSelectConversation, onBack, selectedConvers
     
     if (!otherUser || otherUserId === user.uid) return acc;
     
-    // Create conversation ID
-    const conversationId = [user.uid, otherUserId].sort().join('_');
+    // Create conversation ID to match message chatRoom format
+    const conversationId = message.chatRoom || `${otherUserId}_admin`;
     
     if (!acc[conversationId]) {
       acc[conversationId] = {
@@ -79,12 +79,6 @@ export function ConversationList({ onSelectConversation, onBack, selectedConvers
     conv.otherUser.email.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  // Debug logging
-  console.log('Conversations:', conversations);
-  console.log('Filtered conversations:', filteredConversations);
-  console.log('User:', user);
-  console.log('All messages:', allMessages);
-  console.log('Users:', users);
 
   const formatMessageTime = (timestamp: any) => {
     if (!timestamp) return "";
@@ -162,12 +156,11 @@ export function ConversationList({ onSelectConversation, onBack, selectedConvers
             filteredConversations.map((conversation: any) => (
               <div
                 key={conversation.id}
-                onClick={() => {
-                  console.log('Conversation clicked:', conversation.id);
-                  onSelectConversation(conversation.id);
-                }}
+                onClick={() => onSelectConversation(conversation.id)}
                 className={`px-3 py-3 border-b border-border/30 cursor-pointer hover:bg-muted transition-colors sm:px-6 sm:py-4 ${
-                  selectedConversation === conversation.id ? 'bg-muted border-l-4 border-l-primary' : ''
+                  selectedConversation === conversation.id 
+                    ? 'bg-primary/10 border-l-4 border-l-primary shadow-sm ring-1 ring-primary/20' 
+                    : ''
                 }`}
               >
                 <div className="flex items-center space-x-3 sm:space-x-4">
@@ -186,7 +179,12 @@ export function ConversationList({ onSelectConversation, onBack, selectedConvers
                   </div>
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center justify-between">
-                      <p className="text-sm font-medium truncate sm:text-base">{conversation.otherUser.name}</p>
+                      <div className="flex items-center gap-2">
+                        <p className="text-sm font-medium truncate sm:text-base">{conversation.otherUser.name}</p>
+                        {selectedConversation === conversation.id && (
+                          <div className="w-2 h-2 bg-primary rounded-full"></div>
+                        )}
+                      </div>
                       <span className="text-xs text-muted-foreground sm:text-sm">
                         {formatMessageTime(conversation.lastMessage.createdAt)}
                       </span>

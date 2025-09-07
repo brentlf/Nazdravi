@@ -16,11 +16,10 @@ export default function DashboardMessages() {
 
   // Get the other user in the conversation
   const { data: users } = useFirestoreCollection<UserType>("users");
-  const otherUserId = selectedConversation ? selectedConversation.split('_').find(id => id !== user?.uid) : null;
+  const otherUserId = selectedConversation ? selectedConversation.replace('_admin', '') : null;
   const otherUser = users?.find(u => u.uid === otherUserId);
 
   const handleSelectConversation = (conversationId: string) => {
-    console.log('handleSelectConversation called with:', conversationId);
     setSelectedConversation(conversationId);
   };
 

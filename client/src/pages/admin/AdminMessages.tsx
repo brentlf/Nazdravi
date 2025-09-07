@@ -45,19 +45,13 @@ export default function AdminMessages() {
   const messages = allMessages?.filter(message => {
     if (!selectedConversation || !user) return false;
     
-    // Extract client user ID from conversation ID (format: clientUserId_admin)
-    const clientUserId = selectedConversation.replace('_admin', '');
-    
     // Check if message belongs to this conversation
     const isFromConversation = (
       message.chatRoom === selectedConversation ||
-      (message.fromUser === user.uid && message.toUser === clientUserId) ||
-      (message.fromUser === clientUserId && message.toUser === user.uid) ||
-      (message.fromUser === "admin" && message.toUser === clientUserId) ||
-      (message.fromUser === clientUserId && message.toUser === "admin") ||
-      // Also check for the conversation ID format used in ConversationList
-      message.chatRoom === [user.uid, clientUserId].sort().join('_') ||
-      message.chatRoom === [clientUserId, user.uid].sort().join('_')
+      (message.fromUser === user.uid && message.toUser === selectedConversation.replace('_admin', '')) ||
+      (message.fromUser === selectedConversation.replace('_admin', '') && message.toUser === user.uid) ||
+      (message.fromUser === "admin" && message.toUser === selectedConversation.replace('_admin', '')) ||
+      (message.fromUser === selectedConversation.replace('_admin', '') && message.toUser === "admin")
     );
     
     return isFromConversation;
