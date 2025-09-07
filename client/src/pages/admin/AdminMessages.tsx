@@ -229,10 +229,10 @@ export default function AdminMessages() {
 
       {/* Fixed User Info Section - Below Header */}
       <div className="chat-header-user-info text-foreground">
-        <div className="px-4 py-1 h-full flex items-center">
+        <div className="px-4 h-full flex items-center">
           <div className="flex-1 min-w-0">
-            <p className="text-[10px] font-medium text-foreground truncate">{selectedClient?.name || 'Client'}</p>
-            <p className="text-[9px] text-muted-foreground truncate">{selectedClient?.email || 'client@example.com'}</p>
+            <p className="font-medium text-foreground truncate" style={{ fontSize: '9px', lineHeight: '1.2' }}>{selectedClient?.name || 'Client'}</p>
+            <p className="text-muted-foreground truncate" style={{ fontSize: '8px', lineHeight: '1.2' }}>{selectedClient?.email || 'client@example.com'}</p>
           </div>
         </div>
       </div>

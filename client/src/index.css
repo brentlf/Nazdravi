@@ -492,14 +492,14 @@
     left: 0 !important;
     right: 0 !important;
     z-index: 40 !important;
-    height: 32px !important;
+    height: 24px !important;
     background-color: hsl(var(--card)) !important;
     border-bottom: 1px solid hsl(var(--border)) !important;
   }
 
   .chat-messages-container {
-    padding-top: 192px !important; /* 80px site header + 80px chat header + 32px user info */
-    height: calc(100vh - 304px) !important; /* Subtract site header (80) + chat header (80) + user info (32) + input (48) + bottom nav (64) */
+    padding-top: 104px !important; /* 80px chat header + 24px user info */
+    height: calc(100vh - 296px) !important; /* Full viewport minus all fixed elements: site header (80px) + mobile nav (64px) + chat header (80px) + user info (24px) + input (48px) = 296px */
     overflow-y: auto !important; /* Only messages scroll */
     scrollbar-width: none !important; /* Firefox */
     -ms-overflow-style: none !important; /* IE/Edge */
@@ -518,7 +518,7 @@
   /* Prevent page scrolling on chat pages */
   .chat-page-container {
     overflow: hidden !important;
-    height: 100vh !important;
+    height: 100vh !important; /* Full viewport height */
   }
 
   .dark .chat-header-main {
