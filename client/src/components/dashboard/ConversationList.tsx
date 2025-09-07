@@ -125,7 +125,7 @@ export function ConversationList({ onSelectConversation, onBack, selectedConvers
   }
 
   return (
-    <div className="flex flex-col h-screen">
+    <div className="flex flex-col h-full">
       {/* Header */}
       <div className="bg-card border-b border-border text-foreground px-4 py-3 flex items-center justify-between flex-shrink-0 sm:px-6 sm:py-4">
         <div className="flex items-center gap-3">
