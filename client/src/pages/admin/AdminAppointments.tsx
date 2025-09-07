@@ -56,6 +56,7 @@ export default function AdminAppointments() {
   const [sortBy, setSortBy] = useState<string>("date-desc");
   const [selectedAppointment, setSelectedAppointment] = useState<Appointment | null>(null);
   const [isEditingAppointment, setIsEditingAppointment] = useState(false);
+  const [isDetailsOpen, setIsDetailsOpen] = useState(false);
   const [editDate, setEditDate] = useState("");
   const [editTimeslot, setEditTimeslot] = useState("");
   const [isChangingStatus, setIsChangingStatus] = useState(false);
@@ -1055,9 +1056,8 @@ export default function AdminAppointments() {
                                 Edit Appointment
                               </DropdownMenuItem>
                               <DropdownMenuItem onClick={() => {
-                                // Add view details functionality
                                 setSelectedAppointment(appointment);
-                                // You could add a details dialog state here if needed
+                                setIsDetailsOpen(true);
                               }}>
                                 <FileText className="w-4 h-4 mr-2" />
                                 View Details
@@ -1607,6 +1607,87 @@ export default function AdminAppointments() {
           </div>
         </div>
       </div>
+
+      {/* Appointment Details Dialog */}
+      <Dialog open={isDetailsOpen} onOpenChange={setIsDetailsOpen}>
+        <DialogContent className="max-w-md">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <FileText className="h-5 w-5" />
+              Appointment Details
+            </DialogTitle>
+          </DialogHeader>
+          
+          {selectedAppointment && (
+            <div className="space-y-4">
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <Label className="text-sm font-medium text-muted-foreground">Date</Label>
+                  <p className="text-sm font-medium">
+                    {new Date(selectedAppointment.date).toLocaleDateString('en-GB', { 
+                      weekday: 'long', 
+                      year: 'numeric', 
+                      month: 'long', 
+                      day: 'numeric' 
+                    })}
+                  </p>
+                </div>
+                <div>
+                  <Label className="text-sm font-medium text-muted-foreground">Time</Label>
+                  <p className="text-sm font-medium">{selectedAppointment.timeslot}</p>
+                </div>
+              </div>
+              
+              <div>
+                <Label className="text-sm font-medium text-muted-foreground">Client</Label>
+                <p className="text-sm font-medium">{selectedAppointment.name}</p>
+                <p className="text-xs text-muted-foreground">{selectedAppointment.email}</p>
+              </div>
+              
+              <div>
+                <Label className="text-sm font-medium text-muted-foreground">Type</Label>
+                <p className="text-sm font-medium">{selectedAppointment.type}</p>
+              </div>
+              
+              <div>
+                <Label className="text-sm font-medium text-muted-foreground">Status</Label>
+                <div className="flex items-center gap-2 mt-1">
+                  {getStatusIcon(selectedAppointment.status)}
+                  <Badge className={getStatusColor(selectedAppointment.status)}>
+                    {selectedAppointment.status}
+                  </Badge>
+                </div>
+              </div>
+              
+              {selectedAppointment.notes && (
+                <div>
+                  <Label className="text-sm font-medium text-muted-foreground">Notes</Label>
+                  <p className="text-sm mt-1 p-2 bg-muted rounded-md">{selectedAppointment.notes}</p>
+                </div>
+              )}
+              
+              {selectedAppointment.status === 'confirmed' && selectedAppointment.teamsJoinUrl && (
+                <div className="pt-2">
+                  <Button 
+                    className="w-full" 
+                    onClick={() => window.open(selectedAppointment.teamsJoinUrl, '_blank')}
+                  >
+                    <Video className="w-4 h-4 mr-2" />
+                    Join Teams Meeting
+                    <ExternalLink className="w-3 h-3 ml-2" />
+                  </Button>
+                </div>
+              )}
+            </div>
+          )}
+          
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setIsDetailsOpen(false)}>
+              Close
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
