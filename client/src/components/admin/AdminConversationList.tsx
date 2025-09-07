@@ -167,7 +167,7 @@ export function AdminConversationList({ onSelectConversation, onBack, selectedCo
                     <Avatar className="w-10 h-10 sm:w-12 sm:h-12">
                       <AvatarImage src={conversation.clientUser.photoURL} />
                       <AvatarFallback className="bg-primary text-primary-foreground">
-                        {conversation.clientUser.name.split(' ').map(n => n[0]).join('').toUpperCase()}
+                        {conversation.clientUser.name.split(' ').map((n: any) => n[0]).join('').toUpperCase()}
                       </AvatarFallback>
                     </Avatar>
                     {conversation.unreadCount > 0 && (

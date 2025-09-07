@@ -79,6 +79,13 @@ export function ConversationList({ onSelectConversation, onBack, selectedConvers
     conv.otherUser.email.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
+  // Debug logging
+  console.log('Conversations:', conversations);
+  console.log('Filtered conversations:', filteredConversations);
+  console.log('User:', user);
+  console.log('All messages:', allMessages);
+  console.log('Users:', users);
+
   const formatMessageTime = (timestamp: any) => {
     if (!timestamp) return "";
     
@@ -155,7 +162,10 @@ export function ConversationList({ onSelectConversation, onBack, selectedConvers
             filteredConversations.map((conversation: any) => (
               <div
                 key={conversation.id}
-                onClick={() => onSelectConversation(conversation.id)}
+                onClick={() => {
+                  console.log('Conversation clicked:', conversation.id);
+                  onSelectConversation(conversation.id);
+                }}
                 className={`px-3 py-3 border-b border-border/30 cursor-pointer hover:bg-muted transition-colors sm:px-6 sm:py-4 ${
                   selectedConversation === conversation.id ? 'bg-muted border-l-4 border-l-primary' : ''
                 }`}

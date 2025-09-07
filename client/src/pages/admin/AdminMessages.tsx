@@ -54,13 +54,19 @@ export default function AdminMessages() {
       (message.fromUser === user.uid && message.toUser === clientUserId) ||
       (message.fromUser === clientUserId && message.toUser === user.uid) ||
       (message.fromUser === "admin" && message.toUser === clientUserId) ||
-      (message.fromUser === clientUserId && message.toUser === "admin")
+      (message.fromUser === clientUserId && message.toUser === "admin") ||
+      // Also check for the conversation ID format used in ConversationList
+      message.chatRoom === [user.uid, clientUserId].sort().join('_') ||
+      message.chatRoom === [clientUserId, user.uid].sort().join('_')
     );
     
     return isFromConversation;
   }) || [];
 
   console.log('Final filtered messages:', messages.length, 'out of', allMessages?.length || 0);
+  console.log('Selected conversation:', selectedConversation);
+  console.log('Sample message structure:', allMessages?.[0]);
+  console.log('All message chatRooms:', allMessages?.map(m => m.chatRoom));
 
   const { add: addMessage, update: updateMessage, loading: sendingMessage } = useFirestoreActions("messages");
 
@@ -206,6 +212,7 @@ export default function AdminMessages() {
             handleSendMessage={handleSendMessage}
             sendingMessage={sendingMessage}
             messagesEndRef={messagesEndRef}
+            user={user}
           />
         ) : (
           /* Desktop fallback when no conversation selected */
@@ -233,10 +240,11 @@ function AdminConversationView({
   setNewMessage, 
   handleSendMessage, 
   sendingMessage, 
-  messagesEndRef 
+  messagesEndRef,
+  user
 }: any) {
   const clientUserId = selectedConversation.replace('_admin', '');
-  const selectedClient = users?.find(u => u.uid === clientUserId);
+  const selectedClient = users?.find((u: any) => u.uid === clientUserId);
 
   return (
     <>
@@ -250,7 +258,7 @@ function AdminConversationView({
           <Avatar className="h-11 w-11 ring-2 ring-primary/30 bg-gradient-to-br from-primary/20 to-primary/10 shadow-md sm:h-12 sm:w-12">
             <AvatarImage src={selectedClient?.photoURL} />
             <AvatarFallback className="bg-gradient-to-br from-primary to-primary/80 text-primary-foreground font-semibold">
-              <span className="text-sm sm:text-base">{selectedClient?.name?.split(' ').map(n => n[0]).join('').toUpperCase()}</span>
+              <span className="text-sm sm:text-base">{selectedClient?.name?.split(' ').map((n: any) => n[0]).join('').toUpperCase()}</span>
             </AvatarFallback>
           </Avatar>
           
@@ -291,7 +299,7 @@ function AdminConversationView({
                 ))}
               </div>
             ) : messages && messages.length > 0 ? (
-              messages.map((message, index) => {
+              messages.map((message: any, index: number) => {
                 const isFromAdmin = message.fromUser === "admin" || message.fromUser === user?.uid;
                 const prevMessage = index > 0 ? messages[index - 1] : null;
                 const showTime = !prevMessage || 
@@ -426,6 +434,6 @@ function AdminConversationView({
           </div>
         </div>
       </div>
-    </div>
+    </>
   );
 }

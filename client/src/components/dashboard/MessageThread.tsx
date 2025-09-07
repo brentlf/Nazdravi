@@ -35,8 +35,16 @@ export function MessageThread({ conversationId }: MessageThreadProps) {
 
   // Use provided conversationId or create default chat room ID
   const chatRoom = conversationId || (user ? `${user.uid}_admin` : "");
+  
+  console.log('MessageThread - conversationId:', conversationId);
+  console.log('MessageThread - chatRoom:', chatRoom);
+  console.log('MessageThread - user:', user);
 
-  // Fetch messages with fallback approach - try without orderBy first to test
+  // Extract the other user ID from conversation ID
+  const otherUserId = conversationId ? conversationId.split('_').find(id => id !== user?.uid) : null;
+  console.log('MessageThread - otherUserId:', otherUserId);
+
+  // Fetch messages with multiple approaches to handle different ID formats
   const { data: messagesNew } = useFirestoreCollection<Message>("messages", 
     user ? [where("chatRoom", "==", chatRoom)] : []
   );
@@ -49,14 +57,32 @@ export function MessageThread({ conversationId }: MessageThreadProps) {
     user ? [where("toUser", "==", user.uid)] : []
   );
 
+  // Also try to fetch messages by user IDs if conversationId is provided
+  const { data: messagesByUsers } = useFirestoreCollection<Message>("messages", 
+    user && otherUserId ? [
+      where("fromUser", "in", [user.uid, otherUserId]),
+      where("toUser", "in", [user.uid, otherUserId])
+    ] : []
+  );
+
   // Combine all messages and deduplicate
   const allMessages = [
     ...(messagesNew || []),
     ...(messagesLegacy || []),
-    ...(messagesLegacyTo || [])
+    ...(messagesLegacyTo || []),
+    ...(messagesByUsers || [])
   ];
   
-  const messages = allMessages.filter((msg, index, self) => 
+  // Filter messages for the specific conversation if conversationId is provided
+  const filteredMessages = conversationId && otherUserId ? 
+    allMessages.filter(msg => 
+      (msg.fromUser === user?.uid && msg.toUser === otherUserId) ||
+      (msg.fromUser === otherUserId && msg.toUser === user?.uid) ||
+      (msg.chatRoom === conversationId) ||
+      (msg.chatRoom === chatRoom)
+    ) : allMessages;
+  
+  const messages = filteredMessages.filter((msg, index, self) => 
     index === self.findIndex(m => m.id === msg.id)
   ).sort((a, b) => {
     // Handle different date formats from Firebase
@@ -88,10 +114,15 @@ export function MessageThread({ conversationId }: MessageThreadProps) {
     console.log("MessageThread Debug:", {
       user: user?.uid,
       chatRoom,
+      conversationId,
+      otherUserId,
       messagesNew: messagesNew?.length || 0,
       messagesLegacy: messagesLegacy?.length || 0,
       messagesLegacyTo: messagesLegacyTo?.length || 0,
-      totalMessages: messages?.length || 0,
+      messagesByUsers: messagesByUsers?.length || 0,
+      allMessages: allMessages.length,
+      filteredMessages: filteredMessages.length,
+      finalMessages: messages.length,
       loading
     });
   }, [user, chatRoom, messagesNew, messagesLegacy, messagesLegacyTo, messages, loading]);
