@@ -127,12 +127,12 @@ export default function AdminCalendar() {
   }
 
   return (
-    <div className="min-h-[calc(100vh-8rem)] bg-background">
-      <div className="container mx-auto px-4 sm:px-6 px-safe py-2 sm:py-4 min-h-full flex flex-col">
+    <div className="h-[calc(100vh-5rem)] bg-background">
+      <div className="container mx-auto px-3 sm:px-4 lg:px-6 px-safe py-1 sm:py-2 h-full flex flex-col">
         
         {/* Calendar Header */}
-        <Card className="mb-4">
-          <CardHeader className="pb-3">
+        <Card className="mb-2 flex-shrink-0">
+          <CardHeader className="pb-2">
             <div className="flex items-center justify-between">
               <CardTitle className="flex items-center gap-2">
                 <Calendar className="w-5 h-5" />
@@ -191,12 +191,12 @@ export default function AdminCalendar() {
 
         {/* Calendar Grid */}
         <Card className="flex-1 flex flex-col min-h-0">
-          <CardContent className="flex-1 p-2 sm:p-4">
+          <CardContent className="flex-1 p-1 sm:p-2">
             {calendarView === 'month' ? (
               /* Monthly Calendar Grid */
               <>
                 {/* Day Headers */}
-                <div className="grid grid-cols-7 gap-1 mb-2">
+                <div className="grid grid-cols-7 gap-1 mb-1">
                   {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map((day) => (
                     <div key={day} className="text-center text-xs font-medium text-muted-foreground p-1">
                       {day}
@@ -216,7 +216,7 @@ export default function AdminCalendar() {
                       <div
                         key={index}
                         className={`
-                          min-h-[60px] sm:min-h-[80px] p-1 border rounded-lg flex flex-col
+                          min-h-[50px] sm:min-h-[60px] p-1 border rounded-lg flex flex-col
                           ${isCurrentMonth ? 'bg-background' : 'bg-muted/30'}
                           ${isToday ? 'ring-2 ring-primary bg-primary/5' : ''}
                           ${hasAppt ? 'bg-blue-50 dark:bg-blue-900/20 border-blue-200 dark:border-blue-800' : ''}

@@ -18,11 +18,10 @@ import {
 } from "@/components/ui/form";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/contexts/AuthContext";
-import { useLanguage } from "@/contexts/LanguageContext";
 
-const createLoginSchema = (t: (key: string, namespace?: string) => string) => z.object({
-  email: z.string().email(t("valid-email", "login")),
-  password: z.string().min(6, t("password-min-length", "login")),
+const loginSchema = z.object({
+  email: z.string().email("Please enter a valid email address"),
+  password: z.string().min(6, "Password must be at least 6 characters"),
 });
 
 export default function Login() {
@@ -31,7 +30,6 @@ export default function Login() {
   const [, setLocation] = useLocation();
   const { toast } = useToast();
   const { signIn, signInWithGoogle, user } = useAuth();
-  const { t } = useLanguage();
 
   const loginSchema = createLoginSchema(t);
   type LoginFormData = z.infer<typeof loginSchema>;

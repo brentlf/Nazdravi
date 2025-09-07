@@ -81,6 +81,13 @@ const SelectContent = React.forwardRef<
         className
       )}
       position={position}
+      style={{
+        backgroundColor: 'hsl(var(--popover))',
+        color: 'hsl(var(--popover-foreground))',
+        borderColor: 'hsl(var(--border))',
+        opacity: 1,
+        backdropFilter: 'none'
+      }}
       {...props}
     >
       <SelectScrollUpButton />

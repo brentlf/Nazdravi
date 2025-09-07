@@ -5,7 +5,6 @@ import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { AuthProvider } from "@/contexts/AuthContext";
 import { ThemeProvider } from "@/contexts/ThemeContext";
-import { LanguageProvider } from "@/contexts/LanguageContext";
 import { Header } from "@/components/common/Header";
 import { Footer } from "@/components/common/Footer";
 import { MobileBottomNav } from "@/components/common/MobileBottomNav";
@@ -49,7 +48,6 @@ import AdminUsers from "@/pages/admin/AdminUsers";
 import AdminAppointments from "@/pages/admin/AdminAppointments";
 import AdminMessages from "@/pages/admin/AdminMessages";
 import AdminPlans from "@/pages/admin/AdminPlans";
-import AdminTranslations from "@/pages/admin/AdminTranslations";
 import AdminAvailability from "@/pages/admin/AdminAvailability";
 import AdminDocuments from "@/pages/admin/AdminDocuments";
 import AdminBlog from "@/pages/admin/AdminBlog";
@@ -200,11 +198,6 @@ function Router() {
           <Layout><AdminPlans /></Layout>
         </RouteGuard>
       </Route>
-      <Route path="/admin/translations">
-        <RouteGuard role="admin">
-          <Layout><AdminTranslations /></Layout>
-        </RouteGuard>
-      </Route>
       <Route path="/admin/availability">
         <RouteGuard role="admin">
           <Layout><AdminAvailability /></Layout>
@@ -252,14 +245,12 @@ function App() {
     <ErrorBoundary>
       <QueryClientProvider client={queryClient}>
         <ThemeProvider>
-          <LanguageProvider>
-            <AuthProvider>
-              <TooltipProvider>
-                <Toaster />
-                <Router />
-              </TooltipProvider>
-            </AuthProvider>
-          </LanguageProvider>
+          <AuthProvider>
+            <TooltipProvider>
+              <Toaster />
+              <Router />
+            </TooltipProvider>
+          </AuthProvider>
         </ThemeProvider>
       </QueryClientProvider>
     </ErrorBoundary>

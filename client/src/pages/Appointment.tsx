@@ -50,8 +50,8 @@ export default function Appointment() {
         <div className="max-w-4xl mx-auto w-full">
           {/* Header Section */}
           <div className="text-center mb-8">
-            <div className="inline-flex items-center justify-center w-12 h-12 bg-primary/10 rounded-full mb-4">
-              <Calendar className="h-6 w-6 text-primary" />
+            <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-primary/20 to-primary/10 rounded-2xl mb-6 shadow-lg">
+              <Calendar className="h-8 w-8 text-primary" />
             </div>
             <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-4 leading-tight text-foreground font-serif">
               Book Consultation
@@ -85,7 +85,8 @@ export default function Appointment() {
                     </p>
                     {!user && (
                       <Link href="/login">
-                        <Button size="sm" className="mt-3 bg-gradient-to-r from-blue-500 to-indigo-500 hover:from-blue-600 hover:to-indigo-600 text-white shadow-sm border-2 border-blue-400/30">
+                        <Button size="sm" className="mt-4 bg-gradient-to-r from-blue-500 to-indigo-500 hover:from-blue-600 hover:to-indigo-600 text-white shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 border-2 border-blue-400/30 px-6 py-2 font-semibold">
+                          <User className="w-4 h-4 mr-2" />
                           Join Us Today
                         </Button>
                       </Link>
@@ -117,7 +118,8 @@ export default function Appointment() {
                     </p>
                     {!hasConsent && (
                       <Link href="/consent-form">
-                        <Button size="sm" className="mt-3 bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white shadow-sm border-2 border-purple-400/30">
+                        <Button size="sm" className="mt-4 bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 border-2 border-purple-400/30 px-6 py-2 font-semibold">
+                          <Shield className="w-4 h-4 mr-2" />
                           Complete Form
                         </Button>
                       </Link>
@@ -130,35 +132,43 @@ export default function Appointment() {
 
           {/* Main Content Section */}
           {user && hasConsent ? (
-            <div className="bg-card border border-border rounded-xl overflow-hidden">
+            <div className="bg-gradient-to-br from-card via-card/95 to-primary/5 border border-primary/20 rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300">
               {/* Collapsible Header */}
               <div 
-                className="p-6 cursor-pointer hover:bg-muted/50 transition-colors border-b border-border"
+                className="p-8 cursor-pointer hover:bg-gradient-to-r hover:from-primary/5 hover:to-primary/10 transition-all duration-300 border-b border-primary/10"
                 onClick={() => setIsFormExpanded(!isFormExpanded)}
               >
                 <div className="flex items-center justify-between">
                   <div className="text-center flex-1">
-                    <h2 className="text-xl font-bold text-card-foreground mb-2">Schedule Your Session</h2>
-                    <p className="text-muted-foreground mb-4">
+                    <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-primary to-primary/80 rounded-2xl mb-4 shadow-lg">
+                      <Calendar className="h-8 w-8 text-white" />
+                    </div>
+                    <h2 className="text-2xl font-bold text-card-foreground mb-3">Schedule Your Session</h2>
+                    <p className="text-muted-foreground mb-6 text-lg">
                       Fill out the form below and we'll get back to you within 24 hours
                     </p>
                     {!isFormExpanded && (
-                      <Button
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          setIsFormExpanded(true);
-                        }}
-                        className="bg-gradient-to-r from-primary to-primary/90 hover:from-primary/90 hover:to-primary text-white shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 border-2 border-primary/20"
-                      >
-                        📝 Start Booking
-                      </Button>
+                      <div className="relative">
+                        <Button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setIsFormExpanded(true);
+                          }}
+                          className="bg-gradient-to-r from-primary via-primary to-primary/90 hover:from-primary/90 hover:via-primary hover:to-primary text-white shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:scale-105 border-2 border-primary/30 px-8 py-4 text-lg font-semibold rounded-xl"
+                        >
+                          <Calendar className="w-5 h-5 mr-2" />
+                          📝 Start Booking
+                        </Button>
+                        {/* Subtle pulsing ring */}
+                        <div className="absolute inset-0 rounded-xl bg-primary/20 animate-ping opacity-20"></div>
+                      </div>
                     )}
                   </div>
                   <div className="ml-6">
                     {isFormExpanded ? (
-                      <ChevronUp className="w-6 h-6 text-muted-foreground" />
+                      <ChevronUp className="w-6 h-6 text-primary" />
                     ) : (
-                      <ChevronDown className="w-6 h-6 text-muted-foreground" />
+                      <ChevronDown className="w-6 h-6 text-primary" />
                     )}
                   </div>
                 </div>
@@ -183,17 +193,19 @@ export default function Appointment() {
                 <p className="text-orange-700 max-w-lg mx-auto mb-6">
                   We're excited to help you on your nutrition journey! Just complete the steps above and you'll be ready to book your consultation.
                 </p>
-                <div className="flex flex-col sm:flex-row gap-3 justify-center">
+                <div className="flex flex-col sm:flex-row gap-4 justify-center">
                   {!user && (
                     <Link href="/login">
-                      <Button className="bg-gradient-to-r from-orange-500 to-yellow-500 hover:from-orange-600 hover:to-yellow-600 text-white shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 border-2 border-orange-400/30">
+                      <Button className="bg-gradient-to-r from-orange-500 to-yellow-500 hover:from-orange-600 hover:to-yellow-600 text-white shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:scale-105 border-2 border-orange-400/30 px-8 py-4 text-lg font-semibold rounded-xl">
+                        <User className="w-5 h-5 mr-2" />
                         Get Started
                       </Button>
                     </Link>
                   )}
                   {user && !hasConsent && (
                     <Link href="/consent-form">
-                      <Button className="bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 border-2 border-purple-400/30">
+                      <Button className="bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:scale-105 border-2 border-purple-400/30 px-8 py-4 text-lg font-semibold rounded-xl">
+                        <Shield className="w-5 h-5 mr-2" />
                         Complete Form
                       </Button>
                     </Link>

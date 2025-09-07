@@ -3,7 +3,7 @@ import { Link, useLocation } from "wouter";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { Eye, EyeOff, Mail, Lock, User, Leaf, AlertCircle, X, CheckCircle } from "lucide-react";
+import { Eye, EyeOff, Mail, Lock, User, Leaf, AlertCircle, X, CheckCircle, ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
@@ -18,6 +18,7 @@ import {
 } from "@/components/ui/form";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/contexts/AuthContext";
+import { ThemeToggle } from "@/components/common/ThemeToggle";
 
 const registerSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters"),
@@ -93,7 +94,7 @@ export default function Register() {
       <div 
         className="absolute inset-0 bg-cover bg-center bg-no-repeat"
         style={{
-          backgroundImage: `url(/orange-upward.jpg)`,
+          backgroundImage: `url(/oranges-sky.jpg)`,
           imageRendering: 'crisp-edges',
           WebkitBackfaceVisibility: 'hidden',
           backfaceVisibility: 'hidden',
@@ -102,34 +103,54 @@ export default function Register() {
         }}
       />
       
-      {/* Elegant overlay for better form readability */}
-      <div className="absolute inset-0 bg-gradient-to-br from-black/30 via-black/20 to-black/40 dark:from-black/50 dark:via-black/40 dark:to-black/60" />
+      {/* Light overlay for better text readability while maintaining image clarity */}
+      <div className="absolute inset-0 bg-black/25 sm:bg-black/15" />
       
-      <div className="relative z-10 min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8 px-safe pb-safe">
-        <div className="max-w-md w-full space-y-8">
+      {/* Navigation Header */}
+      <div className="relative z-20 w-full">
+        <div className="absolute top-4 sm:top-6 left-4 sm:left-8 flex items-center gap-3 sm:gap-4 px-safe pt-safe">
+          <Link href="/">
+            <Button
+              variant="ghost"
+              size="sm"
+              className="text-white hover:bg-white/20 transition-all duration-300 group"
+            >
+              <ArrowLeft className="h-4 w-4 mr-2 group-hover:-translate-x-1 transition-transform" />
+              Back to Home
+            </Button>
+          </Link>
+        </div>
+        
+        <div className="absolute top-4 sm:top-6 right-4 sm:right-8 flex items-center gap-2 px-safe pt-safe">
+          <ThemeToggle className="text-white hover:bg-white/20" />
+        </div>
+      </div>
+
+      <div className="relative z-10 min-h-screen flex items-center justify-center py-16 px-4 sm:px-6 lg:px-8 px-safe pb-safe">
+        <div className="max-w-md w-full space-y-10">
           {/* Sophisticated Header */}
-          <div className="text-center space-y-4">
+          <div className="text-center space-y-6 animate-in fade-in-0 slide-in-from-top-4 duration-700 delay-200">
             <Link href="/">
               <div className="flex items-center justify-center space-x-3 cursor-pointer group">
-                <div className="w-12 h-12 bg-white/20 backdrop-blur-sm rounded-xl border border-white/30 flex items-center justify-center transition-all duration-300 group-hover:scale-110 group-hover:shadow-lg group-hover:bg-white/30">
-                  <Leaf className="h-7 w-7 text-white" />
+                <div className="w-12 h-12 bg-primary rounded-xl flex items-center justify-center transition-all duration-300 group-hover:scale-110 group-hover:shadow-lg group-hover:bg-primary/90">
+                  <Leaf className="h-7 w-7 text-primary-foreground" />
                 </div>
-                <span className="font-bold text-3xl text-white tracking-tight" style={{fontFamily: 'DM Sans, sans-serif'}}>
-                  nazdravi
+                <span className="font-bold text-3xl text-primary tracking-tight" style={{fontFamily: 'DM Sans, sans-serif'}}>
+                  Nazdravi
                 </span>
               </div>
             </Link>
             <div className="text-center">
-              <h1 className="text-4xl font-light text-white mb-2" style={{fontFamily: 'DM Sans, sans-serif', textShadow: '2px 2px 4px rgba(0,0,0,0.7)'}}>
+              <h1 className="text-4xl font-light text-foreground mb-3" style={{fontFamily: 'DM Sans, sans-serif'}}>
                 Join our community
               </h1>
-              <p className="text-white/90 text-lg font-light" style={{fontFamily: 'DM Sans, sans-serif'}}>
-                Start your wellness journey with nazdravi
+              <p className="text-muted-foreground text-lg font-light leading-relaxed" style={{fontFamily: 'DM Sans, sans-serif'}}>
+                Start your wellness journey with Nazdravi
               </p>
             </div>
           </div>
 
-          <Card className="backdrop-blur-xl bg-card/95 border border-border shadow-2xl">
+          <Card className="backdrop-blur-xl bg-white/95 dark:bg-gray-900/95 border border-white/20 dark:border-gray-700/30 shadow-2xl animate-in fade-in-0 slide-in-from-bottom-4 duration-700">
             <CardHeader className="space-y-3 pb-6">
               <CardTitle className="text-2xl font-semibold text-center text-foreground" style={{fontFamily: 'Playfair Display, serif'}}>
                 Create your account

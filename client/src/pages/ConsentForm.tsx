@@ -29,7 +29,6 @@ import {
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/contexts/AuthContext";
 import { useFirestoreActions } from "@/hooks/useFirestore";
-import { useLanguage } from "@/contexts/LanguageContext";
 
 const consentSchema = z.object({
   // Required consents
@@ -75,7 +74,6 @@ export default function ConsentForm() {
   const { toast } = useToast();
   const { user } = useAuth();
   const { add: saveConsent, loading } = useFirestoreActions("consentRecords");
-  const { t } = useLanguage();
 
   const form = useForm<ConsentFormData>({
     resolver: zodResolver(consentSchema),
@@ -121,15 +119,15 @@ export default function ConsentForm() {
       setIsSubmitted(true);
       
       toast({
-        title: t("consent-completed", "consent"),
-        description: t("consent-recorded", "consent"),
+        title: "Consent Completed",
+        description: "Your consent has been recorded successfully.",
       });
       
     } catch (error) {
       console.error("Consent submission error:", error);
       toast({
-        title: t("submission-failed", "consent"),
-        description: t("try-again", "consent"),
+        title: "Submission Failed",
+        description: "Please try again later.",
         variant: "destructive",
       });
     }
@@ -162,8 +160,8 @@ export default function ConsentForm() {
       setStep(2);
     } else {
       toast({
-        title: t("complete-required-consents", "consent"),
-        description: t("all-checkboxes-required", "consent"),
+        title: "Complete Required Consents",
+        description: "All checkboxes must be checked to proceed.",
         variant: "destructive",
       });
     }
@@ -179,21 +177,21 @@ export default function ConsentForm() {
               <Check className="h-8 w-8 text-white" />
             </div>
             <h3 className="text-2xl font-bold text-foreground mb-4">
-              {t("success-title", "consent")}
+              Consent Form Completed
             </h3>
             <p className="text-muted-foreground mb-6 max-w-lg mx-auto">
-              {t("success-description", "consent")}
+              Thank you for completing the informed consent form. You can now proceed with booking your consultation.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Button asChild className="bg-brand text-brand-foreground hover:brightness-110">
                 <a href="/appointment">
                   <Shield className="w-4 h-4 mr-2" />
-                  {t("book-consultation", "consent")}
+                  Book Consultation
                 </a>
               </Button>
               <Button variant="outline" asChild>
                 <a href="/">
-                  {t("return-home", "consent")}
+                  Return Home
                 </a>
               </Button>
             </div>
@@ -222,9 +220,9 @@ export default function ConsentForm() {
       <div className="container mx-auto px-4 max-w-3xl">
         {/* Header */}
         <div className="text-center mb-8">
-          <h1 className="text-3xl font-bold mb-4">{t("informed-consent-title", "consent")}</h1>
+          <h1 className="text-3xl font-bold mb-4">Informed Consent Form</h1>
           <p className="text-muted-foreground">
-            {t("consent-legal-requirements", "consent")}
+            This form is required by law to ensure you understand the nature of our nutrition services and your rights as a client.
           </p>
         </div>
 

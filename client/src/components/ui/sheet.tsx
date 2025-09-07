@@ -72,8 +72,6 @@ const SheetContent = React.forwardRef<
   React.ElementRef<typeof SheetPrimitive.Content>,
   SheetContentProps
 >(({ side = "right", className, children, ...props }, ref) => {
-  const isDark = document.documentElement.classList.contains('dark');
-  
   return (
     <SheetPortal>
       <SheetOverlay />
@@ -81,10 +79,11 @@ const SheetContent = React.forwardRef<
         ref={ref}
         className={cn(sheetVariants({ side }), className)}
         style={{
-          backgroundColor: isDark ? 'hsl(220 15% 8%)' : 'hsl(var(--background))',
-          color: isDark ? 'hsl(0 0% 95%)' : 'hsl(var(--foreground))',
-          borderColor: isDark ? 'hsl(220 10% 22%)' : 'hsl(var(--border))',
-          opacity: 1
+          backgroundColor: 'hsl(var(--background))',
+          color: 'hsl(var(--foreground))',
+          borderColor: 'hsl(var(--border))',
+          opacity: 1,
+          backdropFilter: 'none'
         }}
         {...props}
       >

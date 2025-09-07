@@ -6,7 +6,6 @@ import {
   Users, 
   Calendar, 
   TrendingUp,
-  Clock,
   CheckCircle,
   AlertTriangle,
   CalendarX,
@@ -22,7 +21,7 @@ import { Link } from "wouter";
 import { useFirestoreCollection } from "@/hooks/useFirestore";
 import { User, Appointment } from "@/types";
 import type { Invoice } from "@shared/firebase-schema";
-import { where, orderBy, limit } from "firebase/firestore";
+import { orderBy, limit } from "firebase/firestore";
 import { FloatingOrganic, DoodleConnector } from "@/components/ui/PageTransition";
 
 // Helper function to parse appointment date
@@ -77,7 +76,6 @@ export default function AdminHome() {
 
 
   // Calculate stats
-  const totalUsers = users?.length || 0;
   const clientUsers = users?.filter(user => user.role === "client").length || 0;
 
   // Process appointments for desktop view
@@ -97,17 +95,10 @@ export default function AdminHome() {
   const completeProgramUsers = users?.filter(user => (user as any).servicePlan === "complete-program").length || 0;
   
   const pendingAppointments = appointments?.filter(apt => apt.status === "pending").length || 0;
-  const thisMonthAppointments = appointments?.filter(apt => 
-    new Date(apt.date).getMonth() === new Date().getMonth()
-  ).length || 0;
-
 
   // Invoice statistics
-  const totalInvoices = invoices?.length || 0;
   const pendingInvoices = invoices?.filter(inv => inv.status === 'pending').length || 0;
-  const paidInvoices = invoices?.filter(inv => inv.status === 'paid').length || 0;
   const penaltyInvoices = invoices?.filter(inv => inv.invoiceType === 'penalty').length || 0;
-  const pendingPenalties = invoices?.filter(inv => inv.invoiceType === 'penalty' && inv.status === 'pending').length || 0;
   const thisMonthRevenue = invoices?.filter(inv => 
     inv.status === 'paid' && 
     new Date(inv.createdAt).getMonth() === new Date().getMonth()
@@ -212,11 +203,12 @@ export default function AdminHome() {
     }
   ];
 
+
   return (
-    <div className="h-[calc(100vh-8rem)] bg-gradient-to-br from-background via-background to-muted/10 relative">
-      <div className="container mx-auto px-4 sm:px-6 py-2 lg:py-6 relative z-10 h-full flex flex-col">
+    <div className="h-[calc(100vh-5rem)] bg-gradient-to-br from-background via-background to-muted/10 relative">
+      <div className="container mx-auto px-3 sm:px-4 lg:px-6 py-1 sm:py-2 lg:py-3 relative z-10 h-full flex flex-col">
         {/* Header with Navigation and Organic Design */}
-        <div className="mb-2 lg:mb-4 relative">
+        <div className="mb-1 lg:mb-2 relative flex-shrink-0">
           <div className="flex items-center justify-between">
             <div className="relative">
               <div className="doodle-arrow mb-1">
@@ -252,14 +244,14 @@ export default function AdminHome() {
 
 
         {/* Main Dashboard Content */}
-        <div className="grid grid-cols-1 lg:grid-cols-5 gap-4 lg:gap-6 mb-4 lg:mb-6">
+        <div className="grid grid-cols-1 lg:grid-cols-5 gap-2 lg:gap-3 mb-2 lg:mb-3 flex-shrink-0">
           {/* Key Metrics */}
           <div className="lg:col-span-5">
-            <h3 className="text-sm lg:text-base font-semibold mb-2 lg:mb-3 flex items-center gap-2 text-foreground">
+            <h3 className="text-sm lg:text-base font-semibold mb-1.5 lg:mb-2 flex items-center gap-2 text-foreground">
               <TrendingUp className="w-4 h-4 lg:w-5 lg:h-5" />
               Key Metrics
             </h3>
-            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-8 gap-2 lg:gap-3">
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-8 gap-1.5 lg:gap-2">
               {quickStats.map((stat, index) => {
                 const Icon = stat.icon;
                 
@@ -293,15 +285,14 @@ export default function AdminHome() {
                 }
 
                 return (
-                  <Card
-                    key={index}
-                    className="group relative overflow-hidden bg-gradient-to-br from-card via-card/95 to-muted/30 border hover:border-primary/20 hover:shadow-lg hover:shadow-primary/5 transition-all duration-300 cursor-pointer"
-                    asChild
-                  >
-                    <Link href={stat.href} className="block">
+                  <Link href={stat.href} className="block">
+                    <Card
+                      key={index}
+                      className="group relative overflow-hidden bg-gradient-to-br from-card via-card/95 to-muted/30 border hover:border-primary/20 hover:shadow-lg hover:shadow-primary/5 transition-all duration-300 cursor-pointer"
+                    >
                       {isMobile ? (
                         /* Mobile Design - Compact */
-                        <CardContent className="p-3 flex flex-col items-center justify-center gap-2 h-20">
+                        <CardContent className="p-2 flex flex-col items-center justify-center gap-1.5 h-16">
                           {/* Icon */}
                           <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${stat.bgColor} shadow-sm transition-transform duration-300 group-hover:scale-110`}>
                             <Icon className={`w-5 h-5 ${stat.color}`} />
@@ -319,7 +310,7 @@ export default function AdminHome() {
                         </CardContent>
                       ) : (
                         /* Desktop Design - Compact */
-                        <CardContent className="p-3 flex flex-col items-center justify-center gap-2 h-20">
+                        <CardContent className="p-2 flex flex-col items-center justify-center gap-1.5 h-16">
                           {/* Icon */}
                           <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${stat.bgColor} shadow-sm transition-transform duration-300 group-hover:scale-110`}>
                             <Icon className={`w-4 h-4 ${stat.color}`} />
@@ -336,8 +327,8 @@ export default function AdminHome() {
                           </div>
                         </CardContent>
                       )}
-                    </Link>
-                  </Card>
+                    </Card>
+                  </Link>
                 );
               })}
             </div>
@@ -345,12 +336,12 @@ export default function AdminHome() {
         </div>
 
         {/* Mobile Only - Quick Actions Section */}
-        <div className="lg:hidden mb-6">
-          <h3 className="text-base font-semibold mb-3 flex items-center gap-2 text-foreground">
-            <Calendar className="w-5 h-5" />
+        <div className="lg:hidden mb-3 flex-shrink-0">
+          <h3 className="text-sm font-semibold mb-2 flex items-center gap-2 text-foreground">
+            <Calendar className="w-4 h-4" />
             Quick Actions
           </h3>
-          <div className="space-y-2">
+          <div className="space-y-1.5">
             {quickActions.map((action, index) => {
               const Icon = action.icon;
               return (
@@ -377,11 +368,11 @@ export default function AdminHome() {
         </div>
 
         {/* Desktop Only - Calendar and Sidebar Section */}
-        <div className="hidden lg:grid grid-cols-1 lg:grid-cols-5 gap-6 mb-6 flex-1">
+        <div className="hidden lg:grid grid-cols-1 lg:grid-cols-5 gap-3 mb-3 flex-1 min-h-0">
           {/* Calendar Section - Left Side */}
           <div className="lg:col-span-3 flex flex-col">
             <Card className="flex-1 flex flex-col">
-              <CardHeader className="pb-3 flex-shrink-0">
+              <CardHeader className="pb-2 flex-shrink-0">
                 <div className="flex items-center justify-between">
                   <CardTitle className="flex items-center gap-2">
                     <Calendar className="w-5 h-5" />
@@ -657,15 +648,15 @@ export default function AdminHome() {
             </Card>
           </div>
 
-          {/* Quick Actions & Recent Messages - Right Side */}
-          <div className="lg:col-span-2 space-y-6">
+            {/* Quick Actions & Recent Messages - Right Side */}
+            <div className="lg:col-span-2 space-y-3">
             {/* Quick Actions */}
             <div>
-              <h3 className="text-base lg:text-lg font-semibold mb-3 lg:mb-4 flex items-center gap-2 text-foreground">
-                <Calendar className="w-5 h-5 lg:w-6 lg:h-6" />
+              <h3 className="text-sm lg:text-base font-semibold mb-2 lg:mb-3 flex items-center gap-2 text-foreground">
+                <Calendar className="w-4 h-4 lg:w-5 lg:h-5" />
                 Quick Actions
               </h3>
-              <div className="space-y-2 lg:space-y-3">
+              <div className="space-y-1.5 lg:space-y-2">
               {quickActions.map((action, index) => {
                 const Icon = action.icon;
                 return (
@@ -713,11 +704,11 @@ export default function AdminHome() {
 
             {/* Recent Messages - Desktop Only */}
             <div className="hidden lg:block">
-              <h3 className="text-base font-semibold mb-3 flex items-center gap-2 text-foreground">
-                <MessageCircle className="w-5 h-5" />
+              <h3 className="text-sm font-semibold mb-2 flex items-center gap-2 text-foreground">
+                <MessageCircle className="w-4 h-4" />
                 Recent Messages
               </h3>
-              <div className="space-y-2">
+              <div className="space-y-1.5">
                 {recentMessages.length > 0 ? (
                   <>
                     {recentMessages.slice(0, 3).map((message, index) => (
@@ -758,11 +749,10 @@ export default function AdminHome() {
           </div>
         </div>
 
-
         {/* Alerts and Important Info */}
         {(penaltyInvoices > 0 || pendingAppointments > 0) && (
-          <Card className="bg-gradient-to-r from-orange-50 to-red-50 dark:from-orange-900/20 dark:to-red-900/20 border-orange-200 dark:border-orange-800 mb-4">
-            <CardContent className="p-4">
+          <Card className="bg-gradient-to-r from-orange-50 to-red-50 dark:from-orange-900/20 dark:to-red-900/20 border-orange-200 dark:border-orange-800 mb-2 flex-shrink-0">
+            <CardContent className="p-3">
               <div className="flex items-center gap-3">
                 <div className="w-8 h-8 rounded-full bg-orange-100 dark:bg-orange-900/30 flex items-center justify-center">
                   <AlertTriangle className="w-4 h-4 text-orange-600" />

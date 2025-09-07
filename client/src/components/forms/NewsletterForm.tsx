@@ -14,7 +14,6 @@ import {
 } from "@/components/ui/form";
 import { useToast } from "@/hooks/use-toast";
 import { useFirestoreActions } from "@/hooks/useFirestore";
-import { useLanguage } from "@/contexts/LanguageContext";
 
 const newsletterSchema = z.object({
   email: z.string().email("Please enter a valid email address"),
@@ -26,7 +25,6 @@ export function NewsletterForm() {
   const [isSubmitted, setIsSubmitted] = useState(false);
   const { toast } = useToast();
   const { add, loading } = useFirestoreActions("newsletter_subscribers");
-  const { t } = useLanguage();
 
   const form = useForm<NewsletterFormData>({
     resolver: zodResolver(newsletterSchema),
@@ -91,7 +89,7 @@ export function NewsletterForm() {
                     <Input
                       {...field}
                       type="email"
-                      placeholder={t("email-address", "home")}
+                      placeholder="Enter your email address"
                       className="bg-card text-foreground placeholder:text-muted-foreground"
                     />
                   </FormControl>
@@ -109,7 +107,7 @@ export function NewsletterForm() {
               ) : (
                 <>
                   <Mail className="mr-2 h-4 w-4" />
-                  {t("subscribe", "home")}
+                  Subscribe
                 </>
               )}
             </Button>
@@ -121,7 +119,7 @@ export function NewsletterForm() {
         <div className="flex items-center justify-center space-x-3 mb-3 text-foreground">
           <Gift className="w-6 h-6 text-brand" />
           <h3 className="text-lg font-semibold text-foreground">
-            {t("free-bonus", "home")}
+            Get our free nutrition guide as a bonus!
           </h3>
         </div>
         <p className="text-sm text-center text-muted-foreground">
@@ -130,7 +128,7 @@ export function NewsletterForm() {
         </p>
       </div>
       <p className="text-muted-foreground text-sm mt-4 text-center">
-        {t("privacy-notice", "home")}
+        We respect your privacy. Unsubscribe at any time.
       </p>
     </div>
   );

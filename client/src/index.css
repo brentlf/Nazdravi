@@ -351,11 +351,12 @@
     box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
   }
   
-  /* Force dropdown backgrounds to be solid */
+  /* Force all Radix UI components to have solid backgrounds */
   [data-radix-popper-content-wrapper] {
     backdrop-filter: none !important;
   }
   
+  /* Dropdown Menu */
   [data-radix-dropdown-menu-content] {
     background-color: hsl(var(--popover)) !important;
     opacity: 1 !important;
@@ -369,17 +370,7 @@
     border-color: hsl(220 10% 22%) !important;
   }
   
-  /* Ensure theme dropdown is never transparent */
-  .theme-dropdown-content {
-    background-color: hsl(var(--popover)) !important;
-    opacity: 1 !important;
-  }
-  
-  .dark .theme-dropdown-content {
-    background-color: hsl(220 15% 12%) !important;
-  }
-  
-  /* Force Select dropdown backgrounds to be solid */
+  /* Select Dropdown */
   [data-radix-select-content] {
     background-color: hsl(var(--popover)) !important;
     opacity: 1 !important;
@@ -391,6 +382,114 @@
     background-color: hsl(220 15% 12%) !important;
     color: hsl(0 0% 95%) !important;
     border-color: hsl(220 10% 22%) !important;
+  }
+  
+  /* Popover */
+  [data-radix-popover-content] {
+    background-color: hsl(var(--popover)) !important;
+    opacity: 1 !important;
+    backdrop-filter: none !important;
+    border: 1px solid hsl(var(--border)) !important;
+  }
+  
+  .dark [data-radix-popover-content] {
+    background-color: hsl(220 15% 12%) !important;
+    color: hsl(0 0% 95%) !important;
+    border-color: hsl(220 10% 22%) !important;
+  }
+  
+  /* Tooltip */
+  [data-radix-tooltip-content] {
+    background-color: hsl(var(--popover)) !important;
+    opacity: 1 !important;
+    backdrop-filter: none !important;
+    border: 1px solid hsl(var(--border)) !important;
+  }
+  
+  .dark [data-radix-tooltip-content] {
+    background-color: hsl(220 15% 12%) !important;
+    color: hsl(0 0% 95%) !important;
+    border-color: hsl(220 10% 22%) !important;
+  }
+  
+  /* Context Menu */
+  [data-radix-context-menu-content] {
+    background-color: hsl(var(--popover)) !important;
+    opacity: 1 !important;
+    backdrop-filter: none !important;
+    border: 1px solid hsl(var(--border)) !important;
+  }
+  
+  .dark [data-radix-context-menu-content] {
+    background-color: hsl(220 15% 12%) !important;
+    color: hsl(0 0% 95%) !important;
+    border-color: hsl(220 10% 22%) !important;
+  }
+  
+  /* Hover Card */
+  [data-radix-hover-card-content] {
+    background-color: hsl(var(--popover)) !important;
+    opacity: 1 !important;
+    backdrop-filter: none !important;
+    border: 1px solid hsl(var(--border)) !important;
+  }
+  
+  .dark [data-radix-hover-card-content] {
+    background-color: hsl(220 15% 12%) !important;
+    color: hsl(0 0% 95%) !important;
+    border-color: hsl(220 10% 22%) !important;
+  }
+  
+  /* Command Dialog */
+  [data-radix-dialog-content] {
+    background-color: hsl(var(--background)) !important;
+    opacity: 1 !important;
+    backdrop-filter: none !important;
+    border: 1px solid hsl(var(--border)) !important;
+  }
+  
+  .dark [data-radix-dialog-content] {
+    background-color: hsl(220 15% 8%) !important;
+    color: hsl(0 0% 95%) !important;
+    border-color: hsl(220 10% 22%) !important;
+  }
+  
+  /* Alert Dialog */
+  [data-radix-alert-dialog-content] {
+    background-color: hsl(var(--background)) !important;
+    opacity: 1 !important;
+    backdrop-filter: none !important;
+    border: 1px solid hsl(var(--border)) !important;
+  }
+  
+  .dark [data-radix-alert-dialog-content] {
+    background-color: hsl(220 15% 8%) !important;
+    color: hsl(0 0% 95%) !important;
+    border-color: hsl(220 10% 22%) !important;
+  }
+  
+  /* Drawer Content */
+  [data-vaul-drawer] {
+    background-color: hsl(var(--background)) !important;
+    opacity: 1 !important;
+    backdrop-filter: none !important;
+    border: 1px solid hsl(var(--border)) !important;
+  }
+  
+  .dark [data-vaul-drawer] {
+    background-color: hsl(220 15% 8%) !important;
+    color: hsl(0 0% 95%) !important;
+    border-color: hsl(220 10% 22%) !important;
+  }
+  
+  /* Ensure theme dropdown is never transparent */
+  .theme-dropdown-content {
+    background-color: hsl(var(--popover)) !important;
+    opacity: 1 !important;
+  }
+  
+  .dark .theme-dropdown-content {
+    background-color: hsl(220 15% 12%) !important;
   }
 
   /* Mobile menu overlay - ensure proper background with highest specificity */

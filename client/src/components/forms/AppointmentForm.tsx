@@ -494,23 +494,26 @@ export function AppointmentForm() {
             </div>
 
             {/* Submit Button */}
-            <div className="pt-2">
+            <div className="pt-4">
               <Button 
                 type="submit" 
                 disabled={loading || !form.formState.isValid} 
-                className={`w-full h-8 text-xs font-semibold shadow-lg transition-colors ${
+                className={`w-full h-12 text-sm font-bold shadow-xl transition-all duration-300 transform ${
                   form.formState.isValid && !loading
-                    ? "bg-blue-200 hover:bg-blue-300 text-blue-900 border border-blue-400"
+                    ? "bg-gradient-to-r from-primary via-primary to-primary/90 hover:from-primary/90 hover:via-primary hover:to-primary text-white border-2 border-primary/30 hover:scale-105 hover:shadow-2xl"
                     : "bg-gray-200 hover:bg-gray-300 text-gray-600 border border-gray-400 cursor-not-allowed"
                 }`}
               >
                 {loading ? (
-                  <div className="flex items-center gap-2">
-                    <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-blue-900"></div>
+                  <div className="flex items-center gap-3">
+                    <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
                     Submitting Request...
                   </div>
                 ) : form.formState.isValid ? (
-                  "📅 Request Appointment"
+                  <div className="flex items-center gap-2">
+                    <Calendar className="w-5 h-5" />
+                    📅 Request Appointment
+                  </div>
                 ) : (
                   "Complete All Required Fields"
                 )}
@@ -560,20 +563,30 @@ export function AppointmentForm() {
             </p>
           </div>
 
-          <DialogFooter className="gap-2">
+          <DialogFooter className="gap-3">
             <Button 
               variant="outline" 
               onClick={handleBillingCancellation}
-              className="flex-1"
+              className="flex-1 px-6 py-3 font-semibold"
             >
               Cancel
             </Button>
             <Button 
               onClick={handleBillingConfirmation}
-              className="flex-1 bg-blue-600 hover:bg-blue-700 text-white"
+              className="flex-1 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 px-6 py-3 font-bold"
               disabled={loading}
             >
-              {loading ? "Processing..." : "Confirm & Pay €100"}
+              {loading ? (
+                <div className="flex items-center gap-2">
+                  <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
+                  Processing...
+                </div>
+              ) : (
+                <div className="flex items-center gap-2">
+                  <CreditCard className="w-4 h-4" />
+                  Confirm & Pay €100
+                </div>
+              )}
             </Button>
           </DialogFooter>
         </DialogContent>

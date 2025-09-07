@@ -1,9 +1,7 @@
-import { useLanguage } from "@/contexts/LanguageContext";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Cookie, Settings, Shield, Mail } from "lucide-react";
 
 export default function CookiePolicy() {
-  const { t } = useLanguage();
 
   return (
     <div className="min-h-screen py-20 bg-gray-50 dark:bg-gray-900">

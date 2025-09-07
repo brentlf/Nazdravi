@@ -3,7 +3,7 @@ import { Link, useLocation } from "wouter";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { Eye, EyeOff, Mail, Lock, Leaf, AlertCircle, X, CheckCircle } from "lucide-react";
+import { Eye, EyeOff, Mail, Lock, Leaf, AlertCircle, X, CheckCircle, ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
@@ -18,11 +18,11 @@ import {
 } from "@/components/ui/form";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/contexts/AuthContext";
-import { useLanguage } from "@/contexts/LanguageContext";
+import { ThemeToggle } from "@/components/common/ThemeToggle";
 
-const createLoginSchema = (t: (key: string, namespace?: string) => string) => z.object({
-  email: z.string().email(t("valid-email", "login")),
-  password: z.string().min(6, t("password-min-length", "login")),
+const loginSchema = z.object({
+  email: z.string().email("Please enter a valid email address"),
+  password: z.string().min(6, "Password must be at least 6 characters"),
 });
 
 export default function Login() {
@@ -33,9 +33,6 @@ export default function Login() {
   const [, setLocation] = useLocation();
   const { toast } = useToast();
   const { signIn, signInWithGoogle, user } = useAuth();
-  const { t } = useLanguage();
-
-  const loginSchema = createLoginSchema(t);
   type LoginFormData = z.infer<typeof loginSchema>;
 
   const form = useForm<LoginFormData>({
@@ -63,9 +60,9 @@ export default function Login() {
     setSuccess(null); // Clear any previous success messages
     try {
       await signIn(data.email, data.password);
-      setSuccess(t("sign-in-success", "login"));
+      setSuccess("Successfully signed in!");
     } catch (error: any) {
-      setError(error.message || t("check-credentials", "login"));
+      setError(error.message || "Please check your credentials and try again.");
     } finally {
       setLoading(false);
     }
@@ -77,7 +74,7 @@ export default function Login() {
     try {
       await signInWithGoogle();
     } catch (error: any) {
-      setError(error.message || t("try-again-later", "login"));
+      setError(error.message || "Please try again later.");
       setLoading(false);
     }
   };
@@ -88,7 +85,7 @@ export default function Login() {
       <div 
         className="absolute inset-0 bg-cover bg-center bg-no-repeat"
         style={{
-          backgroundImage: `url(/orange-closeup.jpg)`,
+          backgroundImage: `url(/oranges-sky.jpg)`,
           imageRendering: 'crisp-edges',
           WebkitBackfaceVisibility: 'hidden',
           backfaceVisibility: 'hidden',
@@ -97,34 +94,54 @@ export default function Login() {
         }}
       />
       
-      {/* Elegant overlay for better form readability */}
-      <div className="absolute inset-0 bg-gradient-to-br from-black/30 via-black/20 to-black/40 dark:from-black/50 dark:via-black/40 dark:to-black/60" />
+      {/* Light overlay for better text readability while maintaining image clarity */}
+      <div className="absolute inset-0 bg-black/25 sm:bg-black/15" />
       
-      <div className="relative z-10 min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8 px-safe pb-safe">
-        <div className="max-w-md w-full space-y-8">
+      {/* Navigation Header */}
+      <div className="relative z-20 w-full">
+        <div className="absolute top-4 sm:top-6 left-4 sm:left-8 flex items-center gap-3 sm:gap-4 px-safe pt-safe">
+          <Link href="/">
+            <Button
+              variant="ghost"
+              size="sm"
+              className="text-white hover:bg-white/20 transition-all duration-300 group"
+            >
+              <ArrowLeft className="h-4 w-4 mr-2 group-hover:-translate-x-1 transition-transform" />
+              Back to Home
+            </Button>
+          </Link>
+        </div>
+        
+        <div className="absolute top-4 sm:top-6 right-4 sm:right-8 flex items-center gap-2 px-safe pt-safe">
+          <ThemeToggle className="text-white hover:bg-white/20" />
+        </div>
+      </div>
+
+      <div className="relative z-10 min-h-screen flex items-center justify-center py-16 px-4 sm:px-6 lg:px-8 px-safe pb-safe">
+        <div className="max-w-md w-full space-y-10">
           {/* Sophisticated Header */}
-          <div className="text-center space-y-4">
+          <div className="text-center space-y-6 animate-in fade-in-0 slide-in-from-top-4 duration-700 delay-200">
             <Link href="/">
               <div className="flex items-center justify-center space-x-3 cursor-pointer group">
-                <div className="w-12 h-12 bg-white/20 backdrop-blur-sm rounded-xl border border-white/30 flex items-center justify-center transition-all duration-300 group-hover:scale-110 group-hover:shadow-lg group-hover:bg-white/30">
-                  <Leaf className="h-7 w-7 text-white" />
+                <div className="w-12 h-12 bg-primary rounded-xl flex items-center justify-center transition-all duration-300 group-hover:scale-110 group-hover:shadow-lg group-hover:bg-primary/90">
+                  <Leaf className="h-7 w-7 text-primary-foreground" />
                 </div>
-                <span className="font-bold text-3xl text-white tracking-tight" style={{fontFamily: 'DM Sans, sans-serif'}}>
+                <span className="font-bold text-3xl text-primary tracking-tight" style={{fontFamily: 'DM Sans, sans-serif'}}>
                   Nazdravi
                 </span>
               </div>
             </Link>
             <div className="text-center">
-              <h1 className="text-4xl font-light text-white mb-2" style={{fontFamily: 'DM Sans, sans-serif', textShadow: '2px 2px 4px rgba(0,0,0,0.7)'}}>
+              <h1 className="text-4xl font-light text-foreground mb-3" style={{fontFamily: 'DM Sans, sans-serif'}}>
                 Welcome back
               </h1>
-              <p className="text-white/90 text-lg font-light" style={{fontFamily: 'DM Sans, sans-serif'}}>
-                {t("sign-in-description", "login")}
+              <p className="text-muted-foreground text-lg font-light leading-relaxed" style={{fontFamily: 'DM Sans, sans-serif'}}>
+                Sign in to your account to continue your wellness journey
               </p>
             </div>
           </div>
 
-          <Card className="backdrop-blur-xl bg-card/95 border border-border shadow-2xl">
+          <Card className="backdrop-blur-xl bg-white/95 dark:bg-gray-900/95 border border-white/20 dark:border-gray-700/30 shadow-2xl animate-in fade-in-0 slide-in-from-bottom-4 duration-700">
             <CardHeader className="space-y-3 pb-6">
               <CardTitle className="text-2xl font-semibold text-center text-foreground" style={{fontFamily: 'Playfair Display, serif'}}>
                 Sign in to your account
@@ -205,7 +222,7 @@ export default function Login() {
                     d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"
                   />
                 </svg>
-                {t("continue-with-google", "login")}
+                Continue with Google
               </Button>
 
               <div className="relative my-8">
@@ -214,7 +231,7 @@ export default function Login() {
                 </div>
                 <div className="relative flex justify-center text-sm">
                   <span className="bg-card px-4 text-muted-foreground font-medium" style={{fontFamily: 'DM Sans, sans-serif'}}>
-                    {t("or-continue-with-email", "login")}
+                    Or continue with email
                   </span>
                 </div>
               </div>
@@ -228,7 +245,7 @@ export default function Login() {
                     render={({ field }) => (
                       <FormItem className="space-y-2">
                         <FormLabel className="text-sm font-semibold text-foreground" style={{fontFamily: 'DM Sans, sans-serif'}}>
-                          {t("email-address", "login")}
+                          Email Address
                         </FormLabel>
                         <FormControl>
                           <div className="relative">
@@ -236,7 +253,7 @@ export default function Login() {
                             <Input
                               {...field}
                               type="email"
-                              placeholder={t("enter-your-email", "login")}
+                              placeholder="Enter your email address"
                               className="pl-10 h-12 text-base border-2 focus:border-primary/50 transition-colors"
                               style={{fontFamily: 'DM Sans, sans-serif'}}
                               onChange={(e) => {
@@ -258,7 +275,7 @@ export default function Login() {
                     render={({ field }) => (
                       <FormItem className="space-y-2">
                         <FormLabel className="text-sm font-semibold text-foreground" style={{fontFamily: 'DM Sans, sans-serif'}}>
-                          {t("password", "login")}
+                          Password
                         </FormLabel>
                         <FormControl>
                           <div className="relative">
@@ -266,7 +283,7 @@ export default function Login() {
                             <Input
                               {...field}
                               type={showPassword ? "text" : "password"}
-                              placeholder={t("enter-your-password", "login")}
+                              placeholder="Enter your password"
                               className="pl-10 pr-12 h-12 text-base border-2 focus:border-primary/50 transition-colors"
                               style={{fontFamily: 'DM Sans, sans-serif'}}
                               onChange={(e) => {
@@ -301,7 +318,7 @@ export default function Login() {
                     disabled={loading}
                     style={{fontFamily: 'DM Sans, sans-serif'}}
                   >
-                    {loading ? t("signing-in", "login") : t("sign-in", "login")}
+                    {loading ? "Signing in..." : "Sign In"}
                   </Button>
                 </form>
               </Form>
@@ -309,14 +326,14 @@ export default function Login() {
 
             <CardFooter className="flex flex-col space-y-4 px-8 pb-8">
               <div className="text-center text-muted-foreground" style={{fontFamily: 'DM Sans, sans-serif'}}>
-                {t("dont-have-account", "login")}{" "}
+                Don't have an account?{" "}
                 <Link href="/register" className="text-primary hover:text-primary/80 font-semibold underline underline-offset-4 transition-colors">
-                  {t("sign-up-here", "login")}
+                  Sign up here
                 </Link>
               </div>
               <div className="text-center">
                 <Link href="/forgot-password" className="text-muted-foreground hover:text-foreground font-medium transition-colors underline underline-offset-4" style={{fontFamily: 'DM Sans, sans-serif'}}>
-                  {t("forgot-your-password", "login")}
+                  Forgot your password?
                 </Link>
               </div>
             </CardFooter>

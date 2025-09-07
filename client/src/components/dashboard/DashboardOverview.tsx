@@ -227,10 +227,34 @@ export function DashboardOverview() {
     },
   ];
 
+  const additionalActions = [
+    {
+      title: "Calendar",
+      description: "View your schedule",
+      icon: Calendar,
+      href: "/dashboard/calendar",
+      color: "bg-green-500 hover:bg-green-600",
+    },
+    {
+      title: "Documents",
+      description: "Your nutrition files",
+      icon: FileText,
+      href: "/dashboard/documents",
+      color: "bg-indigo-500 hover:bg-indigo-600",
+    },
+    {
+      title: "Resources",
+      description: "Helpful guides & tips",
+      icon: Target,
+      href: "/dashboard/resources",
+      color: "bg-orange-500 hover:bg-orange-600",
+    },
+  ];
+
   return (
-    <div className="space-y-3 relative h-full flex flex-col">
+    <div className="space-y-2 relative h-full flex flex-col">
       {/* Compact Welcome Section */}
-      <div className="relative overflow-hidden mediterranean-card p-4 text-white bg-gradient-to-br from-primary to-accent warm-glow flex-shrink-0">
+      <div className="relative overflow-hidden mediterranean-card p-3 sm:p-4 text-white bg-gradient-to-br from-primary to-accent warm-glow flex-shrink-0">
         {isAdminViewingClient && (
           <div className="mb-3 bg-yellow-500/20 border border-yellow-400/30 rounded-lg p-2 floating-element">
             <p className="text-sm text-yellow-100">
@@ -263,20 +287,20 @@ export function DashboardOverview() {
       </div>
 
       {/* Optimized Grid Layout - Stats + Program Section */}
-      <div className="grid lg:grid-cols-12 gap-3 flex-shrink-0">
+      <div className="grid lg:grid-cols-12 gap-2 flex-shrink-0">
         {/* Quick Stats - Takes up more space */}
         <div className="lg:col-span-8">
-          <h3 className="text-sm font-semibold mb-2 flex items-center gap-2 text-muted-foreground">
+          <h3 className="text-sm font-semibold mb-1.5 flex items-center gap-2 text-muted-foreground">
             <Target className="w-4 h-4" />
             Quick Overview
           </h3>
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-1.5 sm:gap-2">
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-1 sm:gap-1.5">
             {quickStats.map((stat, index) => {
               const Icon = stat.icon;
               return (
                 <Card
                   key={index}
-                  className="group relative overflow-hidden bg-gradient-to-br from-card via-card/95 to-muted/30 border hover:border-primary/20 hover:shadow-lg hover:shadow-primary/5 transition-all duration-300 h-20 sm:h-32 md:h-40"
+                  className="group relative overflow-hidden bg-gradient-to-br from-card via-card/95 to-muted/30 border hover:border-primary/20 hover:shadow-lg hover:shadow-primary/5 transition-all duration-300 h-16 sm:h-24 md:h-28"
                 >
                   <CardContent className="p-1.5 sm:p-3 flex flex-col h-full relative z-10">
                     {/* Fixed Header - Smaller on mobile */}
@@ -328,17 +352,17 @@ export function DashboardOverview() {
 
         {/* Program Status - Matches Quick Overview height */}
         <div className="lg:col-span-4">
-          <h3 className="text-sm font-semibold mb-2 flex items-center gap-2 text-muted-foreground">
+          <h3 className="text-sm font-semibold mb-1.5 flex items-center gap-2 text-muted-foreground">
             <Crown className="w-4 h-4" />
             Program Status
           </h3>
-          <div className="h-32 sm:h-40 flex flex-col gap-2">
+          <div className="h-24 sm:h-28 flex flex-col gap-1.5">
             <div className="flex-1">
               <ServicePlanStatusWidget user={user} />
             </div>
             {/* Only show billing widget for complete program users and make it very compact */}
             {user?.servicePlan === 'complete-program' && (
-              <div className="h-16 flex-shrink-0">
+              <div className="h-12 flex-shrink-0">
                 <SubscriptionBillingWidget user={user} />
               </div>
             )}
@@ -347,13 +371,13 @@ export function DashboardOverview() {
       </div>
 
       {/* Compact Main Content - Messages + Quick Actions */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-3 flex-1 min-h-0">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-2 flex-1 min-h-0">
         {/* Recent Messages */}
         <div className="lg:col-span-2 min-h-0">
           <Card className="h-full flex flex-col bg-gradient-to-br from-card via-card/95 to-muted/20 border hover:border-primary/20 transition-all duration-300 shadow-sm">
-            <CardHeader className="flex flex-row items-center justify-between pb-3 flex-shrink-0 bg-gradient-to-r from-muted/20 to-muted/10 rounded-t-lg border-b border-border/50">
-              <CardTitle className="flex items-center gap-2 text-base font-semibold text-foreground">
-                <div className="w-6 h-6 rounded-lg bg-primary/10 flex items-center justify-center">
+            <CardHeader className="flex flex-row items-center justify-between pb-2 flex-shrink-0 bg-gradient-to-r from-muted/20 to-muted/10 rounded-t-lg border-b border-border/50">
+              <CardTitle className="flex items-center gap-2 text-sm font-semibold text-foreground">
+                <div className="w-5 h-5 rounded-lg bg-primary/10 flex items-center justify-center">
                   <MessageCircle className="w-3 h-3 text-primary" />
                 </div>
                 Messages ({messages?.length || 0})
@@ -362,11 +386,11 @@ export function DashboardOverview() {
                 <Link href="/dashboard/messages">All</Link>
               </Button>
             </CardHeader>
-            <CardContent className="flex-1 flex flex-col p-3 min-h-0">
+            <CardContent className="flex-1 flex flex-col p-2 min-h-0">
               {messages && messages.length > 0 ? (
-                <div className="space-y-2 flex-1 overflow-y-auto">
+                <div className="space-y-1.5 flex-1 overflow-y-auto">
                   {messages.slice(0, 4).map((message) => (
-                    <div key={message.id} className="group flex items-start gap-2 p-2 hover:bg-muted/20 rounded-lg transition-all duration-200 cursor-pointer">
+                    <div key={message.id} className="group flex items-start gap-2 p-1.5 hover:bg-muted/20 rounded-lg transition-all duration-200 cursor-pointer">
                       <div className="w-5 h-5 bg-gradient-to-br from-primary/20 to-primary/10 rounded-lg flex items-center justify-center flex-shrink-0 group-hover:scale-105 transition-transform duration-200">
                         <MessageCircle className="w-2.5 h-2.5 text-primary" />
                       </div>
@@ -402,16 +426,16 @@ export function DashboardOverview() {
         {/* Quick Actions */}
         <div className="lg:col-span-1 min-h-0">
           <Card className="h-full flex flex-col bg-gradient-to-br from-card via-card/95 to-muted/20 border hover:border-primary/20 transition-all duration-300 shadow-sm">
-            <CardHeader className="pb-3 flex-shrink-0 bg-gradient-to-r from-muted/20 to-muted/10 rounded-t-lg border-b border-border/50">
-              <CardTitle className="flex items-center gap-2 text-base font-semibold text-foreground">
-                <div className="w-6 h-6 rounded-lg bg-primary/10 flex items-center justify-center">
+            <CardHeader className="pb-2 flex-shrink-0 bg-gradient-to-r from-muted/20 to-muted/10 rounded-t-lg border-b border-border/50">
+              <CardTitle className="flex items-center gap-2 text-sm font-semibold text-foreground">
+                <div className="w-5 h-5 rounded-lg bg-primary/10 flex items-center justify-center">
                   <Target className="w-3 h-3 text-primary" />
                 </div>
                 Quick Actions
               </CardTitle>
             </CardHeader>
-            <CardContent className="flex-1 p-3 flex flex-col">
-              <div className="flex flex-col gap-2 h-full">
+            <CardContent className="flex-1 p-2 flex flex-col">
+              <div className="flex flex-col gap-1.5 h-full">
                 {quickActions.map((action, index) => {
                   const Icon = action.icon;
                   return (
@@ -420,7 +444,7 @@ export function DashboardOverview() {
                       className="group relative overflow-hidden bg-gradient-to-r from-background via-background to-muted/30 border border-border/40 hover:border-primary/20 hover:shadow-lg hover:shadow-primary/5 transition-all duration-300 flex-1"
                     >
                       <Link href={action.href} className="block w-full h-full">
-                        <CardContent className="p-3 flex items-center gap-3 h-full">
+                        <CardContent className="p-2 flex items-center gap-2 h-full">
                           <div className={`w-7 h-7 rounded-lg flex items-center justify-center ${action.color} flex-shrink-0 transition-all duration-300 group-hover:scale-105 group-hover:shadow-lg relative`}>
                             <Icon className="w-3.5 h-3.5 text-white" />
                             {action.badge && (
@@ -448,6 +472,30 @@ export function DashboardOverview() {
         </div>
       </div>
 
+      {/* Additional Navigation - Non-intrusive compact section */}
+      <div className="flex-shrink-0">
+        <div className="grid grid-cols-3 gap-1.5">
+          {additionalActions.map((action, index) => {
+            const Icon = action.icon;
+            return (
+              <Link key={index} href={action.href} className="block">
+                <Card className="group relative overflow-hidden bg-gradient-to-r from-muted/30 via-muted/20 to-muted/10 border border-border/30 hover:border-primary/20 hover:shadow-md hover:shadow-primary/5 transition-all duration-300">
+                  <CardContent className="p-2 flex flex-col items-center gap-1.5 h-16">
+                    <div className={`w-6 h-6 rounded-md flex items-center justify-center ${action.color} flex-shrink-0 transition-all duration-300 group-hover:scale-110 group-hover:shadow-lg`}>
+                      <Icon className="w-3 h-3 text-white" />
+                    </div>
+                    <div className="text-center">
+                      <p className="text-xs font-medium text-foreground group-hover:text-primary transition-colors duration-300 leading-tight">{action.title}</p>
+                    </div>
+                  </CardContent>
+                  {/* Subtle background decoration */}
+                  <div className="absolute inset-0 bg-gradient-to-br from-transparent via-transparent to-primary/[0.02] opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                </Card>
+              </Link>
+            );
+          })}
+        </div>
+      </div>
 
     </div>
   );
