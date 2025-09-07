@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Search, MoreHorizontal, Shield, User, Trash2, Edit, ArrowLeft } from "lucide-react";
 import { Link } from "wouter";
 import { FloatingOrganic, DoodleConnector } from "@/components/ui/PageTransition";
@@ -48,6 +48,8 @@ import { orderBy } from "firebase/firestore";
 export default function AdminUsers() {
   const [searchTerm, setSearchTerm] = useState("");
   const [roleFilter, setRoleFilter] = useState<string>("all");
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage, setItemsPerPage] = useState(20);
   const { toast } = useToast();
 
   // Fetch users
@@ -67,6 +69,16 @@ export default function AdminUsers() {
     
     return matchesSearch && matchesRole;
   }) || [];
+
+  // Pagination calculations
+  const totalPages = Math.ceil(filteredUsers.length / itemsPerPage);
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const paginatedUsers = filteredUsers.slice(startIndex, startIndex + itemsPerPage);
+
+  // Reset to first page when search or filter changes
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchTerm, roleFilter]);
 
   const handleRoleChange = async (userId: string, newRole: "client" | "admin") => {
     try {
@@ -163,7 +175,7 @@ export default function AdminUsers() {
           <CardContent className="p-2 sm:p-6">
             {/* Mobile: Ultra-compact filters */}
             <div className="block sm:hidden">
-              <div className="flex gap-1 items-center">
+              <div className="flex gap-1 items-center mb-2">
                 <div className="flex-1 relative">
                   <Search className="absolute left-2 top-2.5 h-3.5 w-3.5 text-muted-foreground" />
                   <Input
@@ -181,6 +193,20 @@ export default function AdminUsers() {
                     <SelectItem value="all">All</SelectItem>
                     <SelectItem value="client">Client</SelectItem>
                     <SelectItem value="admin">Admin</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="flex justify-between items-center text-xs text-muted-foreground">
+                <span>{paginatedUsers.length} of {filteredUsers.length} users</span>
+                <Select value={itemsPerPage.toString()} onValueChange={(value) => setItemsPerPage(Number(value))}>
+                  <SelectTrigger className="w-16 h-6 px-1 text-xs">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="10">10</SelectItem>
+                    <SelectItem value="20">20</SelectItem>
+                    <SelectItem value="50">50</SelectItem>
+                    <SelectItem value="100">100</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
@@ -211,6 +237,24 @@ export default function AdminUsers() {
                     <SelectItem value="admin">Admins</SelectItem>
                   </SelectContent>
                 </Select>
+
+                {/* Items per page */}
+                <Select value={itemsPerPage.toString()} onValueChange={(value) => setItemsPerPage(Number(value))}>
+                  <SelectTrigger className="w-24">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="10">10</SelectItem>
+                    <SelectItem value="20">20</SelectItem>
+                    <SelectItem value="50">50</SelectItem>
+                    <SelectItem value="100">100</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="flex justify-end mt-4 pt-4 border-t">
+                <div className="text-sm text-muted-foreground">
+                  Showing {paginatedUsers.length} of {filteredUsers.length} users
+                </div>
               </div>
             </div>
           </CardContent>
@@ -236,11 +280,11 @@ export default function AdminUsers() {
             </CardTitle>
           </CardHeader>
           <CardContent>
-            {filteredUsers.length > 0 ? (
+            {paginatedUsers.length > 0 ? (
               <>
                 {/* Mobile: Ultra-compact card layout */}
                 <div className="block sm:hidden space-y-1 max-h-[75vh] overflow-y-auto">
-                  {filteredUsers.map((user) => (
+                  {paginatedUsers.map((user) => (
                     <div key={user.uid} className="border rounded-md p-2 bg-card">
                       <div className="flex items-center justify-between">
                         <div className="flex items-center gap-1.5 flex-1 min-w-0">
@@ -335,7 +379,7 @@ export default function AdminUsers() {
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {filteredUsers.map((user) => (
+                  {paginatedUsers.map((user) => (
                     <TableRow key={user.uid}>
                       <TableCell>
                         <div className="flex items-center space-x-3">
@@ -527,35 +571,108 @@ export default function AdminUsers() {
           </CardContent>
         </Card>
 
-        {/* Summary Stats */}
-        <div className="grid md:grid-cols-3 gap-6 mt-8">
-          <Card>
-            <CardContent className="p-6 text-center">
-              <User className="w-8 h-8 text-blue-500 mx-auto mb-2" />
-              <p className="text-2xl font-bold">{filteredUsers.filter(u => u.role === "client").length}</p>
-              <p className="text-sm text-muted-foreground">Total Clients</p>
+        {/* Pagination Controls */}
+        {totalPages > 1 && (
+          <Card className="mt-4">
+            <CardContent className="p-3 sm:p-4">
+              <div className="flex items-center justify-between">
+                <div className="text-sm text-muted-foreground">
+                  Page {currentPage} of {totalPages}
+                </div>
+                <div className="flex items-center gap-2">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setCurrentPage(Math.max(1, currentPage - 1))}
+                    disabled={currentPage === 1}
+                    className="h-8 px-3"
+                  >
+                    Previous
+                  </Button>
+                  <div className="flex items-center gap-1">
+                    {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
+                      const pageNum = Math.max(1, Math.min(totalPages - 4, currentPage - 2)) + i;
+                      if (pageNum > totalPages) return null;
+                      return (
+                        <Button
+                          key={pageNum}
+                          variant={currentPage === pageNum ? "default" : "outline"}
+                          size="sm"
+                          onClick={() => setCurrentPage(pageNum)}
+                          className="h-8 w-8 p-0"
+                        >
+                          {pageNum}
+                        </Button>
+                      );
+                    })}
+                  </div>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setCurrentPage(Math.min(totalPages, currentPage + 1))}
+                    disabled={currentPage === totalPages}
+                    className="h-8 px-3"
+                  >
+                    Next
+                  </Button>
+                </div>
+              </div>
             </CardContent>
           </Card>
-          
-          <Card>
-            <CardContent className="p-6 text-center">
-              <Shield className="w-8 h-8 text-purple-500 mx-auto mb-2" />
-              <p className="text-2xl font-bold">{filteredUsers.filter(u => u.role === "admin").length}</p>
-              <p className="text-sm text-muted-foreground">Admin Users</p>
-            </CardContent>
-          </Card>
-          
-          <Card>
-            <CardContent className="p-6 text-center">
-              <div className="w-8 h-8 mx-auto mb-2 text-green-500">📈</div>
-              <p className="text-2xl font-bold">
-                {users?.filter(u => 
+        )}
+
+        {/* Summary Stats - Compact on mobile */}
+        <div className="mt-4 sm:mt-8">
+          {/* Mobile: Horizontal compact stats */}
+          <div className="block sm:hidden">
+            <div className="flex gap-2 overflow-x-auto pb-2">
+              <div className="flex items-center gap-1 bg-blue-50 dark:bg-blue-900/20 px-3 py-2 rounded text-xs whitespace-nowrap">
+                <User className="h-3 w-3 text-blue-500" />
+                <span className="font-medium text-blue-700 dark:text-blue-300">{filteredUsers.filter(u => u.role === "client").length} Clients</span>
+              </div>
+              <div className="flex items-center gap-1 bg-purple-50 dark:bg-purple-900/20 px-3 py-2 rounded text-xs whitespace-nowrap">
+                <Shield className="h-3 w-3 text-purple-500" />
+                <span className="font-medium text-purple-700 dark:text-purple-300">{filteredUsers.filter(u => u.role === "admin").length} Admins</span>
+              </div>
+              <div className="flex items-center gap-1 bg-green-50 dark:bg-green-900/20 px-3 py-2 rounded text-xs whitespace-nowrap">
+                <div className="h-3 w-3 text-green-500">📈</div>
+                <span className="font-medium text-green-700 dark:text-green-300">{users?.filter(u => 
                   new Date(u.createdAt).getMonth() === new Date().getMonth()
-                ).length || 0}
-              </p>
-              <p className="text-sm text-muted-foreground">New This Month</p>
-            </CardContent>
-          </Card>
+                ).length || 0} This Month</span>
+              </div>
+            </div>
+          </div>
+
+          {/* Desktop: Full stats cards */}
+          <div className="hidden sm:grid grid-cols-1 md:grid-cols-3 gap-6">
+            <Card>
+              <CardContent className="p-6 text-center">
+                <User className="w-8 h-8 text-blue-500 mx-auto mb-2" />
+                <p className="text-2xl font-bold">{filteredUsers.filter(u => u.role === "client").length}</p>
+                <p className="text-sm text-muted-foreground">Total Clients</p>
+              </CardContent>
+            </Card>
+            
+            <Card>
+              <CardContent className="p-6 text-center">
+                <Shield className="w-8 h-8 text-purple-500 mx-auto mb-2" />
+                <p className="text-2xl font-bold">{filteredUsers.filter(u => u.role === "admin").length}</p>
+                <p className="text-sm text-muted-foreground">Admin Users</p>
+              </CardContent>
+            </Card>
+            
+            <Card>
+              <CardContent className="p-6 text-center">
+                <div className="w-8 h-8 mx-auto mb-2 text-green-500">📈</div>
+                <p className="text-2xl font-bold">
+                  {users?.filter(u => 
+                    new Date(u.createdAt).getMonth() === new Date().getMonth()
+                  ).length || 0}
+                </p>
+                <p className="text-sm text-muted-foreground">New This Month</p>
+              </CardContent>
+            </Card>
+          </div>
         </div>
       </div>
     </div>
