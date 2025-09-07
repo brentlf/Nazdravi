@@ -865,61 +865,58 @@ export default function AdminAppointments() {
           </>
         )}
 
-        {/* Enhanced Filters - Compact on mobile */}
-        <Card className="mb-4 sm:mb-8">
-          <CardContent className="p-3 sm:p-6">
-            {/* Mobile: Compact filters */}
-            <div className="block sm:hidden space-y-3">
-              {/* Search */}
-              <div className="relative">
-                <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-                <Input
-                  placeholder="Search appointments..."
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                  className="pl-9 h-9"
-                />
-              </div>
-              
-              {/* Filters row */}
-              <div className="flex gap-2">
+        {/* Enhanced Filters - Ultra-compact on mobile */}
+        <Card className="mb-3 sm:mb-8">
+          <CardContent className="p-2 sm:p-6">
+            {/* Mobile: Ultra-compact filters */}
+            <div className="block sm:hidden space-y-2">
+              {/* Search and filters in one compact row */}
+              <div className="flex gap-1">
+                <div className="relative flex-1">
+                  <Search className="absolute left-2 top-2.5 h-3.5 w-3.5 text-muted-foreground" />
+                  <Input
+                    placeholder="Search..."
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    className="pl-7 h-8 text-sm"
+                  />
+                </div>
+                
                 <Select value={statusFilter} onValueChange={setStatusFilter}>
-                  <SelectTrigger className="flex-1 h-9">
-                    <Filter className="w-4 h-4 mr-1" />
-                    <SelectValue placeholder="Status" />
+                  <SelectTrigger className="w-20 h-8 px-2">
+                    <Filter className="w-3 h-3" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="all">All Statuses</SelectItem>
+                    <SelectItem value="all">All</SelectItem>
                     <SelectItem value="pending">Pending</SelectItem>
                     <SelectItem value="confirmed">Confirmed</SelectItem>
-                    <SelectItem value="done">Completed</SelectItem>
+                    <SelectItem value="done">Done</SelectItem>
                     <SelectItem value="cancelled">Cancelled</SelectItem>
-                    <SelectItem value="clientRescheduleRequested">Client Reschedule</SelectItem>
-                    <SelectItem value="confirmRescheduleRequest">Confirm Reschedule</SelectItem>
+                    <SelectItem value="clientRescheduleRequested">Reschedule</SelectItem>
+                    <SelectItem value="confirmRescheduleRequest">Confirm</SelectItem>
                     <SelectItem value="veeRescheduleRequest">Vee Reschedule</SelectItem>
                     <SelectItem value="no-show">No-Show</SelectItem>
                   </SelectContent>
                 </Select>
 
                 <Select value={dateFilter} onValueChange={setDateFilter}>
-                  <SelectTrigger className="flex-1 h-9">
-                    <Calendar className="w-4 h-4 mr-1" />
-                    <SelectValue placeholder="Date" />
+                  <SelectTrigger className="w-20 h-8 px-2">
+                    <Calendar className="w-3 h-3" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="all">All Dates</SelectItem>
+                    <SelectItem value="all">All</SelectItem>
                     <SelectItem value="today">Today</SelectItem>
                     <SelectItem value="tomorrow">Tomorrow</SelectItem>
-                    <SelectItem value="this-week">This Week</SelectItem>
+                    <SelectItem value="this-week">Week</SelectItem>
                     <SelectItem value="future">Future</SelectItem>
                     <SelectItem value="past">Past</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
               
-              {/* Results count */}
+              {/* Results count - inline with search */}
               <div className="text-xs text-muted-foreground text-center">
-                {processedAppointments.length} of {appointments?.length || 0} appointments
+                {processedAppointments.length}/{appointments?.length || 0}
               </div>
             </div>
 
