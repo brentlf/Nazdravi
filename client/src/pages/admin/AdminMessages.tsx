@@ -198,7 +198,7 @@ export default function AdminMessages() {
   // Show individual conversation
   return (
     <div className="h-screen bg-background flex flex-col overflow-hidden">
-      {/* Fixed Header - No Scrolling */}
+      {/* Fixed Main Header */}
       <div className="bg-card border-b border-border text-foreground fixed top-0 left-0 right-0 z-50">
         <div className="px-4 py-3 flex items-center justify-between">
           <div className="flex items-center gap-3">
@@ -225,9 +225,11 @@ export default function AdminMessages() {
             </Button>
           </div>
         </div>
-        
-        {/* User Info Section - Fixed and Compact */}
-        <div className="px-4 py-2 border-b border-border/50">
+      </div>
+
+      {/* Fixed User Info Section - Below Header */}
+      <div className="bg-card border-b border-border text-foreground fixed top-16 left-0 right-0 z-40">
+        <div className="px-4 py-2">
           <div className="flex items-center gap-2">
             <div className="flex-1 min-w-0">
               <p className="text-xs font-medium text-foreground truncate">{selectedClient?.name || 'Client'}</p>
@@ -238,7 +240,7 @@ export default function AdminMessages() {
       </div>
 
       {/* Chat Background */}
-      <div className="flex-1 bg-muted/30 relative overflow-hidden pt-24">
+      <div className="flex-1 bg-muted/30 relative overflow-hidden pt-32">
         {/* Subtle Pattern */}
         <div 
           className="absolute inset-0 opacity-5 dark:opacity-10"
