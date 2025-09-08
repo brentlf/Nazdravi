@@ -66,21 +66,21 @@ export default function Blog() {
 
     const getPageNumbers = () => {
       const pages = [];
-      const maxVisiblePages = 5;
+      const maxVisiblePages = 3;
       
       if (totalPages <= maxVisiblePages) {
         for (let i = 1; i <= totalPages; i++) {
           pages.push(i);
         }
       } else {
-        if (currentPage <= 3) {
-          for (let i = 1; i <= 4; i++) pages.push(i);
+        if (currentPage <= 2) {
+          for (let i = 1; i <= 3; i++) pages.push(i);
           pages.push('...');
           pages.push(totalPages);
-        } else if (currentPage >= totalPages - 2) {
+        } else if (currentPage >= totalPages - 1) {
           pages.push(1);
           pages.push('...');
-          for (let i = totalPages - 3; i <= totalPages; i++) pages.push(i);
+          for (let i = totalPages - 2; i <= totalPages; i++) pages.push(i);
         } else {
           pages.push(1);
           pages.push('...');
@@ -94,15 +94,16 @@ export default function Blog() {
     };
 
     return (
-      <div className="flex items-center justify-center gap-2 mt-8">
+      <div className="flex items-center justify-center gap-1 mt-4">
         <Button
           variant="outline"
           size="sm"
           onClick={() => setCurrentPage(Math.max(1, currentPage - 1))}
           disabled={currentPage === 1}
+          className="h-8 px-2 text-xs"
         >
-          <ChevronLeft className="h-4 w-4" />
-          Previous
+          <ChevronLeft className="h-3 w-3" />
+          Prev
         </Button>
         
         <div className="flex items-center gap-1">
@@ -113,7 +114,7 @@ export default function Blog() {
               size="sm"
               onClick={() => typeof page === 'number' && setCurrentPage(page)}
               disabled={page === '...'}
-              className="w-10 h-10"
+              className="w-8 h-8 text-xs"
             >
               {page}
             </Button>
@@ -125,9 +126,10 @@ export default function Blog() {
           size="sm"
           onClick={() => setCurrentPage(Math.min(totalPages, currentPage + 1))}
           disabled={currentPage === totalPages}
+          className="h-8 px-2 text-xs"
         >
           Next
-          <ChevronRight className="h-4 w-4" />
+          <ChevronRight className="h-3 w-3" />
         </Button>
       </div>
     );
@@ -157,56 +159,58 @@ export default function Blog() {
   return (
     <div className="page-wrapper">
       {/* Main content section */}
-      <section className="page-content px-4 sm:px-6 px-safe py-8">
+      <section className="page-content px-3 sm:px-4 px-safe py-3">
         <div className="max-w-7xl mx-auto w-full">
           {/* Header Section */}
-          <div className="text-center mb-6 xs:mb-8 sm:mb-12">
-            <div className="inline-flex items-center justify-center w-10 h-10 xs:w-12 xs:h-12 bg-primary/10 rounded-full mb-3 xs:mb-4">
-              <BookOpen className="h-5 w-5 xs:h-6 xs:w-6 text-primary" />
+          <div className="text-center mb-3 xs:mb-4">
+            <div className="inline-flex items-center justify-center w-8 h-8 xs:w-10 xs:h-10 bg-primary/10 rounded-full mb-2">
+              <BookOpen className="h-4 w-4 xs:h-5 xs:w-5 text-primary" />
             </div>
-            <h1 className="text-2xl xs:text-3xl sm:text-4xl lg:text-5xl font-bold mb-3 xs:mb-4 leading-tight text-foreground font-serif h-short-heading">
+            <h1 className="text-xl xs:text-2xl sm:text-3xl font-bold mb-1 xs:mb-2 leading-tight text-foreground font-serif">
               Nutrition Blog
             </h1>
-            <p className="text-base xs:text-lg text-muted-foreground max-w-2xl mx-auto leading-relaxed h-short-text">
+            <p className="text-sm xs:text-base text-muted-foreground max-w-2xl mx-auto leading-relaxed">
               Expert insights, practical tips, and evidence-based guidance to support your nutrition journey.
             </p>
           </div>
 
           {/* Search and Filter Section */}
-          <div className="bg-card border border-border rounded-xl p-4 xs:p-6 mb-6 xs:mb-8">
-            <div className="grid grid-cols-1 xs:grid-cols-2 lg:grid-cols-3 gap-4 xs:gap-6 items-end">
+          <div className="bg-card border border-border rounded-xl p-3 mb-3 xs:mb-4">
+            <div className="grid grid-cols-1 xs:grid-cols-2 lg:grid-cols-3 gap-2 xs:gap-3 items-end">
               {/* Search Bar */}
               <div>
-                <h3 className="text-lg font-semibold text-card-foreground mb-3">Find Articles</h3>
+                <h3 className="text-sm font-semibold text-card-foreground mb-1">Find Articles</h3>
                 <div className="relative">
-                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                  <Search className="absolute left-2 top-1/2 transform -translate-y-1/2 h-3 w-3 text-muted-foreground" />
                   <Input
                     type="text"
                     placeholder="Search articles..."
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
-                    className="pl-10"
+                    className="pl-8 h-8 text-sm"
                   />
                 </div>
               </div>
               
               {/* Category Filters */}
               <div>
-                <h3 className="text-lg font-semibold text-card-foreground mb-3">Browse Categories</h3>
-                <div className="flex gap-2 flex-wrap">
+                <h3 className="text-sm font-semibold text-card-foreground mb-1">Categories</h3>
+                <div className="flex gap-1 flex-wrap">
                   <Button
                     variant={selectedCategory === "" ? "default" : "outline"}
                     onClick={() => setSelectedCategory("")}
                     size="sm"
+                    className="h-7 px-2 text-xs"
                   >
                     All
                   </Button>
-                  {uniqueCategories.slice(0, 4).map((category) => (
+                  {uniqueCategories.slice(0, 3).map((category) => (
                     <Button
                       key={category}
                       variant={selectedCategory === category ? "default" : "outline"}
                       onClick={() => setSelectedCategory(category)}
                       size="sm"
+                      className="h-7 px-2 text-xs"
                     >
                       {category}
                     </Button>
@@ -216,28 +220,28 @@ export default function Blog() {
 
               {/* View Toggle */}
               <div>
-                <h3 className="text-lg font-semibold text-card-foreground mb-3">View Mode</h3>
-                <div className="flex gap-2">
+                <h3 className="text-sm font-semibold text-card-foreground mb-1">View</h3>
+                <div className="flex gap-1">
                   <button
                     onClick={() => setViewMode("grid")}
-                    className={`flex items-center gap-2 px-3 py-2 text-sm font-medium rounded-md transition-colors ${
+                    className={`flex items-center gap-1 px-2 py-1 text-xs font-medium rounded-md transition-colors ${
                       viewMode === "grid" 
                         ? "bg-primary text-primary-foreground hover:bg-primary/90" 
                         : "bg-background border border-input hover:bg-accent hover:text-accent-foreground"
                     }`}
                   >
-                    <Grid3X3 className="h-4 w-4" />
+                    <Grid3X3 className="h-3 w-3" />
                     Grid
                   </button>
                   <button
                     onClick={() => setViewMode("list")}
-                    className={`flex items-center gap-2 px-3 py-2 text-sm font-medium rounded-md transition-colors ${
+                    className={`flex items-center gap-1 px-2 py-1 text-xs font-medium rounded-md transition-colors ${
                       viewMode === "list" 
                         ? "bg-primary text-primary-foreground hover:bg-primary/90" 
                         : "bg-background border border-input hover:bg-accent hover:text-accent-foreground"
                     }`}
                   >
-                    <List className="h-4 w-4" />
+                    <List className="h-3 w-3" />
                     List
                   </button>
                 </div>
@@ -247,26 +251,28 @@ export default function Blog() {
 
           {/* Blog Posts Section */}
           {postsToShow.length === 0 ? (
-            <div className="bg-card border border-border rounded-xl p-8 text-center">
-              <div className="inline-flex items-center justify-center w-12 h-12 bg-muted rounded-full mb-4">
-                <Search className="h-6 w-6 text-muted-foreground" />
+            <div className="bg-card border border-border rounded-xl p-4 text-center">
+              <div className="inline-flex items-center justify-center w-10 h-10 bg-muted rounded-full mb-2">
+                <Search className="h-5 w-5 text-muted-foreground" />
               </div>
-              <h3 className="text-xl font-bold text-card-foreground mb-2">No Articles Found</h3>
-              <p className="text-muted-foreground mb-4 max-w-md mx-auto">
+              <h3 className="text-base font-bold text-card-foreground mb-2">No Articles Found</h3>
+              <p className="text-muted-foreground mb-3 max-w-md mx-auto text-sm">
                 Try adjusting your search terms or browse all categories to discover our nutrition content.
               </p>
               <Button 
                 onClick={() => { setSearchTerm(""); setSelectedCategory(""); }}
                 variant="outline"
+                size="sm"
+                className="h-8 text-xs"
               >
                 Clear Filters
               </Button>
             </div>
           ) : (
-            <div className="space-y-6">
+            <div className="space-y-3">
               <div className="text-center">
-                <h2 className="text-2xl font-bold text-foreground mb-2">Latest Articles</h2>
-                <p className="text-muted-foreground">
+                <h2 className="text-lg font-bold text-foreground mb-1">Latest Articles</h2>
+                <p className="text-muted-foreground text-xs">
                   Showing {startIndex + 1}-{Math.min(endIndex, postsToShow.length)} of {postsToShow.length} article{postsToShow.length !== 1 ? 's' : ''}
                   {viewMode === "grid" ? " (6 per page)" : " (20 per page)"}
                 </p>
@@ -274,17 +280,17 @@ export default function Blog() {
               
               {/* Blog Posts - Grid View */}
               {viewMode === "grid" && (
-                <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-3">
                   {paginatedPosts.map((post, index) => (
                     <Card key={post.id || index} className="group border border-border bg-card hover:shadow-lg transition-all duration-300 overflow-hidden">
                       {post.tags && post.tags.length > 0 && (
-                        <Badge className="absolute top-3 right-3 bg-primary text-primary-foreground border-0 z-10">
+                        <Badge className="absolute top-1 right-1 bg-primary text-primary-foreground border-0 z-10 text-xs px-1 py-0.5">
                           {post.tags[0]}
                         </Badge>
                       )}
                       
                       {/* Thumbnail */}
-                      <div className="w-full h-48 bg-muted relative overflow-hidden">
+                      <div className="w-full h-32 bg-muted relative overflow-hidden">
                         {post.featuredImage || post.mediumUrl ? (
                           <img
                             src={post.featuredImage || post.mediumUrl}
@@ -293,36 +299,36 @@ export default function Blog() {
                           />
                         ) : (
                           <div className="w-full h-full flex items-center justify-center">
-                            <Leaf className="h-12 w-12 text-muted-foreground" />
+                            <Leaf className="h-8 w-8 text-muted-foreground" />
                           </div>
                         )}
                       </div>
                       
                       {/* Content */}
-                      <CardContent className="p-6 text-card-foreground">
-                        <div className="flex items-center gap-4 text-sm text-muted-foreground mb-3">
+                      <CardContent className="p-3 text-card-foreground">
+                        <div className="flex items-center gap-2 text-xs text-muted-foreground mb-1">
                           <div className="flex items-center gap-1">
-                            <Calendar className="h-4 w-4" />
+                            <Calendar className="h-3 w-3" />
                             {post.createdAt ? new Date(post.createdAt.seconds * 1000).toLocaleDateString() : "Recent"}
                           </div>
                           <div className="flex items-center gap-1">
-                            <Clock className="h-4 w-4" />
+                            <Clock className="h-3 w-3" />
                             {calculateReadTime(post.content || post.excerpt || "")} min
                           </div>
                         </div>
                         
-                        <h3 className="text-lg font-bold mb-3 text-card-foreground group-hover:text-primary transition-colors duration-300 line-clamp-2">
+                        <h3 className="text-sm font-bold mb-1 text-card-foreground group-hover:text-primary transition-colors duration-300 line-clamp-2">
                           {post.title}
                         </h3>
                         
-                        <p className="text-muted-foreground mb-4 leading-relaxed line-clamp-3">
-                          {post.excerpt || post.content?.substring(0, 120) + "..."}
+                        <p className="text-muted-foreground mb-2 leading-relaxed line-clamp-2 text-xs">
+                          {post.excerpt || post.content?.substring(0, 80) + "..."}
                         </p>
                         
                         <Link href={`/blog/post?id=${post.id}`}>
-                          <Button variant="outline" className="w-full">
+                          <Button variant="outline" className="w-full text-xs py-1.5 h-7">
                             Read Article
-                            <ArrowRight className="ml-2 h-4 w-4" />
+                            <ArrowRight className="ml-1 h-3 w-3" />
                           </Button>
                         </Link>
                       </CardContent>
@@ -333,12 +339,12 @@ export default function Blog() {
 
               {/* Blog Posts - List View */}
               {viewMode === "list" && (
-                <div className="space-y-4">
+                <div className="space-y-3">
                   {paginatedPosts.map((post, index) => (
                     <Card key={post.id || index} className="group border border-border bg-card hover:shadow-lg transition-all duration-300 overflow-hidden">
                       <div className="flex flex-col md:flex-row">
                         {/* Thumbnail - Smaller in list view */}
-                        <div className="w-full md:w-48 h-48 md:h-32 bg-muted relative overflow-hidden flex-shrink-0">
+                        <div className="w-full md:w-32 h-32 md:h-24 bg-muted relative overflow-hidden flex-shrink-0">
                           {post.featuredImage || post.mediumUrl ? (
                             <img
                               src={post.featuredImage || post.mediumUrl}
@@ -347,42 +353,42 @@ export default function Blog() {
                             />
                           ) : (
                             <div className="w-full h-full flex items-center justify-center">
-                              <Leaf className="h-8 w-8 text-muted-foreground" />
+                              <Leaf className="h-6 w-6 text-muted-foreground" />
                             </div>
                           )}
                         </div>
                         
                         {/* Content */}
-                        <CardContent className="p-6 text-card-foreground flex-1">
+                        <CardContent className="p-4 text-card-foreground flex-1">
                           <div className="flex flex-col h-full">
-                            <div className="flex items-start justify-between mb-3">
+                            <div className="flex items-start justify-between mb-2">
                               <div className="flex-1">
-                                <div className="flex items-center gap-4 text-sm text-muted-foreground mb-2">
+                                <div className="flex items-center gap-3 text-xs text-muted-foreground mb-1">
                                   <div className="flex items-center gap-1">
-                                    <Calendar className="h-4 w-4" />
+                                    <Calendar className="h-3 w-3" />
                                     {post.createdAt ? new Date(post.createdAt.seconds * 1000).toLocaleDateString() : "Recent"}
                                   </div>
                                   <div className="flex items-center gap-1">
-                                    <Clock className="h-4 w-4" />
+                                    <Clock className="h-3 w-3" />
                                     {calculateReadTime(post.content || post.excerpt || "")} min
                                   </div>
                                 </div>
                                 
-                                <h3 className="text-xl font-bold mb-2 text-card-foreground group-hover:text-primary transition-colors duration-300 line-clamp-2">
+                                <h3 className="text-base font-bold mb-1 text-card-foreground group-hover:text-primary transition-colors duration-300 line-clamp-2">
                                   {post.title}
                                 </h3>
                                 
-                                <p className="text-muted-foreground leading-relaxed line-clamp-2 mb-4">
-                                  {post.excerpt || post.content?.substring(0, 200) + "..."}
+                                <p className="text-muted-foreground leading-relaxed line-clamp-2 mb-2 text-sm">
+                                  {post.excerpt || post.content?.substring(0, 150) + "..."}
                                 </p>
                               </div>
                               
                               {/* Tags and Read Button */}
-                              <div className="flex flex-col items-end gap-3 ml-4">
+                              <div className="flex flex-col items-end gap-2 ml-3">
                                 {post.tags && post.tags.length > 0 && (
                                   <div className="flex gap-1 flex-wrap justify-end">
-                                    {post.tags.slice(0, 2).map((tag: string, tagIndex: number) => (
-                                      <Badge key={tagIndex} variant="secondary" className="text-xs">
+                                    {post.tags.slice(0, 1).map((tag: string, tagIndex: number) => (
+                                      <Badge key={tagIndex} variant="secondary" className="text-xs px-1 py-0.5">
                                         {tag}
                                       </Badge>
                                     ))}
@@ -390,9 +396,9 @@ export default function Blog() {
                                 )}
                                 
                                 <Link href={`/blog/post?id=${post.id}`}>
-                                  <Button variant="outline" size="sm" className="whitespace-nowrap">
+                                  <Button variant="outline" size="sm" className="whitespace-nowrap h-7 text-xs">
                                     Read Article
-                                    <ArrowRight className="ml-2 h-4 w-4" />
+                                    <ArrowRight className="ml-1 h-3 w-3" />
                                   </Button>
                                 </Link>
                               </div>
@@ -411,16 +417,16 @@ export default function Blog() {
           )}
 
           {/* CTA Section */}
-          <div className="text-center mt-12">
-            <div className="bg-card border border-border rounded-xl p-8">
-              <h3 className="text-xl font-bold text-card-foreground mb-4">Need Personalized Nutrition Advice?</h3>
-              <p className="text-muted-foreground mb-6 max-w-2xl mx-auto">
+          <div className="text-center mt-4">
+            <div className="bg-card border border-border rounded-xl p-4">
+              <h3 className="text-base font-bold text-card-foreground mb-2">Need Personalized Nutrition Advice?</h3>
+              <p className="text-muted-foreground mb-3 max-w-2xl mx-auto text-sm">
                 Our blog articles provide general guidance, but for personalized recommendations tailored to your specific needs, book a consultation with our expert dietitian.
               </p>
               <Link href="/appointment">
-                <Button size="lg" className="px-8 py-3 bg-gradient-to-r from-sky-400 to-blue-500 hover:from-sky-500 hover:to-blue-600 text-white border-0 shadow-lg hover:shadow-xl transition-all duration-300">
+                <Button size="sm" className="px-4 py-2 bg-gradient-to-r from-sky-400 to-blue-500 hover:from-sky-500 hover:to-blue-600 text-white border-0 shadow-lg hover:shadow-xl transition-all duration-300 text-sm">
                   Book Consultation
-                  <ArrowRight className="ml-2 h-4 w-4" />
+                  <ArrowRight className="ml-1 h-3 w-3" />
                 </Button>
               </Link>
             </div>

@@ -658,20 +658,20 @@ export default function DashboardAppointments() {
   }
 
   return (
-    <div className="h-full bg-gradient-to-br from-background to-muted/30 country-texture relative">
-      <div className="h-full overflow-y-auto container mx-auto px-4 sm:px-6 px-safe py-2 relative z-10">
+    <div className="h-full bg-gradient-to-br from-background to-muted/30 country-texture relative dashboard-viewport">
+      <div className="h-full overflow-y-auto container mx-auto px-3 sm:px-4 px-safe py-2 relative z-10">
         {/* Compact Header with Back Navigation */}
-        <div className="flex items-center justify-between mb-2 flex-shrink-0">
-          <div className="flex items-center gap-4">
+        <div className="flex items-center justify-between mb-1 flex-shrink-0">
+          <div className="flex items-center gap-3">
             <Link href="/dashboard">
-              <Button variant="ghost" size="sm" className="flex items-center gap-2">
-                <ArrowLeft className="w-4 h-4" />
+              <Button variant="ghost" size="sm" className="flex items-center gap-1 text-xs px-2 py-1">
+                <ArrowLeft className="w-3 h-3" />
                 Back
               </Button>
             </Link>
             <div>
-              <h1 className="text-xl font-bold text-foreground">Your Appointments</h1>
-              <p className="text-sm text-muted-foreground">
+              <h1 className="text-lg font-bold text-foreground">Your Appointments</h1>
+              <p className="text-xs text-muted-foreground">
                 Schedule and manage your consultations
               </p>
             </div>
@@ -680,24 +680,24 @@ export default function DashboardAppointments() {
 
         {/* Booking Requirements - Condensed (hidden on mobile to prioritize list) */}
         {(!hasConsent || (!hasPreEvaluation && hasConsent)) && (
-          <Card className="mb-3 hidden sm:block">
-            <CardHeader className="pb-2">
-              <CardTitle className="text-base">Booking Requirements</CardTitle>
+          <Card className="mb-2 hidden sm:block">
+            <CardHeader className="pb-1">
+              <CardTitle className="text-sm">Booking Requirements</CardTitle>
             </CardHeader>
-            <CardContent className="space-y-3">
+            <CardContent className="space-y-2">
               {!hasConsent && (
-                <div className="flex items-center justify-between p-3 bg-red-50 dark:bg-red-900/20 rounded-lg border border-red-200 dark:border-red-800">
-                  <div className="flex items-center gap-3">
-                    <Shield className="w-5 h-5 text-red-500" />
+                <div className="flex items-center justify-between p-2 bg-red-50 dark:bg-red-900/20 rounded-lg border border-red-200 dark:border-red-800">
+                  <div className="flex items-center gap-2">
+                    <Shield className="w-4 h-4 text-red-500" />
                     <div>
-                      <p className="font-medium text-red-800 dark:text-red-200 text-sm">Informed Consent Required</p>
+                      <p className="font-medium text-red-800 dark:text-red-200 text-xs">Informed Consent Required</p>
                       <p className="text-red-600 dark:text-red-400 text-xs">Complete before booking appointments</p>
                     </div>
                   </div>
                   <Button 
                     size="sm"
                     onClick={() => window.location.href = '/consent-form'}
-                    className="bg-destructive hover:brightness-110 text-destructive-foreground"
+                    className="bg-destructive hover:brightness-110 text-destructive-foreground text-xs px-2 py-1"
                   >
                     Complete
                   </Button>
@@ -705,18 +705,18 @@ export default function DashboardAppointments() {
               )}
               
               {!hasPreEvaluation && hasConsent && (
-                <div className="flex items-center justify-between p-3 bg-orange-50 dark:bg-orange-900/20 rounded-lg border border-orange-200 dark:border-orange-800">
-                  <div className="flex items-center gap-3">
-                    <AlertCircle className="w-5 h-5 text-orange-500" />
+                <div className="flex items-center justify-between p-2 bg-orange-50 dark:bg-orange-900/20 rounded-lg border border-orange-200 dark:border-orange-800">
+                  <div className="flex items-center gap-2">
+                    <AlertCircle className="w-4 h-4 text-orange-500" />
                     <div>
-                      <p className="font-medium text-orange-800 dark:text-orange-200 text-sm">Pre-Evaluation Recommended</p>
+                      <p className="font-medium text-orange-800 dark:text-orange-200 text-xs">Pre-Evaluation Recommended</p>
                       <p className="text-orange-600 dark:text-orange-400 text-xs">Health assessment for personalized guidance</p>
                     </div>
                   </div>
                   <Button 
                     size="sm"
                     onClick={() => setIsPreEvaluationOpen(true)}
-                    className="bg-warning hover:brightness-110 text-primary-foreground"
+                    className="bg-warning hover:brightness-110 text-primary-foreground text-xs px-2 py-1"
                   >
                     Complete
                   </Button>
@@ -728,28 +728,28 @@ export default function DashboardAppointments() {
 
         {/* Next Upcoming Appointment (hidden on mobile to prioritize list) */}
         {nextAppointment && (
-          <Card className="mb-6 hidden sm:block">
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Clock className="w-5 h-5" />
+          <Card className="mb-3 hidden sm:block">
+            <CardHeader className="pb-2">
+              <CardTitle className="flex items-center gap-2 text-sm">
+                <Clock className="w-4 h-4" />
                 Next Appointment
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="space-y-4">
+              <div className="space-y-2">
                 {/* Pre-evaluation alert for this appointment */}
                 {!hasPreEvaluation && (
-                  <div className="flex items-center gap-3 p-3 bg-orange-50 dark:bg-orange-900/20 rounded-lg border border-orange-200 dark:border-orange-800">
-                    <AlertCircle className="w-5 h-5 text-orange-500" />
+                  <div className="flex items-center gap-2 p-2 bg-orange-50 dark:bg-orange-900/20 rounded-lg border border-orange-200 dark:border-orange-800">
+                    <AlertCircle className="w-4 h-4 text-orange-500" />
                     <div className="flex-1">
-                      <p className="text-orange-800 dark:text-orange-200 text-sm font-medium">
+                      <p className="text-orange-800 dark:text-orange-200 text-xs font-medium">
                         Complete pre-evaluation form before this appointment
                       </p>
                     </div>
                     <Button 
                       size="sm" 
                       onClick={() => setIsPreEvaluationOpen(true)}
-                      className="bg-warning hover:brightness-110 text-primary-foreground"
+                      className="bg-warning hover:brightness-110 text-primary-foreground text-xs px-2 py-1"
                     >
                       Complete Now
                     </Button>

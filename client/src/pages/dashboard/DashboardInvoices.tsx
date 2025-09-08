@@ -59,11 +59,11 @@ export default function DashboardInvoices() {
 
   if (loading) {
     return (
-      <div className="h-full bg-background">
-        <div className="container mx-auto px-4 sm:px-6 px-safe">
-          <div className="animate-pulse space-y-4">
-            <div className="h-8 bg-muted rounded w-1/4"></div>
-            <div className="h-64 bg-muted rounded"></div>
+      <div className="dashboard-viewport bg-background">
+        <div className="container mx-auto px-3 sm:px-4 px-safe py-2">
+          <div className="animate-pulse space-y-2">
+            <div className="h-6 bg-muted rounded w-1/4"></div>
+            <div className="h-48 bg-muted rounded"></div>
           </div>
         </div>
       </div>
@@ -74,58 +74,58 @@ export default function DashboardInvoices() {
   const totalPending = pendingInvoices.reduce((sum, invoice) => sum + (invoice.amount || 0), 0);
 
   return (
-    <div className="h-full bg-background">
-      <div className="h-full overflow-y-auto container mx-auto px-4 sm:px-6 px-safe py-4">
+    <div className="dashboard-viewport bg-background">
+      <div className="container mx-auto px-3 sm:px-4 px-safe py-2 flex flex-col h-full">
         {/* Compact Header with Back Navigation */}
-        <div className="flex items-center justify-between mb-4 flex-shrink-0">
-          <div className="flex items-center gap-4">
+        <div className="flex items-center justify-between mb-2 flex-shrink-0">
+          <div className="flex items-center gap-3">
             <Link href="/dashboard">
-              <Button variant="ghost" size="sm">
-                <ArrowLeft className="w-4 h-4 mr-2" />
+              <Button variant="ghost" size="sm" className="flex items-center gap-1 text-xs px-2 py-1">
+                <ArrowLeft className="w-3 h-3" />
                 Back
               </Button>
             </Link>
             <div>
-              <h1 className="text-xl font-bold text-foreground">My Invoices</h1>
-              <p className="text-sm text-muted-foreground">View and pay your consultation invoices</p>
+              <h1 className="text-lg font-bold text-foreground">My Invoices</h1>
+              <p className="text-xs text-muted-foreground">View and pay your consultation invoices</p>
             </div>
           </div>
         </div>
 
         {/* Compact Summary Cards */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 mb-4 flex-shrink-0">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2 mb-2 flex-shrink-0">
           <Card>
-            <CardContent className="p-3">
+            <CardContent className="p-2">
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-xs font-medium text-muted-foreground">Total</p>
-                  <p className="text-lg font-bold">{invoices?.length || 0}</p>
+                  <p className="text-sm font-bold">{invoices?.length || 0}</p>
                 </div>
-                <Receipt className="w-5 h-5 text-info" />
+                <Receipt className="w-4 h-4 text-info" />
               </div>
             </CardContent>
           </Card>
 
           <Card>
-            <CardContent className="p-3">
+            <CardContent className="p-2">
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-xs font-medium text-muted-foreground">Pending</p>
-                  <p className="text-lg font-bold">{pendingInvoices.length}</p>
+                  <p className="text-sm font-bold">{pendingInvoices.length}</p>
                 </div>
-                <CreditCard className="w-5 h-5 text-warning" />
+                <CreditCard className="w-4 h-4 text-warning" />
               </div>
             </CardContent>
           </Card>
 
           <Card>
-            <CardContent className="p-3">
+            <CardContent className="p-2">
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-xs font-medium text-muted-foreground">Amount Due</p>
-                  <p className="text-lg font-bold">€{totalPending.toFixed(2)}</p>
+                  <p className="text-sm font-bold">€{totalPending.toFixed(2)}</p>
                 </div>
-                <CreditCard className="w-5 h-5 text-destructive" />
+                <CreditCard className="w-4 h-4 text-destructive" />
               </div>
             </CardContent>
           </Card>
@@ -133,33 +133,33 @@ export default function DashboardInvoices() {
 
         {/* Main Content - Invoice List */}
         <Card className="flex-1 min-h-0">
-          <CardHeader className="pb-3">
-            <CardTitle className="text-base">Invoice History</CardTitle>
+          <CardHeader className="pb-2">
+            <CardTitle className="text-sm">Invoice History</CardTitle>
           </CardHeader>
-          <CardContent className="flex-1 p-3">
+          <CardContent className="flex-1 p-2">
             {!invoices || invoices.length === 0 ? (
               <div className="flex items-center justify-center h-full text-center">
                 <div>
-                  <Receipt className="w-10 h-10 text-muted-foreground mx-auto mb-3" />
-                  <h3 className="text-base font-medium text-foreground mb-2">
+                  <Receipt className="w-8 h-8 text-muted-foreground mx-auto mb-2" />
+                  <h3 className="text-sm font-medium text-foreground mb-1">
                     No invoices yet
                   </h3>
-                  <p className="text-sm text-muted-foreground">
+                  <p className="text-xs text-muted-foreground">
                     Your consultation invoices will appear here
                   </p>
                 </div>
               </div>
             ) : (
-              <div className="h-full overflow-y-auto space-y-2">
+              <div className="h-full overflow-y-auto space-y-1">
                 {invoices.map((invoice) => (
                   <div 
                     key={invoice.id}
-                    className="flex items-center justify-between p-3 border rounded-lg hover:bg-muted/50 transition-colors"
+                    className="flex items-center justify-between p-2 border rounded-lg hover:bg-muted/50 transition-colors"
                   >
                     <div className="flex-1">
-                      <div className="flex items-center gap-4">
+                      <div className="flex items-center gap-3">
                         <div>
-                          <p className="text-sm font-medium text-foreground">
+                          <p className="text-xs font-medium text-foreground">
                             {invoice.invoiceNumber}
                           </p>
                           <p className="text-xs text-muted-foreground truncate">
@@ -175,34 +175,34 @@ export default function DashboardInvoices() {
                       </div>
                     </div>
 
-                    <div className="flex items-center gap-4">
+                    <div className="flex items-center gap-3">
                       <div className="text-right">
-                        <p className="font-bold text-base">€{(invoice.amount || 0).toFixed(2)}</p>
+                        <p className="font-bold text-sm">€{(invoice.amount || 0).toFixed(2)}</p>
                         <p className="text-xs text-muted-foreground">
                           Due: {invoice.dueDate ? new Date(invoice.dueDate).toLocaleDateString() : 'N/A'}
                         </p>
                       </div>
                       
-                      <div className="flex items-center gap-2">
+                      <div className="flex items-center gap-1">
                         {getStatusBadge(invoice.status)}
                         
                         {(invoice.status === "unpaid" || invoice.status === "pending") && (
                           <Button 
                             onClick={() => handlePayInvoice(invoice)}
                             size="sm"
-                            className="bg-success hover:brightness-110 text-primary-foreground font-medium shadow-sm"
+                            className="bg-success hover:brightness-110 text-primary-foreground font-medium shadow-sm text-xs px-2 py-1"
                             disabled={!invoice.paymentUrl}
                           >
-                            <CreditCard className="w-4 h-4 mr-2" />
-                            {invoice.paymentUrl ? 'Pay Now' : 'Payment Link Unavailable'}
+                            <CreditCard className="w-3 h-3 mr-1" />
+                            {invoice.paymentUrl ? 'Pay' : 'Unavailable'}
                           </Button>
                         )}
                         
                         {invoice.status === "paid" && (
                           <Link href={`/invoice/${invoice.id}`}>
-                            <Button variant="outline" size="sm">
-                              <Eye className="w-4 h-4 mr-2" />
-                              View Receipt
+                            <Button variant="outline" size="sm" className="text-xs px-2 py-1">
+                              <Eye className="w-3 h-3 mr-1" />
+                              View
                             </Button>
                           </Link>
                         )}

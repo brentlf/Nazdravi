@@ -82,51 +82,51 @@ export default function DashboardDocuments() {
   }
 
   return (
-    <div className="h-full bg-background">
-      <div className="container mx-auto px-4 sm:px-6 px-safe py-4">
+    <div className="dashboard-viewport bg-background">
+      <div className="container mx-auto px-3 sm:px-4 px-safe py-2 flex flex-col h-full">
         {/* Back Navigation */}
-        <div className="mb-4 flex-shrink-0">
+        <div className="mb-2 flex-shrink-0">
           <Link href="/dashboard">
-            <Button variant="ghost" size="sm" className="flex items-center gap-2">
-              <ArrowLeft className="w-4 h-4" />
+            <Button variant="ghost" size="sm" className="flex items-center gap-1 text-xs px-2 py-1">
+              <ArrowLeft className="w-3 h-3" />
               Back to Dashboard
             </Button>
           </Link>
         </div>
         
         <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <FileText className="w-5 h-5" />
+          <CardHeader className="pb-2">
+            <CardTitle className="flex items-center gap-2 text-sm">
+              <FileText className="w-4 h-4" />
               My Documents
             </CardTitle>
-            <p className="text-sm text-muted-foreground mt-2">
+            <p className="text-xs text-muted-foreground mt-1">
               Download your nutrition plans and documents provided by your nutritionist
             </p>
           </CardHeader>
-      <CardContent>
+      <CardContent className="p-3">
         {documents && documents.length > 0 ? (
-          <div className="space-y-4">
+          <div className="space-y-2">
             {documents.map((doc) => (
-              <div key={doc.id} className="flex items-center justify-between p-4 border rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800/50">
-                <div className="flex items-start space-x-3">
-                  <div className="w-10 h-10 bg-primary-100 dark:bg-primary-900/30 rounded-lg flex items-center justify-center flex-shrink-0">
-                    <FileText className="w-5 h-5 text-primary-600 dark:text-primary-400" />
+              <div key={doc.id} className="flex items-center justify-between p-2 border rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800/50">
+                <div className="flex items-start space-x-2">
+                  <div className="w-8 h-8 bg-primary-100 dark:bg-primary-900/30 rounded-lg flex items-center justify-center flex-shrink-0">
+                    <FileText className="w-4 h-4 text-primary-600 dark:text-primary-400" />
                   </div>
                   <div className="flex-1 min-w-0">
-                    <h3 className="font-medium text-sm mb-1">{doc.title}</h3>
+                    <h3 className="font-medium text-xs mb-1">{doc.title}</h3>
                     {doc.description && (
-                      <p className="text-xs text-muted-foreground mb-2 line-clamp-2">
+                      <p className="text-xs text-muted-foreground mb-1 line-clamp-1">
                         {doc.description}
                       </p>
                     )}
-                    <div className="flex items-center gap-4 text-xs text-muted-foreground">
+                    <div className="flex items-center gap-2 text-xs text-muted-foreground">
                       <div className="flex items-center gap-1">
                         <Calendar className="w-3 h-3" />
                         {new Date(doc.createdAt).toLocaleDateString()}
                       </div>
                       {doc.fileName && (
-                        <span>{doc.fileName}</span>
+                        <span className="truncate max-w-20">{doc.fileName}</span>
                       )}
                       {doc.fileSize && (
                         <span>{formatFileSize(doc.fileSize)}</span>
@@ -138,19 +138,19 @@ export default function DashboardDocuments() {
                   size="sm"
                   variant="outline"
                   onClick={() => handleDownloadDocument(doc)}
-                  className="flex-shrink-0"
+                  className="flex-shrink-0 text-xs px-2 py-1 h-7"
                 >
-                  <Download className="w-4 h-4 mr-2" />
+                  <Download className="w-3 h-3 mr-1" />
                   Download
                 </Button>
               </div>
             ))}
           </div>
         ) : (
-          <div className="text-center py-12">
-            <FileText className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
-            <h3 className="text-lg font-medium mb-2">No Documents Yet</h3>
-            <p className="text-muted-foreground">
+          <div className="text-center py-6">
+            <FileText className="w-8 h-8 text-muted-foreground mx-auto mb-2" />
+            <h3 className="text-sm font-medium mb-1">No Documents Yet</h3>
+            <p className="text-xs text-muted-foreground">
               Your nutritionist hasn't uploaded any documents for you yet. 
               Documents like nutrition plans and guides will appear here when available.
             </p>

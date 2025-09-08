@@ -188,44 +188,44 @@ export default function DashboardResources() {
   }
 
   return (
-    <div className="h-full bg-background">
-      <div className="h-full overflow-y-auto container mx-auto px-4 sm:px-6 px-safe py-20">
+    <div className="dashboard-viewport bg-background">
+      <div className="container mx-auto px-3 sm:px-4 px-safe py-2 flex flex-col h-full">
         {/* Back to Dashboard Navigation */}
-        <div className="mb-6">
+        <div className="mb-2">
           <Link href="/dashboard">
-            <Button variant="ghost" className="flex items-center gap-2 text-sm">
-              <ArrowLeft className="w-4 h-4" />
+            <Button variant="ghost" className="flex items-center gap-1 text-xs px-2 py-1">
+              <ArrowLeft className="w-3 h-3" />
               Back to Dashboard
             </Button>
           </Link>
         </div>
 
         {/* Header */}
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold mb-2">Resource Library</h1>
-          <p className="text-muted-foreground">
+        <div className="mb-3">
+          <h1 className="text-xl font-bold mb-1">Resource Library</h1>
+          <p className="text-sm text-muted-foreground">
             Access exclusive guides, tools, and educational content to support your nutrition journey
           </p>
         </div>
 
         {/* Search and Filters */}
-        <Card className="mb-8">
-          <CardContent className="p-6">
-            <div className="flex flex-col md:flex-row gap-4">
+        <Card className="mb-3">
+          <CardContent className="p-3">
+            <div className="flex flex-col md:flex-row gap-2">
               {/* Search */}
               <div className="flex-1 relative">
-                <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+                <Search className="absolute left-2 top-2 h-3 w-3 text-muted-foreground" />
                 <Input
                   placeholder="Search resources..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  className="pl-9"
+                  className="pl-8 h-8 text-xs"
                 />
               </div>
 
               {/* Type Filter */}
               <Select value={selectedType} onValueChange={setSelectedType}>
-                <SelectTrigger className="w-full md:w-48">
+                <SelectTrigger className="w-full md:w-40 h-8 text-xs">
                   <SelectValue placeholder="Filter by type" />
                 </SelectTrigger>
                 <SelectContent>
@@ -238,7 +238,7 @@ export default function DashboardResources() {
 
               {/* Tag Filter */}
               <Select value={selectedTag} onValueChange={setSelectedTag}>
-                <SelectTrigger className="w-full md:w-48">
+                <SelectTrigger className="w-full md:w-40 h-8 text-xs">
                   <SelectValue placeholder="Filter by topic" />
                 </SelectTrigger>
                 <SelectContent>
@@ -256,61 +256,61 @@ export default function DashboardResources() {
 
         {/* Resources Grid */}
         {filteredResources.length > 0 ? (
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-3">
             {filteredResources.map((resource) => {
               const Icon = getResourceIcon(resource.type);
               return (
-                <Card key={resource.id} className="hover:shadow-xl transition-all duration-300 hover:-translate-y-2">
-                  <CardHeader>
-                    <div className="flex items-start justify-between mb-4">
-                      <div className="w-12 h-12 bg-primary-100 dark:bg-primary-900/30 rounded-lg flex items-center justify-center">
-                        <Icon className="w-6 h-6 text-primary-600 dark:text-primary-400" />
+                <Card key={resource.id} className="hover:shadow-lg transition-all duration-300 hover:-translate-y-1">
+                  <CardHeader className="pb-2">
+                    <div className="flex items-start justify-between mb-2">
+                      <div className="w-8 h-8 bg-primary-100 dark:bg-primary-900/30 rounded-lg flex items-center justify-center">
+                        <Icon className="w-4 h-4 text-primary-600 dark:text-primary-400" />
                       </div>
-                      <Badge className={getResourceColor(resource.type)}>
+                      <Badge className={`${getResourceColor(resource.type)} text-xs`}>
                         {resource.type.toUpperCase()}
                       </Badge>
                     </div>
-                    <CardTitle className="text-lg leading-tight">{resource.title}</CardTitle>
+                    <CardTitle className="text-sm leading-tight">{resource.title}</CardTitle>
                   </CardHeader>
-                  <CardContent>
-                    <p className="text-muted-foreground mb-6 text-sm leading-relaxed">
+                  <CardContent className="pt-0">
+                    <p className="text-muted-foreground mb-3 text-xs leading-relaxed">
                       {resource.description}
                     </p>
                     
                     {/* Tags */}
-                    <div className="flex flex-wrap gap-2 mb-6">
-                      {resource.tags.slice(0, 3).map((tag) => (
-                        <Badge key={tag} variant="secondary" className="text-xs">
+                    <div className="flex flex-wrap gap-1 mb-3">
+                      {resource.tags.slice(0, 2).map((tag) => (
+                        <Badge key={tag} variant="secondary" className="text-xs px-1 py-0">
                           {tag}
                         </Badge>
                       ))}
-                      {resource.tags.length > 3 && (
-                        <Badge variant="secondary" className="text-xs">
-                          +{resource.tags.length - 3} more
+                      {resource.tags.length > 2 && (
+                        <Badge variant="secondary" className="text-xs px-1 py-0">
+                          +{resource.tags.length - 2} more
                         </Badge>
                       )}
                     </div>
 
                     {/* Action Button */}
                     <Button 
-                      className="w-full bg-primary-500 hover:bg-primary-600" 
+                      className="w-full bg-primary-500 hover:bg-primary-600 text-xs py-2" 
                       onClick={() => handleResourceAction(resource)}
                     >
                       {resource.type === "pdf" && (
                         <>
-                          <Download className="w-4 h-4 mr-2" />
+                          <Download className="w-3 h-3 mr-1" />
                           Download PDF
                         </>
                       )}
                       {resource.type === "video" && (
                         <>
-                          <Video className="w-4 h-4 mr-2" />
+                          <Video className="w-3 h-3 mr-1" />
                           Watch Video
                         </>
                       )}
                       {resource.type === "link" && (
                         <>
-                          <ExternalLink className="w-4 h-4 mr-2" />
+                          <ExternalLink className="w-3 h-3 mr-1" />
                           Open Tool
                         </>
                       )}

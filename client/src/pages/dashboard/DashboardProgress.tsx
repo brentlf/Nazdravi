@@ -133,20 +133,20 @@ export default function DashboardProgress() {
   }
 
   return (
-    <div className="viewport-fit bg-background">
-      <div className="viewport-content container mx-auto px-4 sm:px-6 px-safe py-4">
+    <div className="dashboard-viewport bg-background">
+      <div className="container mx-auto px-3 sm:px-4 px-safe py-2 flex flex-col h-full">
         {/* Compact Header with Back Navigation */}
-        <div className="flex items-center justify-between mb-4 flex-shrink-0">
-          <div className="flex items-center gap-4">
+        <div className="flex items-center justify-between mb-2 flex-shrink-0">
+          <div className="flex items-center gap-3">
             <Link href="/dashboard">
-              <Button variant="ghost" size="sm" className="flex items-center gap-2">
-                <ArrowLeft className="w-4 h-4" />
+              <Button variant="ghost" size="sm" className="flex items-center gap-1 text-xs px-2 py-1">
+                <ArrowLeft className="w-3 h-3" />
                 Back
               </Button>
             </Link>
             <div>
-              <h1 className="text-xl font-bold">Progress Tracking</h1>
-              <p className="text-sm text-muted-foreground">
+              <h1 className="text-lg font-bold">Progress Tracking</h1>
+              <p className="text-xs text-muted-foreground">
                 Monitor your weight, hydration, and progress
               </p>
             </div>
@@ -154,8 +154,8 @@ export default function DashboardProgress() {
           
           <Dialog open={isAddingProgress} onOpenChange={setIsAddingProgress}>
             <DialogTrigger asChild>
-              <Button className="bg-brand text-brand-foreground hover:brightness-110">
-                <Plus className="w-4 h-4 mr-2" />
+              <Button className="bg-brand text-brand-foreground hover:brightness-110 text-xs px-3 py-2">
+                <Plus className="w-3 h-3 mr-1" />
                 Log Progress
               </Button>
             </DialogTrigger>
@@ -269,14 +269,14 @@ export default function DashboardProgress() {
         </div>
 
         {/* Compact Quick Stats */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-4 flex-shrink-0">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-2 flex-shrink-0">
           <Card>
-            <CardContent className="p-3">
+            <CardContent className="p-2">
               <div className="flex items-center justify-between mb-1">
                 <span className="text-xs font-medium text-muted-foreground">Current Weight</span>
                 <Scale className="w-3 h-3 text-muted-foreground" />
               </div>
-              <p className="text-lg font-bold">
+              <p className="text-sm font-bold">
                 {latestEntry?.weightKg ? `${latestEntry.weightKg}kg` : 'No data'}
               </p>
               <p className="text-xs text-muted-foreground truncate">
@@ -286,12 +286,12 @@ export default function DashboardProgress() {
           </Card>
 
           <Card>
-            <CardContent className="p-3">
+            <CardContent className="p-2">
               <div className="flex items-center justify-between mb-1">
                 <span className="text-xs font-medium text-muted-foreground">Weight Change</span>
                 <TrendingDown className={`w-3 h-3 ${weightChange < 0 ? 'text-green-500' : 'text-gray-400'}`} />
               </div>
-              <p className={`text-lg font-bold ${weightChange < 0 ? 'text-green-600' : 'text-gray-600'}`}>
+              <p className={`text-sm font-bold ${weightChange < 0 ? 'text-green-600' : 'text-gray-600'}`}>
                 {weightChange !== 0 ? `${weightChange > 0 ? '+' : ''}${weightChange.toFixed(1)}kg` : '0kg'}
               </p>
               <p className="text-xs text-muted-foreground">Total change</p>
@@ -299,12 +299,12 @@ export default function DashboardProgress() {
           </Card>
 
           <Card>
-            <CardContent className="p-3">
+            <CardContent className="p-2">
               <div className="flex items-center justify-between mb-1">
                 <span className="text-xs font-medium text-muted-foreground">Avg Water</span>
                 <Droplets className="w-3 h-3 text-blue-500" />
               </div>
-              <p className="text-lg font-bold text-blue-600">
+              <p className="text-sm font-bold text-blue-600">
                 {avgWaterThisMonth > 0 ? `${avgWaterThisMonth.toFixed(1)}L` : '0L'}
               </p>
               <p className="text-xs text-muted-foreground">
@@ -314,12 +314,12 @@ export default function DashboardProgress() {
           </Card>
 
           <Card>
-            <CardContent className="p-3">
+            <CardContent className="p-2">
               <div className="flex items-center justify-between mb-1">
                 <span className="text-xs font-medium text-muted-foreground">This Month</span>
                 <Calendar className="w-3 h-3 text-primary-500" />
               </div>
-              <p className="text-lg font-bold text-primary-600">
+              <p className="text-sm font-bold text-primary-600">
                 {entriesThisMonth.length}
               </p>
               <p className="text-xs text-muted-foreground">

@@ -700,6 +700,41 @@
     flex-direction: column;
   }
 
+  /* Ensure dashboard and admin pages have proper bottom spacing */
+  .dashboard-viewport {
+    height: calc(100vh - 64px); /* Account for header */
+    min-height: calc(100vh - 64px);
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* Mobile bottom navigation spacing */
+  @media (max-width: 640px) {
+    .dashboard-viewport {
+      height: calc(100vh - 64px - 64px); /* Header + mobile nav */
+      min-height: calc(100vh - 64px - 64px);
+      padding-bottom: 20px; /* Extra bottom margin */
+    }
+  }
+
+  /* Tablet spacing */
+  @media (max-width: 768px) and (min-width: 641px) {
+    .dashboard-viewport {
+      height: calc(100vh - 56px - 56px); /* Header + mobile nav */
+      min-height: calc(100vh - 56px - 56px);
+      padding-bottom: 16px; /* Extra bottom margin */
+    }
+  }
+
+  /* Extra small screens */
+  @media (max-width: 480px) {
+    .dashboard-viewport {
+      height: calc(100vh - 48px - 48px); /* Header + mobile nav */
+      min-height: calc(100vh - 48px - 48px);
+      padding-bottom: 12px; /* Extra bottom margin */
+    }
+  }
+
   .viewport-content {
     flex: 1;
     overflow-y: auto;

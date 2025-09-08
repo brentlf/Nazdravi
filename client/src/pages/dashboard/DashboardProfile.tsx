@@ -577,14 +577,14 @@ export default function DashboardProfile() {
   };
 
   return (
-    <div className="h-full">
-      <div className="h-full overflow-y-auto p-4 sm:p-6 lg:p-8">
-        <div className="max-w-4xl mx-auto space-y-6">
+    <div className="dashboard-viewport bg-background">
+      <div className="container mx-auto px-3 sm:px-4 px-safe py-2 flex flex-col h-full">
+        <div className="max-w-4xl mx-auto space-y-3 flex-1 min-h-0">
           {/* Back Navigation */}
-          <div className="mb-4 flex-shrink-0">
+          <div className="mb-2 flex-shrink-0">
             <Link href="/dashboard">
-              <Button variant="ghost" size="sm" className="flex items-center gap-2">
-                <ArrowLeft className="w-4 h-4" />
+              <Button variant="ghost" size="sm" className="flex items-center gap-1 text-xs px-2 py-1">
+                <ArrowLeft className="w-3 h-3" />
                 Back to Dashboard
               </Button>
             </Link>

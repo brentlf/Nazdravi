@@ -242,18 +242,18 @@ export default function AdminHome() {
 
 
   return (
-    <div className="h-full bg-gradient-to-br from-background via-background to-muted/10 relative">
-      <div className="h-full flex flex-col p-4 sm:p-6 lg:p-8 relative z-10">
+    <div className="h-full bg-gradient-to-br from-background via-background to-muted/10 relative dashboard-viewport">
+      <div className="h-full flex flex-col p-3 sm:p-4 lg:p-6 relative z-10">
         {/* Header with Navigation and Organic Design */}
-        <div className="mb-1 lg:mb-2 relative flex-shrink-0">
+        <div className="mb-1 relative flex-shrink-0">
           <div className="flex items-center justify-between">
             <div className="relative">
               <div className="doodle-arrow mb-1">
-                <h1 className="font-display text-xl md:text-2xl mb-1 text-foreground handwritten-accent">
+                <h1 className="font-display text-lg md:text-xl mb-1 text-foreground handwritten-accent">
                   Admin Dashboard
                 </h1>
               </div>
-              <p className="serif-body text-base text-muted-foreground leading-relaxed">
+              <p className="serif-body text-sm text-muted-foreground leading-relaxed">
                 Overview of your nutrition practice and client management
               </p>
               
@@ -263,9 +263,9 @@ export default function AdminHome() {
               </div>
             </div>
             <div className="relative">
-              <Button variant="outline" asChild className="mediterranean-card floating-element">
+              <Button variant="outline" asChild className="mediterranean-card floating-element text-sm px-3 py-2">
                 <Link href="/admin-client-view">
-                  <Users className="mr-2 h-4 w-4" />
+                  <Users className="mr-1 h-3 w-3" />
                   View Client Dashboard
                 </Link>
               </Button>
@@ -282,14 +282,14 @@ export default function AdminHome() {
 
         {/* Main Dashboard Content */}
         <div className="flex-1 overflow-y-auto">
-          <div className="grid grid-cols-1 lg:grid-cols-5 gap-2 lg:gap-3 mb-2 lg:mb-3">
+          <div className="grid grid-cols-1 lg:grid-cols-5 gap-1 lg:gap-2 mb-1 lg:mb-2">
           {/* Key Metrics */}
           <div className="lg:col-span-5">
-            <h3 className="text-sm lg:text-base font-semibold mb-1.5 lg:mb-2 flex items-center gap-2 text-foreground">
-              <TrendingUp className="w-4 h-4 lg:w-5 lg:h-5" />
+            <h3 className="text-xs lg:text-sm font-semibold mb-1 flex items-center gap-2 text-foreground">
+              <TrendingUp className="w-3 h-3 lg:w-4 lg:h-4" />
               Key Metrics
             </h3>
-            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-8 gap-1.5 lg:gap-2">
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-8 gap-1 lg:gap-1.5">
               {quickStats.map((stat, index) => {
                 const Icon = stat.icon;
                 

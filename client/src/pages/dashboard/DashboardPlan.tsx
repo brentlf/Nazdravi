@@ -92,62 +92,62 @@ export default function DashboardPlan() {
   }
 
   return (
-    <div className="h-full bg-background">
-      <div className="h-full overflow-y-auto container mx-auto px-4 py-20">
+    <div className="dashboard-viewport bg-background">
+      <div className="container mx-auto px-3 py-2">
         {/* Back to Dashboard Navigation */}
-        <div className="mb-6">
+        <div className="mb-2">
           <Link href="/dashboard">
-            <Button variant="ghost" className="flex items-center gap-2 text-sm">
-              <ArrowLeft className="w-4 h-4" />
+            <Button variant="ghost" className="flex items-center gap-1 text-xs px-2 py-1">
+              <ArrowLeft className="w-3 h-3" />
               Back to Dashboard
             </Button>
           </Link>
         </div>
 
         {/* Header */}
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold mb-2">My Nutrition Plan</h1>
-          <p className="text-muted-foreground">
+        <div className="mb-3">
+          <h1 className="text-xl font-bold mb-1">My Nutrition Plan</h1>
+          <p className="text-sm text-muted-foreground">
             Access your personalized nutrition plan and meal guides
           </p>
         </div>
 
-        <div className="max-w-4xl mx-auto space-y-8">
+        <div className="max-w-4xl mx-auto space-y-3">
           {latestPlan ? (
             <>
               {/* Current Plan */}
               <Card className="border-primary-200 bg-primary-50 dark:bg-primary-900/20">
-                <CardHeader>
+                <CardHeader className="pb-2">
                   <div className="flex items-center justify-between">
-                    <div className="flex items-center space-x-3">
-                      <div className="w-12 h-12 bg-primary-500 rounded-lg flex items-center justify-center">
-                        <FileText className="w-6 h-6 text-white" />
+                    <div className="flex items-center space-x-2">
+                      <div className="w-8 h-8 bg-primary-500 rounded-lg flex items-center justify-center">
+                        <FileText className="w-4 h-4 text-white" />
                       </div>
                       <div>
-                        <CardTitle className="text-xl">{latestPlan.title}</CardTitle>
-                        <p className="text-muted-foreground">
+                        <CardTitle className="text-base">{latestPlan.title}</CardTitle>
+                        <p className="text-xs text-muted-foreground">
                           Created on {new Date(latestPlan.createdAt).toLocaleDateString()}
                         </p>
                       </div>
                     </div>
-                    <Badge className="bg-primary-500 text-white">Current Plan</Badge>
+                    <Badge className="bg-primary-500 text-white text-xs">Current Plan</Badge>
                   </div>
                 </CardHeader>
-                <CardContent>
-                  <div className="flex flex-col sm:flex-row gap-4">
+                <CardContent className="pt-0">
+                  <div className="flex flex-col sm:flex-row gap-2">
                     <Button 
                       onClick={() => handleViewOnline(latestPlan)}
-                      className="flex-1 bg-primary-500 hover:bg-primary-600"
+                      className="flex-1 bg-primary-500 hover:bg-primary-600 text-xs py-2"
                     >
-                      <ExternalLink className="w-4 h-4 mr-2" />
+                      <ExternalLink className="w-3 h-3 mr-1" />
                       View Online
                     </Button>
                     <Button 
                       variant="outline" 
                       onClick={() => handleDownload(latestPlan)}
-                      className="flex-1"
+                      className="flex-1 text-xs py-2"
                     >
-                      <Download className="w-4 h-4 mr-2" />
+                      <Download className="w-3 h-3 mr-1" />
                       Download PDF
                     </Button>
                   </div>
@@ -156,40 +156,40 @@ export default function DashboardPlan() {
 
               {/* Plan Overview */}
               <Card>
-                <CardHeader>
-                  <CardTitle>Plan Overview</CardTitle>
+                <CardHeader className="pb-2">
+                  <CardTitle className="text-sm">Plan Overview</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <div className="grid md:grid-cols-2 gap-6">
-                    <div className="space-y-4">
-                      <h3 className="font-semibold text-primary-600 dark:text-primary-400">What's Included</h3>
-                      <ul className="space-y-2 text-sm">
+                  <div className="grid md:grid-cols-2 gap-3">
+                    <div className="space-y-2">
+                      <h3 className="font-semibold text-primary-600 dark:text-primary-400 text-sm">What's Included</h3>
+                      <ul className="space-y-1 text-xs">
                         <li className="flex items-center space-x-2">
-                          <div className="w-2 h-2 bg-primary-500 rounded-full"></div>
+                          <div className="w-1.5 h-1.5 bg-primary-500 rounded-full"></div>
                           <span>Personalized meal plans for 4 weeks</span>
                         </li>
                         <li className="flex items-center space-x-2">
-                          <div className="w-2 h-2 bg-primary-500 rounded-full"></div>
+                          <div className="w-1.5 h-1.5 bg-primary-500 rounded-full"></div>
                           <span>Shopping lists and prep guides</span>
                         </li>
                         <li className="flex items-center space-x-2">
-                          <div className="w-2 h-2 bg-primary-500 rounded-full"></div>
+                          <div className="w-1.5 h-1.5 bg-primary-500 rounded-full"></div>
                           <span>Recipe alternatives and substitutions</span>
                         </li>
                         <li className="flex items-center space-x-2">
-                          <div className="w-2 h-2 bg-primary-500 rounded-full"></div>
+                          <div className="w-1.5 h-1.5 bg-primary-500 rounded-full"></div>
                           <span>Macro and calorie breakdowns</span>
                         </li>
                         <li className="flex items-center space-x-2">
-                          <div className="w-2 h-2 bg-primary-500 rounded-full"></div>
+                          <div className="w-1.5 h-1.5 bg-primary-500 rounded-full"></div>
                           <span>Supplement recommendations</span>
                         </li>
                       </ul>
                     </div>
                     
-                    <div className="space-y-4">
-                      <h3 className="font-semibold text-primary-600 dark:text-primary-400">How to Use Your Plan</h3>
-                      <ul className="space-y-2 text-sm text-muted-foreground">
+                    <div className="space-y-2">
+                      <h3 className="font-semibold text-primary-600 dark:text-primary-400 text-sm">How to Use Your Plan</h3>
+                      <ul className="space-y-1 text-xs text-muted-foreground">
                         <li>1. Review the meal plan overview and goals</li>
                         <li>2. Check the weekly shopping lists</li>
                         <li>3. Follow the prep day guidelines</li>

@@ -26,12 +26,12 @@ export default function DashboardMessages() {
 
   // Two-page design for mobile, split-pane for desktop
   return (
-    <div className="flex flex-col max-w-7xl mx-auto w-full" style={{ height: 'calc(100vh - 80px)' }}>
+    <div className="flex flex-col max-w-7xl mx-auto w-full dashboard-viewport">
       {/* Back Navigation - Always visible */}
-      <div className="flex-shrink-0 px-4 py-2 border-b border-border bg-card">
+      <div className="flex-shrink-0 px-3 py-1 border-b border-border bg-card">
         <Link href="/dashboard">
-          <Button variant="ghost" size="sm" className="flex items-center gap-2">
-            <ArrowLeft className="w-4 h-4" />
+          <Button variant="ghost" size="sm" className="flex items-center gap-1 text-xs px-2 py-1">
+            <ArrowLeft className="w-3 h-3" />
             Back to Dashboard
           </Button>
         </Link>
@@ -61,23 +61,23 @@ export default function DashboardMessages() {
             <div className="flex-1 flex flex-col">
               {/* Chat Header */}
               <div className="chat-header-main text-foreground shadow-sm">
-                <div className="px-2 py-0.5 flex items-center justify-start gap-1 h-full sm:px-3 sm:py-1">
-                  <Button variant="ghost" size="icon" className="text-muted-foreground hover:bg-muted/50 h-9 w-9 p-0 rounded-full sm:hidden" onClick={handleBackToConversations}>
-                    <ArrowLeft className="w-5 h-5" />
+                <div className="px-2 py-1 flex items-center justify-start gap-1 h-full sm:px-3 sm:py-1">
+                  <Button variant="ghost" size="icon" className="text-muted-foreground hover:bg-muted/50 h-8 w-8 p-0 rounded-full sm:hidden" onClick={handleBackToConversations}>
+                    <ArrowLeft className="w-4 h-4" />
                   </Button>
-                  <Avatar className="h-11 w-11 ring-2 ring-primary/30 bg-gradient-to-br from-primary/20 to-primary/10 shadow-md sm:h-12 sm:w-12">
+                  <Avatar className="h-9 w-9 ring-2 ring-primary/30 bg-gradient-to-br from-primary/20 to-primary/10 shadow-md sm:h-10 sm:w-10">
                     <AvatarImage src={otherUser?.photoURL} />
                     <AvatarFallback className="bg-gradient-to-br from-primary to-primary/80 text-primary-foreground font-semibold">
-                      <span className="text-sm sm:text-base">{otherUser?.name?.split(' ').map(n => n[0]).join('').toUpperCase()}</span>
+                      <span className="text-xs sm:text-sm">{otherUser?.name?.split(' ').map(n => n[0]).join('').toUpperCase()}</span>
                     </AvatarFallback>
                   </Avatar>
                   <div className="flex-1 min-w-0 flex flex-col justify-center overflow-hidden">
-                    <h1 className="font-semibold text-foreground truncate text-sm leading-tight sm:text-base sm:leading-normal mb-0 w-full">{otherUser?.name || 'Nutritionist'}</h1>
-                    <p className="text-xs text-muted-foreground truncate leading-tight sm:text-sm sm:leading-normal mt-0 mb-0 w-full">{otherUser?.email || 'nutritionist@example.com'}</p>
+                    <h1 className="font-semibold text-foreground truncate text-xs leading-tight sm:text-sm sm:leading-normal mb-0 w-full">{otherUser?.name || 'Nutritionist'}</h1>
+                    <p className="text-xs text-muted-foreground truncate leading-tight sm:text-xs sm:leading-normal mt-0 mb-0 w-full">{otherUser?.email || 'nutritionist@example.com'}</p>
                   </div>
                   <div className="hidden sm:flex items-center gap-2">
-                    <Button variant="ghost" size="icon" className="text-muted-foreground hover:bg-muted/50 h-9 w-9">
-                      <MoreVertical className="w-5 h-5" />
+                    <Button variant="ghost" size="icon" className="text-muted-foreground hover:bg-muted/50 h-8 w-8">
+                      <MoreVertical className="w-4 h-4" />
                     </Button>
                   </div>
                 </div>

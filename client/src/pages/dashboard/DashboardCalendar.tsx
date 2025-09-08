@@ -118,70 +118,72 @@ export default function DashboardCalendar() {
   }
 
   return (
-    <div className="viewport-fit bg-background">
-      <div className="viewport-content container mx-auto px-3 sm:px-4 lg:px-6 px-safe py-1 sm:py-2">
+    <div className="dashboard-viewport bg-background">
+      <div className="container mx-auto px-3 sm:px-4 lg:px-6 px-safe py-1">
         
         {/* Back Navigation */}
-        <div className="mb-4 flex-shrink-0">
+        <div className="mb-2 flex-shrink-0">
           <Link href="/dashboard">
-            <Button variant="ghost" size="sm" className="flex items-center gap-2">
-              <ChevronLeft className="w-4 h-4" />
+            <Button variant="ghost" size="sm" className="flex items-center gap-1 text-xs px-2 py-1">
+              <ChevronLeft className="w-3 h-3" />
               Back to Dashboard
             </Button>
           </Link>
         </div>
         
         {/* Calendar Header */}
-        <Card className="mb-2 flex-shrink-0">
-          <CardHeader className="pb-2">
+        <Card className="mb-1 flex-shrink-0">
+          <CardHeader className="pb-1">
             <div className="flex items-center justify-between">
-              <CardTitle className="flex items-center gap-2">
-                <Calendar className="w-5 h-5" />
+              <CardTitle className="flex items-center gap-2 text-sm">
+                <Calendar className="w-4 h-4" />
                 Calendar View
               </CardTitle>
-              <div className="flex items-center gap-3">
+              <div className="flex items-center gap-2">
                 {/* View Toggle */}
                 <div className="flex items-center bg-muted rounded-lg p-1">
                   <Button
                     variant={calendarView === 'month' ? 'default' : 'ghost'}
                     size="sm"
-                    className="h-7 px-2"
+                    className="h-6 px-2 text-xs"
                     onClick={() => setCalendarView('month')}
                   >
-                    <Grid3X3 className="w-4 h-4 mr-1" />
+                    <Grid3X3 className="w-3 h-3 mr-1" />
                     Month
                   </Button>
                   <Button
                     variant={calendarView === 'week' ? 'default' : 'ghost'}
                     size="sm"
-                    className="h-7 px-2"
+                    className="h-6 px-2 text-xs"
                     onClick={() => setCalendarView('week')}
                   >
-                    <List className="w-4 h-4 mr-1" />
+                    <List className="w-3 h-3 mr-1" />
                     Week
                   </Button>
                 </div>
                 
                 {/* Navigation */}
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-1">
                   <Button
                     variant="outline"
                     size="sm"
+                    className="h-6 w-6 p-0"
                     onClick={() => navigateCalendar('prev')}
                   >
-                    <ChevronLeft className="w-4 h-4" />
+                    <ChevronLeft className="w-3 h-3" />
                   </Button>
                   <Button
                     variant="outline"
                     size="sm"
+                    className="h-6 w-6 p-0"
                     onClick={() => navigateCalendar('next')}
                   >
-                    <ChevronRight className="w-4 h-4" />
+                    <ChevronRight className="w-3 h-3" />
                   </Button>
                 </div>
               </div>
             </div>
-            <h2 className="text-xl font-semibold text-center">
+            <h2 className="text-base font-semibold text-center">
               {calendarView === 'month' 
                 ? currentDate.toLocaleDateString('en-GB', { month: 'long', year: 'numeric' })
                 : `Week of ${currentDate.toLocaleDateString('en-GB', { month: 'short', day: 'numeric' })}`
@@ -192,7 +194,7 @@ export default function DashboardCalendar() {
 
         {/* Calendar Grid */}
         <Card className="flex-1 flex flex-col min-h-0">
-          <CardContent className="flex-1 p-1 sm:p-2">
+          <CardContent className="flex-1 p-1">
             {calendarView === 'month' ? (
               /* Monthly Calendar Grid */
               <>
@@ -217,7 +219,7 @@ export default function DashboardCalendar() {
                       <div
                         key={index}
                         className={`
-                          min-h-[50px] sm:min-h-[60px] p-1 border rounded-lg flex flex-col
+                          min-h-[40px] sm:min-h-[50px] p-1 border rounded-lg flex flex-col
                           ${isCurrentMonth ? 'bg-background' : 'bg-muted/30'}
                           ${isToday ? 'ring-2 ring-primary bg-primary/5' : ''}
                           ${hasAppt ? 'bg-green-50 dark:bg-green-900/20 border-green-200 dark:border-green-800' : ''}
@@ -232,13 +234,13 @@ export default function DashboardCalendar() {
                             {date.getDate()}
                           </span>
                           {hasAppt && (
-                            <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                            <div className="w-1.5 h-1.5 bg-green-500 rounded-full"></div>
                           )}
                         </div>
                         
                         {/* Appointments for this date */}
-                        <div className="flex-1 space-y-1">
-                          {appointments.slice(0, 2).map((apt, aptIndex) => (
+                        <div className="flex-1 space-y-0.5">
+                          {appointments.slice(0, 1).map((apt, aptIndex) => (
                             <div
                               key={aptIndex}
                               className="text-xs bg-primary/10 text-primary px-1 py-0.5 rounded truncate"
@@ -247,9 +249,9 @@ export default function DashboardCalendar() {
                               {apt.timeslot}
                             </div>
                           ))}
-                          {appointments.length > 2 && (
+                          {appointments.length > 1 && (
                             <div className="text-xs text-muted-foreground">
-                              +{appointments.length - 2} more
+                              +{appointments.length - 1} more
                             </div>
                           )}
                         </div>
@@ -263,11 +265,11 @@ export default function DashboardCalendar() {
               <div className="flex-1 border border-border rounded-lg overflow-hidden">
                 {/* Time slots header */}
                 <div className="grid grid-cols-8 bg-muted/50">
-                  <div className="text-xs font-semibold text-muted-foreground p-3 text-center border-r border-border">
+                  <div className="text-xs font-semibold text-muted-foreground p-2 text-center border-r border-border">
                     Time
                   </div>
                   {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map(day => (
-                    <div key={day} className="text-xs font-semibold text-muted-foreground p-3 text-center border-r border-border last:border-r-0">
+                    <div key={day} className="text-xs font-semibold text-muted-foreground p-2 text-center border-r border-border last:border-r-0">
                       {day}
                     </div>
                   ))}
@@ -290,7 +292,7 @@ export default function DashboardCalendar() {
                       timeSlots.push(
                         <div key={hour} className="grid grid-cols-8">
                           {/* Time column */}
-                          <div className="text-xs text-muted-foreground p-2 text-center border-r border-b border-border bg-muted/20">
+                          <div className="text-xs text-muted-foreground p-1 text-center border-r border-b border-border bg-muted/20">
                             {timeString}
                           </div>
                           
