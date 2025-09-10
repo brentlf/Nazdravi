@@ -166,8 +166,8 @@ export default function Blog() {
             <div className="inline-flex items-center justify-center w-8 h-8 xs:w-10 xs:h-10 bg-primary/10 rounded-full mb-2">
               <BookOpen className="h-4 w-4 xs:h-5 xs:w-5 text-primary" />
             </div>
-            <h1 className="text-xl xs:text-2xl sm:text-3xl font-bold mb-1 xs:mb-2 leading-tight text-foreground" 
-                style={{fontFamily: 'The Seasons, serif', letterSpacing: '-0.01em'}}>
+            <h1 className="text-xl xs:text-2xl sm:text-3xl font-bold mb-1 xs:mb-2 leading-tight text-foreground uppercase" 
+                style={{fontFamily: 'Calibri, sans-serif', letterSpacing: '0.02em'}}>
               Nutrition Blog
             </h1>
             <p className="text-sm xs:text-base text-muted-foreground max-w-2xl mx-auto leading-relaxed">

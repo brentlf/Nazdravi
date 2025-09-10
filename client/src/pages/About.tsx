@@ -1,99 +1,136 @@
-import { Heart, Target, Smile, Stethoscope, ArrowRight, Award, Users, Clock } from "lucide-react";
+import { Heart, Target, Smile, Stethoscope, ArrowRight, Award, Users, Clock, Globe } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Link } from "wouter";
 
 export default function About() {
   return (
     <div className="page-wrapper">
+      {/* Image Background */}
+      <div className="fixed inset-0 z-0">
+        <img
+          src="/fruits-601742_1920.jpg"
+          alt="Fresh fruits and vegetables"
+          className="w-full h-full object-cover"
+        />
+        <div className="absolute inset-0 bg-black/30"></div>
+      </div>
+      
       {/* Main content section */}
-      <section className="page-content p-3 sm:p-4 lg:p-6">
+      <section className="page-content p-3 sm:p-4 lg:p-6 relative z-10 -mt-8">
         <div className="max-w-6xl mx-auto w-full">
-          {/* Header Section */}
-          <div className="text-center mb-3 xs:mb-4 sm:mb-6">
-            <div className="inline-flex items-center justify-center w-8 h-8 xs:w-10 xs:h-10 sm:w-12 sm:h-12 bg-primary/10 rounded-full mb-2 xs:mb-3">
-              <Stethoscope className="w-4 h-4 xs:w-5 xs:h-5 sm:w-6 sm:h-6 text-primary" />
+          {/* Header Section - Split Layout */}
+          <div className="relative mb-2 xs:mb-3 sm:mb-4">
+            {/* Vertical "ABOUT" on left side - moved down and left */}
+            <div className="absolute left-0 top-48 xs:top-52 sm:top-56 h-full flex flex-col justify-center" style={{transform: 'translateX(-8rem)'}}>
+              <div className="font-medium uppercase leading-none animate-fadeInUp" 
+                   style={{
+                     fontFamily: 'Calibri, sans-serif', 
+                     letterSpacing: '0.02em', 
+                     writingMode: 'vertical-rl', 
+                     textOrientation: 'mixed',
+                     fontSize: 'clamp(5rem, 8vw, 10rem)',
+                     color: '#FEF3C7',
+                     animationDelay: '0.5s',
+                     animationFillMode: 'both'
+                   }}>
+                ABOUT
+              </div>
             </div>
-            <h1 className="text-xl xs:text-2xl sm:text-3xl md:text-4xl font-bold mb-2 xs:mb-3 leading-tight text-foreground" 
-                style={{fontFamily: 'The Seasons, serif', letterSpacing: '-0.01em'}}>
-              About Nazdravi
-            </h1>
-            <p className="text-sm xs:text-base text-muted-foreground max-w-2xl mx-auto leading-relaxed">
-              We're a nutrition practice that believes healthy eating should be simple, sustainable, and actually work for your real life.
-            </p>
+            
+            {/* "nazdravi" in top right corner */}
+            <div className="absolute -top-4 right-0" style={{transform: 'translateX(22rem)'}}>
+              <h1 className="font-bold text-foreground leading-tight animate-fadeInUp" 
+                  style={{
+                    fontFamily: 'The Seasons, serif', 
+                    letterSpacing: '-0.01em', 
+                    fontSize: 'clamp(4rem, 8vw, 12rem)',
+                    animationDelay: '0.8s',
+                    animationFillMode: 'both'
+                  }}>
+                nazdravi
+              </h1>
+            </div>
+            
+            {/* Description text centered */}
+            <div className="text-center pt-8 xs:pt-10 sm:pt-12">
+              <p className="text-lg xs:text-xl text-white max-w-2xl mx-auto leading-relaxed font-medium" style={{fontFamily: 'Calibri, sans-serif', letterSpacing: '0.02em'}}>
+                I'm a nutrition practice that believes healthy eating should be simple, sustainable, and actually work for your real life.
+              </p>
+            </div>
           </div>
 
           {/* Credentials Grid */}
-          <div className="grid grid-cols-1 xs:grid-cols-2 md:grid-cols-3 gap-3 xs:gap-4 sm:gap-5 mb-4 xs:mb-6 sm:mb-8">
-            <div className="bg-card border border-border rounded-xl p-3 xs:p-4 text-center hover:shadow-lg transition-all">
+          <div className="grid grid-cols-1 xs:grid-cols-2 md:grid-cols-3 gap-2 xs:gap-3 sm:gap-4 mb-2 xs:mb-3 sm:mb-4">
+            <div className="border border-white rounded-xl p-2 xs:p-3 sm:p-4 text-center hover:shadow-lg transition-all flex flex-col items-center justify-center min-h-[200px]">
               <div className="inline-flex items-center justify-center w-8 h-8 xs:w-10 xs:h-10 bg-gradient-to-br from-yellow-400 to-orange-500 rounded-xl mb-2 xs:mb-3">
                 <Award className="w-4 h-4 xs:w-5 xs:h-5 text-white" />
               </div>
-              <h3 className="text-card-foreground font-bold text-sm xs:text-base mb-1 xs:mb-2">Registered Dietitian</h3>
-              <p className="text-muted-foreground text-xs xs:text-sm">Licensed with HPCSA & HCPC</p>
+                      <h3 className="text-white font-bold text-xl xs:text-2xl mb-1 xs:mb-2" style={{fontFamily: 'The Seasons, serif', letterSpacing: '-0.01em'}}>Registered Dietitian</h3>
+              <p className="text-white/90 text-sm xs:text-base leading-relaxed" style={{fontFamily: 'Calibri, sans-serif', letterSpacing: '0.02em'}}>Licensed with HPCSA & HCPC</p>
             </div>
             
-            <div className="bg-card border border-border rounded-xl p-3 xs:p-4 text-center hover:shadow-lg transition-all">
+            <div className="border border-white rounded-xl p-2 xs:p-3 sm:p-4 text-center hover:shadow-lg transition-all flex flex-col items-center justify-center min-h-[200px]">
               <div className="inline-flex items-center justify-center w-8 h-8 xs:w-10 xs:h-10 bg-gradient-to-br from-blue-400 to-indigo-500 rounded-xl mb-2 xs:mb-3">
-                <Clock className="w-4 h-4 xs:w-5 xs:h-5 text-white" />
+                <Heart className="w-4 h-4 xs:w-5 xs:h-5 text-white" />
               </div>
-              <h3 className="text-card-foreground font-bold text-sm xs:text-base mb-1 xs:mb-2">8+ Years Experience</h3>
-              <p className="text-muted-foreground text-xs xs:text-sm">Clinical practice & private consulting</p>
+                      <h3 className="text-white font-bold text-xl xs:text-2xl mb-1 xs:mb-2" style={{fontFamily: 'The Seasons, serif', letterSpacing: '-0.01em'}}>Holistic Approach</h3>
+              <p className="text-white/90 text-sm xs:text-base leading-relaxed" style={{fontFamily: 'Calibri, sans-serif', letterSpacing: '0.02em'}}>With over 10 years of experience as a dietitian, I provide evidence-based advice tailored to each individual's needs. My approach is holistic, focusing not only on nutrition but also on lifestyle, balance, and long-term well-being.</p>
             </div>
             
-            <div className="bg-card border border-border rounded-xl p-3 xs:p-4 text-center hover:shadow-lg transition-all xs:col-span-2 md:col-span-1">
+            <div className="border border-white rounded-xl p-3 xs:p-4 sm:p-5 text-center hover:shadow-lg transition-all xs:col-span-2 md:col-span-1 flex flex-col items-center justify-center min-h-[200px]">
               <div className="inline-flex items-center justify-center w-8 h-8 xs:w-10 xs:h-10 bg-gradient-to-br from-green-400 to-emerald-500 rounded-xl mb-2 xs:mb-3">
-                <Users className="w-4 h-4 xs:w-5 xs:h-5 text-white" />
+                <Globe className="w-4 h-4 xs:w-5 xs:h-5 text-white" />
               </div>
-              <h3 className="text-card-foreground font-bold text-sm xs:text-base mb-1 xs:mb-2">500+ Clients Helped</h3>
-              <p className="text-muted-foreground text-xs xs:text-sm">95% report sustainable progress</p>
+                      <h3 className="text-white font-bold text-xl xs:text-2xl mb-1 xs:mb-2" style={{fontFamily: 'The Seasons, serif', letterSpacing: '-0.01em'}}>Global Perspective</h3>
+              <p className="text-white/90 text-sm xs:text-base leading-relaxed" style={{fontFamily: 'Calibri, sans-serif', letterSpacing: '0.02em'}}>Having lived in different parts of the world, I bring a global perspective to my work, drawing on diverse cultures, food traditions, and cuisines. This experience allows me to create practical and culturally sensitive solutions that support health whilst celebrating the joy of food.</p>
             </div>
           </div>
 
           {/* Approach Section */}
-          <div className="bg-card border border-border rounded-2xl p-3 xs:p-4 sm:p-6 mb-4 xs:mb-6 sm:mb-8">
-            <h2 className="text-lg xs:text-xl font-bold text-card-foreground text-center mb-3 xs:mb-4 sm:mb-6">Our Approach</h2>
-            <div className="grid grid-cols-1 xs:grid-cols-2 sm:grid-cols-3 gap-3 xs:gap-4 sm:gap-6">
-              <div className="text-center">
-                <div className="inline-flex items-center justify-center w-10 h-10 xs:w-12 xs:h-12 bg-gradient-to-br from-red-500 to-pink-500 rounded-xl mb-2 xs:mb-3">
-                  <Heart className="h-5 w-5 xs:h-6 xs:w-6 text-white" />
+          <div className="border border-white rounded-2xl p-2 xs:p-3 sm:p-4 mb-2 xs:mb-3 sm:mb-4">
+            <h2 className="text-xl xs:text-2xl font-bold text-white text-center mb-2 xs:mb-3" style={{fontFamily: 'The Seasons, serif', letterSpacing: '-0.01em'}}>My Approach</h2>
+            <div className="grid grid-cols-1 xs:grid-cols-2 sm:grid-cols-3 gap-2 xs:gap-3 sm:gap-4">
+              <div className="text-center flex flex-col items-center justify-center min-h-[150px]">
+                <div className="inline-flex items-center justify-center w-8 h-8 xs:w-10 xs:h-10 bg-gradient-to-br from-red-500 to-pink-500 rounded-xl mb-2 xs:mb-3">
+                  <Heart className="h-4 w-4 xs:h-5 xs:w-5 text-white" />
                 </div>
-                <h3 className="text-card-foreground font-bold text-base xs:text-lg mb-1 xs:mb-2">Compassionate</h3>
-                <p className="text-muted-foreground text-sm xs:text-base leading-relaxed">No judgment, just support. We understand that everyone's journey is unique.</p>
+                <h3 className="text-white font-bold text-xl xs:text-2xl mb-1 xs:mb-2" style={{fontFamily: 'The Seasons, serif', letterSpacing: '-0.01em'}}>Compassionate</h3>
+                <p className="text-white/90 text-sm xs:text-base leading-relaxed" style={{fontFamily: 'Calibri, sans-serif', letterSpacing: '0.02em'}}>No judgement, just support. I understand that everyone's journey is unique.</p>
               </div>
               
-              <div className="text-center">
-                <div className="inline-flex items-center justify-center w-10 h-10 xs:w-12 xs:h-12 bg-gradient-to-br from-blue-500 to-indigo-500 rounded-xl mb-2 xs:mb-3">
-                  <Target className="h-5 w-5 xs:h-6 xs:w-6 text-white" />
+              <div className="text-center flex flex-col items-center justify-center min-h-[150px]">
+                <div className="inline-flex items-center justify-center w-8 h-8 xs:w-10 xs:h-10 bg-gradient-to-br from-blue-500 to-indigo-500 rounded-xl mb-2 xs:mb-3">
+                  <Target className="h-4 w-4 xs:h-5 xs:w-5 text-white" />
                 </div>
-                <h3 className="text-card-foreground font-bold text-base xs:text-lg mb-1 xs:mb-2">Practical</h3>
-                <p className="text-muted-foreground text-sm xs:text-base leading-relaxed">Real strategies for real life. We focus on actionable steps that fit your routine.</p>
+                <h3 className="text-white font-bold text-xl xs:text-2xl mb-1 xs:mb-2" style={{fontFamily: 'The Seasons, serif', letterSpacing: '-0.01em'}}>Practical</h3>
+                <p className="text-white/90 text-sm xs:text-base leading-relaxed" style={{fontFamily: 'Calibri, sans-serif', letterSpacing: '0.02em'}}>Real strategies for real life. I focus on actionable steps that fit your routine.</p>
               </div>
               
-              <div className="text-center">
-                <div className="inline-flex items-center justify-center w-10 h-10 xs:w-12 xs:h-12 bg-gradient-to-br from-green-500 to-emerald-500 rounded-xl mb-2 xs:mb-3">
-                  <Smile className="h-5 w-5 xs:h-6 xs:w-6 text-white" />
+              <div className="text-center flex flex-col items-center justify-center min-h-[150px]">
+                <div className="inline-flex items-center justify-center w-8 h-8 xs:w-10 xs:h-10 bg-gradient-to-br from-green-500 to-emerald-500 rounded-xl mb-2 xs:mb-3">
+                  <Smile className="h-4 w-4 xs:h-5 xs:w-5 text-white" />
                 </div>
-                <h3 className="text-card-foreground font-bold text-base xs:text-lg mb-1 xs:mb-2">Sustainable</h3>
-                <p className="text-muted-foreground text-sm xs:text-base leading-relaxed">Habits that actually stick. We help you build lasting changes.</p>
+                <h3 className="text-white font-bold text-xl xs:text-2xl mb-1 xs:mb-2" style={{fontFamily: 'The Seasons, serif', letterSpacing: '-0.01em'}}>Sustainable</h3>
+                <p className="text-white/90 text-sm xs:text-base leading-relaxed" style={{fontFamily: 'Calibri, sans-serif', letterSpacing: '0.02em'}}>Habits that actually stick. I help you build lasting changes.</p>
               </div>
             </div>
           </div>
 
           {/* CTA Section */}
-          <div className="text-center bg-gradient-to-br from-primary/5 to-primary/10 rounded-2xl p-3 xs:p-4 sm:p-6 border border-primary/20">
-            <h3 className="text-lg xs:text-xl font-bold text-foreground mb-2 xs:mb-3">Ready to Start Your Journey?</h3>
-            <p className="text-muted-foreground mb-4 xs:mb-6 max-w-2xl mx-auto text-sm xs:text-base">
-              Take the first step towards better health with a personalized nutrition consultation.
+          <div className="text-center bg-gradient-to-br from-yellow-50/95 to-orange-50/95 border border-orange-200 rounded-2xl p-2 xs:p-3 sm:p-4 flex flex-col items-center justify-center min-h-[200px]">
+            <h3 className="text-xl xs:text-2xl font-bold text-card-foreground mb-2 xs:mb-3" style={{fontFamily: 'The Seasons, serif', letterSpacing: '-0.01em'}}>Ready to Start Your Journey?</h3>
+            <p className="text-muted-foreground mb-3 xs:mb-4 max-w-2xl mx-auto text-base xs:text-lg leading-relaxed" style={{fontFamily: 'Calibri, sans-serif', letterSpacing: '0.02em'}}>
+              Take the first step towards better health with a personalised nutrition consultation.
             </p>
             <div className="flex flex-col sm:flex-row gap-2 xs:gap-3 justify-center">
               <Link href="/appointment">
-                <Button size="lg" className="px-6 xs:px-8 py-2 xs:py-3 text-sm xs:text-base font-semibold shadow-lg hover:shadow-xl transition-all duration-300 bg-gradient-to-r from-primary to-primary/90 hover:from-primary/90 hover:to-primary transform hover:scale-105 border-2 border-primary/20">
+                <Button size="lg" className="px-6 xs:px-8 py-2 xs:py-3 text-sm xs:text-base font-semibold shadow-lg hover:shadow-xl transition-all duration-300 bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 transform hover:scale-105 border-2 border-orange-300 text-white">
                   Book Consultation
                   <ArrowRight className="ml-2 h-4 w-4 xs:h-5 xs:w-5" />
                 </Button>
               </Link>
               <Link href="/services">
-                <Button variant="outline" size="lg" className="px-6 xs:px-8 py-2 xs:py-3 text-sm xs:text-base font-semibold border-2 bg-primary/5 hover:bg-primary/10 transition-all duration-300 transform hover:scale-105">
+                <Button variant="outline" size="lg" className="px-6 xs:px-8 py-2 xs:py-3 text-sm xs:text-base font-semibold border-2 border-blue-300 bg-blue-50 hover:bg-blue-100 text-blue-700 hover:text-blue-800 transition-all duration-300 transform hover:scale-105">
                   View Services
                 </Button>
               </Link>

@@ -11,6 +11,7 @@ import { MobileBottomNav } from "@/components/common/MobileBottomNav";
 import { RouteGuard } from "@/components/common/RouteGuard";
 import { ErrorBoundary } from "@/components/ui/ErrorBoundary";
 import NotFound from "@/pages/not-found";
+import { useEffect } from "react";
 
 // Public pages
 import Home from "@/pages/Home";
@@ -18,6 +19,7 @@ import About from "@/pages/About";
 import Services from "@/pages/Services";
 import Blog from "@/pages/Blog";
 import BlogPost from "@/pages/BlogPost";
+import Contact from "@/pages/Contact";
 import Login from "@/pages/Login";
 import Register from "@/pages/Register";
 import Appointment from "@/pages/Appointment";
@@ -58,18 +60,70 @@ import PayInvoice from "@/pages/PayInvoice";
 import AdminEmailScheduler from "@/pages/admin/AdminEmailScheduler";
 import InvoiceView from "@/pages/invoice/InvoiceView";
 
+// Component to manage body class for scrolling
+function BodyClassManager() {
+  const [location] = useLocation();
+  
+  useEffect(() => {
+    const isBlogPage = location === "/blog";
+    if (isBlogPage) {
+      document.body.classList.add('blog-page');
+    } else {
+      document.body.classList.remove('blog-page');
+    }
+    
+    // Prevent scrolling on non-blog pages
+    const preventScroll = (e: Event) => {
+      if (!isBlogPage) {
+        e.preventDefault();
+        e.stopPropagation();
+        return false;
+      }
+    };
+    
+    // Add event listeners to prevent scrolling
+    if (!isBlogPage) {
+      document.addEventListener('wheel', preventScroll, { passive: false });
+      document.addEventListener('touchmove', preventScroll, { passive: false });
+      document.addEventListener('keydown', (e) => {
+        // Prevent arrow keys, page up/down, home, end from scrolling
+        if ([32, 33, 34, 35, 36, 37, 38, 39, 40].includes(e.keyCode)) {
+          e.preventDefault();
+        }
+      });
+    }
+    
+    // Cleanup on unmount or route change
+    return () => {
+      document.body.classList.remove('blog-page');
+      document.removeEventListener('wheel', preventScroll);
+      document.removeEventListener('touchmove', preventScroll);
+    };
+  }, [location]);
+  
+  return null;
+}
+
 function Layout({ children }: { children: React.ReactNode }) {
   const [location] = useLocation();
   const isHomePage = location === "/";
   const isDashboardRoute = location.startsWith("/dashboard") || location.startsWith("/admin");
+  const isBlogPage = location === "/blog";
+  const isServicesPage = location === "/services";
+  const isAboutPage = location === "/about";
+  const isContactPage = location === "/contact";
+  const allowScrolling = isBlogPage;
+  
+  // Don't show footer on home, dashboard, admin, services, about, blog, or contact pages
+  const showFooter = !isHomePage && !isDashboardRoute && !isServicesPage && !isAboutPage && !isBlogPage && !isContactPage;
   
   return (
     <div className="flex-layout bg-background text-foreground h-screen overflow-hidden">
       <Header />
-      <main className={`flex-content overflow-y-auto ${!isHomePage ? 'main-with-fixed-header' : ''}`}>
+      <main className={`flex-content ${!isHomePage ? 'pt-28' : ''}`}>
         {children}
       </main>
-      {!isHomePage && !isDashboardRoute && (
+      {showFooter && (
         <Footer />
       )}
       <MobileBottomNav />
@@ -86,6 +140,7 @@ function Router() {
       <Route path="/services" component={() => <Layout><Services /></Layout>} />
       <Route path="/blog" component={() => <Layout><Blog /></Layout>} />
       <Route path="/blog/post" component={() => <Layout><BlogPost /></Layout>} />
+      <Route path="/contact" component={() => <Layout><Contact /></Layout>} />
 
       <Route path="/consent-form" component={() => <Layout><ConsentForm /></Layout>} />
       <Route path="/appointment" component={() => <Layout><Appointment /></Layout>} />
@@ -244,6 +299,7 @@ function App() {
         <ThemeProvider>
           <AuthProvider>
             <TooltipProvider>
+              <BodyClassManager />
               <Toaster />
               <Router />
             </TooltipProvider>

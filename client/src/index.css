@@ -1,6 +1,101 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:wght@400;500;600;700;800;900&family=Maharlika:wght@400&family=DM+Sans:wght@100;200;300;400;500;600;700;800;900&display=swap');
 @import "tailwindcss";
 
+/* Disable scrolling globally except for blog page */
+html, body {
+  overflow: hidden !important;
+  height: 100vh !important;
+  position: fixed !important;
+  width: 100% !important;
+  /* Hide scrollbar completely */
+  scrollbar-width: none !important; /* Firefox */
+  -ms-overflow-style: none !important; /* Internet Explorer 10+ */
+}
+
+/* Hide scrollbar for WebKit browsers */
+html::-webkit-scrollbar,
+body::-webkit-scrollbar {
+  display: none !important;
+}
+
+/* Allow scrolling only on blog page */
+body.blog-page {
+  overflow: auto !important;
+  height: auto !important;
+  position: static !important;
+  /* Show scrollbar only on blog page */
+  scrollbar-width: auto !important;
+  -ms-overflow-style: auto !important;
+}
+
+/* Show scrollbar for blog page in WebKit browsers */
+body.blog-page::-webkit-scrollbar {
+  display: block !important;
+}
+
+/* Ensure all containers respect the no-scroll rule */
+* {
+  box-sizing: border-box;
+}
+
+/* Hide all scrollbars globally except on blog page */
+* {
+  scrollbar-width: none !important; /* Firefox */
+  -ms-overflow-style: none !important; /* Internet Explorer 10+ */
+}
+
+*::-webkit-scrollbar {
+  display: none !important; /* WebKit browsers */
+}
+
+/* Show scrollbars only on blog page */
+body.blog-page * {
+  scrollbar-width: auto !important;
+  -ms-overflow-style: auto !important;
+}
+
+body.blog-page *::-webkit-scrollbar {
+  display: block !important;
+}
+
+/* Prevent any element from creating scroll */
+.flex-layout {
+  overflow: hidden !important;
+  height: 100vh !important;
+  /* Hide scrollbar */
+  scrollbar-width: none !important;
+  -ms-overflow-style: none !important;
+}
+
+.flex-layout::-webkit-scrollbar {
+  display: none !important;
+}
+
+.flex-content {
+  overflow: hidden !important;
+  height: 100vh !important;
+  /* Hide scrollbar */
+  scrollbar-width: none !important;
+  -ms-overflow-style: none !important;
+}
+
+.flex-content::-webkit-scrollbar {
+  display: none !important;
+}
+
+/* Only allow scrolling on blog page content */
+body.blog-page .flex-content {
+  overflow: auto !important;
+  height: auto !important;
+  /* Show scrollbar only on blog page */
+  scrollbar-width: auto !important;
+  -ms-overflow-style: auto !important;
+}
+
+body.blog-page .flex-content::-webkit-scrollbar {
+  display: block !important;
+}
+
 /* The Seasons Font */
 @font-face {
   font-family: 'The Seasons';
@@ -47,6 +142,15 @@
   src: url('/Demo-The-Seasons/Fontspring-DEMO-theseasons-bdit.otf') format('opentype');
   font-weight: 700;
   font-style: italic;
+  font-display: swap;
+}
+
+/* ALTA Font */
+@font-face {
+  font-family: 'ALTA';
+  src: url('https://fonts.googleapis.com/css2?family=Alata:wght@400&display=swap');
+  font-weight: 400;
+  font-style: normal;
   font-display: swap;
 }
 
@@ -602,6 +706,54 @@
   @keyframes subtle-gradient {
     0%, 100% { background-position: 0% 50%; }
     50% { background-position: 100% 50%; }
+  }
+
+  /* Navigation entrance animation */
+  @keyframes slideInFromTop {
+    0% {
+      opacity: 0;
+      transform: translateY(-50px) scale(0.8);
+    }
+    50% {
+      opacity: 0.7;
+      transform: translateY(-10px) scale(0.95);
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+  }
+
+  /* Header fade in down animation */
+  @keyframes fadeInDown {
+    0% {
+      opacity: 0;
+      transform: translateY(-30px);
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .animate-fadeInDown {
+    animation: fadeInDown 1s ease-out;
+  }
+
+  /* Fade in up animation for text elements */
+  @keyframes fadeInUp {
+    0% {
+      opacity: 0;
+      transform: translateY(30px);
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .animate-fadeInUp {
+    animation: fadeInUp 1.2s ease-out;
   }
 
   /* Mobile safe-area helpers */

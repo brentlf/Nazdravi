@@ -145,11 +145,11 @@ export default function Services() {
         <div className="max-w-7xl mx-auto w-full">
           {/* Header Section */}
           <div className="text-center mb-3 xs:mb-4 sm:mb-6">
-            <div className="inline-flex items-center justify-center w-8 h-8 xs:w-10 xs:h-10 sm:w-12 sm:h-12 bg-primary/10 rounded-full mb-2 xs:mb-3">
-              <Leaf className="h-4 w-4 xs:h-5 xs:h-5 sm:h-6 sm:h-6 text-primary" />
+            <div className="inline-flex items-center justify-center w-8 h-8 xs:w-10 xs:h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-blue-400 to-blue-600 rounded-full mb-2 xs:mb-3">
+              <Leaf className="h-4 w-4 xs:h-5 xs:h-5 sm:h-6 sm:h-6 text-white" />
             </div>
-            <h1 className="text-xl xs:text-2xl sm:text-3xl md:text-4xl font-bold mb-2 xs:mb-3 leading-tight text-foreground" 
-                style={{fontFamily: 'The Seasons, serif', letterSpacing: '-0.01em'}}>
+            <h1 className="text-xl xs:text-2xl sm:text-3xl md:text-4xl font-bold mb-2 xs:mb-3 leading-tight text-foreground uppercase" 
+                style={{fontFamily: 'Calibri, sans-serif', letterSpacing: '0.02em'}}>
               Nutrition Services
             </h1>
             <p className="text-sm xs:text-base text-muted-foreground max-w-2xl mx-auto leading-relaxed">
@@ -202,19 +202,15 @@ export default function Services() {
                     )}
                   </ul>
                   
-                  <Button 
-                    variant="outline"
-                    className={`w-full font-semibold py-2 xs:py-3 text-xs xs:text-sm transition-all duration-300 transform hover:scale-105 ${
-                      service.popular 
-                        ? 'bg-gradient-to-r from-yellow-500 to-orange-500 hover:from-yellow-600 hover:to-orange-600 shadow-lg hover:shadow-xl border-2 border-yellow-400/30' 
-                        : '!bg-primary/10 hover:!bg-primary/20 !border-2 !border-primary/30 shadow-md hover:shadow-lg'
-                    }`}
-                    style={service.popular ? {} : {
-                      backgroundColor: 'hsl(var(--primary) / 0.1)',
-                      borderColor: 'hsl(var(--primary) / 0.3)'
-                    }}
-                    onClick={() => handleServicePlanSelection(service.id as any)}
-                  >
+                    <Button 
+                      variant="outline"
+                      className={`w-full font-semibold py-2 xs:py-3 text-xs xs:text-sm transition-all duration-300 transform hover:scale-105 ${
+                        service.popular 
+                          ? 'bg-gradient-to-r from-yellow-500 to-orange-500 hover:from-yellow-600 hover:to-orange-600 shadow-lg hover:shadow-xl border-2 border-yellow-400/30 text-white' 
+                          : 'bg-gradient-to-r from-blue-50 to-blue-100 hover:from-blue-100 hover:to-blue-200 border-2 border-blue-300 text-blue-700 hover:text-blue-800 shadow-md hover:shadow-lg'
+                      }`}
+                      onClick={() => handleServicePlanSelection(service.id as any)}
+                    >
                     {service.id === "program" ? "Start Program" : "Book Now"}
                     <ChevronRight className="ml-2 h-3 w-3 xs:h-4 xs:w-4" />
                   </Button>
@@ -224,13 +220,13 @@ export default function Services() {
           </div>
 
           {/* CTA Section */}
-          <div className="text-center bg-gradient-to-br from-primary/5 to-primary/10 border border-primary/20 rounded-2xl p-3 xs:p-4 sm:p-6 shadow-lg">
-            <h3 className="text-lg xs:text-xl font-bold text-foreground mb-2 xs:mb-3">💡 Not sure which option is right for you?</h3>
+          <div className="text-center bg-gradient-to-br from-blue-50 to-blue-100 border border-blue-200 rounded-2xl p-3 xs:p-4 sm:p-6 shadow-lg">
+            <h3 className="text-lg xs:text-xl font-bold text-foreground mb-2 xs:mb-3 uppercase" style={{fontFamily: 'Calibri, sans-serif', letterSpacing: '0.02em'}}>💡 Not sure which option is right for you?</h3>
             <p className="text-muted-foreground mb-4 xs:mb-6 max-w-2xl mx-auto text-sm xs:text-base">
               Schedule a free 15-minute consultation to discuss your goals and find the perfect service for your needs.
             </p>
             <Link href="/appointment">
-              <Button size="lg" className="px-6 xs:px-8 py-2 xs:py-3 text-sm xs:text-base font-semibold shadow-lg hover:shadow-xl transition-all duration-300 bg-gradient-to-r from-primary to-primary/90 hover:from-primary/90 hover:to-primary transform hover:scale-105 border-2 border-primary/20">
+              <Button size="lg" className="px-6 xs:px-8 py-2 xs:py-3 text-sm xs:text-base font-semibold shadow-lg hover:shadow-xl transition-all duration-300 bg-gradient-to-r from-yellow-500 to-orange-500 hover:from-yellow-600 hover:to-orange-600 transform hover:scale-105 border-2 border-yellow-300 text-white">
                 Book Your Consultation
                 <ArrowRight className="ml-2 h-4 w-4 xs:h-5 xs:w-5" />
               </Button>

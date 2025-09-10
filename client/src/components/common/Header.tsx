@@ -1,260 +1,132 @@
 import { useState } from "react";
 import { Link, useLocation } from "wouter";
-import { Menu, Leaf, LogOut, User } from "lucide-react";
+import { Menu } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-  DropdownMenuSeparator,
-} from "@/components/ui/dropdown-menu";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { ThemeToggle } from "./ThemeToggle";
 import { useAuth } from "@/contexts/AuthContext";
 
 export function Header() {
   const [isOpen, setIsOpen] = useState(false);
   const [location] = useLocation();
-  const { user, signOut } = useAuth();
+  const { user } = useAuth();
 
   const navigation = [
-    { name: "Home", href: "/" },
-    { name: "About", href: "/about" },
-    { name: "Services", href: "/services" },
-    { name: "Blog", href: "/blog" },
-    { name: "Book Appointment", href: "/appointment" },
+    { name: "NAZDRAVI", href: "/" },
+    { name: "ABOUT NAZDRAVI", href: "/about" },
+    { name: "SERVICES", href: "/services" },
+    { name: "BLOG", href: "/blog" },
+    { name: "CONTACT", href: "/contact" },
+    { name: "MY ACCOUNT", href: user ? "/dashboard" : "/login" },
   ];
 
   const isActive = (href: string) => location === href;
-
-  const handleSignOut = async () => {
-    try {
-      await signOut();
-    } catch (error) {
-      console.error("Sign out error:", error);
-    }
-  };
-
-  const overlayHeaderRoutes = ["/"];
-  const isOverlayHeader = overlayHeaderRoutes.includes(location);
-
-  // Don't render header on home page at all
-  if (location === "/") {
-    return null;
-  }
+  const isHomePage = location === "/";
+  const isAboutPage = location === "/about";
 
   return (
-    <header className={`${
-      isOverlayHeader 
-        ? "absolute top-0 left-0 right-0 z-50 border-white/20 bg-transparent text-white" 
-        : "fixed top-0 left-0 right-0 z-50 border-border/40 bg-background/80 backdrop-blur-xl supports-[backdrop-filter]:bg-background/60 text-foreground"
-    } w-full border-b transition-all duration-300 header-responsive`}>
-      <div className="responsive-container flex items-center justify-between h-full max-w-7xl mx-auto w-full">
-        {/* Logo */}
-        <Link href="/">
-          <div className="flex items-center space-x-2 xs:space-x-3 cursor-pointer group">
-            <div className={`w-6 h-6 xs:w-7 xs:h-7 sm:w-8 sm:h-8 md:w-10 md:h-10 rounded-xl flex items-center justify-center transition-all duration-300 group-hover:scale-110 group-hover:shadow-lg ${
-              isOverlayHeader ? "bg-white/20 backdrop-blur-sm" : "bg-primary"
-            }`}>
-              <Leaf className={`h-3 w-3 xs:h-3.5 xs:w-3.5 sm:h-4 sm:w-4 md:h-6 md:w-6 ${
-                isOverlayHeader ? "text-white" : "text-primary-foreground"
-              }`} />
-            </div>
-            <span className={`font-bold text-sm xs:text-base sm:text-lg md:text-xl tracking-tight ${
-              isOverlayHeader ? "text-white" : "text-primary"
-            }`}>
-              Nazdravi
-            </span>
-          </div>
-        </Link>
-
-        {/* Desktop Navigation */}
-        <nav className="hidden lg:flex items-center space-x-10">
-          {navigation.map((item) => (
-            <Link
-              key={item.href}
-              href={item.href}
-              className={`relative text-sm font-medium transition-all duration-300 ${
-                isOverlayHeader
-                  ? isActive(item.href)
-                    ? "text-white"
-                    : "text-white/80 hover:text-white"
-                  : isActive(item.href)
-                  ? "text-primary"
-                  : "text-muted-foreground hover:text-foreground"
-              }`}
-            >
-              {item.name}
-              {isActive(item.href) && (
-                <span className={`absolute -bottom-2 left-0 w-full h-0.5 rounded-full ${
-                  isOverlayHeader ? "bg-white" : "bg-primary"
-                }`}></span>
-              )}
-            </Link>
-          ))}
-        </nav>
-
-        {/* Right side controls */}
-        <div className="flex items-center space-x-1 xs:space-x-2 sm:space-x-3 md:space-x-4">
-          <ThemeToggle className="tap-target h-6 w-6 xs:h-7 xs:w-7 sm:h-8 sm:w-8 md:h-10 md:w-10" />
-
-          {/* User menu or auth buttons */}
-          {user ? (
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant="ghost" className={`relative h-6 w-6 xs:h-7 xs:w-7 sm:h-8 sm:w-8 md:h-10 md:w-10 rounded-full hover:bg-muted/80 ${
-                  isOverlayHeader ? "text-white hover:bg-white/20" : ""
-                }`}>
-                  <Avatar className="h-6 w-6 xs:h-7 xs:w-7 sm:h-8 sm:w-8 md:h-10 md:w-10">
-                    <AvatarImage src={user.photoURL} alt={user.name} />
-                    <AvatarFallback className={`font-semibold text-xs ${
-                      isOverlayHeader ? "bg-white/20 text-white" : "bg-primary text-primary-foreground"
-                    }`}>
-                      {user.name.slice(0, 2).toUpperCase()}
-                    </AvatarFallback>
-                  </Avatar>
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent 
-                className="w-64 p-2" 
-                align="end" 
-                forceMount
+    <header className={`fixed top-0 left-0 right-0 z-50 transition-all duration-1000 ease-out ${
+      isHomePage || isAboutPage
+        ? "bg-transparent border-none animate-fadeInDown" 
+        : "bg-white border-b border-gray-200"
+    }`}>
+      <div className="w-full px-4 sm:px-6 lg:px-8">
+        <div className="flex items-center justify-between h-28 w-full">
+          {/* Desktop Navigation - Full Width with Equal Spacing */}
+          <nav className="hidden md:flex items-center w-full">
+            {navigation.map((item, index) => (
+                      <Link
+                        key={item.href}
+                        href={item.href}
+                        className={`text-5xl font-medium transition-all duration-700 ease-out transform hover:scale-105 ${
+                  isHomePage
+                    ? isActive(item.href)
+                      ? "text-black"
+                      : item.name === "MY ACCOUNT"
+                      ? "text-orange-500 hover:text-orange-600"
+                      : "text-black/80 hover:text-black"
+                    : isAboutPage
+                    ? isActive(item.href)
+                      ? "text-white"
+                      : item.name === "MY ACCOUNT"
+                      ? "text-orange-400 hover:text-orange-300"
+                      : "text-white/90 hover:text-white"
+                    : isActive(item.href)
+                    ? "text-gray-900"
+                    : "text-gray-600 hover:text-gray-900"
+                }`}
                 style={{
-                  backgroundColor: 'hsl(var(--popover))',
-                  color: 'hsl(var(--popover-foreground))',
-                  borderColor: 'hsl(var(--border))',
-                  opacity: 1,
-                  backdropFilter: 'none'
+                  flex: '1 1 0',
+                  textAlign: 'center',
+                  fontFamily: 'Calibri, sans-serif',
+                  letterSpacing: '0.02em',
+                  textShadow: '1px 1px 0px rgba(255,255,255,0.8), -1px -1px 0px rgba(0,0,0,0.3), 0px 0px 3px rgba(0,0,0,0.2)',
+                  filter: 'drop-shadow(0 1px 2px rgba(0,0,0,0.1))',
+                  animation: `slideInFromTop 0.8s ease-out ${index * 0.1}s both`,
+                  opacity: 0
                 }}
               >
-                <div className="flex items-center justify-start gap-3 p-3">
-                  <Avatar className="h-12 w-12">
-                    <AvatarImage src={user.photoURL} alt={user.name} />
-                    <AvatarFallback className="bg-primary text-primary-foreground font-semibold">
-                      {user.name.slice(0, 2).toUpperCase()}
-                    </AvatarFallback>
-                  </Avatar>
-                  <div className="flex flex-col space-y-1 leading-none">
-                    <p className="font-semibold text-foreground">{user.name}</p>
-                    <p className="w-[200px] truncate text-sm text-muted-foreground">
-                      {user.email}
-                    </p>
-                  </div>
-                </div>
-                <DropdownMenuSeparator />
-                {user.role === "admin" ? (
-                  <>
-                    <DropdownMenuItem asChild>
-                      <Link href="/admin" className="flex items-center gap-2 p-2 rounded-lg hover:bg-muted/80">
-                        <User className="h-4 w-4" />
-                        Admin Dashboard
-                      </Link>
-                    </DropdownMenuItem>
-                    <DropdownMenuSeparator />
-                  </>
-                ) : (
-                  <>
-                    <DropdownMenuItem asChild>
-                      <Link href="/dashboard" className="flex items-center gap-2 p-2 rounded-lg hover:bg-muted/80">
-                        <User className="h-4 w-4" />
-                        Dashboard
-                      </Link>
-                    </DropdownMenuItem>
-                    <DropdownMenuSeparator />
-                  </>
-                )}
-                <DropdownMenuItem
-                  onClick={handleSignOut}
-                  className="flex items-center gap-2 p-2 rounded-lg hover:bg-muted/80 text-destructive focus:text-destructive"
-                >
-                  <LogOut className="h-4 w-4" />
-                  Sign Out
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
-          ) : (
-            <div className="flex items-center space-x-1 xs:space-x-2 sm:space-x-3">
-              <Link href="/login">
-                <Button variant="ghost" className={`font-medium text-xs xs:text-sm sm:text-base px-1 xs:px-2 sm:px-3 md:px-4 ${
-                  isOverlayHeader 
-                    ? "text-white hover:bg-white/20" 
-                    : "hover:bg-muted/80"
-                }`}>
-                  Sign In
-                </Button>
+                {item.name}
               </Link>
-              <Link href="/register">
-                <Button className={`font-medium text-xs xs:text-sm sm:text-base px-1 xs:px-2 sm:px-3 md:px-4 shadow-soft hover:shadow-elegant transition-all duration-300 ${
-                  isOverlayHeader 
-                    ? "bg-white/20 text-white hover:bg-white/30 border-white/30" 
-                    : ""
-                }`}>
-                  Get Started
-                </Button>
-              </Link>
-            </div>
-          )}
+            ))}
+          </nav>
 
           {/* Mobile menu button */}
-          <Sheet open={isOpen} onOpenChange={setIsOpen}>
-            <SheetTrigger asChild>
-              <Button
-                variant="ghost"
-                size="icon"
-                className={`lg:hidden h-6 w-6 xs:h-7 xs:w-7 sm:h-8 sm:w-8 tap-target ${
-                  isOverlayHeader ? "text-white hover:bg-white/20" : ""
-                }`}
-                onClick={() => setIsOpen(true)}
-              >
-                <Menu className="h-3 w-3 xs:h-3.5 xs:w-3.5 sm:h-4 sm:w-4" />
-                <span className="sr-only">Toggle menu</span>
-              </Button>
-            </SheetTrigger>
-            <SheetContent side="right" className="w-[85vw] xs:w-[82vw] sm:w-[80vw] max-w-[400px] px-safe pb-safe bg-background text-foreground border-l border-border/40 backdrop-blur-xl">
-              <div className="flex flex-col h-full">
-                <div className="flex items-center space-x-3 mb-4 xs:mb-6 sm:mb-8">
-                  <div className="w-7 h-7 xs:w-8 xs:h-8 bg-primary rounded-lg flex items-center justify-center">
-                    <Leaf className="h-4 w-4 xs:h-5 xs:w-5 text-primary-foreground" />
+          <div className="md:hidden absolute right-4">
+            <Sheet open={isOpen} onOpenChange={setIsOpen}>
+              <SheetTrigger asChild>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className={`${
+                    isHomePage 
+                      ? "text-black hover:text-black/80" 
+                      : isAboutPage
+                      ? "text-white hover:text-white/80"
+                      : "text-gray-600 hover:text-gray-900"
+                  }`}
+                  onClick={() => setIsOpen(true)}
+                >
+                  <Menu className="h-6 w-6" />
+                  <span className="sr-only">Toggle menu</span>
+                </Button>
+              </SheetTrigger>
+              <SheetContent side="right" className="w-[300px] bg-white">
+                <div className="flex flex-col h-full">
+                  <div className="flex items-center justify-between mb-8">
+                    <span className="text-lg font-medium text-gray-900">Menu</span>
                   </div>
-                  <span className="font-bold text-base xs:text-lg text-primary">Nazdravi</span>
-                </div>
-                
-                <nav className="flex-1 space-y-1 xs:space-y-2">
-                  {navigation.map((item) => (
-                    <Link
-                      key={item.href}
-                      href={item.href}
-                      onClick={() => setIsOpen(false)}
-                      className={`block px-3 xs:px-4 py-3 xs:py-4 rounded-lg text-sm xs:text-base sm:text-lg font-medium transition-colors tap-target ${
-                        isActive(item.href)
-                          ? "bg-primary text-primary-foreground"
-                          : "text-muted-foreground hover:text-foreground hover:bg-muted/80"
-                      }`}
-                    >
-                      {item.name}
-                    </Link>
-                  ))}
-                </nav>
+                  
+                  <nav className="flex-1 space-y-2">
+                    {navigation.map((item) => (
+                      <Link
+                        key={item.href}
+                        href={item.href}
+                        onClick={() => setIsOpen(false)}
+                        className={`block px-3 py-2 text-lg font-medium transition-all duration-500 ease-out transform hover:scale-105 ${
+                          isActive(item.href)
+                            ? "text-gray-900 bg-gray-50"
+                            : "text-gray-600 hover:text-gray-900 hover:bg-gray-50"
+                        }`}
+                        style={{
+                          fontFamily: 'Calibri, sans-serif',
+                          letterSpacing: '0.02em',
+                          textShadow: '1px 1px 0px rgba(255,255,255,0.8), -1px -1px 0px rgba(0,0,0,0.3), 0px 0px 3px rgba(0,0,0,0.2)',
+                          filter: 'drop-shadow(0 1px 2px rgba(0,0,0,0.1))'
+                        }}
+                      >
+                        {item.name}
+                      </Link>
+                    ))}
+                  </nav>
 
-                {!user && (
-                  <div className="pt-6 border-t border-border/40 space-y-3">
-                    <Link href="/login" onClick={() => setIsOpen(false)}>
-                      <Button variant="outline" className="w-full justify-center tap-target">
-                        Sign In
-                      </Button>
-                    </Link>
-                    <Link href="/register" onClick={() => setIsOpen(false)}>
-                      <Button className="w-full justify-center shadow-soft tap-target">
-                        Get Started
-                      </Button>
-                    </Link>
+                  <div className="pt-6 border-t border-gray-200">
+                    <ThemeToggle className="w-full justify-start" />
                   </div>
-                )}
-              </div>
-            </SheetContent>
-          </Sheet>
+                </div>
+              </SheetContent>
+            </Sheet>
+          </div>
         </div>
       </div>
     </header>

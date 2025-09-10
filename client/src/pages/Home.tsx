@@ -1,22 +1,10 @@
-import { Link, useLocation } from "wouter";
+import { Link } from "wouter";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Footer } from "@/components/common/Footer";
-import { useAuth } from "@/contexts/AuthContext";
-import { LogOut, User, Settings, Menu, X } from "lucide-react";
+import { Menu, X } from "lucide-react";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-import { ThemeToggle } from "@/components/common/ThemeToggle";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-  DropdownMenuSeparator,
-} from "@/components/ui/dropdown-menu";
 
 export default function Home() {
-  const { user, signOut } = useAuth();
-  const [, setLocation] = useLocation();
   const [menuOpen, setMenuOpen] = useState(false);
   // No need for manual overflow control with new layout system
 
@@ -27,22 +15,6 @@ export default function Home() {
     { name: "Blog", href: "/blog" },
     { name: "Book Appointment", href: "/appointment" },
   ];
-
-  const handleSignOut = async () => {
-    try {
-      await signOut();
-    } catch (error) {
-      console.error("Sign out error:", error);
-    }
-  };
-
-  const handleDashboardClick = () => {
-    if (user?.role === "admin") {
-      setLocation("/admin");
-    } else {
-      setLocation("/dashboard");
-    }
-  };
 
   return (
     <div className="viewport-fit w-full">
@@ -64,15 +36,6 @@ export default function Home() {
           }}
         >
           <source src="/banana.mp4" type="video/mp4" />
-          {/* Fallback to image if video fails to load */}
-          <div 
-            className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-            style={{
-              backgroundImage: `url(/font-page-reference.png)`,
-              imageRendering: 'crisp-edges',
-              zIndex: 0
-            }}
-          />
         </video>
         
         {/* Light overlay for better text readability while maintaining image clarity */}
@@ -80,77 +43,9 @@ export default function Home() {
         
         {/* Header overlay - positioned at top */}
         <div className="relative z-20 w-full">
-          {/* Top left logo and account section */}
-          <div className="absolute top-4 sm:top-6 left-4 sm:left-8 flex items-center gap-3 sm:gap-4 px-safe pt-safe">
-            {/* Logo placeholder */}
-            <div className="w-10 h-10 sm:w-12 sm:h-12 bg-white/20 backdrop-blur-sm rounded-lg border border-white/30 flex items-center justify-center">
-              <div className="w-7 h-7 sm:w-8 sm:h-8 bg-white/40 rounded-md"></div>
-            </div>
-            
-            {/* Account section with dropdown for logged-in users */}
-            {user ? (
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <span 
-                    className="text-white text-base sm:text-lg font-light tracking-wide opacity-90 hover:opacity-100 transition-opacity duration-300 cursor-pointer tap-target"
-                    style={{fontFamily: 'Calibri, sans-serif'}}
-                  >
-                    {user.role === "admin" ? "admin panel" : "my account"}
-                  </span>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent 
-                  className="w-56 p-2" 
-                  align="start"
-                  style={{
-                    backgroundColor: 'rgba(0, 0, 0, 0.9)',
-                    color: 'white',
-                    borderColor: 'rgba(255, 255, 255, 0.2)',
-                    backdropFilter: 'blur(10px)',
-                  }}
-                >
-                  <div className="flex items-center justify-start gap-3 p-3">
-                    <div className="w-8 h-8 bg-white/20 rounded-full flex items-center justify-center">
-                      <User className="h-4 w-4 text-white" />
-                    </div>
-                    <div className="flex flex-col space-y-1 leading-none">
-                      <p className="font-medium text-white text-sm">{user.name}</p>
-                      <p className="text-xs text-white/70 truncate w-[180px]">
-                        {user.email}
-                      </p>
-                    </div>
-                  </div>
-                  <DropdownMenuSeparator className="bg-white/20" />
-                  <DropdownMenuItem 
-                    onClick={handleDashboardClick}
-                    className="flex items-center gap-2 p-2 rounded-lg hover:bg-white/20 text-white focus:text-white cursor-pointer"
-                  >
-                    <Settings className="h-4 w-4" />
-                    {user.role === "admin" ? "Admin Dashboard" : "Dashboard"}
-                  </DropdownMenuItem>
-                  <DropdownMenuSeparator className="bg-white/20" />
-                  <DropdownMenuItem
-                    onClick={handleSignOut}
-                    className="flex items-center gap-2 p-2 rounded-lg hover:bg-red-500/20 text-red-300 focus:text-red-300 cursor-pointer"
-                  >
-                    <LogOut className="h-4 w-4" />
-                    Sign Out
-                  </DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
-            ) : (
-              <span 
-                className="text-white text-base sm:text-lg font-light tracking-wide opacity-90 hover:opacity-100 transition-opacity duration-300 cursor-pointer tap-target"
-                style={{fontFamily: 'Calibri, sans-serif'}}
-                onClick={() => setLocation("/login")}
-              >
-                sign in
-              </span>
-            )}
-          </div>
 
-          {/* Mobile burger menu and theme toggle (home-only, not header) */}
+          {/* Mobile burger menu (home-only, not header) */}
           <div className="absolute top-4 sm:top-6 right-4 sm:right-6 flex items-center gap-2 px-safe pt-safe">
-            <ThemeToggle className="text-white hover:bg-white/20 tap-target" />
             <div className="lg:hidden">
               <Sheet open={menuOpen} onOpenChange={setMenuOpen}>
                 <SheetTrigger asChild>
@@ -178,115 +73,50 @@ export default function Home() {
                     </Link>
                   ))}
                 </nav>
-                {!user && (
-                  <div className="pt-4 pb-safe space-y-3">
-                    <Link href="/login" onClick={() => setMenuOpen(false)}>
-                      <Button variant="outline" className="w-full justify-center tap-target">Sign In</Button>
-                    </Link>
-                    <Link href="/register" onClick={() => setMenuOpen(false)}>
-                      <Button className="w-full justify-center tap-target">Get Started</Button>
-                    </Link>
-                  </div>
-                )}
               </SheetContent>
             </Sheet>
             </div>
           </div>
         </div>
 
-        {/* Main content positioned at bottom left */}
-        <div className="absolute bottom-24 sm:bottom-28 md:bottom-32 lg:bottom-36 left-4 sm:left-6 md:left-8 z-10 max-w-4xl px-safe">
-                {/* Main title "nazdravi" raised from the image */}
-                <h1 className="text-8xl xs:text-9xl sm:text-8xl md:text-9xl lg:text-[10rem] xl:text-[12rem] 2xl:text-[14rem] font-light mb-2 sm:mb-3 md:mb-4 leading-tight text-white text-balance" 
-                    style={{
-                      fontFamily: 'The Seasons, serif',
-                      textShadow: '2px 2px 4px rgba(0,0,0,0.7), -1px -1px 3px rgba(255,255,255,0.25), 1px 1px 2px rgba(255,255,255,0.15)',
-                      filter: 'drop-shadow(3px 3px 6px rgba(0,0,0,0.55))',
-                      letterSpacing: '-0.02em'
-                    }}>
-                  nazdravi
-                </h1>
-                
-                {/* Left-aligned content under nazdravi */}
-                <div className="flex flex-col items-start">
-                  {/* Subtitle "REGISTERED DIETITIAN" left-aligned under nazdravi - larger font */}
-                  <p className="text-xl xs:text-2xl sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl mb-4 sm:mb-6 md:mb-8 text-white font-light tracking-wide opacity-90 text-left text-balance"
-                     style={{fontFamily: 'The Seasons, serif', letterSpacing: '0.05em'}}>
-                    REGISTERED DIETITIAN
-                  </p>
-                  
-                  {/* BOOK AN APPOINTMENT button left-aligned - larger */}
-                  <Link href="/appointment">
-                     <Button 
-                       size="lg" 
-                       variant="outline"
-                       className="text-sm xs:text-base sm:text-lg md:text-xl lg:text-2xl px-4 xs:px-6 sm:px-8 md:px-10 lg:px-12 py-3 xs:py-4 sm:py-5 md:py-6 lg:py-8 border-white/40 text-white hover:bg-white/20 backdrop-blur-sm rounded-lg transition-all duration-300 hover:border-white/60 hover:scale-105 tap-target"
-                       style={{fontFamily: 'The Seasons, serif', letterSpacing: '0.02em'}}
-                     >
-                       BOOK AN APPOINTMENT
-                     </Button>
-                  </Link>
-                </div>
+        {/* Main title "nazdravi" positioned at bottom left corner */}
+        <div className="absolute -bottom-16 left-8 z-10">
+          <h1 className="text-7xl xs:text-8xl sm:text-9xl md:text-[10rem] lg:text-[12rem] xl:text-[14rem] 2xl:text-[16rem] font-light leading-tight text-white" 
+              style={{
+                fontFamily: 'The Seasons, serif',
+                textShadow: '2px 2px 4px rgba(0,0,0,0.7), -1px -1px 3px rgba(255,255,255,0.25), 1px 1px 2px rgba(255,255,255,0.15)',
+                filter: 'drop-shadow(3px 3px 6px rgba(0,0,0,0.55))',
+                letterSpacing: '-0.02em'
+              }}>
+            nazdravi
+          </h1>
         </div>
 
-        {/* Right lower corner - Navigation menu with elegant styling */}
-        <div className="hidden lg:flex flex-col items-end space-y-4 xl:space-y-6 absolute bottom-16 sm:bottom-20 md:bottom-24 lg:bottom-28 right-6 md:right-8 lg:right-12 hide-on-mobile z-20">
-                <Link href="/">
-                   <div className="text-white text-3xl lg:text-4xl xl:text-5xl 2xl:text-6xl font-light hover:text-white/80 transition-all duration-300 cursor-pointer border-b border-white/30 pb-1 lg:pb-2 tracking-[0.1em] lg:tracking-[0.2em]" 
-                        style={{
-                          fontFamily: 'The Seasons, serif',
-                          textShadow: '2px 2px 4px rgba(0,0,0,0.7)',
-                          filter: 'drop-shadow(2px 2px 4px rgba(0,0,0,0.5))'
-                        }}>
-                     HOME
-                   </div>
-                </Link>
-                <Link href="/about">
-                   <div className="text-white/90 text-3xl lg:text-4xl xl:text-5xl 2xl:text-6xl font-light hover:text-white transition-all duration-300 cursor-pointer tracking-[0.1em] lg:tracking-[0.2em]" 
-                        style={{
-                          fontFamily: 'The Seasons, serif',
-                          textShadow: '2px 2px 4px rgba(0,0,0,0.7)',
-                          filter: 'drop-shadow(2px 2px 4px rgba(0,0,0,0.5))'
-                        }}>
-                     ABOUT
-                   </div>
-                </Link>
-                <Link href="/services">
-                   <div className="text-white/90 text-3xl lg:text-4xl xl:text-5xl 2xl:text-6xl font-light hover:text-white transition-all duration-300 cursor-pointer tracking-[0.1em] lg:tracking-[0.2em]" 
-                        style={{
-                          fontFamily: 'The Seasons, serif',
-                          textShadow: '2px 2px 4px rgba(0,0,0,0.7)',
-                          filter: 'drop-shadow(2px 2px 4px rgba(0,0,0,0.5))'
-                        }}>
-                     SERVICES
-                   </div>
-                </Link>
-                <Link href="/blog">
-                   <div className="text-white/90 text-3xl lg:text-4xl xl:text-5xl 2xl:text-6xl font-light hover:text-white transition-all duration-300 cursor-pointer tracking-[0.1em] lg:tracking-[0.2em]" 
-                        style={{
-                          fontFamily: 'The Seasons, serif',
-                          textShadow: '2px 2px 4px rgba(0,0,0,0.7)',
-                          filter: 'drop-shadow(2px 2px 4px rgba(0,0,0,0.5))'
-                        }}>
-                     BLOG
-                   </div>
-                </Link>
-                <Link href="/appointment">
-                   <div className="text-white/90 text-3xl lg:text-4xl xl:text-5xl 2xl:text-6xl font-light hover:text-white transition-all duration-300 cursor-pointer tracking-[0.1em] lg:tracking-[0.2em]" 
-                        style={{
-                          fontFamily: 'The Seasons, serif',
-                          textShadow: '2px 2px 4px rgba(0,0,0,0.7)',
-                          filter: 'drop-shadow(2px 2px 4px rgba(0,0,0,0.5))'
-                        }}>
-                     APPOINTMENT
-                   </div>
-                </Link>
+        {/* Bottom right corner content */}
+        <div className="absolute bottom-4 sm:bottom-6 right-4 sm:right-6 z-10 flex flex-col items-center">
+          {/* Registered Dietitian text */}
+          <p className="text-white text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-light tracking-wide mb-6 text-center"
+             style={{
+               fontFamily: 'Calibri, sans-serif',
+               textShadow: '2px 2px 4px rgba(0,0,0,0.7)',
+               filter: 'drop-shadow(2px 2px 4px rgba(0,0,0,0.5))'
+             }}>
+            REGISTERED DIETITIAN (UK and SA)
+          </p>
+          
+          {/* BOOK APPOINTMENT button */}
+          <Link href="/appointment">
+             <Button 
+               size="lg" 
+               variant="outline"
+               className="text-xl sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl px-8 sm:px-10 md:px-12 lg:px-16 py-4 sm:py-5 md:py-6 lg:py-8 border-2 border-orange-400 text-white hover:bg-orange-500/20 backdrop-blur-sm rounded-lg transition-all duration-300 hover:border-orange-300 hover:scale-105 tap-target bg-gradient-to-r from-orange-500/80 to-red-500/80 hover:from-orange-500 hover:to-red-500"
+               style={{fontFamily: 'Calibri, sans-serif', letterSpacing: '0.02em'}}
+             >
+               BOOK APPOINTMENT
+             </Button>
+          </Link>
         </div>
 
-        {/* Footer overlay - positioned at bottom */}
-        <div className="absolute bottom-0 left-0 right-0 z-20">
-          <Footer overlay={true} />
-        </div>
       </section>
     </div>
   );
