@@ -53,7 +53,8 @@ export default function Appointment() {
             <div className="inline-flex items-center justify-center w-12 h-12 xs:w-14 xs:h-14 bg-gradient-to-br from-primary/20 to-primary/10 rounded-2xl mb-3 xs:mb-4 shadow-lg">
               <Calendar className="h-6 w-6 xs:h-7 xs:w-7 text-primary" />
             </div>
-            <h1 className="text-2xl xs:text-3xl sm:text-4xl font-bold mb-2 xs:mb-3 leading-tight text-foreground font-serif">
+            <h1 className="text-2xl xs:text-3xl sm:text-4xl font-bold mb-2 xs:mb-3 leading-tight text-foreground" 
+                style={{fontFamily: 'The Seasons, serif', letterSpacing: '-0.01em'}}>
               Book Consultation
             </h1>
             <p className="text-base xs:text-lg text-muted-foreground max-w-2xl mx-auto leading-relaxed">

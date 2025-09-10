@@ -148,7 +148,8 @@ export default function Services() {
             <div className="inline-flex items-center justify-center w-8 h-8 xs:w-10 xs:h-10 sm:w-12 sm:h-12 bg-primary/10 rounded-full mb-2 xs:mb-3">
               <Leaf className="h-4 w-4 xs:h-5 xs:h-5 sm:h-6 sm:h-6 text-primary" />
             </div>
-            <h1 className="text-xl xs:text-2xl sm:text-3xl md:text-4xl font-bold mb-2 xs:mb-3 leading-tight text-foreground font-serif">
+            <h1 className="text-xl xs:text-2xl sm:text-3xl md:text-4xl font-bold mb-2 xs:mb-3 leading-tight text-foreground" 
+                style={{fontFamily: 'The Seasons, serif', letterSpacing: '-0.01em'}}>
               Nutrition Services
             </h1>
             <p className="text-sm xs:text-base text-muted-foreground max-w-2xl mx-auto leading-relaxed">

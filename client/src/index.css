@@ -1,6 +1,54 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:wght@400;500;600;700;800;900&family=Maharlika:wght@400&family=DM+Sans:wght@100;200;300;400;500;600;700;800;900&display=swap');
-
 @import "tailwindcss";
+
+/* The Seasons Font */
+@font-face {
+  font-family: 'The Seasons';
+  src: url('/Demo-The-Seasons/Fontspring-DEMO-theseasons-reg.otf') format('opentype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'The Seasons';
+  src: url('/Demo-The-Seasons/Fontspring-DEMO-theseasons-lt.otf') format('opentype');
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'The Seasons';
+  src: url('/Demo-The-Seasons/Fontspring-DEMO-theseasons-bd.otf') format('opentype');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'The Seasons';
+  src: url('/Demo-The-Seasons/Fontspring-DEMO-theseasons-it.otf') format('opentype');
+  font-weight: 400;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'The Seasons';
+  src: url('/Demo-The-Seasons/Fontspring-DEMO-theseasons-ltit.otf') format('opentype');
+  font-weight: 300;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'The Seasons';
+  src: url('/Demo-The-Seasons/Fontspring-DEMO-theseasons-bdit.otf') format('opentype');
+  font-weight: 700;
+  font-style: italic;
+  font-display: swap;
+}
 
 :root {
   /* Light Theme - Warm Neutral Colors */
@@ -126,10 +174,11 @@
     color: hsl(var(--foreground)) !important;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-    font-feature-settings: "rlig" 1, "calt" 1;
-    line-height: 1.7;
-    letter-spacing: -0.01em;
+    font-family: 'The Seasons', 'Playfair Display', 'Times New Roman', serif;
+    font-feature-settings: "kern" 1, "liga" 1, "clig" 1, "calt" 1;
+    line-height: 1.6;
+    letter-spacing: 0.01em;
+    font-weight: 400;
     transition: background-color 0.3s ease, color 0.3s ease;
     overflow: hidden;
     height: 100vh;
@@ -147,13 +196,13 @@
   
   /* Removed empty html ruleset to satisfy linter */
   
-  /* Playfair Display for elegant headers */
+  /* The Seasons for elegant headers */
   h1, h2, h3, h4, h5, h6 {
-    font-family: 'Playfair Display', serif;
+    font-family: 'The Seasons', 'Playfair Display', serif;
     font-weight: 600;
     line-height: 1.2;
     color: hsl(var(--foreground));
-    letter-spacing: -0.02em;
+    letter-spacing: -0.01em;
     transition: color 0.3s ease;
   }
   

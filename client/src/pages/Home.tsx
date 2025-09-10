@@ -48,18 +48,32 @@ export default function Home() {
     <div className="viewport-fit w-full">
       {/* Full Viewport Hero Section with Background Image */}
       <section className="relative viewport-content w-full">
-        {/* Background Image */}
-        <div 
-          className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+        {/* Background Video */}
+        <video 
+          className="absolute inset-0 w-full h-full object-cover"
+          autoPlay
+          loop
+          muted
+          playsInline
           style={{
-            backgroundImage: `url(/oranges-sky.jpg)`,
-            imageRendering: 'crisp-edges',
             WebkitBackfaceVisibility: 'hidden',
             backfaceVisibility: 'hidden',
             transform: 'translateZ(0)',
-            WebkitTransform: 'translateZ(0)'
+            WebkitTransform: 'translateZ(0)',
+            zIndex: 1
           }}
-        />
+        >
+          <source src="/banana.mp4" type="video/mp4" />
+          {/* Fallback to image if video fails to load */}
+          <div 
+            className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+            style={{
+              backgroundImage: `url(/font-page-reference.png)`,
+              imageRendering: 'crisp-edges',
+              zIndex: 0
+            }}
+          />
+        </video>
         
         {/* Light overlay for better text readability while maintaining image clarity */}
         <div className="absolute inset-0 bg-black/25 sm:bg-black/15" />
@@ -183,11 +197,12 @@ export default function Home() {
         {/* Main content positioned at bottom left */}
         <div className="absolute bottom-24 sm:bottom-28 md:bottom-32 lg:bottom-36 left-4 sm:left-6 md:left-8 z-10 max-w-4xl px-safe">
                 {/* Main title "nazdravi" raised from the image */}
-                <h1 className="text-8xl xs:text-9xl sm:text-8xl md:text-9xl lg:text-[10rem] xl:text-[12rem] 2xl:text-[14rem] font-extralight mb-2 sm:mb-3 md:mb-4 leading-tight text-white text-balance" 
+                <h1 className="text-8xl xs:text-9xl sm:text-8xl md:text-9xl lg:text-[10rem] xl:text-[12rem] 2xl:text-[14rem] font-light mb-2 sm:mb-3 md:mb-4 leading-tight text-white text-balance" 
                     style={{
-                      fontFamily: 'DM Sans, sans-serif',
+                      fontFamily: 'The Seasons, serif',
                       textShadow: '2px 2px 4px rgba(0,0,0,0.7), -1px -1px 3px rgba(255,255,255,0.25), 1px 1px 2px rgba(255,255,255,0.15)',
-                      filter: 'drop-shadow(3px 3px 6px rgba(0,0,0,0.55))'
+                      filter: 'drop-shadow(3px 3px 6px rgba(0,0,0,0.55))',
+                      letterSpacing: '-0.02em'
                     }}>
                   nazdravi
                 </h1>
@@ -196,20 +211,20 @@ export default function Home() {
                 <div className="flex flex-col items-start">
                   {/* Subtitle "REGISTERED DIETITIAN" left-aligned under nazdravi - larger font */}
                   <p className="text-xl xs:text-2xl sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl mb-4 sm:mb-6 md:mb-8 text-white font-light tracking-wide opacity-90 text-left text-balance"
-                     style={{fontFamily: 'DM Sans, sans-serif'}}>
+                     style={{fontFamily: 'The Seasons, serif', letterSpacing: '0.05em'}}>
                     REGISTERED DIETITIAN
                   </p>
                   
                   {/* BOOK AN APPOINTMENT button left-aligned - larger */}
                   <Link href="/appointment">
-                    <Button 
-                      size="lg" 
-                      variant="outline"
-                      className="text-sm xs:text-base sm:text-lg md:text-xl lg:text-2xl px-4 xs:px-6 sm:px-8 md:px-10 lg:px-12 py-3 xs:py-4 sm:py-5 md:py-6 lg:py-8 border-white/40 text-white hover:bg-white/20 backdrop-blur-sm rounded-lg transition-all duration-300 hover:border-white/60 hover:scale-105 tap-target"
-                      style={{fontFamily: 'DM Sans, sans-serif'}}
-                    >
-                      BOOK AN APPOINTMENT
-                    </Button>
+                     <Button 
+                       size="lg" 
+                       variant="outline"
+                       className="text-sm xs:text-base sm:text-lg md:text-xl lg:text-2xl px-4 xs:px-6 sm:px-8 md:px-10 lg:px-12 py-3 xs:py-4 sm:py-5 md:py-6 lg:py-8 border-white/40 text-white hover:bg-white/20 backdrop-blur-sm rounded-lg transition-all duration-300 hover:border-white/60 hover:scale-105 tap-target"
+                       style={{fontFamily: 'The Seasons, serif', letterSpacing: '0.02em'}}
+                     >
+                       BOOK AN APPOINTMENT
+                     </Button>
                   </Link>
                 </div>
         </div>
@@ -217,54 +232,54 @@ export default function Home() {
         {/* Right lower corner - Navigation menu with elegant styling */}
         <div className="hidden lg:flex flex-col items-end space-y-4 xl:space-y-6 absolute bottom-16 sm:bottom-20 md:bottom-24 lg:bottom-28 right-6 md:right-8 lg:right-12 hide-on-mobile z-20">
                 <Link href="/">
-                  <div className="text-white text-3xl lg:text-4xl xl:text-5xl 2xl:text-6xl font-light hover:text-white/80 transition-all duration-300 cursor-pointer border-b border-white/30 pb-1 lg:pb-2 tracking-[0.1em] lg:tracking-[0.2em]" 
-                       style={{
-                         fontFamily: 'DM Sans, sans-serif',
-                         textShadow: '2px 2px 4px rgba(0,0,0,0.7)',
-                         filter: 'drop-shadow(2px 2px 4px rgba(0,0,0,0.5))'
-                       }}>
-                    HOME
-                  </div>
+                   <div className="text-white text-3xl lg:text-4xl xl:text-5xl 2xl:text-6xl font-light hover:text-white/80 transition-all duration-300 cursor-pointer border-b border-white/30 pb-1 lg:pb-2 tracking-[0.1em] lg:tracking-[0.2em]" 
+                        style={{
+                          fontFamily: 'The Seasons, serif',
+                          textShadow: '2px 2px 4px rgba(0,0,0,0.7)',
+                          filter: 'drop-shadow(2px 2px 4px rgba(0,0,0,0.5))'
+                        }}>
+                     HOME
+                   </div>
                 </Link>
                 <Link href="/about">
-                  <div className="text-white/90 text-3xl lg:text-4xl xl:text-5xl 2xl:text-6xl font-light hover:text-white transition-all duration-300 cursor-pointer tracking-[0.1em] lg:tracking-[0.2em]" 
-                       style={{
-                         fontFamily: 'DM Sans, sans-serif',
-                         textShadow: '2px 2px 4px rgba(0,0,0,0.7)',
-                         filter: 'drop-shadow(2px 2px 4px rgba(0,0,0,0.5))'
-                       }}>
-                    ABOUT
-                  </div>
+                   <div className="text-white/90 text-3xl lg:text-4xl xl:text-5xl 2xl:text-6xl font-light hover:text-white transition-all duration-300 cursor-pointer tracking-[0.1em] lg:tracking-[0.2em]" 
+                        style={{
+                          fontFamily: 'The Seasons, serif',
+                          textShadow: '2px 2px 4px rgba(0,0,0,0.7)',
+                          filter: 'drop-shadow(2px 2px 4px rgba(0,0,0,0.5))'
+                        }}>
+                     ABOUT
+                   </div>
                 </Link>
                 <Link href="/services">
-                  <div className="text-white/90 text-3xl lg:text-4xl xl:text-5xl 2xl:text-6xl font-light hover:text-white transition-all duration-300 cursor-pointer tracking-[0.1em] lg:tracking-[0.2em]" 
-                       style={{
-                         fontFamily: 'DM Sans, sans-serif',
-                         textShadow: '2px 2px 4px rgba(0,0,0,0.7)',
-                         filter: 'drop-shadow(2px 2px 4px rgba(0,0,0,0.5))'
-                       }}>
-                    SERVICES
-                  </div>
+                   <div className="text-white/90 text-3xl lg:text-4xl xl:text-5xl 2xl:text-6xl font-light hover:text-white transition-all duration-300 cursor-pointer tracking-[0.1em] lg:tracking-[0.2em]" 
+                        style={{
+                          fontFamily: 'The Seasons, serif',
+                          textShadow: '2px 2px 4px rgba(0,0,0,0.7)',
+                          filter: 'drop-shadow(2px 2px 4px rgba(0,0,0,0.5))'
+                        }}>
+                     SERVICES
+                   </div>
                 </Link>
                 <Link href="/blog">
-                  <div className="text-white/90 text-3xl lg:text-4xl xl:text-5xl 2xl:text-6xl font-light hover:text-white transition-all duration-300 cursor-pointer tracking-[0.1em] lg:tracking-[0.2em]" 
-                       style={{
-                         fontFamily: 'DM Sans, sans-serif',
-                         textShadow: '2px 2px 4px rgba(0,0,0,0.7)',
-                         filter: 'drop-shadow(2px 2px 4px rgba(0,0,0,0.5))'
-                       }}>
-                    BLOG
-                  </div>
+                   <div className="text-white/90 text-3xl lg:text-4xl xl:text-5xl 2xl:text-6xl font-light hover:text-white transition-all duration-300 cursor-pointer tracking-[0.1em] lg:tracking-[0.2em]" 
+                        style={{
+                          fontFamily: 'The Seasons, serif',
+                          textShadow: '2px 2px 4px rgba(0,0,0,0.7)',
+                          filter: 'drop-shadow(2px 2px 4px rgba(0,0,0,0.5))'
+                        }}>
+                     BLOG
+                   </div>
                 </Link>
                 <Link href="/appointment">
-                  <div className="text-white/90 text-3xl lg:text-4xl xl:text-5xl 2xl:text-6xl font-light hover:text-white transition-all duration-300 cursor-pointer tracking-[0.1em] lg:tracking-[0.2em]" 
-                       style={{
-                         fontFamily: 'DM Sans, sans-serif',
-                         textShadow: '2px 2px 4px rgba(0,0,0,0.7)',
-                         filter: 'drop-shadow(2px 2px 4px rgba(0,0,0,0.5))'
-                       }}>
-                    APPOINTMENT
-                  </div>
+                   <div className="text-white/90 text-3xl lg:text-4xl xl:text-5xl 2xl:text-6xl font-light hover:text-white transition-all duration-300 cursor-pointer tracking-[0.1em] lg:tracking-[0.2em]" 
+                        style={{
+                          fontFamily: 'The Seasons, serif',
+                          textShadow: '2px 2px 4px rgba(0,0,0,0.7)',
+                          filter: 'drop-shadow(2px 2px 4px rgba(0,0,0,0.5))'
+                        }}>
+                     APPOINTMENT
+                   </div>
                 </Link>
         </div>
 
