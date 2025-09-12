@@ -66,15 +66,20 @@ function BodyClassManager() {
   
   useEffect(() => {
     const isBlogPage = location === "/blog";
+    const isHomePage = location === "/";
+    
+    // Remove all scroll-related classes first
+    document.body.classList.remove('scrollable-page', 'home-page');
+    
     if (isBlogPage) {
-      document.body.classList.add('blog-page');
-    } else {
-      document.body.classList.remove('blog-page');
+      document.body.classList.add('scrollable-page');
+    } else if (isHomePage) {
+      document.body.classList.add('home-page');
     }
     
-    // Prevent scrolling on non-blog pages
+    // Prevent scrolling on non-blog and non-home pages
     const preventScroll = (e: Event) => {
-      if (!isBlogPage) {
+      if (!isBlogPage && !isHomePage) {
         e.preventDefault();
         e.stopPropagation();
         return false;
@@ -82,7 +87,7 @@ function BodyClassManager() {
     };
     
     // Add event listeners to prevent scrolling
-    if (!isBlogPage) {
+    if (!isBlogPage && !isHomePage) {
       document.addEventListener('wheel', preventScroll, { passive: false });
       document.addEventListener('touchmove', preventScroll, { passive: false });
       document.addEventListener('keydown', (e) => {
@@ -95,7 +100,7 @@ function BodyClassManager() {
     
     // Cleanup on unmount or route change
     return () => {
-      document.body.classList.remove('blog-page');
+      document.body.classList.remove('scrollable-page', 'home-page');
       document.removeEventListener('wheel', preventScroll);
       document.removeEventListener('touchmove', preventScroll);
     };
@@ -112,21 +117,21 @@ function Layout({ children }: { children: React.ReactNode }) {
   const isServicesPage = location === "/services";
   const isAboutPage = location === "/about";
   const isContactPage = location === "/contact";
-  const allowScrolling = isBlogPage;
+  const allowScrolling = isBlogPage || isAboutPage || isHomePage;
   
   // Don't show footer on home, dashboard, admin, services, about, blog, or contact pages
   const showFooter = !isHomePage && !isDashboardRoute && !isServicesPage && !isAboutPage && !isBlogPage && !isContactPage;
   
   return (
-    <div className="flex-layout bg-background text-foreground h-screen overflow-hidden">
-      <Header />
-      <main className={`flex-content ${!isHomePage ? 'pt-28' : ''}`}>
+    <div className={`${allowScrolling ? 'w-full h-screen overflow-y-auto' : 'flex-layout bg-background text-foreground h-screen overflow-hidden'}`}>
+      {!isHomePage && <Header />}
+      <main className={`${allowScrolling ? 'w-full' : 'flex-content'} ${!isHomePage ? 'pt-28' : ''}`}>
         {children}
       </main>
       {showFooter && (
         <Footer />
       )}
-      <MobileBottomNav />
+      {!isHomePage && <MobileBottomNav />}
     </div>
   );
 }

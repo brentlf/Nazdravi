@@ -44,7 +44,13 @@ export default function Appointment() {
   }
 
   return (
-    <div className="h-full">
+    <div className="h-full -mt-28 pt-28" style={{
+      backgroundImage: 'url("/nazdravi.nl%20(4).png")',
+      backgroundSize: 'cover',
+      backgroundPosition: 'center',
+      backgroundRepeat: 'no-repeat',
+      minHeight: '100vh'
+    }}>
       {/* Main content section */}
       <section className="h-full overflow-y-auto p-3 sm:p-4 lg:p-6">
         <div className="max-w-4xl mx-auto w-full">
@@ -53,11 +59,11 @@ export default function Appointment() {
             <div className="inline-flex items-center justify-center w-12 h-12 xs:w-14 xs:h-14 bg-gradient-to-br from-primary/20 to-primary/10 rounded-2xl mb-3 xs:mb-4 shadow-lg">
               <Calendar className="h-6 w-6 xs:h-7 xs:w-7 text-primary" />
             </div>
-            <h1 className="text-2xl xs:text-3xl sm:text-4xl font-bold mb-2 xs:mb-3 leading-tight text-foreground" 
+            <h1 className="text-2xl xs:text-3xl sm:text-4xl font-bold mb-2 xs:mb-3 leading-tight text-white" 
                 style={{fontFamily: 'The Seasons, serif', letterSpacing: '-0.01em'}}>
               Book Consultation
             </h1>
-            <p className="text-base xs:text-lg text-muted-foreground max-w-2xl mx-auto leading-relaxed">
+            <p className="text-base xs:text-lg text-white/90 max-w-2xl mx-auto leading-relaxed">
               Begin your personalized nutrition journey with expert guidance in English and Czech.
             </p>
           </div>

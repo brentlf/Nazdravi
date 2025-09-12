@@ -91,12 +91,12 @@ export default function Register() {
   };
 
   return (
-    <div className="h-full relative overflow-hidden">
+    <div className="h-full relative overflow-hidden -mt-28 pt-28">
       {/* Background Image */}
       <div 
         className="absolute inset-0 bg-cover bg-center bg-no-repeat"
         style={{
-          backgroundImage: `url(/oranges-sky.jpg)`,
+          backgroundImage: `url(/backbanana.png)`,
           imageRendering: 'crisp-edges',
           WebkitBackfaceVisibility: 'hidden',
           backfaceVisibility: 'hidden',

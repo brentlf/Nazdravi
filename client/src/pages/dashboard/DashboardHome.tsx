@@ -3,7 +3,13 @@ import { FloatingOrganic, DoodleConnector } from "@/components/ui/PageTransition
 
 export default function DashboardHome() {
   return (
-    <div className="dashboard-viewport bg-gradient-to-br from-background via-background to-muted/10 relative">
+    <div className="dashboard-viewport relative -mt-28 pt-28" style={{
+      backgroundImage: 'url("/backbanana.png")',
+      backgroundSize: 'cover',
+      backgroundPosition: 'center',
+      backgroundRepeat: 'no-repeat',
+      minHeight: '100vh'
+    }}>
       <div className="adaptive-content">
 
         {/* Main dashboard content with flex-1 to fill remaining space */}

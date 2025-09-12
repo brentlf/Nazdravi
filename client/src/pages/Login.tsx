@@ -82,12 +82,12 @@ export default function Login() {
   };
 
   return (
-    <div className="min-viewport-height relative overflow-hidden">
+    <div className="min-viewport-height relative overflow-hidden -mt-28 pt-28">
       {/* Background Image */}
       <div 
         className="absolute inset-0 bg-cover bg-center bg-no-repeat"
         style={{
-          backgroundImage: `url(/oranges-sky.jpg)`,
+          backgroundImage: `url(/backbanana.png)`,
           imageRendering: 'crisp-edges',
           WebkitBackfaceVisibility: 'hidden',
           backfaceVisibility: 'hidden',

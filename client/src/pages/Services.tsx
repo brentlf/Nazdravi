@@ -1,276 +1,148 @@
-import { useState } from "react";
-import {
-  MessageCircle,
+import { 
+  Heart, 
+  Target, 
+  Smile, 
+  Stethoscope, 
+  Leaf, 
+  Users,
+  Clock,
+  Shield,
   CheckCircle,
-  ChevronRight,
-  ArrowRight,
-  Leaf,
-  Crown,
-  Calendar,
+  ArrowRight
 } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Link, useLocation } from "wouter";
-import { useAuth } from "@/contexts/AuthContext";
-import { useFirestoreDocument } from "@/hooks/useFirestore";
-import { doc, updateDoc } from "firebase/firestore";
-import { db } from "@/lib/firebase";
-import { useToast } from "@/hooks/use-toast";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
+import { Link } from "wouter";
 
 export default function Services() {
-  const { user } = useAuth();
-  const [, setLocation] = useLocation();
-  const { toast } = useToast();
-  const { data: userData } = useFirestoreDocument("users", user?.uid || "");
-  const [showBillingConfirmation, setShowBillingConfirmation] = useState(false);
-  const [pendingPlanType, setPendingPlanType] = useState<"pay-as-you-go" | "complete-program" | null>(null);
-
-  const handleServicePlanSelection = async (planType: "pay-as-you-go" | "complete-program") => {
-    if (!user) {
-      toast({
-        title: "Authentication Required",
-        description: "Please sign in to select a service plan.",
-        variant: "destructive",
-      });
-      setLocation("/login");
-      return;
-    }
-
-    if (planType === "complete-program" && userData?.servicePlan !== "complete-program") {
-      setPendingPlanType(planType);
-      setShowBillingConfirmation(true);
-      return;
-    }
-
-    await updateServicePlan(planType);
-  };
-
-  const updateServicePlan = async (planType: "pay-as-you-go" | "complete-program") => {
-    try {
-      const userRef = doc(db, "users", user!.uid);
-      const updateData: any = {
-        servicePlan: planType,
-        updatedAt: new Date(),
-      };
-
-      if (planType === "complete-program") {
-        const startDate = new Date();
-        const endDate = new Date();
-        endDate.setMonth(endDate.getMonth() + 3);
-        updateData.programStartDate = startDate;
-        updateData.programEndDate = endDate;
-      }
-
-      await updateDoc(userRef, updateData);
-
-      toast({
-        title: "Service Plan Updated",
-        description: `You've selected the ${planType === "complete-program" ? "Complete Program" : "Pay As You Go"} plan.`,
-      });
-
-      window.location.reload();
-    } catch (error) {
-      console.error("Error updating service plan:", error);
-      toast({
-        title: "Error",
-        description: "Failed to update service plan. Please try again.",
-        variant: "destructive",
-      });
-    }
-  };
-
   const services = [
     {
-      id: "initial",
-      icon: Calendar,
-      title: "Initial Consultation",
-      description: "Comprehensive assessment and personalized nutrition strategy",
-      duration: "60 minutes",
-      price: "€95",
-      features: [
-        "Detailed health history review",
-        "Current eating habits analysis",
-        "Personalized nutrition plan",
-        "Goal setting & recommendations",
-      ],
-      color: "from-emerald-500 to-teal-500",
-      popular: false,
+      icon: Heart,
+      title: "Personalized Nutrition",
+      description: "Tailored meal plans designed specifically for your health goals and dietary preferences",
+      color: "from-pink-500 to-rose-500"
     },
     {
-      id: "followup",
-      icon: MessageCircle,
-      title: "Follow-up Sessions",
-      description: "Ongoing support and plan adjustments",
-      duration: "30 minutes",
-      price: "€40",
-      features: [
-        "Progress review and accountability",
-        "Adjustments to nutrition plan",
-        "Motivation and practical tips",
-      ],
-      color: "from-blue-500 to-cyan-500",
-      popular: false,
+      icon: Target,
+      title: "Weight Management",
+      description: "Sustainable strategies for achieving and maintaining your ideal weight",
+      color: "from-blue-500 to-cyan-500"
     },
     {
-      id: "program",
-      icon: Crown,
-      title: "Complete Program",
-      description: "Comprehensive 3-month transformation journey",
-      duration: "3 months",
-      price: "€300",
-      features: [
-        "Initial consultation (60 min) + 5 follow-up sessions (30 min each)",
-        "Weekly meal plans & recipes",
-        "Messaging support for questions and accountability",
-        "Progress tracking tools",
-      ],
-      color: "from-purple-500 to-pink-500",
-      popular: true,
+      icon: Smile,
+      title: "Mental Health Support",
+      description: "Nutritional approaches to support mood, energy, and overall mental wellbeing",
+      color: "from-yellow-500 to-orange-500"
     },
+    {
+      icon: Stethoscope,
+      title: "Medical Nutrition",
+      description: "Specialized nutrition therapy for diabetes, heart disease, and other conditions",
+      color: "from-green-500 to-emerald-500"
+    },
+    {
+      icon: Leaf,
+      title: "Plant-Based Nutrition",
+      description: "Expert guidance for vegetarian, vegan, and plant-forward eating patterns",
+      color: "from-lime-500 to-green-500"
+    },
+    {
+      icon: Users,
+      title: "Family Nutrition",
+      description: "Comprehensive nutrition support for the whole family, from children to seniors",
+      color: "from-purple-500 to-indigo-500"
+    }
   ];
 
   return (
-    <div className="page-wrapper">
+    <div className="page-wrapper relative -mt-28 pt-28" style={{
+      backgroundImage: 'url("/nazdravi.nl%20(2).png")',
+      backgroundSize: 'cover',
+      backgroundPosition: 'center',
+      backgroundRepeat: 'no-repeat',
+      minHeight: '100vh',
+      width: '100%'
+    }}>
       {/* Main content section */}
       <section className="page-content p-3 sm:p-4 lg:p-6">
         <div className="max-w-7xl mx-auto w-full">
           {/* Header Section */}
-          <div className="text-center mb-3 xs:mb-4 sm:mb-6">
-            <div className="inline-flex items-center justify-center w-8 h-8 xs:w-10 xs:h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-blue-400 to-blue-600 rounded-full mb-2 xs:mb-3">
-              <Leaf className="h-4 w-4 xs:h-5 xs:h-5 sm:h-6 sm:h-6 text-white" />
+          <div className="text-center mb-8 xs:mb-10 sm:mb-12">
+            <div className="inline-flex items-center justify-center w-12 h-12 xs:w-14 xs:h-14 sm:w-16 sm:h-16 bg-gradient-to-br from-blue-400 to-blue-600 rounded-full mb-4 xs:mb-6">
+              <Leaf className="h-6 w-6 xs:h-7 xs:h-7 sm:h-8 sm:h-8 text-white" />
             </div>
-            <h1 className="text-xl xs:text-2xl sm:text-3xl md:text-4xl font-bold mb-2 xs:mb-3 leading-tight text-foreground uppercase" 
-                style={{fontFamily: 'Calibri, sans-serif', letterSpacing: '0.02em'}}>
-              Nutrition Services
+            <h1 className="text-3xl xs:text-4xl sm:text-5xl font-bold mb-3 xs:mb-4 text-white" 
+                style={{fontFamily: 'The Seasons, serif', letterSpacing: '-0.01em'}}>
+              Our Services
             </h1>
-            <p className="text-sm xs:text-base text-muted-foreground max-w-2xl mx-auto leading-relaxed">
+            <p className="text-lg xs:text-xl text-white/90 max-w-3xl mx-auto leading-relaxed" style={{fontFamily: 'Calibri, sans-serif', letterSpacing: '0.02em'}}>
               Transform your health with evidence-based nutrition guidance tailored to your unique needs and lifestyle.
             </p>
           </div>
 
-          {/* Services Grid */}
-          <div className="grid grid-cols-1 xs:grid-cols-2 lg:grid-cols-3 gap-3 xs:gap-4 sm:gap-5 mb-4 xs:mb-6 sm:mb-8">
+          {/* Services Grid - 6 Squares */}
+          <div className="grid grid-cols-1 xs:grid-cols-2 lg:grid-cols-3 gap-4 xs:gap-6 sm:gap-8 mb-8 xs:mb-10 sm:mb-12">
             {services.map((service, index) => (
-              <Card key={index} className={`relative border border-border bg-card hover:shadow-lg transition-all duration-300 ${service.popular ? 'ring-2 ring-yellow-400/50' : ''}`}>
-                {service.popular && (
-                  <div className="absolute -top-3 left-1/2 transform -translate-x-1/2">
-                    <Badge className="bg-gradient-to-r from-yellow-400 to-orange-500 text-white px-3 py-1 font-bold text-xs shadow-lg border-2 border-yellow-300/50">
-                      Most Popular
-                    </Badge>
-                  </div>
-                )}
-                <CardContent className="p-3 xs:p-4 text-card-foreground h-full flex flex-col">
-                  <div className={`inline-flex items-center justify-center w-8 h-8 xs:w-10 xs:h-10 bg-gradient-to-br ${service.color} rounded-xl mb-2 xs:mb-3`}>
-                    <service.icon className="h-4 w-4 xs:h-5 xs:w-5 text-foreground" />
+              <Card key={index} className="group relative border-2 border-white/20 bg-white/10 backdrop-blur-sm hover:bg-white/20 transition-all duration-300 hover:scale-105 hover:shadow-xl">
+                <CardContent className="p-6 xs:p-8 text-center h-full flex flex-col items-center justify-center min-h-[250px]">
+                  <div className={`inline-flex items-center justify-center w-16 h-16 xs:w-20 xs:h-20 bg-gradient-to-br ${service.color} rounded-2xl mb-4 xs:mb-6 shadow-lg group-hover:scale-110 transition-transform duration-300`}>
+                    <service.icon className="h-8 w-8 xs:h-10 xs:w-10 text-white" />
                   </div>
                   
-                  <h3 className="text-base xs:text-lg font-bold mb-1 xs:mb-2">
+                  <h3 className="text-xl xs:text-2xl font-bold mb-3 xs:mb-4 text-white" style={{fontFamily: 'The Seasons, serif', letterSpacing: '-0.01em'}}>
                     {service.title}
                   </h3>
                   
-                  <p className="text-muted-foreground mb-2 xs:mb-3 leading-relaxed flex-grow text-xs xs:text-sm">
+                  <p className="text-white/90 text-base xs:text-lg leading-relaxed" style={{fontFamily: 'Calibri, sans-serif', letterSpacing: '0.02em'}}>
                     {service.description}
                   </p>
-                  
-                  <div className="flex items-center justify-between mb-2 xs:mb-3">
-                    <div className="text-xs xs:text-sm text-muted-foreground">
-                      Duration: {service.duration}
-                    </div>
-                    <div className="text-lg xs:text-xl font-bold text-primary">
-                      {service.price}
-                    </div>
-                  </div>
-                  
-                  <ul className="space-y-1 xs:space-y-1.5 mb-3 xs:mb-4 flex-grow">
-                    {service.features.slice(0, 3).map((feature, featureIndex) => (
-                      <li key={featureIndex} className="flex items-start gap-1 xs:gap-1.5">
-                        <CheckCircle className="h-3 w-3 xs:h-3.5 xs:w-3.5 text-green-500 flex-shrink-0 mt-0.5" />
-                        <span className="text-muted-foreground text-xs xs:text-sm">{feature}</span>
-                      </li>
-                    ))}
-                    {service.features.length > 3 && (
-                      <li className="text-xs xs:text-sm text-muted-foreground italic">+ {service.features.length - 3} more features</li>
-                    )}
-                  </ul>
-                  
-                    <Button 
-                      variant="outline"
-                      className={`w-full font-semibold py-2 xs:py-3 text-xs xs:text-sm transition-all duration-300 transform hover:scale-105 ${
-                        service.popular 
-                          ? 'bg-gradient-to-r from-yellow-500 to-orange-500 hover:from-yellow-600 hover:to-orange-600 shadow-lg hover:shadow-xl border-2 border-yellow-400/30 text-white' 
-                          : 'bg-gradient-to-r from-blue-50 to-blue-100 hover:from-blue-100 hover:to-blue-200 border-2 border-blue-300 text-blue-700 hover:text-blue-800 shadow-md hover:shadow-lg'
-                      }`}
-                      onClick={() => handleServicePlanSelection(service.id as any)}
-                    >
-                    {service.id === "program" ? "Start Program" : "Book Now"}
-                    <ChevronRight className="ml-2 h-3 w-3 xs:h-4 xs:w-4" />
-                  </Button>
                 </CardContent>
               </Card>
             ))}
           </div>
 
           {/* CTA Section */}
-          <div className="text-center bg-gradient-to-br from-blue-50 to-blue-100 border border-blue-200 rounded-2xl p-3 xs:p-4 sm:p-6 shadow-lg">
-            <h3 className="text-lg xs:text-xl font-bold text-foreground mb-2 xs:mb-3 uppercase" style={{fontFamily: 'Calibri, sans-serif', letterSpacing: '0.02em'}}>💡 Not sure which option is right for you?</h3>
-            <p className="text-muted-foreground mb-4 xs:mb-6 max-w-2xl mx-auto text-sm xs:text-base">
-              Schedule a free 15-minute consultation to discuss your goals and find the perfect service for your needs.
+          <div className="text-center bg-white/10 backdrop-blur-sm border border-white/20 rounded-2xl p-6 xs:p-8 sm:p-10 shadow-lg">
+            <div className="inline-flex items-center justify-center w-16 h-16 xs:w-20 xs:h-20 bg-gradient-to-br from-yellow-400 to-orange-500 rounded-full mb-4 xs:mb-6">
+              <Clock className="h-8 w-8 xs:h-10 xs:w-10 text-white" />
+            </div>
+            <h2 className="text-2xl xs:text-3xl sm:text-4xl font-bold text-white mb-3 xs:mb-4" style={{fontFamily: 'The Seasons, serif', letterSpacing: '-0.01em'}}>
+              Ready to Start Your Journey?
+            </h2>
+            <p className="text-white/90 text-lg xs:text-xl mb-6 xs:mb-8 max-w-2xl mx-auto leading-relaxed" style={{fontFamily: 'Calibri, sans-serif', letterSpacing: '0.02em'}}>
+              Book a consultation today and take the first step towards a healthier, happier you.
             </p>
-            <Link href="/appointment">
-              <Button size="lg" className="px-6 xs:px-8 py-2 xs:py-3 text-sm xs:text-base font-semibold shadow-lg hover:shadow-xl transition-all duration-300 bg-gradient-to-r from-yellow-500 to-orange-500 hover:from-yellow-600 hover:to-orange-600 transform hover:scale-105 border-2 border-yellow-300 text-white">
-                Book Your Consultation
-                <ArrowRight className="ml-2 h-4 w-4 xs:h-5 xs:w-5" />
-              </Button>
-            </Link>
+            <div className="flex flex-col xs:flex-row gap-4 xs:gap-6 justify-center items-center">
+              <Link href="/appointment">
+                <Button size="lg" className="px-8 xs:px-10 py-3 xs:py-4 text-lg xs:text-xl font-semibold shadow-xl hover:shadow-2xl transition-all duration-300 bg-gradient-to-r from-yellow-500 to-orange-500 hover:from-yellow-600 hover:to-orange-600 transform hover:scale-105 border-2 border-yellow-300 text-white">
+                  Book Consultation
+                  <ArrowRight className="ml-2 h-5 w-5 xs:h-6 xs:w-6" />
+                </Button>
+              </Link>
+              <Link href="/plans">
+                <Button variant="outline" size="lg" className="px-8 xs:px-10 py-3 xs:py-4 text-lg xs:text-xl font-semibold shadow-lg hover:shadow-xl transition-all duration-300 border-2 border-white/30 text-white hover:bg-white/10 backdrop-blur-sm">
+                  View Plans
+                </Button>
+              </Link>
+            </div>
+          </div>
+
+          {/* Nutrition Services Heading */}
+          <div className="text-center mt-8 xs:mt-10 sm:mt-12">
+            <h1 className="text-6xl xs:text-7xl sm:text-8xl md:text-9xl font-bold leading-tight lowercase" 
+                style={{
+                  fontFamily: 'The Seasons, serif', 
+                  letterSpacing: '-0.01em',
+                  background: 'linear-gradient(45deg, #f97316, #eab308)',
+                  WebkitBackgroundClip: 'text',
+                  backgroundClip: 'text',
+                  color: 'transparent'
+                }}>
+              nutrition services
+            </h1>
           </div>
         </div>
       </section>
-
-      {/* Billing Confirmation Dialog */}
-      <Dialog open={showBillingConfirmation} onOpenChange={setShowBillingConfirmation}>
-        <DialogContent className="sm:max-w-md">
-          <DialogHeader>
-            <DialogTitle>Complete Program Upgrade</DialogTitle>
-            <DialogDescription>
-              You're about to upgrade to the Complete Program. This will provide you with comprehensive support for 3 months.
-            </DialogDescription>
-          </DialogHeader>
-          <div className="py-4">
-            <p className="text-sm text-muted-foreground">
-              The Complete Program includes:
-            </p>
-            <ul className="mt-2 space-y-1 text-sm text-muted-foreground">
-              <li>• Initial consultation (60 min) + 5 follow-up sessions (30 min each)</li>
-              <li>• Weekly meal plans & recipes</li>
-              <li>• Messaging support for questions and accountability</li>
-              <li>• Progress tracking tools</li>
-            </ul>
-            <div className="mt-4 p-3 bg-muted rounded-lg">
-              <p className="text-sm font-medium text-foreground">Total: €300</p>
-            </div>
-          </div>
-          <DialogFooter>
-            <Button variant="outline" onClick={() => setShowBillingConfirmation(false)}>
-              Cancel
-            </Button>
-            <Button onClick={() => {
-              setShowBillingConfirmation(false);
-              updateServicePlan(pendingPlanType!);
-            }}>
-              Confirm Upgrade
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
     </div>
   );
 }

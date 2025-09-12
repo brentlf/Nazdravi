@@ -307,7 +307,7 @@ export function DashboardOverview() {
       <div className="grid lg:grid-cols-12 gap-2 flex-shrink-0">
         {/* Quick Stats - Takes up more space */}
         <div className="lg:col-span-8">
-          <h3 className="text-sm font-semibold mb-1.5 flex items-center gap-2 text-muted-foreground">
+          <h3 className="text-sm font-semibold mb-1.5 flex items-center gap-2 text-white/90">
             <Target className="w-4 h-4" />
             Quick Overview
           </h3>
@@ -388,7 +388,7 @@ export function DashboardOverview() {
                         <Icon className={`${isShortViewport ? 'w-1 h-1 sm:w-1.5 sm:h-1.5' : viewportHeight < 700 ? 'w-1.5 h-1.5 sm:w-2 sm:h-2' : viewportHeight < 900 ? 'w-1.5 h-1.5 sm:w-2 sm:h-2 md:w-2.5 md:h-2.5' : 'w-1.5 h-1.5 sm:w-2 sm:h-2 md:w-2.5 md:h-2.5'} ${stat.color}`} />
                       </div>
                       <div className="flex-1 min-w-0">
-                        <p className="text-[10px] sm:text-xs font-medium text-muted-foreground uppercase tracking-wide leading-none truncate" title={stat.title}>
+                        <p className="text-[10px] sm:text-xs font-medium text-white/80 uppercase tracking-wide leading-none truncate" title={stat.title}>
                           {stat.title}
                         </p>
                       </div>
@@ -397,11 +397,11 @@ export function DashboardOverview() {
                     {/* Flexible Content Area - Takes remaining space */}
                     <div className="flex-1 flex flex-col justify-center py-1 sm:py-2">
                       <div className="text-center">
-                        <p className={`${getTextSize()} font-bold text-foreground leading-none mb-0.5 sm:mb-1 transition-colors duration-300 group-hover:text-primary`}>
+                        <p className={`${getTextSize()} font-bold text-white leading-none mb-0.5 sm:mb-1 transition-colors duration-300 group-hover:text-yellow-300`}>
                           {stat.value}
                         </p>
                         {stat.subtitle && (
-                          <p className="text-[9px] sm:text-xs text-muted-foreground leading-tight">
+                          <p className="text-[9px] sm:text-xs text-white/80 leading-tight">
                             {stat.subtitle}
                           </p>
                         )}
@@ -431,7 +431,7 @@ export function DashboardOverview() {
 
         {/* Program Status - Matches Quick Overview height */}
         <div className="lg:col-span-4">
-          <h3 className="text-sm font-semibold mb-1.5 flex items-center gap-2 text-muted-foreground">
+          <h3 className="text-sm font-semibold mb-1.5 flex items-center gap-2 text-white/90">
             <Crown className="w-4 h-4" />
             Program Status
           </h3>
@@ -455,7 +455,7 @@ export function DashboardOverview() {
         <div className="lg:col-span-2 min-h-0">
           <Card className="h-full flex flex-col bg-gradient-to-br from-card via-card/95 to-muted/20 border hover:border-primary/20 transition-all duration-300 shadow-sm">
             <CardHeader className="flex flex-row items-center justify-between pb-2 flex-shrink-0 bg-gradient-to-r from-muted/20 to-muted/10 rounded-t-lg border-b border-border/50">
-              <CardTitle className="flex items-center gap-2 text-sm font-semibold text-foreground">
+              <CardTitle className="flex items-center gap-2 text-sm font-semibold text-white">
                 <div className="w-5 h-5 rounded-lg bg-primary/10 flex items-center justify-center">
                   <MessageCircle className="w-3 h-3 text-primary" />
                 </div>
@@ -475,14 +475,14 @@ export function DashboardOverview() {
                       </div>
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center justify-between mb-1">
-                          <span className="text-xs font-semibold text-foreground truncate group-hover:text-primary transition-colors duration-200">
+                          <span className="text-xs font-semibold text-white truncate group-hover:text-yellow-300 transition-colors duration-200">
                             {message.fromUser === user?.uid ? "You" : "Nutritionist"}
                           </span>
-                          <span className="text-xs text-muted-foreground flex-shrink-0">
+                          <span className="text-xs text-white/80 flex-shrink-0">
                             {new Date(message.createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
                           </span>
                         </div>
-                        <p className="text-xs text-muted-foreground line-clamp-2 leading-tight">{message.text}</p>
+                        <p className="text-xs text-white/90 line-clamp-2 leading-tight">{message.text}</p>
                       </div>
                     </div>
                   ))}
@@ -490,8 +490,8 @@ export function DashboardOverview() {
               ) : (
                 <div className="flex-1 flex items-center justify-center">
                   <div className="text-center">
-                    <MessageCircle className="w-8 h-8 text-muted-foreground mx-auto mb-2" />
-                    <p className="text-muted-foreground text-sm">No messages</p>
+                    <MessageCircle className="w-8 h-8 text-white/60 mx-auto mb-2" />
+                    <p className="text-white/80 text-sm">No messages</p>
                     <Button size="sm" className="mt-3" asChild>
                       <Link href="/dashboard/messages">Start Chat</Link>
                     </Button>
@@ -506,7 +506,7 @@ export function DashboardOverview() {
         <div className="lg:col-span-1 min-h-0">
           <Card className="h-full flex flex-col bg-gradient-to-br from-card via-card/95 to-muted/20 border hover:border-primary/20 transition-all duration-300 shadow-sm">
             <CardHeader className="pb-2 flex-shrink-0 bg-gradient-to-r from-muted/20 to-muted/10 rounded-t-lg border-b border-border/50">
-              <CardTitle className="flex items-center gap-2 text-sm font-semibold text-foreground">
+              <CardTitle className="flex items-center gap-2 text-sm font-semibold text-white">
                 <div className="w-5 h-5 rounded-lg bg-primary/10 flex items-center justify-center">
                   <Target className="w-3 h-3 text-primary" />
                 </div>
@@ -533,8 +533,8 @@ export function DashboardOverview() {
                             )}
                           </div>
                           <div className="flex-1 min-w-0 flex flex-col justify-center">
-                            <p className="text-sm font-medium text-foreground group-hover:text-primary transition-colors duration-300 truncate leading-tight">{action.title}</p>
-                            <p className="text-xs text-muted-foreground leading-tight mt-0.5 truncate">
+                            <p className="text-sm font-medium text-white group-hover:text-yellow-300 transition-colors duration-300 truncate leading-tight">{action.title}</p>
+                            <p className="text-xs text-white/80 leading-tight mt-0.5 truncate">
                               {action.description}
                             </p>
                           </div>
@@ -564,7 +564,7 @@ export function DashboardOverview() {
                       <Icon className="w-3 h-3 text-white" />
                     </div>
                     <div className="text-center">
-                      <p className="text-xs font-medium text-foreground group-hover:text-primary transition-colors duration-300 leading-tight">{action.title}</p>
+                      <p className="text-xs font-medium text-white group-hover:text-yellow-300 transition-colors duration-300 leading-tight">{action.title}</p>
                     </div>
                   </CardContent>
                   {/* Subtle background decoration */}
